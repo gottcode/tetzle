@@ -119,6 +119,13 @@ Window::Window()
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, SLOT(zoomFit()));
 	m_zoom_fit_action->setEnabled(false);
 
+	menu->addSeparator();
+
+	QAction* fullscreen_action = menu->addAction(tr("Fullscreen"));
+	connect(fullscreen_action, SIGNAL(toggled(bool)), this, SLOT(setFullScreen(bool)));
+	fullscreen_action->setCheckable(true);
+	fullscreen_action->setShortcut(Qt::Key_F11);
+
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&Controls"), this, SLOT(showControls()));
 	menu->addSeparator();
@@ -210,6 +217,16 @@ void Window::openGame()
 void Window::gameFinished()
 {
 	m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+}
+
+/*****************************************************************************/
+
+void Window::setFullScreen(bool enable)
+{
+	if (enable)
+		showFullScreen();
+	else
+		showNormal();
 }
 
 /*****************************************************************************/

@@ -58,6 +58,7 @@ private slots:
 	void newGame();
 	void openGame();
 	void gameFinished();
+	void setFullScreen(bool enable);
 	void showControls();
 	void showAbout();
 
