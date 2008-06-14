@@ -1,0 +1,212 @@
+2008-06-08 Graeme Gott <graeme@gottcode.org>
+	* Tag version 1.0.
+	* Switch keyboard shortcut for toggling overview.
+	* FIXED: Overview was not a tool window in GNOME.
+
+2008-06-07 Graeme Gott <graeme@gottcode.org>
+	* FIXED: User could remove image of currently open game.
+	* FIXED: Default piece count was being ignored.
+	* Remember overview's visibility and position with program.
+	* Update zoom values from previous file formats.
+
+2008-06-04 Graeme Gott <graeme@gottcode.org>
+	* Add label system for images.
+
+2008-06-01 Graeme Gott <graeme@gottcode.org>
+	* Remember dialog sizes.
+
+2008-05-31 Graeme Gott <graeme@gottcode.org>
+	* Simplify zoom algorithm.
+
+2008-05-26 Graeme Gott <graeme@gottcode.org>
+	* Remember window position.
+	* Hide statusbar widgets when creating or loading a puzzle.
+
+2008-05-25 Graeme Gott <graeme@gottcode.org>
+	* Inform player of delay when creating or loading a puzzle.
+
+2008-05-09 Graeme Gott <graeme@gottcode.org>
+	* Tag version 0.7.
+	* Add help menu.
+
+2008-05-08 Graeme Gott <graeme@gottcode.org>
+	* Improve thumbnail shadow code.
+	* FIXED: Thumbnails were not generated in static build.
+
+2008-05-07 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Pieces would leave mouse cursor when moved and rotated.
+
+2008-05-05 Graeme Gott <graeme@gottcode.org>
+	* Add alternate commands.
+	* Add "Best Fit" to view menu.
+	* FIXED: Completed boards were not always rotated correctly.
+
+2008-05-04 Graeme Gott <graeme@gottcode.org>
+	* Prevent addition of duplicate images.
+	* Share thumbnail generation code in all dialogs with thumbnails.
+
+2008-05-03 Graeme Gott <graeme@gottcode.org>
+	* Add zoom slider to statusbar.
+	* Remember each puzzle's position and zoom.
+	* Remember overview's visibility and position with each puzzle.
+
+2008-05-02 Graeme Gott <graeme@gottcode.org>
+	* Show puzzle overview.
+	* Automatically save games.
+	* Store directory shown in image selection dialog across runs.
+	* Add cap to number of previews stored by image selection dialog.
+
+2008-04-30 Graeme Gott <graeme@gottcode.org>
+	* Add shadows to all thumbnails.
+	* Disable image selection dialog's open button unless images are selected.
+	* Create defualt icon for image selection dialog.
+	* Use filename as tooltip in image selection dialog.
+
+2008-04-29 Graeme Gott <graeme@gottcode.org>
+	* Add thumbnails to files in image selection dialog.
+
+2008-04-28 Graeme Gott <graeme@gottcode.org>
+	* Replace success message.
+	* Allow multiple images to be added at once.
+
+2008-04-09 Graeme Gott <graeme@gottcode.org>
+	* Tag version 0.6.
+	* FIXED: Minimum zoom level was incorrect.
+
+2008-04-06 Graeme Gott <graeme@gottcode.org>
+	* Improve code to set maximum value for piece count slider.
+
+2008-04-05 Graeme Gott <graeme@gottcode.org>
+	* Use 8x8 groups instead of 4x4 groups.
+
+2008-04-02 Graeme Gott <graeme@gottcode.org>
+	* Remember selected image across new games.
+	* Add image selection dialog.
+	* FIXED: Pieces were covering other pieces at start of a new game.
+	* Push non-snappable pieces away from dropped piece.
+
+2008-03-31 Graeme Gott <graeme@gottcode.org>
+	* Snap tiles while moving.
+
+2008-03-30 Graeme Gott <graeme@gottcode.org>
+	* Center and zoom out board on new and loaded games.
+
+2008-03-29 Graeme Gott <graeme@gottcode.org>
+	* Make zooming smoother.
+	* Generate arbitrary arrangement of pieces.
+
+2008-03-27 Graeme Gott <graeme@gottcode.org>
+	* Regenerate bumpmap when zoomed.
+	* FIXED: Sometimes couldn't put pieces down.
+
+2008-03-26 Graeme Gott <graeme@gottcode.org>
+	* Add maximum image size.
+	* FIXED: Finished games were shown as unsaved.
+	* Add Windows support.
+	* Add Mac support.
+
+2008-03-25 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Pieces were positioned incorrectly when moved and rotated.
+
+2008-03-24 Graeme Gott <graeme@gottcode.org>
+	* Add indicator of modified state.
+	* Make snap region the same at all zoom levels.
+
+2008-03-22 Graeme Gott <graeme@gottcode.org>
+	* Randomly rotate and position new game pieces.
+	* FIXED: Did not show textures on new game.
+
+2008-03-20 Graeme Gott <graeme@gottcode.org>
+	* Congratulate player when they finish a game.
+
+2008-03-19 Graeme Gott <graeme@gottcode.org>
+	* Add zoom actions to menu.
+	* Move active piece when resizing or zooming.
+
+2008-03-18 Graeme Gott <graeme@gottcode.org>
+	* Adjust for zoom when determining where mouse is.
+
+2008-03-16 Graeme Gott <graeme@gottcode.org>
+	* Add zooming.
+	* Add scrolling.
+	* Add bounding rectangle to tiles.
+
+2008-03-15 Graeme Gott <graeme@gottcode.org>
+	* Prompt to save game on window close.
+	* Disable open button when there are no saved games to open.
+	* Disable save button when no changes have been made.
+
+2008-03-13 Graeme Gott <graeme@gottcode.org>
+	* Remember window geometry.
+	* Remember piece count for new games.
+	* Manage images in new game dialog.
+	* Copy images into data folder.
+
+2008-03-12 Graeme Gott <graeme@gottcode.org>
+	* Add new game dialog.
+	* Add open game dialog.
+	* Create thumbnails.
+	* Show percent completed.
+
+2008-03-11 Graeme Gott <graeme@gottcode.org>
+	* Read and write tile data.
+
+2008-03-10 Graeme Gott <graeme@gottcode.org>
+	* Left-click to pick up and to drop groups.
+
+2008-03-09 Graeme Gott <graeme@gottcode.org>
+	* Rewrite using OpenGL.
+
+2008-03-06 Graeme Gott <graeme@gottcode.org>
+	* Start with tetromino pieces.
+	* Snap tiles together during creation.
+
+2008-03-05 Graeme Gott <graeme@gottcode.org>
+	* Embed solutions in program.
+
+2008-03-04 Graeme Gott <graeme@gottcode.org>
+	* Make dancing links row count dynamic.
+
+2008-03-02 Graeme Gott <graeme@gottcode.org>
+	* Add dancing links implementation.
+
+2008-03-01 Graeme Gott <graeme@gottcode.org>
+	* Speed up tile creation.
+
+2008-02-26 Graeme Gott <graeme@gottcode.org>
+	* Cache rotated pixmaps.
+
+2008-02-22 Graeme Gott <graeme@gottcode.org>
+	* Rotate around tile clicked on.
+
+2008-02-21 Graeme Gott <graeme@gottcode.org>
+	* Change mouse cursor.
+	* FIXED: Dropping a tile on two groups didn't position it properly.
+
+2008-02-18 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Rotated tiles would not snap together.
+	* Allow player to rotate groups.
+
+2008-02-16 Graeme Gott <graeme@gottcode.org>
+	* Snap tiles into groups.
+
+2008-02-15 Graeme Gott <graeme@gottcode.org>
+	* Snap tiles together.
+
+2008-02-10 Graeme Gott <graeme@gottcode.org>
+	* Store column and row in Piece.
+	* Middle-mouse click moves tiles to back.
+
+2008-02-09 Graeme Gott <graeme@gottcode.org>
+	* Allow player to move and rotate tiles.
+	* Add tile class.
+	* Add board class.
+	* Cache emboss effect.
+	* Add emboss effect.
+	* Show creation progress.
+	* FIXED: Puzzle tiles were the wrong size.
+
+2008-02-08 Graeme Gott <graeme@gottcode.org>
+	* Add window class.
+	* Add mask class.
+	* Initial project layout.
