@@ -48,12 +48,9 @@ public slots:
 	void zoomOut();
 	void zoomFit();
 	void zoom(int value);
-	void showOverview();
-	void hideOverview();
+	void showOverview(bool enable);
 
 signals:
-	void overviewShown();
-	void overviewHidden();
 	void statusMessage(const QString& message);
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);
@@ -65,8 +62,6 @@ protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
 	virtual void paintGL();
-	virtual bool eventFilter(QObject* watched, QEvent* event);
-	virtual void hideEvent(QHideEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void keyReleaseEvent(QKeyEvent* event);
 	virtual void mousePressEvent(QMouseEvent* event);
@@ -99,7 +94,7 @@ private:
 	int m_image_width;
 	int m_image_height;
 	int m_tile_size;
-	QLabel* m_overview;
+	bool m_overview;
 
 	GLuint m_success;
 	GLuint m_image;
