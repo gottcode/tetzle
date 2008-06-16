@@ -1,3 +1,6 @@
+2008-06-10 Graeme Gott <graeme@gottcode.org>
+	* Prevent opening a game that references a missing image.
+
 2008-06-08 Graeme Gott <graeme@gottcode.org>
 	* Tag version 1.0.
 	* Switch keyboard shortcut for toggling overview.

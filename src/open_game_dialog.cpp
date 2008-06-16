@@ -66,13 +66,17 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 3) {
 			QString image = attributes.value("image").toString();
+			if (!QFileInfo("images/" + image).exists()) {
+				delete item;
+				continue;
+			}
 			int pieces = attributes.value("pieces").toString().toInt();
 			int complete = attributes.value("complete").toString().toInt();
-			item->setText(QString("%L1 pieces\n%2% complete").arg(pieces).arg(complete));
+			item->setText(tr("%L1 pieces\n%2% complete").arg(pieces).arg(complete));
 			item->setData(Qt::UserRole, id);
 			m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
 		} else {
-			xml.raiseError(QString("Unknown data format"));
+			xml.raiseError(tr("Unknown data format"));
 			delete item;
 		}
 	}

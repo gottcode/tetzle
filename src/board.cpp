@@ -145,6 +145,12 @@ void Board::newGame(const QString& image, int difficulty)
 	// Remove any previous textures and tiles
 	cleanup();
 
+	// Prevent starting a game with a missing image
+	if (!QFileInfo("images/" + image).exists()) {
+		QMessageBox::warning(this, tr("Error"), tr("Missing image."));
+		return;
+	}
+
 	// Update player about status
 	emit statusMessage("");
 	QLabel dialog(tr("Creating puzzle; please wait."), this, Qt::Dialog);
@@ -250,6 +256,12 @@ void Board::openGame(int id)
 	unsigned int version = attributes.value("version").toString().toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version <= 3) {
 		m_image_path = attributes.value("image").toString();
+		if (!QFileInfo("images/" + m_image_path).exists()) {
+			dialog.hide();
+			QMessageBox::warning(this, tr("Error"), tr("Missing image."));
+			cleanup();
+			return;
+		}
 		m_difficulty = attributes.value("difficulty").toString().toInt();
 		board_zoom = attributes.value("zoom").toString().toInt();
 		m_pos.setX(attributes.value("x").toString().toInt());
@@ -260,7 +272,7 @@ void Board::openGame(int id)
 			board_zoom = log(old_scale * (m_tile_size * 0.25)) / log(1.25) * 2;
 		}
 	} else {
-		xml.raiseError(QString("Unknown data format"));
+		xml.raiseError(tr("Unknown data format"));
 	}
 
 	// Load tiles
@@ -289,11 +301,12 @@ void Board::openGame(int id)
 			QStringRef r = xml.attributes().value("rotation");
 			rotation = !r.isEmpty() ? r.toString().toInt() : -1;
 		} else if (xml.name() != QLatin1String("overview")) {
-			xml.raiseError(QString("Unknown element '%1'").arg(xml.name().toString()));
+			xml.raiseError(tr("Unknown element '%1'").arg(xml.name().toString()));
 		}
 	}
 	if (xml.hasError()) {
-		QMessageBox::warning(0, tr("Error"), tr("Error parsing XML file.\n\n%1").arg(xml.errorString()));
+		dialog.hide();
+		QMessageBox::warning(this, tr("Error"), tr("Error parsing XML file.\n\n%1").arg(xml.errorString()));
 		cleanup();
 		return;
 	}
@@ -992,6 +1005,7 @@ void Board::cleanup()
 	qDeleteAll(m_tiles);
 	m_tiles.clear();
 	m_completed = 0;
+	m_id = 0;
 
 	m_scrolling = false;
 	m_pos = QPoint(0, 0);

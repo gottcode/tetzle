@@ -105,12 +105,7 @@ void ThumbnailList::previewGenerated(const QString& path)
 	}
 	m_items.erase(m_items.find(path));
 
-	if (m_items.count()) {
-		QString file = m_items.begin().key();
-		Thumbnail* thumbnail = new Thumbnail(file, m_items.begin().value().m_thumbnail);
-		connect(thumbnail, SIGNAL(generated(const QString&)), this, SLOT(previewGenerated(const QString&)));
-		thumbnail->start();
-	}
+	start();
 }
 
 /*****************************************************************************/
