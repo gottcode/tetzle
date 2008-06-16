@@ -94,7 +94,12 @@ Board::Board(QWidget* parent)
 #endif
 	generateSuccessImage();
 
-	m_overview = false;
+	// Create overview dialog
+	m_overview = new QLabel(this, Qt::Tool);
+	m_overview->setWindowTitle(tr("Overview"));
+	m_overview->setAlignment(Qt::AlignCenter);
+	m_overview->installEventFilter(this);
+	m_overview->move(QSettings().value("Overview/Position").toPoint());
 }
 
 /*****************************************************************************/
@@ -461,10 +466,18 @@ void Board::zoom(int value)
 
 /*****************************************************************************/
 
-void Board::showOverview(bool enable)
+void Board::showOverview()
 {
-	m_overview = enable;
-	repaint();
+	m_overview->show();
+	QSettings().setValue("Overview/Visible", true);
+}
+
+/*****************************************************************************/
+
+void Board::hideOverview()
+{
+	m_overview->hide();
+	QSettings().setValue("Overview/Visible", false);
 }
 
 /*****************************************************************************/
@@ -492,8 +505,6 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
-	int board_w = width();
-	int board_h = height();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -501,7 +512,7 @@ void Board::paintGL()
 
 	glScalef(m_scale, m_scale, 1);
 	float inverse_scale = 1.0f / (m_scale * 2);
-	glTranslatef(board_w * inverse_scale - m_pos.x(), board_h * inverse_scale - m_pos.y(), 0);
+	glTranslatef(width() * inverse_scale - m_pos.x(), height() * inverse_scale - m_pos.y(), 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_image);
@@ -554,33 +565,31 @@ void Board::paintGL()
 		glEnd();
 
 		glDisable(GL_BLEND);
-	} else if (m_overview) {
-		int image_texture_size = powerOfTwo(qMax(m_image_width, m_image_height));
-		int overview_w, overview_h;
-		float image_tex_w = static_cast<float>(m_image_width) / static_cast<float>(image_texture_size);
-		float image_text_h = static_cast<float>(m_image_height) / static_cast<float>(image_texture_size);
-		float image_aspect = static_cast<float>(m_image_width) / static_cast<float>(m_image_height);
-		float board_aspect = static_cast<float>(board_w) / static_cast<float>(board_h);
+	}
+}
 
-		if (image_aspect > board_aspect){
-			overview_w = 0.978 * board_w;
-			overview_h = 0.978 * board_w / image_aspect;
-		} else {
-			overview_w = 0.978 * board_h * image_aspect;
-			overview_h = 0.978 * board_h;
+/*****************************************************************************/
+
+bool Board::eventFilter(QObject* watched, QEvent* event)
+{
+	if (watched == m_overview) {
+		if (event->type() == QEvent::Hide) {
+			emit overviewHidden();
+		} else if (event->type() == QEvent::Show) {
+			emit overviewShown();
 		}
+		return false;
+	} else {
+		return QGLWidget::eventFilter(watched, event);
+	}
+}
 
-		glBegin(GL_QUADS);
-		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
-		glVertex3f((board_w - overview_w)/2, (board_h - overview_w)/2, 2.0f);
-		glMultiTexCoord2f(GL_TEXTURE0, image_tex_w, 0);
-		glVertex3f((board_w + overview_w)/2, (board_h - overview_w)/2, 2.0f);
-		glMultiTexCoord2f(GL_TEXTURE0, image_tex_w, image_text_h);
-		glVertex3f((board_w + overview_w)/2, (board_h + overview_w)/2, 2.0f);
-		glMultiTexCoord2f(GL_TEXTURE0, 0, image_text_h);
-		glVertex3f((board_w - overview_w)/2, (board_h + overview_w)/2, 2.0f);
-		glEnd();
-    }
+/*****************************************************************************/
+
+void Board::hideEvent(QHideEvent* event)
+{
+	QSettings().setValue("Overview/Position", m_overview->pos());
+	QGLWidget::hideEvent(event);
 }
 
 /*****************************************************************************/
@@ -588,13 +597,8 @@ void Board::paintGL()
 void Board::keyPressEvent(QKeyEvent* event)
 {
 	if (!event->isAutoRepeat()) {
-		if ((event->key() == Qt::Key_Space) && (event->modifiers() == Qt::NoModifier)) {
-			event->accept();
-			showOverview(true);
-		} else {
-			m_action_key = event->key();
-			performAction();
-		}
+		m_action_key = event->key();
+		performAction();
 	}
 	QGLWidget::keyPressEvent(event);
 }
@@ -604,13 +608,8 @@ void Board::keyPressEvent(QKeyEvent* event)
 void Board::keyReleaseEvent(QKeyEvent* event)
 {
 	if (!event->isAutoRepeat()) {
-		if ((event->key() == Qt::Key_Space) && (event->modifiers() == Qt::NoModifier)) {
-			event->accept();
-			showOverview(false);
-		} else {
-			m_action_key = 0;
-			performAction();
-		}
+		m_action_key = 0;
+		performAction();
 	}
 	QGLWidget::keyReleaseEvent(event);
 }
@@ -800,6 +799,14 @@ void Board::loadImage()
 	// Load puzzle image
 	QImage source("images/" + m_image_path);
 
+	// Create overview
+	QPixmap overview = QPixmap::fromImage(source, Qt::AutoColor | Qt::AvoidDither);
+	if (overview.width() > 400 || overview.height() > 400)
+		overview = overview.scaled(400, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	m_overview->setPixmap(overview);
+	m_overview->setMinimumSize(overview.size());
+	m_overview->resize(overview.size());
+
 	// Find image size
 	GLint max_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
@@ -852,6 +859,9 @@ void Board::loadImage()
 	m_scale_level_min = 2;
 	m_scale_level_max = ceil(2 * (log(m_tile_size * 0.25) / log(1.25)));
 	emit zoomRangeChanged(m_scale_level_min, m_scale_level_max);
+
+	// Show overview
+	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
 }
 
 /*****************************************************************************/
@@ -984,6 +994,7 @@ void Board::finishGame()
 		}
 	}
 
+	m_overview->hide();
 	m_active_tile = 0;
 	unsetCursor();
 	zoomFit();
@@ -1001,6 +1012,8 @@ void Board::cleanup()
 	deleteTexture(m_image);
 	glDeleteTextures(1, &m_bumpmap);
 
+	m_overview->clear();
+	m_overview->hide();
 	m_active_tile = 0;
 	qDeleteAll(m_tiles);
 	m_tiles.clear();

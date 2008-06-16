@@ -58,6 +58,8 @@ private slots:
 	void newGame();
 	void openGame();
 	void gameFinished();
+	void overviewShown();
+	void overviewHidden();
 	void setFullScreen(bool enable);
 	void showControls();
 	void showAbout();
@@ -65,6 +67,8 @@ private slots:
 private:
 	QAction* m_open_action;
 	QAction* m_zoom_fit_action;
+	QAction* m_show_overview_action;
+	QAction* m_hide_overview_action;
 	ZoomSlider* m_slider;
 	Board* m_board;
 };

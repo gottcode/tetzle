@@ -94,6 +94,8 @@ Window::Window()
 	// Add contents
 	m_board = new Board(this);
 	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
+	connect(m_board, SIGNAL(overviewShown()), this, SLOT(overviewShown()));
+	connect(m_board, SIGNAL(overviewHidden()), this, SLOT(overviewHidden()));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int)), m_slider, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(zoomRangeChanged(int, int)), m_slider, SLOT(setRange(int, int)));
@@ -118,6 +120,11 @@ Window::Window()
 	connect(m_board, SIGNAL(zoomOutAvailable(bool)), zoom_out_action, SLOT(setEnabled(bool)));
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, SLOT(zoomFit()));
 	m_zoom_fit_action->setEnabled(false);
+	menu->addSeparator();
+	m_show_overview_action = menu->addAction(tr("&Show Overview"), m_board, SLOT(showOverview()), tr("Tab"));
+	m_show_overview_action->setEnabled(false);
+	m_hide_overview_action = menu->addAction(tr("&Hide Overview"), m_board, SLOT(hideOverview()), tr("Tab"));
+	m_hide_overview_action->setVisible(false);
 
 	menu->addSeparator();
 
@@ -143,7 +150,6 @@ Window::Window()
 
 	// Start or load a game
 	show();
-	m_board->setFocus();
 	if (QDir("saves/", "*.xml").count()) {
 		m_open_action->setEnabled(true);
 		openGame();
@@ -188,6 +194,7 @@ void Window::newGame()
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+		m_show_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	}
@@ -205,6 +212,7 @@ void Window::openGame()
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
+		m_show_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	} else {
@@ -216,7 +224,24 @@ void Window::openGame()
 
 void Window::gameFinished()
 {
+	m_show_overview_action->setEnabled(false);
 	m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+}
+
+/*****************************************************************************/
+
+void Window::overviewShown()
+{
+	m_hide_overview_action->setVisible(true);
+	m_show_overview_action->setVisible(false);
+}
+
+/*****************************************************************************/
+
+void Window::overviewHidden()
+{
+	m_show_overview_action->setVisible(true);
+	m_hide_overview_action->setVisible(false);
 }
 
 /*****************************************************************************/
@@ -251,8 +276,8 @@ void Window::showControls()
 	layout->addWidget(new QLabel(tr("Middle Click or Shift + Left Click"), &dialog), 3, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Zoom Puzzle:</b>"), &dialog), 4, 0, Qt::AlignRight | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("Scrollwheel or +/-"), &dialog), 4, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Show Overview:</b>"), &dialog), 5, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Space (Hold to look)"), &dialog), 5, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Toggle Overview:</b>"), &dialog), 5, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Tab"), &dialog), 5, 2, Qt::AlignLeft | Qt::AlignVCenter);
 
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
 	connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
