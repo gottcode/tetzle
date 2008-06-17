@@ -95,7 +95,7 @@ Board::Board(QWidget* parent)
 	generateSuccessImage();
 
 	// Create overview dialog
-	m_overview = new QLabel(this, Qt::Tool);
+	m_overview = new QLabel(0, Qt::Tool);
 	m_overview->setWindowTitle(tr("Overview"));
 	m_overview->setAlignment(Qt::AlignCenter);
 	m_overview->installEventFilter(this);
@@ -108,6 +108,7 @@ Board::~Board()
 {
 	cleanup();
 	deleteTexture(m_success);
+	delete m_overview;
 }
 
 /*****************************************************************************/
@@ -577,6 +578,9 @@ bool Board::eventFilter(QObject* watched, QEvent* event)
 			emit overviewHidden();
 		} else if (event->type() == QEvent::Show) {
 			emit overviewShown();
+		} else if (event->type() == QEvent::KeyPress) {
+			if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Tab)
+				m_overview->hide();
 		}
 		return false;
 	} else {
