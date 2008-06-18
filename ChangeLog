@@ -1,6 +1,12 @@
+2008-06-18 Graeme Gott <graeme@gottcode.org>
+	* Tag version 1.0.1.
+
 2008-06-17 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Binary not installed with make install.
 	* FIXED: Focus was lost when overview was shown in GNOME.
+
+2008-06-14 Ulrik Mikaelsson <rawler@users.sf.net>
+	* Add fullscreen mode.
 
 2008-06-10 Graeme Gott <graeme@gottcode.org>
 	* Prevent opening a game that references a missing image.
