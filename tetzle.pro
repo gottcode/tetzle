@@ -57,8 +57,7 @@ unix: !macx {
 		PREFIX = /usr/local
 	}
 
-	binary.path = $$PREFIX/bin/
-	binary.files = tetzle
+	target.path = $$PREFIX/bin/
 
 	icon.path = $$PREFIX/share/icons/hicolor/48x48/apps
 	icon.files = icons/tetzle.png
@@ -66,5 +65,5 @@ unix: !macx {
 	desktop.path = $$PREFIX/share/applications/
 	desktop.files = icons/tetzle.desktop
 
-	INSTALLS += binary icon desktop
+	INSTALLS += target icon desktop
 }

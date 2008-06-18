@@ -1,4 +1,5 @@
 2008-06-17 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Binary not installed with make install.
 	* FIXED: Focus was lost when overview was shown in GNOME.
 
 2008-06-10 Graeme Gott <graeme@gottcode.org>
