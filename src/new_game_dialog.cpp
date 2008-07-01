@@ -296,6 +296,9 @@ void NewGameDialog::changeLabels()
 
 void NewGameDialog::imageSelected(QListWidgetItem* item)
 {
+	if (!item)
+		return;
+
 	QString image = item->data(Qt::UserRole).toString();
 	bool enabled = item != 0;
 	m_label_button->setEnabled(enabled);

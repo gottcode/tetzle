@@ -1,3 +1,6 @@
+2008-07-01 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Segfault when all images are removed.
+
 2008-06-18 Graeme Gott <graeme@gottcode.org>
 	* Tag version 1.0.1.
 
