@@ -131,7 +131,11 @@ Window::Window()
 	QAction* fullscreen_action = menu->addAction(tr("Fullscreen"));
 	connect(fullscreen_action, SIGNAL(toggled(bool)), this, SLOT(setFullScreen(bool)));
 	fullscreen_action->setCheckable(true);
-	fullscreen_action->setShortcut(Qt::Key_F11);
+#if !defined(Q_OS_MAC)
+	fullscreen_action->setShortcut(tr("F11"));
+#else
+	fullscreen_action->setShortcut(tr("Ctrl+F"));
+#endif
 
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&Controls"), this, SLOT(showControls()));

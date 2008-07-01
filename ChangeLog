@@ -1,4 +1,5 @@
 2008-07-01 Graeme Gott <graeme@gottcode.org>
+	* Change fullscreen shortcut on the Mac.
 	* FIXED: Segfault when all images are removed.
 
 2008-06-18 Graeme Gott <graeme@gottcode.org>
