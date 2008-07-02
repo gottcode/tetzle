@@ -1,3 +1,6 @@
+2008-07-02 Graeme Gott <graeme@gottcode.org>
+	* Tag version 1.0.2.
+
 2008-07-01 Graeme Gott <graeme@gottcode.org>
 	* Change fullscreen shortcut on the Mac.
 	* FIXED: Segfault when all images are removed.
