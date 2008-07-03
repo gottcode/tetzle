@@ -1016,8 +1016,6 @@ void Board::cleanup()
 	deleteTexture(m_image);
 	glDeleteTextures(1, &m_bumpmap);
 
-	m_overview->clear();
-	m_overview->hide();
 	m_active_tile = 0;
 	qDeleteAll(m_tiles);
 	m_tiles.clear();
