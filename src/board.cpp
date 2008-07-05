@@ -24,6 +24,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QLabel>
@@ -71,7 +72,6 @@ Board::Board(QWidget* parent)
 	m_bumpmap(0),
 	m_image_ts(0),
 	m_bumpmap_ts(0),
-	m_active_tile(0),
 	m_total_pieces(0),
 	m_completed(0),
 	m_pos(0, 0),
@@ -454,7 +454,7 @@ void Board::zoom(int value)
 
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
-	if (m_active_tile)
+	foreach (Tile * m_active_tile, m_active_tiles)
 		m_active_tile->parent()->moveBy(new_pos - old_pos);
 	updateCursor();
 
@@ -646,17 +646,21 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 		// Move by delta
 		m_pos += delta;
-		if (m_active_tile)
+		foreach (Tile * m_active_tile, m_active_tiles) {
+			qDebug() << "Panning an active tile";
 			m_active_tile->parent()->moveBy(delta);
+		}
 
 		// Draw tiles
 		updateGL();
 	}
 
-	if (m_active_tile) {
-		m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
-		m_active_tile->parent()->attachNeighbors(7.0f / m_scale);
-		m_active_pos = event->pos();
+	if (m_active_tiles.size() > 0) {
+		foreach (Tile * m_active_tile, m_active_tiles) {
+			m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
+			m_active_tile->parent()->attachNeighbors(7.0f / m_scale);
+			m_active_pos = event->pos();
+		}
 		updateGL();
 		updateCompleted();
 
@@ -687,7 +691,7 @@ void Board::performAction()
 {
 	if (m_action_button == Qt::LeftButton) {
 		if (m_action_key == 0) {
-			if (!m_active_tile) {
+			if (m_active_tiles.size() == 0) { // TODO: change to grab if pointing at tile, release if pointing at space
 				grabTile();
 			} else {
 				releaseTile();
@@ -737,7 +741,7 @@ void Board::grabTile()
 	Tile* tile = tileUnderCursor();
 	if (tile == 0)
 		return;
-	m_active_tile = tile;
+	m_active_tiles.append(tile);
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
 	tile = tile->parent();
@@ -756,9 +760,11 @@ void Board::releaseTile()
 		return;
 
 	int region = 7.0f / m_scale;
-	m_active_tile->parent()->attachNeighbors(region);
-	m_active_tile->parent()->pushNeighbors(m_active_tile->parent());
-	m_active_tile = 0;
+	foreach (Tile * m_active_tile, m_active_tiles) {
+		m_active_tile->parent()->attachNeighbors(region);
+		m_active_tile->parent()->pushNeighbors(m_active_tile->parent());
+	}
+	m_active_tiles.clear();
 	updateCursor();
 	updateCompleted();
 
@@ -783,7 +789,7 @@ void Board::rotateTile()
 	int region = 7.0f / m_scale;
 	tile->rotateAround(child);
 	tile->attachNeighbors(region);
-	if (!m_active_tile)
+	if (m_active_tiles.size() == 0)
 		tile->pushNeighbors(tile);
 	updateCompleted();
 
@@ -898,7 +904,7 @@ void Board::generateSuccessImage()
 
 void Board::updateCursor()
 {
-	if (!m_active_tile) {
+	if (m_active_tiles.size() == 0) {
 		QPoint pos = mapCursorPosition();
 		if (tileAt(pos) && !m_finished) {
 			setCursor(Qt::OpenHandCursor);
@@ -977,8 +983,8 @@ Tile* Board::tileAt(const QPoint& pos) const
 
 Tile* Board::tileUnderCursor()
 {
-	if (m_active_tile) {
-		return m_active_tile;
+	if (m_active_tiles.size() > 0) {
+		return m_active_tiles.first();
 	} else {
 		return tileAt(mapCursorPosition());
 	}
@@ -999,7 +1005,7 @@ void Board::finishGame()
 	}
 
 	m_overview->hide();
-	m_active_tile = 0;
+	m_active_tiles.clear();
 	unsetCursor();
 	zoomFit();
 
@@ -1016,7 +1022,7 @@ void Board::cleanup()
 	deleteTexture(m_image);
 	glDeleteTextures(1, &m_bumpmap);
 
-	m_active_tile = 0;
+	m_active_tiles.clear();
 	qDeleteAll(m_tiles);
 	m_tiles.clear();
 	m_completed = 0;

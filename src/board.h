@@ -110,7 +110,7 @@ private:
 	QSize m_success_size;
 
 	QList<Tile*> m_tiles;
-	Tile* m_active_tile;
+	QList<Tile*> m_active_tiles;
 	QPoint m_active_pos;
 	int m_total_pieces;
 	int m_completed;
