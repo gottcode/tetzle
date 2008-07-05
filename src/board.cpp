@@ -24,7 +24,6 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QLabel>
@@ -646,21 +645,19 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 		// Move by delta
 		m_pos += delta;
-		foreach (Tile * m_active_tile, m_active_tiles) {
-			qDebug() << "Panning an active tile";
+		foreach (Tile * m_active_tile, m_active_tiles)
 			m_active_tile->parent()->moveBy(delta);
-		}
 
 		// Draw tiles
 		updateGL();
 	}
 
 	if (m_active_tiles.size() > 0) {
-		foreach (Tile * m_active_tile, m_active_tiles) {
+		foreach (Tile * m_active_tile, m_active_tiles)
 			m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
-			m_active_tile->parent()->attachNeighbors(7.0f / m_scale);
-			m_active_pos = event->pos();
-		}
+		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
+			m_active_tiles.first()->parent()->attachNeighbors(7.0f / m_scale);
+		m_active_pos = event->pos();
 		updateGL();
 		updateCompleted();
 
@@ -691,10 +688,10 @@ void Board::performAction()
 {
 	if (m_action_button == Qt::LeftButton) {
 		if (m_action_key == 0) {
-			if (m_active_tiles.size() == 0) { // TODO: change to grab if pointing at tile, release if pointing at space
+			if (tileUnderCursor(false)) {
 				grabTile();
 			} else {
-				releaseTile();
+				releaseTiles();
 			}
 #if !defined(Q_OS_MAC)
 		} else if (m_action_key == Qt::Key_Control) {
@@ -738,7 +735,7 @@ void Board::grabTile()
 	if (m_scrolling || m_finished)
 		return;
 
-	Tile* tile = tileUnderCursor();
+	Tile* tile = tileUnderCursor(false);
 	if (tile == 0)
 		return;
 	m_active_tiles.append(tile);
@@ -754,7 +751,7 @@ void Board::grabTile()
 
 /*****************************************************************************/
 
-void Board::releaseTile()
+void Board::releaseTiles()
 {
 	if (m_scrolling || m_finished)
 		return;
@@ -962,15 +959,19 @@ void Board::updateCompleted()
 
 /*****************************************************************************/
 
-Tile* Board::tileAt(const QPoint& pos) const
+Tile* Board::tileAt(const QPoint& pos, bool includeActive) const
 {
 	Tile* tile;
 	for (int i = m_tiles.count() - 1; i > -1; --i) {
 		tile = m_tiles[i];
+		if (!includeActive && m_active_tiles.contains(tile))
+			continue;
 		if (tile->boundingRect().contains(pos)) {
 			if (tile->rect().contains(pos))
 				return tile;
 			foreach (Tile* child, tile->children()) {
+				if (!includeActive && m_active_tiles.contains(child))
+					continue;
 				if (child->rect().contains(pos))
 					return child;
 			}
@@ -981,13 +982,12 @@ Tile* Board::tileAt(const QPoint& pos) const
 
 /*****************************************************************************/
 
-Tile* Board::tileUnderCursor()
+Tile* Board::tileUnderCursor(bool includeActive)
 {
-	if (m_active_tiles.size() > 0) {
+	if (includeActive && (m_active_tiles.size() > 0))
 		return m_active_tiles.first();
-	} else {
-		return tileAt(mapCursorPosition());
-	}
+	else
+		return tileAt(mapCursorPosition(), includeActive);
 }
 
 /*****************************************************************************/

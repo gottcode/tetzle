@@ -79,7 +79,7 @@ private:
 	void startScrolling();
 	void stopScrolling();
 	void grabTile();
-	void releaseTile();
+	void releaseTiles();
 	void rotateTile();
 
 	void loadImage();
@@ -88,8 +88,8 @@ private:
 	QPoint mapCursorPosition() const;
 	void draw(Tile* tile, const QPoint& pos, float depth) const;
 	void updateCompleted();
-	Tile* tileAt(const QPoint& pos) const;
-	Tile* tileUnderCursor();
+	Tile* tileAt(const QPoint& pos, bool includeActive = true) const;
+	Tile* tileUnderCursor(bool includeActive = true);
 	void finishGame();
 	void cleanup();
 
