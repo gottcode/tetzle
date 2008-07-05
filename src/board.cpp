@@ -656,7 +656,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		foreach (Tile * m_active_tile, m_active_tiles)
 			m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
 		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
-			m_active_tiles.first()->parent()->attachNeighbors(7.0f / m_scale);
+			(*m_active_tiles.begin())->parent()->attachNeighbors(7.0f / m_scale);
 		m_active_pos = event->pos();
 		updateGL();
 		updateCompleted();
@@ -738,7 +738,7 @@ void Board::grabTile()
 	Tile* tile = tileUnderCursor(false);
 	if (tile == 0)
 		return;
-	m_active_tiles.append(tile);
+	m_active_tiles.insert(tile);
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
 	tile = tile->parent();
@@ -985,7 +985,7 @@ Tile* Board::tileAt(const QPoint& pos, bool includeActive) const
 Tile* Board::tileUnderCursor(bool includeActive)
 {
 	if (includeActive && (m_active_tiles.size() > 0))
-		return m_active_tiles.first();
+		return *m_active_tiles.begin();
 	else
 		return tileAt(mapCursorPosition(), includeActive);
 }
