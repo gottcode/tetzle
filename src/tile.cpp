@@ -211,9 +211,12 @@ void Tile::pushNeighbors(Tile* immobile)
 	QPoint vector;
 	float angle;
 	QRect region;
-	foreach (Tile* neighbor, m_board->collidingItems(this)) {
-		neighbor = neighbor->parent();
+	QSet<Tile*> pieces;
 
+	foreach (Tile* neighbor, m_board->collidingItems(this))
+		pieces.insert(neighbor->parent());
+
+	foreach (Tile* neighbor, pieces) {
 		region = bounds.intersected(neighbor->boundingRect());
 		if (neighbor != immobile) {
 			vector = bounds.center() - neighbor->boundingRect().center();
