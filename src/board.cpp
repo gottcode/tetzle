@@ -664,9 +664,10 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		// Handle finishing game
 		if (m_tiles.count() == 1)
 			finishGame();
-	} else if (!m_scrolling) {
-		updateCursor();
 	}
+
+	if (!m_scrolling)
+		updateCursor();
 }
 
 /*****************************************************************************/
@@ -911,15 +912,14 @@ void Board::generateSuccessImage()
 
 void Board::updateCursor()
 {
-	if (m_active_tiles.size() == 0) {
-		QPoint pos = mapCursorPosition();
-		if (tileAt(pos) && !m_finished) {
-			setCursor(Qt::OpenHandCursor);
-		} else {
-			unsetCursor();
-		}
+	QPoint pos = mapCursorPosition();
+	if (tileAt(pos, false) && !m_finished) {
+		setCursor(Qt::OpenHandCursor);
 	} else {
-		setCursor(Qt::ClosedHandCursor);
+		if (m_active_tiles.isEmpty())
+			unsetCursor();
+		else
+			setCursor(Qt::ClosedHandCursor);
 	}
 }
 
