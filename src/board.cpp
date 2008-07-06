@@ -779,16 +779,25 @@ void Board::rotateTile()
 	if (m_scrolling || m_finished)
 		return;
 
-	Tile* child = tileUnderCursor();
-	if (child == 0)
-		return;
-	Tile* tile = child->parent();
-
 	int region = 7.0f / m_scale;
-	tile->rotateAround(child);
-	tile->attachNeighbors(region);
-	if (m_active_tiles.size() == 0)
-		tile->pushNeighbors(tile);
+
+	if (m_active_tiles.isEmpty()) {
+		Tile* child = tileUnderCursor();
+		if (child == 0)
+			return;
+		Tile* tile = child->parent();
+
+		tile->rotateAround(child);
+		tile->attachNeighbors(region);
+		if (m_active_tiles.size() == 0)
+			tile->pushNeighbors(tile);
+	} else {
+		for (QHash<Tile*, Tile*>::const_iterator i = m_active_tiles.constBegin();
+			 i != m_active_tiles.constEnd();
+			 ++i) {
+			i.key()->rotateAround(i.value());
+		}
+	}
 	updateCompleted();
 
 	if (m_tiles.count() == 1)
