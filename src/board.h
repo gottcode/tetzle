@@ -21,7 +21,7 @@
 #define BOARD_H
 
 #include <QGLWidget>
-#include <QSet>
+#include <QHash>
 class QLabel;
 class Tile;
 
@@ -111,7 +111,7 @@ private:
 	QSize m_success_size;
 
 	QList<Tile*> m_tiles;
-	QSet<Tile*> m_active_tiles;
+	QHash<Tile*,Tile*> m_active_tiles;
 	QPoint m_active_pos;
 	int m_total_pieces;
 	int m_completed;

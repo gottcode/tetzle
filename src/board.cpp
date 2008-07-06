@@ -738,7 +738,8 @@ void Board::grabTile()
 	Tile* tile = tileUnderCursor(false);
 	if (tile == 0)
 		return;
-	m_active_tiles.insert(tile);
+	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
+	m_active_tiles[tile->parent()] = tile;
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
 	tile = tile->parent();
@@ -964,7 +965,7 @@ Tile* Board::tileAt(const QPoint& pos, bool includeActive) const
 	Tile* tile;
 	for (int i = m_tiles.count() - 1; i > -1; --i) {
 		tile = m_tiles[i];
-		if (!includeActive && m_active_tiles.contains(tile))
+		if (!includeActive && m_active_tiles.contains(tile->parent()))
 			continue;
 		if (tile->boundingRect().contains(pos)) {
 			if (tile->rect().contains(pos))
