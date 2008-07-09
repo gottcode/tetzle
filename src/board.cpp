@@ -746,7 +746,7 @@ void Board::grabTile()
 	tile = tile->parent();
 	m_tiles.removeAll(tile);
 	m_tiles.append(tile);
-	setCursor(Qt::ClosedHandCursor);
+	updateCursor();
 
 	updateGL();
 }
@@ -912,14 +912,10 @@ void Board::generateSuccessImage()
 
 void Board::updateCursor()
 {
-	QPoint pos = mapCursorPosition();
-	if (tileAt(pos, false) && !m_finished) {
-		setCursor(Qt::OpenHandCursor);
+	if (tileUnderCursor(false) && !m_finished) {
+		setCursor(Qt::PointingHandCursor);
 	} else {
-		if (m_active_tiles.isEmpty())
-			unsetCursor();
-		else
-			setCursor(Qt::ClosedHandCursor);
+		unsetCursor();
 	}
 }
 
