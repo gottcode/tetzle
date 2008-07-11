@@ -109,8 +109,10 @@ void Piece::attach(Piece* piece)
 
 /*****************************************************************************/
 
-void Piece::attachNeighbors(int region)
+void Piece::attachNeighbors()
 {
+	int margin = m_board->margin();
+
 	// Create offset vectors
 	int cos_size = 0;
 	int sin_size = 0;
@@ -148,14 +150,14 @@ void Piece::attachNeighbors(int region)
 				if (tile->column() == child->column() - 1) {
 					// Left
 					delta -= left;
-					if (fabs(delta.x()) <= region && fabs(delta.y()) <= region) {
+					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
 						closest_tiles.insert(piece);
 						piece->moveBy(-delta);
 					}
 				} else if (tile->column() == child->column() + 1) {
 					// Right
 					delta -= right;
-					if (fabs(delta.x()) <= region && fabs(delta.y()) <= region) {
+					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
 						closest_tiles.insert(piece);
 						piece->moveBy(-delta);
 					}
@@ -164,14 +166,14 @@ void Piece::attachNeighbors(int region)
 				if (tile->row() == child->row() - 1) {
 					// Above
 					delta -= above;
-					if (fabs(delta.x()) <= region && fabs(delta.y()) <= region) {
+					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
 						closest_tiles.insert(piece);
 						piece->moveBy(-delta);
 					}
 				} else if (tile->row() == child->row() + 1) {
 					// Below
 					delta -= below;
-					if (fabs(delta.x()) <= region && fabs(delta.y()) <= region) {
+					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
 						closest_tiles.insert(piece);
 						piece->moveBy(-delta);
 					}

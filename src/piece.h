@@ -48,7 +48,7 @@ public:
 	void rotateAround(Tile* tile);
 	void attach(Tile* tile);
 	void attach(Piece* piece);
-	void attachNeighbors(int region);
+	void attachNeighbors();
 	void pushNeighbors(Piece* immobile);
 
 	void save(QXmlStreamWriter& xml) const;

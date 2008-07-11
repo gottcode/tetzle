@@ -125,8 +125,8 @@ void Board::reparent(Piece* piece)
 QList<Piece*> Board::collidingItems(Piece* piece)
 {
 	QList<Piece*> list;
-	int region = 7.0f / m_scale;
-	QRect rect = piece->boundingRect().adjusted(-region, -region, region, region);
+	int margins = margin();
+	QRect rect = piece->boundingRect().adjusted(-margins, -margins, margins, margins);
 	Piece* parent;
 	for (int i = m_tiles.count() - 1; i >= 0; --i) {
 		parent = m_tiles.at(i);
@@ -653,7 +653,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		foreach (Tile * m_active_tile, m_active_tiles)
 			m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
 		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
-			(*m_active_tiles.begin())->parent()->attachNeighbors(7.0f / m_scale);
+			(*m_active_tiles.begin())->parent()->attachNeighbors();
 		m_active_pos = event->pos();
 		updateGL();
 		updateCompleted();
@@ -755,12 +755,11 @@ void Board::releaseTiles()
 	if (m_scrolling || m_finished)
 		return;
 
-	int region = 7.0f / m_scale;
 	Piece* piece;
 	QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin();
 	while (i != m_active_tiles.constEnd()) {
 		piece = i.key();
-		piece->attachNeighbors(region);
+		piece->attachNeighbors();
 		piece->pushNeighbors(piece);
 		++i;
 	}
@@ -782,8 +781,6 @@ void Board::rotateTile()
 	if (m_scrolling || m_finished)
 		return;
 
-	int region = 7.0f / m_scale;
-
 	if (m_active_tiles.isEmpty()) {
 		Tile* child = tileUnderCursor();
 		if (child == 0)
@@ -791,7 +788,7 @@ void Board::rotateTile()
 		Piece* piece = child->parent();
 
 		piece->rotateAround(child);
-		piece->attachNeighbors(region);
+		piece->attachNeighbors();
 		if (m_active_tiles.isEmpty())
 			piece->pushNeighbors(piece);
 	} else {
