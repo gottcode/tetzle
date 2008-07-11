@@ -17,51 +17,49 @@
  *
  ***********************************************************************/
 
-#ifndef TILE_H
-#define TILE_H
+#ifndef PIECE_H
+#define PIECE_H
 
+#include <QList>
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
 
 class Board;
-class Piece;
+class Tile;
 
-class Tile
+class Piece
 {
 public:
-	Tile(int column, int row, const QPoint& pos, Board* board);
+	Piece(int rotation, const QPoint& pos, Board* board);
+	~Piece();
 
-	int column() const
-		{ return m_column; }
-	int row() const
-		{ return m_row; }
-	Piece* parent() const
-		{ return m_parent; }
-	QPoint pos() const
-		{ return m_pos; }
+	int rotation() const
+		{ return m_rotation; }
+	QList<Tile*> children() const
+		{ return m_children; }
 
-	void setPos(const QPoint& pos)
-		{ m_pos = pos; }
-	void setParent(Piece* parent)
-		{ m_parent = parent; }
-
+	void moveBy(const QPoint& delta)
+		{ m_pos += delta; }
 	QPoint scenePos() const;
 	QRect boundingRect() const
-		{ return m_rect.translated(scenePos()); }
-	QRect rect() const
-		{ return m_rect; }
+		{ return m_rect.translated(m_pos); }
 
-	void save(QXmlStreamWriter& xml, bool scene_pos = false) const;
+	void rotateAround(Tile* tile);
+	void attach(Tile* tile);
+	void attach(Piece* piece);
+	void attachNeighbors(int region);
+	void pushNeighbors(Piece* immobile);
+
+	void save(QXmlStreamWriter& xml) const;
 
 private:
-	int m_column;
-	int m_row;
+	int m_rotation;
 	QPoint m_pos;
 	QRect m_rect;
 
-	Piece* m_parent;
+	QList<Tile*> m_children;
 	Board* m_board;
 };
 
-#endif // TILE_H
+#endif // PIECE_H

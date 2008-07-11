@@ -24,6 +24,7 @@ HEADERS = src/add_image_dialog.h \
 	src/label_manager.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
+	src/piece.h \
 	src/solver.h \
 	src/tile.h \
 	src/thumbnail.h \
@@ -38,6 +39,7 @@ SOURCES = src/add_image_dialog.cpp \
 	src/main.cpp \
 	src/new_game_dialog.cpp \
 	src/open_game_dialog.cpp \
+	src/piece.cpp \
 	src/solver.cpp \
 	src/tile.cpp \
 	src/thumbnail.cpp \

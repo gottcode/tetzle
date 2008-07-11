@@ -19,6 +19,7 @@
 
 #include "board.h"
 
+#include "piece.h"
 #include "solver.h"
 #include "tile.h"
 
@@ -112,33 +113,25 @@ Board::~Board()
 
 /*****************************************************************************/
 
-void Board::reparent(Tile* tile)
+void Board::reparent(Piece* piece)
 {
-	m_tiles.removeAll(tile);
+	m_tiles.removeAll(piece);
+	delete piece;
+	piece = 0;
 }
 
 /*****************************************************************************/
 
-QList<Tile*> Board::collidingItems(Tile* tile)
+QList<Piece*> Board::collidingItems(Piece* piece)
 {
-	QList<Tile*> list;
-
+	QList<Piece*> list;
 	int region = 7.0f / m_scale;
-	tile = tile->parent();
-	QRect rect = tile->boundingRect().adjusted(-region, -region, region, region);
-
-	Tile* parent;
-	for (int i = m_tiles.count() - 1; i > -1; --i) {
-		parent = m_tiles[i];
-		Q_ASSERT(parent->parent() == parent);
-		if (parent != tile && parent->boundingRect().intersects(rect)) {
-			if (parent->rect().intersects(rect))
-				list.append(parent);
-			foreach (Tile* child, parent->children()) {
-				if (child->rect().intersects(rect) && child != tile)
-					list.append(child);
-			}
-		}
+	QRect rect = piece->boundingRect().adjusted(-region, -region, region, region);
+	Piece* parent;
+	for (int i = m_tiles.count() - 1; i >= 0; --i) {
+		parent = m_tiles.at(i);
+		if (parent != piece && parent->boundingRect().intersects(rect))
+			list.append(parent);
 	}
 	return list;
 }
@@ -182,12 +175,9 @@ void Board::newGame(const QString& image, int difficulty)
 	int columns = m_image_width / m_tile_size / 8 * 8;
 	int rows = m_image_height / m_tile_size / 8 * 8;
 	QVector< QVector<Tile*> > tiles = QVector< QVector<Tile*> >(columns, QVector<Tile*>(rows));
-	Tile* tile = 0;
 	for (int c = 0; c < columns; ++c) {
 		for (int r = 0; r < rows; ++r) {
-			tile = new Tile(c, r, 0, QPoint(m_tile_size * c, m_tile_size * r), 0, this);
-			tiles[c][r] = tile;
-			m_tiles.append(tile);
+			tiles[c][r] = new Tile(c, r, QPoint(m_tile_size * c, m_tile_size * r), this);
 		}
 	}
 
@@ -196,35 +186,45 @@ void Board::newGame(const QString& image, int difficulty)
 	int groups_tall = rows / 8;
 	srand(time(0));
 	Solver solver(8, 8, groups_wide * groups_tall);
-	Tile* parent_tile = 0;
+	Piece* piece = 0;
+	Tile* tile = 0;
 	int rotations = 0;
 	int full_width = m_image_width * 2;
 	int full_height = m_image_height * 2;
 	for (int c = 0; c < groups_wide; ++c) {
 		for (int r = 0; r < groups_tall; ++r) {
-			foreach (const QList<QPoint>& piece, solver.solutions[r * groups_wide + c]) {
+			foreach (const QList<QPoint>& group, solver.solutions[r * groups_wide + c]) {
 				Q_ASSERT(piece.size() == 4);
-				parent_tile = tiles.at(piece.at(0).x() + (c * 8)).at(piece.at(0).y() + (r * 8));
+				tile = tiles.at(group.at(0).x() + (c * 8)).at(group.at(0).y() + (r * 8));
+
+				// Create piece
+				piece = new Piece(0, tile->pos(), this);
+				m_tiles.append(piece);
+
+				// Add tiles to piece
+				tile->setPos(QPoint(0, 0));
+				piece->attach(tile);
 				for (int i = 1; i < 4; ++i) {
-					tile = tiles.at(piece.at(i).x() + (c * 8)).at(piece.at(i).y() + (r * 8));
-					parent_tile->attach(tile);
+					tile = tiles.at(group.at(i).x() + (c * 8)).at(group.at(i).y() + (r * 8));
+					tile->setPos(tile->pos() - piece->scenePos());
+					piece->attach(tile);
 				}
 
 				// Rotate piece
 				rotations = rand() % 4;
 				for (int i = 0; i < rotations; ++i)
-					parent_tile->rotateAround(parent_tile);
+					piece->rotateAround(piece->children().first());
 
 				// Position piece
-				parent_tile->moveBy(QPoint(rand() % full_width, rand() % full_height) - parent_tile->scenePos());
+				piece->moveBy(QPoint(rand() % full_width, rand() % full_height) - piece->scenePos());
 			}
 		}
 	}
 
 	// Don't cover other pieces
 	m_scale = 1;
-	foreach (Tile* tile, m_tiles) {
-		tile->pushNeighbors(tile);
+	foreach (Piece* piece, m_tiles) {
+		piece->pushNeighbors(piece);
 	}
 
 	// Draw tiles
@@ -281,8 +281,9 @@ void Board::openGame(int id)
 	}
 
 	// Load tiles
-	Tile* parent = 0;
+	Piece* piece = 0;
 	Tile* tile = 0;
+	QPoint pos;
 	int rotation = -1;
 	while (!xml.atEnd()) {
 		xml.readNext();
@@ -290,19 +291,16 @@ void Board::openGame(int id)
 			continue;
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
-			tile = new Tile(
-				attributes.value("column").toString().toInt(),
-				attributes.value("row").toString().toInt(),
-				rotation != -1 ? rotation : attributes.value("rotation").toString().toInt(),
-				QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt()),
-				parent,
-				this);
-			if (!parent) {
-				parent = tile;
-				m_tiles.append(tile);
+			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
+			if (!piece) {
+				piece = new Piece(rotation != -1 ? rotation : attributes.value("rotation").toString().toInt(), pos, this);
+				m_tiles.append(piece);
+				pos = QPoint(0, 0);
 			}
+			tile = new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt(), pos, this);
+			piece->attach(tile);
 		} else if (xml.name() == QLatin1String("group")) {
-			parent = 0;
+			piece = 0;
 			QStringRef r = xml.attributes().value("rotation");
 			rotation = !r.isEmpty() ? r.toString().toInt() : -1;
 		} else if (xml.name() != QLatin1String("overview")) {
@@ -346,8 +344,8 @@ void Board::saveGame()
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 
-	foreach (Tile* tile, m_tiles)
-		tile->save(xml);
+	foreach (Piece* piece, m_tiles)
+		piece->save(xml);
 
 	xml.writeEndElement();
 
@@ -375,8 +373,8 @@ void Board::zoomFit()
 	// Find bounding rectangle
 	QRect bounds(0, 0, 0, 0);
 	QRect tile_bounds;
-	foreach (Tile* tile, m_tiles) {
-		bounds = bounds.united(tile->boundingRect());
+	foreach (Piece* piece, m_tiles) {
+		bounds = bounds.united(piece->boundingRect());
 	}
 	m_pos = bounds.center();
 
@@ -525,9 +523,8 @@ void Board::paintGL()
 	float depth = 0;
 	float depth_diff = 1.0f / m_tiles.count();
 	glBegin(GL_QUADS);
-		foreach (Tile* parent, m_tiles) {
-			draw(parent, parent->scenePos(), depth);
-			foreach (Tile* tile, parent->children()) {
+		foreach (Piece* piece, m_tiles) {
+			foreach (Tile* tile, piece->children()) {
 				draw(tile, tile->scenePos(), depth);
 			}
 			depth += depth_diff;
@@ -743,9 +740,9 @@ void Board::grabTile()
 	m_active_tiles[tile->parent()] = tile;
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
-	tile = tile->parent();
-	m_tiles.removeAll(tile);
-	m_tiles.append(tile);
+	Piece* piece = tile->parent();
+	m_tiles.removeAll(piece);
+	m_tiles.append(piece);
 	updateCursor();
 
 	updateGL();
@@ -759,10 +756,15 @@ void Board::releaseTiles()
 		return;
 
 	int region = 7.0f / m_scale;
-	foreach (Tile * m_active_tile, m_active_tiles) {
-		m_active_tile->parent()->attachNeighbors(region);
-		m_active_tile->parent()->pushNeighbors(m_active_tile->parent());
+	Piece* piece;
+	QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin();
+	while (i != m_active_tiles.constEnd()) {
+		piece = i.key();
+		piece->attachNeighbors(region);
+		piece->pushNeighbors(piece);
+		++i;
 	}
+
 	m_active_tiles.clear();
 	updateCursor();
 	updateCompleted();
@@ -786,16 +788,14 @@ void Board::rotateTile()
 		Tile* child = tileUnderCursor();
 		if (child == 0)
 			return;
-		Tile* tile = child->parent();
+		Piece* piece = child->parent();
 
-		tile->rotateAround(child);
-		tile->attachNeighbors(region);
-		if (m_active_tiles.size() == 0)
-			tile->pushNeighbors(tile);
+		piece->rotateAround(child);
+		piece->attachNeighbors(region);
+		if (m_active_tiles.isEmpty())
+			piece->pushNeighbors(piece);
 	} else {
-		for (QHash<Tile*, Tile*>::const_iterator i = m_active_tiles.constBegin();
-			 i != m_active_tiles.constEnd();
-			 ++i) {
+		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 			i.key()->rotateAround(i.value());
 		}
 	}
@@ -935,7 +935,7 @@ void Board::draw(Tile* tile, const QPoint& pos, float depth) const
 	int x2 = x1 + m_tile_size;
 	int y2 = y1 + m_tile_size;
 
-	const QPointF* corners = m_corners[tile->rotation()];
+	const QPointF* corners = m_corners[tile->parent()->rotation()];
 	float tx = tile->column() * m_image_ts;
 	float ty = tile->row() * m_image_ts;
 
@@ -965,21 +965,17 @@ void Board::updateCompleted()
 
 /*****************************************************************************/
 
-Tile* Board::tileAt(const QPoint& pos, bool includeActive) const
+Tile* Board::tileAt(const QPoint& pos, bool include_active) const
 {
-	Tile* tile;
-	for (int i = m_tiles.count() - 1; i > -1; --i) {
-		tile = m_tiles[i];
-		if (!includeActive && m_active_tiles.contains(tile->parent()))
+	Piece* piece;
+	for (int i = m_tiles.count() - 1; i >= 0; --i) {
+		piece = m_tiles.at(i);
+		if (!include_active && m_active_tiles.contains(piece))
 			continue;
-		if (tile->boundingRect().contains(pos)) {
-			if (tile->rect().contains(pos))
-				return tile;
-			foreach (Tile* child, tile->children()) {
-				if (!includeActive && m_active_tiles.contains(child))
-					continue;
-				if (child->rect().contains(pos))
-					return child;
+		if (piece->boundingRect().contains(pos)) {
+			foreach (Tile* tile, piece->children()) {
+				if (tile->boundingRect().contains(pos))
+					return tile;
 			}
 		}
 	}
@@ -988,12 +984,12 @@ Tile* Board::tileAt(const QPoint& pos, bool includeActive) const
 
 /*****************************************************************************/
 
-Tile* Board::tileUnderCursor(bool includeActive)
+Tile* Board::tileUnderCursor(bool include_active)
 {
-	if (includeActive && (m_active_tiles.size() > 0))
+	if (include_active && !m_active_tiles.isEmpty())
 		return *m_active_tiles.begin();
 	else
-		return tileAt(mapCursorPosition(), includeActive);
+		return tileAt(mapCursorPosition(), include_active);
 }
 
 /*****************************************************************************/
@@ -1003,10 +999,10 @@ void Board::finishGame()
 	m_finished = true;
 
 	// Rotate completed board to face up
-	Tile* tile = m_tiles.first();
-	if (tile->rotation() > 0) {
-		for (int i = tile->rotation(); i < 4; ++i) {
-			tile->rotateAround(0);
+	Piece* piece = m_tiles.first();
+	if (piece->rotation() > 0) {
+		for (int i = piece->rotation(); i < 4; ++i) {
+			piece->rotateAround(0);
 		}
 	}
 

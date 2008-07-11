@@ -23,6 +23,7 @@
 #include <QGLWidget>
 #include <QHash>
 class QLabel;
+class Piece;
 class Tile;
 
 class Board : public QGLWidget
@@ -32,9 +33,9 @@ public:
 	Board(QWidget* parent = 0);
 	~Board();
 
-	void reparent(Tile* tile);
+	void reparent(Piece* piece);
 
-	QList<Tile*> collidingItems(Tile* tile);
+	QList<Piece*> collidingItems(Piece* piece);
 
 	int id() const
 		{ return m_id; }
@@ -89,8 +90,8 @@ private:
 	QPoint mapCursorPosition() const;
 	void draw(Tile* tile, const QPoint& pos, float depth) const;
 	void updateCompleted();
-	Tile* tileAt(const QPoint& pos, bool includeActive = true) const;
-	Tile* tileUnderCursor(bool includeActive = true);
+	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
+	Tile* tileUnderCursor(bool include_active = true);
 	void finishGame();
 	void cleanup();
 
@@ -110,8 +111,8 @@ private:
 	QPointF m_corners[4][4];
 	QSize m_success_size;
 
-	QList<Tile*> m_tiles;
-	QHash<Tile*,Tile*> m_active_tiles;
+	QList<Piece*> m_tiles;
+	QHash<Piece*, Tile*> m_active_tiles;
 	QPoint m_active_pos;
 	int m_total_pieces;
 	int m_completed;
