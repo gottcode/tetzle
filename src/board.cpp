@@ -909,10 +909,23 @@ void Board::generateSuccessImage()
 
 void Board::updateCursor()
 {
-	if (tileUnderCursor(false) && !m_finished) {
+	int state = 0;
+	if (!m_finished)
+		state = (tileUnderCursor(false) != 0) | (!m_active_tiles.isEmpty() * 2);
+
+	switch (state) {
+	case 1:
+		setCursor(Qt::OpenHandCursor);
+		break;
+	case 2:
+		setCursor(Qt::ClosedHandCursor);
+		break;
+	case 3:
 		setCursor(Qt::PointingHandCursor);
-	} else {
+		break;
+	default:
 		unsetCursor();
+		break;
 	}
 }
 
