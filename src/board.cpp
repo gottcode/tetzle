@@ -151,6 +151,7 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Update player about status
 	emit statusMessage("");
+	window()->setCursor(Qt::WaitCursor);
 	QLabel dialog(tr("Creating puzzle; please wait."), this, Qt::Dialog);
 	dialog.setMargin(12);
 	dialog.show();
@@ -228,6 +229,7 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 
 	// Draw tiles
+	window()->unsetCursor();
 	zoomFit();
 	updateCompleted();
 }
@@ -241,6 +243,7 @@ void Board::openGame(int id)
 
 	// Update player about status
 	emit statusMessage("");
+	window()->setCursor(Qt::WaitCursor);
 	QLabel dialog(tr("Loading puzzle; please wait."), this, Qt::Dialog);
 	dialog.setMargin(12);
 	dialog.show();
@@ -315,6 +318,7 @@ void Board::openGame(int id)
 	}
 
 	// Draw tiles
+	window()->unsetCursor();
 	zoom(board_zoom);
 	updateCompleted();
 }
