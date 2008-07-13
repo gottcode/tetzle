@@ -55,6 +55,9 @@ public:
 	void save(QXmlStreamWriter& xml) const;
 
 private:
+	void _pushNeighbors(Piece* immobile, QPointF& inertia);
+
+private:
 	int m_rotation;
 	QPoint m_pos;
 	QRect m_rect;
