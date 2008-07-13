@@ -138,49 +138,42 @@ void Piece::attachNeighbors()
 	// Find closest tiles
 	QSet<Piece*> closest_tiles;
 	QPoint delta;
+	int row, column;
 	foreach (Tile* child, m_children) {
-	foreach (Piece* piece, m_board->collidingItems(child->parent())) {
-		if (piece->m_rotation != m_rotation)
-			continue;
+		foreach (Piece* piece, m_board->collidingItems(child->parent())) {
+			if (piece->m_rotation != m_rotation)
+				continue;
 
-		foreach (Tile* tile, piece->children()) {
-			// Determine which side the tile is on
-			delta = tile->scenePos() - child->scenePos();
-			if (tile->row() == child->row()) {
-				if (tile->column() == child->column() - 1) {
-					// Left
+			foreach (Tile* tile, piece->children()) {
+				delta = tile->scenePos() - child->scenePos();
+
+				// Determine which neighbor the child is of the tile
+				column = tile->column() - child->column() + 2;
+				row = tile->row() - child->row() + 2;
+				switch ((column * 1000) + row) {
+				case 1002:
 					delta -= left;
-					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
-						closest_tiles.insert(piece);
-						piece->moveBy(-delta);
-					}
-				} else if (tile->column() == child->column() + 1) {
-					// Right
+					break;
+				case 3002:
 					delta -= right;
-					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
-						closest_tiles.insert(piece);
-						piece->moveBy(-delta);
-					}
-				}
-			} else if (tile->column() == child->column()) {
-				if (tile->row() == child->row() - 1) {
-					// Above
+					break;
+				case 2001:
 					delta -= above;
-					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
-						closest_tiles.insert(piece);
-						piece->moveBy(-delta);
-					}
-				} else if (tile->row() == child->row() + 1) {
-					// Below
+					break;
+				case 2003:
 					delta -= below;
-					if (fabs(delta.x()) <= margin && fabs(delta.y()) <= margin) {
-						closest_tiles.insert(piece);
-						piece->moveBy(-delta);
-					}
+					break;
+				default:
+					continue;
+				}
+
+				if (delta.manhattanLength() <= margin) {
+					closest_tiles.insert(piece);
+					piece->moveBy(-delta);
+					break;
 				}
 			}
 		}
-	}
 	}
 
 	// Attach to closest tiles
