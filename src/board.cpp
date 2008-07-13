@@ -194,7 +194,6 @@ void Board::newGame(const QString& image, int difficulty)
 	for (int c = 0; c < groups_wide; ++c) {
 		for (int r = 0; r < groups_tall; ++r) {
 			foreach (const QList<QPoint>& group, solver.solutions[r * groups_wide + c]) {
-				Q_ASSERT(piece.size() == 4);
 				tile = tiles.at(group.at(0).x() + (c * 8)).at(group.at(0).y() + (r * 8));
 
 				// Create piece
