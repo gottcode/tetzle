@@ -52,6 +52,14 @@ QPoint Piece::scenePos() const
 
 /*****************************************************************************/
 
+QRect Piece::marginRect() const
+{
+	int margin = m_board->margin();
+	return boundingRect().adjusted(-margin, -margin, margin, margin);
+}
+
+/*****************************************************************************/
+
 void Piece::rotateAround(Tile* tile)
 {
 	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
@@ -139,7 +147,7 @@ void Piece::attachNeighbors()
 	QSet<Piece*> closest_tiles;
 	QPoint delta;
 	foreach (Tile* child, m_children) {
-	foreach (Piece* piece, m_board->collidingItems(child->parent())) {
+	foreach (Piece* piece, m_board->findCollidingPieces(child->parent())) {
 		if (piece->m_rotation != m_rotation)
 			continue;
 
@@ -197,7 +205,7 @@ void Piece::pushNeighbors(Piece* immobile)
 	QPoint vector;
 	float angle;
 	QRect region;
-	foreach (Piece* neighbor, m_board->collidingItems(this)) {
+	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
 		if (!m_rect.intersects(neighbor->m_rect))
 			continue;
 

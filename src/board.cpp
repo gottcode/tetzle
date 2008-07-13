@@ -122,18 +122,29 @@ void Board::reparent(Piece* piece)
 
 /*****************************************************************************/
 
-QList<Piece*> Board::collidingItems(Piece* piece)
+QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 {
 	QList<Piece*> list;
-	int margins = margin();
-	QRect rect = piece->boundingRect().adjusted(-margins, -margins, margins, margins);
-	Piece* parent;
+	QRect rect = piece->marginRect();
 	for (int i = m_tiles.count() - 1; i >= 0; --i) {
-		parent = m_tiles.at(i);
+		Piece * parent = m_tiles.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))
 			list.append(parent);
 	}
 	return list;
+}
+
+/*****************************************************************************/
+
+Piece * Board::findCollidingPiece(Piece* piece) const
+{
+	QRect rect = piece->marginRect();
+	for (int i = m_tiles.count() - 1; i >= 0; --i) {
+		Piece * parent = m_tiles.at(i);
+		if (parent != piece && parent->boundingRect().intersects(rect))
+			return parent;
+	}
+	return 0;
 }
 
 /*****************************************************************************/

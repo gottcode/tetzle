@@ -35,7 +35,8 @@ public:
 
 	void reparent(Piece* piece);
 
-	QList<Piece*> collidingItems(Piece* piece);
+	QList<Piece*> findCollidingPieces(Piece* piece) const;
+	Piece* findCollidingPiece(Piece* piece) const;
 
 	int id() const
 		{ return m_id; }
