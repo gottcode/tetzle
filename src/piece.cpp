@@ -26,6 +26,14 @@
 
 #include <cmath>
 
+// Helper functions to perform rounding similar to trunc, but away from zero instead of towards it.
+inline float cnurtf(float value) {
+      if (value >= 0.0f)
+              return ceilf(value);
+      else
+              return floorf(value);
+}
+
 /*****************************************************************************/
 
 Piece::Piece(int rotation, const QPoint& pos, Board* board)
@@ -48,6 +56,14 @@ Piece::~Piece()
 QPoint Piece::scenePos() const
 {
 	return m_pos;
+}
+
+/*****************************************************************************/
+
+QRect Piece::marginRect() const
+{
+	int margin = m_board->margin();
+	return boundingRect().adjusted(-margin, -margin, margin, margin);
 }
 
 /*****************************************************************************/
@@ -139,11 +155,11 @@ void Piece::attachNeighbors()
 	QSet<Piece*> closest_tiles;
 	QPoint delta;
 	int row, column;
-	foreach (Tile* child, m_children) {
-		foreach (Piece* piece, m_board->collidingItems(child->parent())) {
-			if (piece->m_rotation != m_rotation)
-				continue;
+	foreach (Piece* piece, m_board->findCollidingPieces(this)) {
+		if (piece->m_rotation != m_rotation)
+			continue;
 
+		foreach (Tile* child, m_children) {
 			foreach (Tile* tile, piece->children()) {
 				delta = tile->scenePos() - child->scenePos();
 
@@ -186,33 +202,54 @@ void Piece::attachNeighbors()
 
 void Piece::pushNeighbors(Piece* immobile)
 {
-	QRect bounds = boundingRect();
-	QPoint vector;
-	float angle;
-	QRect region;
-	foreach (Piece* neighbor, m_board->collidingItems(this)) {
-		if (!m_rect.intersects(neighbor->m_rect))
-			continue;
+	QPointF origVector;
+	_pushNeighbors(immobile, origVector);
+}
 
-		region = bounds.intersected(neighbor->boundingRect());
-		if (neighbor != immobile) {
-			vector = bounds.center() - neighbor->boundingRect().center();
+/*****************************************************************************/
+
+void Piece::_pushNeighbors(Piece* immobile, QPointF & inertia)
+{
+	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
+		Piece *source, *target;
+		// First, determine which tile to move, and which to be still
+		if (neighbor == immobile) {
+			source = neighbor;
+			target = this;
 		} else {
-			neighbor = this;
-			vector = immobile->boundingRect().center() - bounds.center();
+			source = this;
+			target = neighbor;
 		}
-		angle = 180.f - ((atan2(vector.y(), vector.x()) * 180.f) / 3.141593f);
 
-		if (angle < 45.0f || angle >= 315.0f) {
-			neighbor->moveBy(QPoint(region.width() + 10, 0));
-		} else if (angle < 135.0f) {
-			neighbor->moveBy(QPoint(0, -region.height() - 10));
-		} else if (angle < 225.0f) {
-			neighbor->moveBy(QPoint(-region.width() - 10, 0));
-		} else if (angle < 315.0f) {
-			neighbor->moveBy(QPoint(0, region.height() + 10));
+		// Calculare and direction to move target
+		QPointF vector = target->boundingRect().center() - source->marginRect().center();
+		// Preserve some motion from last move
+		vector = vector + inertia;
+		// Ensure valid vector (pieces not in exactly the same point)
+		while (abs(vector.x()) + abs(vector.y()) < 1)
+			vector = QPointF(rand() - (RAND_MAX/2), rand() - (RAND_MAX/2));
+		// Scale movement vector such that one of the dimensions = 1
+		QPointF scaledVector;
+		if (abs(vector.x()) > abs(vector.y()))
+			scaledVector = vector / abs(vector.x());
+		else
+			scaledVector = vector / abs(vector.y());
+
+		// Calculate intersection
+		QRect intersection = source->marginRect().intersected(target->boundingRect());
+		// Keep pushing until target is clear from current source.
+		while (intersection.isValid()) {
+			// Desired movement is the intersection, multiplied per-dimension by the scaled movement vector.
+			float deltaX = cnurtf((float)intersection.width() * (float)scaledVector.x());
+			float deltaY = cnurtf((float)intersection.height() * (float)scaledVector.y());
+			// Perform the push
+			target->moveBy(QPoint(deltaX, deltaY));
+			// Update intersection
+			intersection = source->marginRect().intersected(target->boundingRect());
 		}
-		neighbor->pushNeighbors(immobile);
+
+		// Recurse, and keep inertia for stability.
+		target->_pushNeighbors(immobile, vector);
 	}
 }
 

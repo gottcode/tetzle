@@ -44,6 +44,7 @@ public:
 	QPoint scenePos() const;
 	QRect boundingRect() const
 		{ return m_rect.translated(m_pos); }
+	QRect marginRect() const;
 
 	void rotateAround(Tile* tile);
 	void attach(Tile* tile);
@@ -52,6 +53,9 @@ public:
 	void pushNeighbors(Piece* immobile);
 
 	void save(QXmlStreamWriter& xml) const;
+
+private:
+	void _pushNeighbors(Piece* immobile, QPointF& inertia);
 
 private:
 	int m_rotation;
