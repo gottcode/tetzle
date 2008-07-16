@@ -113,9 +113,9 @@ Board::~Board()
 
 /*****************************************************************************/
 
-void Board::reparent(Piece* piece)
+void Board::removePiece(Piece* piece)
 {
-	m_tiles.removeAll(piece);
+	m_pieces.removeAll(piece);
 	delete piece;
 	piece = 0;
 }
@@ -126,8 +126,8 @@ QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 {
 	QList<Piece*> list;
 	QRect rect = piece->marginRect();
-	for (int i = m_tiles.count() - 1; i >= 0; --i) {
-		Piece * parent = m_tiles.at(i);
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		Piece * parent = m_pieces.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))
 			list.append(parent);
 	}
@@ -139,8 +139,8 @@ QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 Piece * Board::findCollidingPiece(Piece* piece) const
 {
 	QRect rect = piece->boundingRect().adjusted(-10, -10, 10, 10);
-	for (int i = m_tiles.count() - 1; i >= 0; --i) {
-		Piece * parent = m_tiles.at(i);
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		Piece * parent = m_pieces.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))
 			return parent;
 	}
@@ -210,7 +210,7 @@ void Board::newGame(const QString& image, int difficulty)
 
 				// Create piece
 				piece = new Piece(0, tile->pos(), this);
-				m_tiles.append(piece);
+				m_pieces.append(piece);
 
 				// Add tiles to piece
 				tile->setPos(QPoint(0, 0));
@@ -234,7 +234,7 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Don't cover other pieces
 	m_scale = 1;
-	foreach (Piece* piece, m_tiles) {
+	foreach (Piece* piece, m_pieces) {
 		piece->pushNeighbors();
 	}
 
@@ -307,7 +307,7 @@ void Board::openGame(int id)
 			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
 			if (!piece) {
 				piece = new Piece(rotation != -1 ? rotation : attributes.value("rotation").toString().toInt(), pos, this);
-				m_tiles.append(piece);
+				m_pieces.append(piece);
 				pos = QPoint(0, 0);
 			}
 			tile = new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt(), pos, this);
@@ -337,7 +337,7 @@ void Board::openGame(int id)
 
 void Board::saveGame()
 {
-	if (m_tiles.count() <= 1)
+	if (m_pieces.count() <= 1)
 		return;
 
 	QFile file(QString("saves/%1.xml").arg(m_id));
@@ -358,7 +358,7 @@ void Board::saveGame()
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 
-	foreach (Piece* piece, m_tiles)
+	foreach (Piece* piece, m_pieces)
 		piece->save(xml);
 
 	xml.writeEndElement();
@@ -387,7 +387,7 @@ void Board::zoomFit()
 	// Find bounding rectangle
 	QRect bounds(0, 0, 0, 0);
 	QRect tile_bounds;
-	foreach (Piece* piece, m_tiles) {
+	foreach (Piece* piece, m_pieces) {
 		bounds = bounds.united(piece->boundingRect());
 	}
 	m_pos = bounds.center();
@@ -535,9 +535,9 @@ void Board::paintGL()
 	glBindTexture(GL_TEXTURE_2D, m_bumpmap);
 
 	float depth = 0;
-	float depth_diff = 1.0f / m_tiles.count();
+	float depth_diff = 1.0f / m_pieces.count();
 	glBegin(GL_QUADS);
-		foreach (Piece* piece, m_tiles) {
+		foreach (Piece* piece, m_pieces) {
 			foreach (Tile* tile, piece->children()) {
 				draw(tile, tile->scenePos(), depth);
 			}
@@ -673,7 +673,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		updateCompleted();
 
 		// Handle finishing game
-		if (m_tiles.count() == 1)
+		if (m_pieces.count() == 1)
 			finishGame();
 	}
 
@@ -701,21 +701,21 @@ void Board::performAction()
 	if (m_action_button == Qt::LeftButton) {
 		if (m_action_key == 0) {
 			if (tileUnderCursor(false)) {
-				grabTile();
+				grabPiece();
 			} else {
-				releaseTiles();
+				releasePieces();
 			}
 #if !defined(Q_OS_MAC)
 		} else if (m_action_key == Qt::Key_Control) {
 #else
 		} else if (m_action_key == Qt::Key_Meta) {
 #endif
-			rotateTile();
+			rotatePiece();
 		} else if (m_action_key == Qt::Key_Shift) {
 			startScrolling();
 		}
 	} else if (m_action_button == Qt::RightButton) {
-		rotateTile();
+		rotatePiece();
 	} else if (m_action_button == Qt::MidButton) {
 		startScrolling();
 	} else if (m_scrolling) {
@@ -742,7 +742,7 @@ void Board::stopScrolling()
 
 /*****************************************************************************/
 
-void Board::grabTile()
+void Board::grabPiece()
 {
 	if (m_scrolling || m_finished)
 		return;
@@ -755,8 +755,8 @@ void Board::grabTile()
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
 	Piece* piece = tile->parent();
-	m_tiles.removeAll(piece);
-	m_tiles.append(piece);
+	m_pieces.removeAll(piece);
+	m_pieces.append(piece);
 	updateCursor();
 
 	updateGL();
@@ -764,7 +764,7 @@ void Board::grabTile()
 
 /*****************************************************************************/
 
-void Board::releaseTiles()
+void Board::releasePieces()
 {
 	if (m_scrolling || m_finished)
 		return;
@@ -782,7 +782,7 @@ void Board::releaseTiles()
 	updateCursor();
 	updateCompleted();
 
-	if (m_tiles.count() == 1)
+	if (m_pieces.count() == 1)
 		finishGame();
 
 	updateGL();
@@ -790,7 +790,7 @@ void Board::releaseTiles()
 
 /*****************************************************************************/
 
-void Board::rotateTile()
+void Board::rotatePiece()
 {
 	if (m_scrolling || m_finished)
 		return;
@@ -812,7 +812,7 @@ void Board::rotateTile()
 	}
 	updateCompleted();
 
-	if (m_tiles.count() == 1)
+	if (m_pieces.count() == 1)
 		finishGame();
 
 	updateGL();
@@ -981,7 +981,7 @@ void Board::draw(Tile* tile, const QPoint& pos, float depth) const
 
 void Board::updateCompleted()
 {
-	int t = 100 * (m_tiles.count() - 1);
+	int t = 100 * (m_pieces.count() - 1);
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
 	emit statusMessage(tr("%1% complete").arg(m_completed));
@@ -992,8 +992,8 @@ void Board::updateCompleted()
 Tile* Board::tileAt(const QPoint& pos, bool include_active) const
 {
 	Piece* piece;
-	for (int i = m_tiles.count() - 1; i >= 0; --i) {
-		piece = m_tiles.at(i);
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		piece = m_pieces.at(i);
 		if (!include_active && m_active_tiles.contains(piece))
 			continue;
 		if (piece->boundingRect().contains(pos)) {
@@ -1023,7 +1023,7 @@ void Board::finishGame()
 	m_finished = true;
 
 	// Rotate completed board to face up
-	Piece* piece = m_tiles.first();
+	Piece* piece = m_pieces.first();
 	if (piece->rotation() > 0) {
 		for (int i = piece->rotation(); i < 4; ++i) {
 			piece->rotateAround(0);
@@ -1049,8 +1049,8 @@ void Board::cleanup()
 	glDeleteTextures(1, &m_bumpmap);
 
 	m_active_tiles.clear();
-	qDeleteAll(m_tiles);
-	m_tiles.clear();
+	qDeleteAll(m_pieces);
+	m_pieces.clear();
 	m_completed = 0;
 	m_id = 0;
 

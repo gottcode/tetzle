@@ -119,7 +119,7 @@ void Piece::attach(Piece* piece)
 	m_rect = m_rect.united(piece->m_rect.translated(delta));
 
 	// Remove old parent
-	m_board->reparent(piece);
+	m_board->removePiece(piece);
 }
 
 /*****************************************************************************/
@@ -151,7 +151,7 @@ void Piece::attachNeighbors()
 	QPoint below(sin_size, cos_size);
 
 	// Find closest tiles
-	QSet<Piece*> closest_tiles;
+	QSet<Piece*> closest_pieces;
 	QPoint delta;
 	int row, column;
 	foreach (Piece* piece, m_board->findCollidingPieces(this)) {
@@ -183,7 +183,7 @@ void Piece::attachNeighbors()
 				}
 
 				if (delta.manhattanLength() <= margin) {
-					closest_tiles.insert(piece);
+					closest_pieces.insert(piece);
 					piece->moveBy(-delta);
 					break;
 				}
@@ -191,8 +191,8 @@ void Piece::attachNeighbors()
 		}
 	}
 
-	// Attach to closest tiles
-	foreach (Piece* piece, closest_tiles) {
+	// Attach to closest pieces
+	foreach (Piece* piece, closest_pieces) {
 		attach(piece);
 	}
 }

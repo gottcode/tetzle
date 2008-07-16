@@ -33,7 +33,7 @@ public:
 	Board(QWidget* parent = 0);
 	~Board();
 
-	void reparent(Piece* piece);
+	void removePiece(Piece* piece);
 
 	QList<Piece*> findCollidingPieces(Piece* piece) const;
 	Piece* findCollidingPiece(Piece* piece) const;
@@ -83,9 +83,9 @@ private:
 	void performAction();
 	void startScrolling();
 	void stopScrolling();
-	void grabTile();
-	void releaseTiles();
-	void rotateTile();
+	void grabPiece();
+	void releasePieces();
+	void rotatePiece();
 
 	void loadImage();
 	void generateSuccessImage();
@@ -114,7 +114,7 @@ private:
 	QPointF m_corners[4][4];
 	QSize m_success_size;
 
-	QList<Piece*> m_tiles;
+	QList<Piece*> m_pieces;
 	QHash<Piece*, Tile*> m_active_tiles;
 	QPoint m_active_pos;
 	int m_total_pieces;
