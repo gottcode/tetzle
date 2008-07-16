@@ -26,12 +26,11 @@
 
 #include <cmath>
 
-// Helper functions to perform rounding similar to trunc, but away from zero instead of towards it.
-inline float cnurtf(float value) {
-      if (value >= 0.0f)
-              return ceilf(value);
-      else
-              return floorf(value);
+/*****************************************************************************/
+
+inline float roundUp(float value)
+{
+	return value >= 0.0f ? ceil(value) : floor(value);
 }
 
 /*****************************************************************************/
@@ -200,57 +199,38 @@ void Piece::attachNeighbors()
 
 /*****************************************************************************/
 
-void Piece::pushNeighbors(Piece* immobile)
-{
-	QPointF origVector;
-	_pushNeighbors(immobile, origVector);
-}
-
-/*****************************************************************************/
-
-void Piece::_pushNeighbors(Piece* immobile, QPointF & inertia)
+void Piece::pushNeighbors(Piece* immobile, const QPointF& inertia)
 {
 	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
+		// Determine which piece to move
 		Piece *source, *target;
-		// First, determine which tile to move, and which to be still
-		if (neighbor == immobile) {
-			source = neighbor;
-			target = this;
-		} else {
+		if (neighbor != immobile) {
 			source = this;
 			target = neighbor;
+		} else {
+			source = neighbor;
+			target = this;
 		}
 		QRect source_rect = source->boundingRect().adjusted(-10, -10, 10, 10);
 
-		// Calculare and direction to move target
-		QPointF vector = target->boundingRect().center() - source_rect.center();
-		// Preserve some motion from last move
-		vector = vector + inertia;
-		// Ensure valid vector (pieces not in exactly the same point)
+		// Calculate valid movement vector for target; preserve some motion from last move
+		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
 		while (abs(vector.x()) + abs(vector.y()) < 1)
 			vector = QPointF(rand() - (RAND_MAX/2), rand() - (RAND_MAX/2));
-		// Scale movement vector such that one of the dimensions = 1
-		QPointF scaledVector;
-		if (abs(vector.x()) > abs(vector.y()))
-			scaledVector = vector / abs(vector.x());
-		else
-			scaledVector = vector / abs(vector.y());
 
-		// Calculate intersection
-		QRect intersection = source_rect.intersected(target->boundingRect());
-		// Keep pushing until target is clear from current source.
-		while (intersection.isValid()) {
-			// Desired movement is the intersection, multiplied per-dimension by the scaled movement vector.
-			float deltaX = cnurtf((float)intersection.width() * (float)scaledVector.x());
-			float deltaY = cnurtf((float)intersection.height() * (float)scaledVector.y());
-			// Perform the push
-			target->moveBy(QPoint(deltaX, deltaY));
-			// Update intersection
-			intersection = source_rect.intersected(target->boundingRect());
+		// Scale movement vector so that the largest dimension is 1
+		QPointF direction = vector / qMax(abs(vector.x()), abs(vector.y()));
+
+		// Push target until it is clear from current source
+		QRectF intersection;
+		while ((intersection = source_rect.intersected(target->boundingRect())).isValid()) {
+			float delta_x = roundUp(intersection.width() * direction.x());
+			float delta_y = roundUp(intersection.height() * direction.y());
+			target->moveBy(QPoint(delta_x, delta_y));
 		}
 
 		// Recurse, and keep inertia for stability.
-		target->_pushNeighbors(immobile, vector);
+		target->pushNeighbors(immobile, vector);
 	}
 }
 

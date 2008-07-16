@@ -50,14 +50,14 @@ public:
 	void attach(Tile* tile);
 	void attach(Piece* piece);
 	void attachNeighbors();
-	void pushNeighbors(Piece* immobile);
+	void pushNeighbors()
+		{ pushNeighbors(this, QPointF()); }
 
 	void save(QXmlStreamWriter& xml) const;
 
 private:
-	void _pushNeighbors(Piece* immobile, QPointF& inertia);
+	void pushNeighbors(Piece* immobile, const QPointF& inertia);
 
-private:
 	int m_rotation;
 	QPoint m_pos;
 	QRect m_rect;

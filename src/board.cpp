@@ -235,7 +235,7 @@ void Board::newGame(const QString& image, int difficulty)
 	// Don't cover other pieces
 	m_scale = 1;
 	foreach (Piece* piece, m_tiles) {
-		piece->pushNeighbors(piece);
+		piece->pushNeighbors();
 	}
 
 	// Draw tiles
@@ -774,7 +774,7 @@ void Board::releaseTiles()
 	while (i != m_active_tiles.constEnd()) {
 		piece = i.key();
 		piece->attachNeighbors();
-		piece->pushNeighbors(piece);
+		piece->pushNeighbors();
 		++i;
 	}
 
@@ -804,7 +804,7 @@ void Board::rotateTile()
 		piece->rotateAround(child);
 		piece->attachNeighbors();
 		if (m_active_tiles.isEmpty())
-			piece->pushNeighbors(piece);
+			piece->pushNeighbors();
 	} else {
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 			i.key()->rotateAround(i.value());
