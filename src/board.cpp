@@ -138,7 +138,7 @@ QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 
 Piece * Board::findCollidingPiece(Piece* piece) const
 {
-	QRect rect = piece->marginRect();
+	QRect rect = piece->boundingRect().adjusted(-10, -10, 10, 10);
 	for (int i = m_tiles.count() - 1; i >= 0; --i) {
 		Piece * parent = m_tiles.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))

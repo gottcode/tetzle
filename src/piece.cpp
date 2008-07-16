@@ -220,9 +220,10 @@ void Piece::_pushNeighbors(Piece* immobile, QPointF & inertia)
 			source = this;
 			target = neighbor;
 		}
+		QRect source_rect = source->boundingRect().adjusted(-10, -10, 10, 10);
 
 		// Calculare and direction to move target
-		QPointF vector = target->boundingRect().center() - source->marginRect().center();
+		QPointF vector = target->boundingRect().center() - source_rect.center();
 		// Preserve some motion from last move
 		vector = vector + inertia;
 		// Ensure valid vector (pieces not in exactly the same point)
@@ -236,7 +237,7 @@ void Piece::_pushNeighbors(Piece* immobile, QPointF & inertia)
 			scaledVector = vector / abs(vector.y());
 
 		// Calculate intersection
-		QRect intersection = source->marginRect().intersected(target->boundingRect());
+		QRect intersection = source_rect.intersected(target->boundingRect());
 		// Keep pushing until target is clear from current source.
 		while (intersection.isValid()) {
 			// Desired movement is the intersection, multiplied per-dimension by the scaled movement vector.
@@ -245,7 +246,7 @@ void Piece::_pushNeighbors(Piece* immobile, QPointF & inertia)
 			// Perform the push
 			target->moveBy(QPoint(deltaX, deltaY));
 			// Update intersection
-			intersection = source->marginRect().intersected(target->boundingRect());
+			intersection = source_rect.intersected(target->boundingRect());
 		}
 
 		// Recurse, and keep inertia for stability.
