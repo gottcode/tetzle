@@ -125,9 +125,10 @@ void Board::removePiece(Piece* piece)
 QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 {
 	QList<Piece*> list;
-	QRect rect = piece->marginRect();
+	int margins = margin();
+	QRect rect = piece->boundingRect().adjusted(-margins, -margins, margins, margins);
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece * parent = m_pieces.at(i);
+		Piece* parent = m_pieces.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))
 			list.append(parent);
 	}
@@ -136,11 +137,11 @@ QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 
 /*****************************************************************************/
 
-Piece * Board::findCollidingPiece(Piece* piece) const
+Piece* Board::findCollidingPiece(Piece* piece) const
 {
 	QRect rect = piece->boundingRect().adjusted(-10, -10, 10, 10);
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece * parent = m_pieces.at(i);
+		Piece* parent = m_pieces.at(i);
 		if (parent != piece && parent->boundingRect().intersects(rect))
 			return parent;
 	}

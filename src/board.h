@@ -42,7 +42,7 @@ public:
 		{ return m_id; }
 	int tileSize() const
 		{ return m_tile_size; }
-	int margin()
+	int margin() const
 		{ return 7.0f / m_scale; }
 
 public slots:

@@ -59,14 +59,6 @@ QPoint Piece::scenePos() const
 
 /*****************************************************************************/
 
-QRect Piece::marginRect() const
-{
-	int margin = m_board->margin();
-	return boundingRect().adjusted(-margin, -margin, margin, margin);
-}
-
-/*****************************************************************************/
-
 void Piece::rotateAround(Tile* tile)
 {
 	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
