@@ -465,8 +465,9 @@ void Board::zoom(int value)
 
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
-	foreach (Tile * m_active_tile, m_active_tiles)
-		m_active_tile->parent()->moveBy(new_pos - old_pos);
+	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
+		i.key()->moveBy(new_pos - old_pos);
+	}
 	updateCursor();
 
 	// Update scene
@@ -656,18 +657,20 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 		// Move by delta
 		m_pos += delta;
-		foreach (Tile * m_active_tile, m_active_tiles)
-			m_active_tile->parent()->moveBy(delta);
+		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
+			i.key()->moveBy(delta);
+		}
 
 		// Draw tiles
 		updateGL();
 	}
 
-	if (m_active_tiles.size() > 0) {
-		foreach (Tile * m_active_tile, m_active_tiles)
-			m_active_tile->parent()->moveBy((event->pos() - m_active_pos) / m_scale);
+	if (!m_active_tiles.isEmpty()) {
+		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
+			i.key()->moveBy((event->pos() - m_active_pos) / m_scale);
+		}
 		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
-			(*m_active_tiles.begin())->parent()->attachNeighbors();
+			m_active_tiles.constBegin().key()->attachNeighbors();
 		m_active_pos = event->pos();
 		updateGL();
 		updateCompleted();
@@ -751,7 +754,7 @@ void Board::grabPiece()
 	if (tile == 0)
 		return;
 	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
-	m_active_tiles[tile->parent()] = tile;
+	m_active_tiles.insert(tile->parent(), tile);
 	m_active_pos = mapFromGlobal(QCursor::pos());
 
 	Piece* piece = tile->parent();
@@ -769,15 +772,10 @@ void Board::releasePieces()
 	if (m_scrolling || m_finished)
 		return;
 
-	Piece* piece;
-	QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin();
-	while (i != m_active_tiles.constEnd()) {
-		piece = i.key();
-		piece->attachNeighbors();
-		piece->pushNeighbors();
-		++i;
+	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
+		i.key()->attachNeighbors();
+		i.key()->pushNeighbors();
 	}
-
 	m_active_tiles.clear();
 	updateCursor();
 	updateCompleted();
@@ -1011,7 +1009,7 @@ Tile* Board::tileAt(const QPoint& pos, bool include_active) const
 Tile* Board::tileUnderCursor(bool include_active)
 {
 	if (include_active && !m_active_tiles.isEmpty())
-		return *m_active_tiles.begin();
+		return m_active_tiles.constBegin().value();
 	else
 		return tileAt(mapCursorPosition(), include_active);
 }
