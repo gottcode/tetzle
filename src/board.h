@@ -21,7 +21,9 @@
 #define BOARD_H
 
 #include <QGLWidget>
+#include <QHash>
 class QLabel;
+class Piece;
 class Tile;
 
 class Board : public QGLWidget
@@ -31,14 +33,17 @@ public:
 	Board(QWidget* parent = 0);
 	~Board();
 
-	void reparent(Tile* tile);
+	void removePiece(Piece* piece);
 
-	QList<Tile*> collidingItems(Tile* tile);
+	QList<Piece*> findCollidingPieces(Piece* piece) const;
+	Piece* findCollidingPiece(Piece* piece) const;
 
 	int id() const
 		{ return m_id; }
 	int tileSize() const
 		{ return m_tile_size; }
+	int margin() const
+		{ return 7.0f / m_scale; }
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -78,9 +83,9 @@ private:
 	void performAction();
 	void startScrolling();
 	void stopScrolling();
-	void grabTile();
-	void releaseTile();
-	void rotateTile();
+	void grabPiece();
+	void releasePieces();
+	void rotatePiece();
 
 	void loadImage();
 	void generateSuccessImage();
@@ -88,8 +93,8 @@ private:
 	QPoint mapCursorPosition() const;
 	void draw(Tile* tile, const QPoint& pos, float depth) const;
 	void updateCompleted();
-	Tile* tileAt(const QPoint& pos) const;
-	Tile* tileUnderCursor();
+	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
+	Tile* tileUnderCursor(bool include_active = true);
 	void finishGame();
 	void cleanup();
 
@@ -109,8 +114,8 @@ private:
 	QPointF m_corners[4][4];
 	QSize m_success_size;
 
-	QList<Tile*> m_tiles;
-	Tile* m_active_tile;
+	QList<Piece*> m_pieces;
+	QHash<Piece*, Tile*> m_active_tiles;
 	QPoint m_active_pos;
 	int m_total_pieces;
 	int m_completed;

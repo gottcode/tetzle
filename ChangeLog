@@ -1,3 +1,40 @@
+2008-07-15 Graeme Gott <graeme@gottcode.org>
+	* Merge marginRect back into findCollidingPieces.
+	* Clean up access to m_active_tiles.
+	* Rename tile to piece where appropriate.
+	* Clean up pushNeighbors.
+	* Ignore zoom when pushing pieces.
+
+2008-07-13 Ulrik Mikaelsson <rawler@users.sf.net>
+	* Use new pushing algorithm based on direction vectors and inertia.
+	* Add marginRect function for quick collision boundary checking.
+	* Change board's collision API to return one or all collisions.
+	* Fix debug build failure.
+
+2008-07-12 Graeme Gott <graeme@gottcode.org>
+	* Share code in attachNeighbors.
+	* Show wait cursor when starting or opening games.
+
+2008-07-11 Graeme Gott <graeme@gottcode.org>
+	* Change cursor if you can grab a piece, and if you are holding pieces.
+
+2008-07-08 Graeme Gott <graeme@gottcode.org>
+	* Add piece class.
+
+2008-07-08 Ulrik Mikaelsson <rawler@users.sf.net>
+	* Rename region-handling-code to margin.
+
+2008-07-06 Ulrik Mikaelsson <rawler@users.sf.net>
+	* Update mouse cursor if you can grab more pieces when dragging.
+	* Rotate all active pieces.
+	* Use a QHashMap for m_active_tiles.
+
+2008-07-05 Ulrik Mikaelsson <rawler@users.sf.net>
+	* FIXED: Pushing neighbors moved them too far.
+	* Add ability to grab multiple pieces.
+	* Attach neighbors when holding only one piece.
+	* Use a QSet for m_active_tiles.
+
 2008-07-03 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Overview was sometimes repositioned to 0,0 in GNOME.
 
