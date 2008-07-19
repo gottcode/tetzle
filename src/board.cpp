@@ -652,14 +652,13 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
-	if (m_scrolling) {
-		QPoint delta = (event->pos() - m_scroll_pos) / -m_scale;
-		m_scroll_pos = event->pos();
+	QPoint delta = (event->pos() - m_cursor_pos) / m_scale;
 
+	if (m_scrolling) {
 		// Move by delta
-		m_pos += delta;
+		m_pos -= delta;
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->moveBy(delta);
+			i.key()->moveBy(-delta);
 		}
 
 		// Draw tiles
@@ -668,11 +667,10 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 	if (!m_active_tiles.isEmpty()) {
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->moveBy((event->pos() - m_active_pos) / m_scale);
+			i.key()->moveBy(delta);
 		}
 		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
 			m_active_tiles.constBegin().key()->attachNeighbors();
-		m_active_pos = event->pos();
 		updateGL();
 		updateCompleted();
 
@@ -680,6 +678,8 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		if (m_pieces.count() == 1)
 			finishGame();
 	}
+
+	m_cursor_pos = event->pos();
 
 	if (!m_scrolling)
 		updateCursor();
@@ -732,7 +732,7 @@ void Board::performAction()
 void Board::startScrolling()
 {
 	m_scrolling = true;
-	m_scroll_pos = mapFromGlobal(QCursor::pos());
+	m_cursor_pos = mapFromGlobal(QCursor::pos());
 	setCursor(Qt::SizeAllCursor);
 }
 
@@ -756,7 +756,7 @@ void Board::grabPiece()
 		return;
 	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
 	m_active_tiles.insert(tile->parent(), tile);
-	m_active_pos = mapFromGlobal(QCursor::pos());
+	m_cursor_pos = mapFromGlobal(QCursor::pos());
 
 	Piece* piece = tile->parent();
 	m_pieces.removeAll(piece);

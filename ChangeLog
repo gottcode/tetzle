@@ -1,3 +1,6 @@
+2008-07-19 Graeme Gott <graeme@gottcode.org>
+	* Unify cursor tracking.
+
 2008-07-15 Graeme Gott <graeme@gottcode.org>
 	* Merge marginRect back into findCollidingPieces.
 	* Clean up access to m_active_tiles.

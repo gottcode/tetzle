@@ -116,17 +116,16 @@ private:
 
 	QList<Piece*> m_pieces;
 	QHash<Piece*, Tile*> m_active_tiles;
-	QPoint m_active_pos;
 	int m_total_pieces;
 	int m_completed;
 
 	QPoint m_pos;
+	QPoint m_cursor_pos;
 	int m_scale_level;
 	int m_scale_level_min;
 	int m_scale_level_max;
 	float m_scale;
 	bool m_scrolling;
-	QPoint m_scroll_pos;
 	bool m_finished;
 
 	int m_action_key;
