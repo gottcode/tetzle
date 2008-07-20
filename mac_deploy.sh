@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP='Tetzle'
-VERSION='1.0.2'
+VERSION='1.1.0'
 
 BUNDLE="$APP.app"
 BUNDLE_FW="$BUNDLE/Contents/Frameworks"

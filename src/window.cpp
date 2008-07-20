@@ -296,7 +296,7 @@ void Window::showControls()
 
 void Window::showAbout()
 {
-	QMessageBox::about(this, tr("About"), tr("<center><big><b>Tetzle 1.0.2</b></big><br/>A jigsaw puzzle with tetrominoes for pieces<br/><small>Copyright &copy; 2008 Graeme Gott</small></center>"));
+	QMessageBox::about(this, tr("About"), tr("<center><big><b>Tetzle 1.1.0</b></big><br/>A jigsaw puzzle with tetrominoes for pieces<br/><small>Copyright &copy; 2008 Graeme Gott</small></center>"));
 }
 
 /*****************************************************************************/
