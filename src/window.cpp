@@ -269,23 +269,25 @@ void Window::showControls()
 	layout->setMargin(12);
 	layout->setSpacing(0);
 	layout->setColumnMinimumWidth(1, 6);
-	layout->setRowMinimumHeight(6, 12);
-	layout->addWidget(new QLabel(tr("<b>Pick Up Piece:</b>"), &dialog), 0, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->setRowMinimumHeight(7, 12);
+	layout->addWidget(new QLabel(tr("<b>Pick Up Pieces:</b>"), &dialog), 0, 0, Qt::AlignRight | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("Left Click"), &dialog), 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Drop Piece:</b>"), &dialog), 1, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Drop Pieces:</b>"), &dialog), 1, 0, Qt::AlignRight | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("Left Click"), &dialog), 1, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Rotate Piece:</b>"), &dialog), 2, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Right Click or Control + Left Click"), &dialog), 2, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Drag Puzzle:</b>"), &dialog), 3, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Middle Click or Shift + Left Click"), &dialog), 3, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Zoom Puzzle:</b>"), &dialog), 4, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Scrollwheel or +/-"), &dialog), 4, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Toggle Overview:</b>"), &dialog), 5, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Tab"), &dialog), 5, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Select Pieces:</b>"), &dialog), 2, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Left Drag"), &dialog), 2, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Rotate Pieces:</b>"), &dialog), 3, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Right Click or Control + Left Click"), &dialog), 3, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Drag Puzzle:</b>"), &dialog), 4, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Middle Click or Shift + Left Click"), &dialog), 4, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Zoom Puzzle:</b>"), &dialog), 5, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Scrollwheel or +/-"), &dialog), 5, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Toggle Overview:</b>"), &dialog), 6, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Tab"), &dialog), 6, 2, Qt::AlignLeft | Qt::AlignVCenter);
 
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
 	connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
-	layout->addWidget(buttons, 7, 0, 1, 3);
+	layout->addWidget(buttons, 8, 0, 1, 3);
 
 	dialog.exec();
 }
