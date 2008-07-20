@@ -80,17 +80,18 @@ protected:
 	virtual void wheelEvent(QWheelEvent* event);
 
 private:
-	void performAction();
 	void startScrolling();
 	void stopScrolling();
 	void grabPiece();
 	void releasePieces();
 	void rotatePiece();
+	void selectPieces();
 
 	void loadImage();
 	void generateSuccessImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
+	QPoint mapPosition(const QPoint& position) const;
 	void draw(Tile* tile, const QPoint& pos, float depth) const;
 	void updateCompleted();
 	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
@@ -121,11 +122,13 @@ private:
 
 	QPoint m_pos;
 	QPoint m_cursor_pos;
+	QPoint m_select_pos;
 	int m_scale_level;
 	int m_scale_level_min;
 	int m_scale_level_max;
 	float m_scale;
 	bool m_scrolling;
+	bool m_selecting;
 	bool m_finished;
 
 	int m_action_key;

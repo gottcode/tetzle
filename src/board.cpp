@@ -80,6 +80,7 @@ Board::Board(QWidget* parent)
 	m_scale_level_max(0),
 	m_scale(0),
 	m_scrolling(false),
+	m_selecting(false),
 	m_finished(false),
 	m_action_key(0),
 	m_action_button(Qt::NoButton)
@@ -549,14 +550,45 @@ void Board::paintGL()
 
 	glPopMatrix();
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (m_selecting) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glPushAttrib(GL_CURRENT_BIT);
+
+		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
+
+		glColor4f(0, 0, 1, 0.25);
+		glBegin(GL_QUADS);
+			glVertex3f(box.x(), box.y(), 1.9);
+			glVertex3f(box.x(), box.y() + box.height(), 1.9);
+			glVertex3f(box.x() + box.width(), box.y() + box.height(), 1.9);
+			glVertex3f(box.x() + box.width(), box.y(), 1.9);
+		glEnd();
+
+		glColor3f(0, 0, 1);
+		glBegin(GL_LINE_STRIP);
+			glVertex3f(box.x(), box.y(), 2);
+			glVertex3f(box.x(), box.y() + box.height(), 2);
+			glVertex3f(box.x() + box.width(), box.y() + box.height(), 2);
+			glVertex3f(box.x() + box.width(), box.y(), 2);
+			glVertex3f(box.x(), box.y(), 2);
+		glEnd();
+
+		glPopAttrib();
+		glDisable(GL_BLEND);
+	}
+
 	if (m_finished) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_success);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		int w = powerOfTwo(m_success_size.width());
 		int h = powerOfTwo(m_success_size.height());
@@ -614,7 +646,6 @@ void Board::keyPressEvent(QKeyEvent* event)
 {
 	if (!event->isAutoRepeat()) {
 		m_action_key = event->key();
-		performAction();
 	}
 	QGLWidget::keyPressEvent(event);
 }
@@ -625,7 +656,6 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 {
 	if (!event->isAutoRepeat()) {
 		m_action_key = 0;
-		performAction();
 	}
 	QGLWidget::keyReleaseEvent(event);
 }
@@ -634,8 +664,17 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 
 void Board::mousePressEvent(QMouseEvent* event)
 {
+	if (m_action_button != Qt::NoButton) {
+		return;
+	}
+
 	m_action_button = event->button();
-	performAction();
+	if (m_action_button == Qt::MidButton || (m_action_button == Qt::LeftButton && m_action_key == Qt::Key_Shift)) {
+		startScrolling();
+	} else if (m_action_button == Qt::LeftButton) {
+		m_select_pos = event->pos();
+	}
+
 	QGLWidget::mousePressEvent(event);
 }
 
@@ -643,8 +682,49 @@ void Board::mousePressEvent(QMouseEvent* event)
 
 void Board::mouseReleaseEvent(QMouseEvent* event)
 {
+	if (event->button() != m_action_button) {
+		return;
+	}
+
+	switch (m_action_button) {
+	case Qt::LeftButton:
+		switch (m_action_key) {
+		case 0:
+			if (!m_selecting) {
+				if (tileUnderCursor(false)) {
+					grabPiece();
+				} else {
+					releasePieces();
+				}
+			} else {
+				selectPieces();
+			}
+			break;
+		case Qt::Key_Shift:
+			stopScrolling();
+			break;
+#if !defined(Q_OS_MAC)
+		case Qt::Key_Control:
+#else
+		case Qt::Key_Meta:
+#endif
+			rotatePiece();
+			break;
+		default:
+			break;
+		}
+		break;
+	case Qt::RightButton:
+		rotatePiece();
+		break;
+	case Qt::MidButton:
+		stopScrolling();
+		break;
+	default:
+		break;
+	}
 	m_action_button = Qt::NoButton;
-	performAction();
+
 	QGLWidget::mouseReleaseEvent(event);
 }
 
@@ -660,9 +740,6 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 			i.key()->moveBy(-delta);
 		}
-
-		// Draw tiles
-		updateGL();
 	}
 
 	if (!m_active_tiles.isEmpty()) {
@@ -671,13 +748,18 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		}
 		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
 			m_active_tiles.constBegin().key()->attachNeighbors();
-		updateGL();
 		updateCompleted();
 
 		// Handle finishing game
 		if (m_pieces.count() == 1)
 			finishGame();
 	}
+
+	if (!m_selecting && m_action_button == Qt::LeftButton && m_action_key == 0) {
+		m_selecting = (event->pos() - m_select_pos).manhattanLength() >= 7;
+	}
+
+	updateGL();
 
 	m_cursor_pos = event->pos();
 
@@ -696,35 +778,6 @@ void Board::wheelEvent(QWheelEvent* event)
 	}
 
 	QGLWidget::wheelEvent(event);
-}
-
-/*****************************************************************************/
-
-void Board::performAction()
-{
-	if (m_action_button == Qt::LeftButton) {
-		if (m_action_key == 0) {
-			if (tileUnderCursor(false)) {
-				grabPiece();
-			} else {
-				releasePieces();
-			}
-#if !defined(Q_OS_MAC)
-		} else if (m_action_key == Qt::Key_Control) {
-#else
-		} else if (m_action_key == Qt::Key_Meta) {
-#endif
-			rotatePiece();
-		} else if (m_action_key == Qt::Key_Shift) {
-			startScrolling();
-		}
-	} else if (m_action_button == Qt::RightButton) {
-		rotatePiece();
-	} else if (m_action_button == Qt::MidButton) {
-		startScrolling();
-	} else if (m_scrolling) {
-		stopScrolling();
-	}
 }
 
 /*****************************************************************************/
@@ -815,6 +868,29 @@ void Board::rotatePiece()
 		finishGame();
 
 	updateGL();
+}
+
+/*****************************************************************************/
+
+void Board::selectPieces()
+{
+	m_selecting = false;
+
+	QPoint cursor = mapPosition(m_cursor_pos);
+	QRect rect = QRect(cursor, mapPosition(m_select_pos)).normalized();
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		Piece* piece = m_pieces.at(i);
+		if (rect.contains(piece->boundingRect())) {
+			Tile* tile = piece->children().at(rand() % piece->children().count());
+			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % m_tile_size, rand() % m_tile_size));
+			m_active_tiles.insert(piece, tile);
+			m_pieces.removeAll(piece);
+			m_pieces.append(piece);
+		}
+	}
+
+	updateGL();
+	updateCursor();
 }
 
 /*****************************************************************************/
@@ -924,7 +1000,7 @@ void Board::updateCursor()
 {
 	int state = 0;
 	if (!m_finished)
-		state = (tileUnderCursor(false) != 0) | (!m_active_tiles.isEmpty() * 2);
+		state = (tileUnderCursor(false) != 0 || m_selecting) | (!m_active_tiles.isEmpty() * 2);
 
 	switch (state) {
 	case 1:
@@ -946,7 +1022,14 @@ void Board::updateCursor()
 
 QPoint Board::mapCursorPosition() const
 {
-	return ( (mapFromGlobal(QCursor::pos()) - QPoint(width() >> 1, height() >> 1)) * (1.0f / m_scale) ) + m_pos;
+	return mapPosition(mapFromGlobal(QCursor::pos()));
+}
+
+/*****************************************************************************/
+
+QPoint Board::mapPosition(const QPoint& position) const
+{
+	return ((position - QPoint(width() >> 1, height() >> 1)) * (1.0f / m_scale)) + m_pos;
 }
 
 /*****************************************************************************/
