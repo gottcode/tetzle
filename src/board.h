@@ -49,6 +49,7 @@ public slots:
 	void newGame(const QString& image, int difficulty);
 	void openGame(int id);
 	void saveGame();
+	void retrievePieces();
 	void zoomIn();
 	void zoomOut();
 	void zoomFit();
@@ -60,6 +61,7 @@ signals:
 	void overviewShown();
 	void overviewHidden();
 	void statusMessage(const QString& message);
+	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);
 	void zoomChanged(int zoom);

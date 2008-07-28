@@ -109,6 +109,10 @@ Window::Window()
 	menu->addAction(tr("&New"), this, SLOT(newGame()), tr("Ctrl+N"));
 	m_open_action = menu->addAction(tr("&Open"), this, SLOT(openGame()), tr("Ctrl+O"));
 	menu->addSeparator();
+	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, SLOT(retrievePieces()), tr("Ctrl+R"));
+	retrieve_pieces_action->setEnabled(false);
+	connect(m_board, SIGNAL(retrievePiecesAvailable(bool)), retrieve_pieces_action, SLOT(setEnabled(bool)));
+	menu->addSeparator();
 	menu->addAction(tr("&Quit"), this, SLOT(close()), tr("Ctrl+Q"));
 
 	menu = menuBar()->addMenu(tr("&View"));

@@ -246,6 +246,7 @@ void Board::newGame(const QString& image, int difficulty)
 	window()->unsetCursor();
 	zoomFit();
 	updateCompleted();
+	emit retrievePiecesAvailable(true);
 }
 
 /*****************************************************************************/
@@ -336,6 +337,7 @@ void Board::openGame(int id)
 	window()->unsetCursor();
 	zoom(board_zoom);
 	updateCompleted();
+	emit retrievePiecesAvailable(true);
 }
 
 /*****************************************************************************/
@@ -370,6 +372,25 @@ void Board::saveGame()
 	xml.writeEndElement();
 
 	xml.writeEndDocument();
+}
+
+/*****************************************************************************/
+
+void Board::retrievePieces()
+{
+	// Make sure all pieces are free
+	if (!m_active_tiles.isEmpty()) {
+		releasePieces();
+	}
+
+	// Move all pieces to center of view
+	foreach (Piece* piece, m_pieces) {
+		piece->moveBy(m_pos - piece->boundingRect().center());
+		piece->pushNeighbors();
+	}
+
+	// Update view
+	zoomFit();
 }
 
 /*****************************************************************************/
@@ -1152,6 +1173,7 @@ void Board::finishGame()
 	m_active_tiles.clear();
 	unsetCursor();
 	zoomFit();
+	emit retrievePiecesAvailable(false);
 
 	QFile(QString("saves/%1.xml").arg(m_id)).remove();
 	QSettings().remove("OpenGame/Image");
