@@ -191,12 +191,12 @@ void Piece::attachNeighbors()
 
 /*****************************************************************************/
 
-void Piece::pushNeighbors(Piece* immobile, const QPointF& inertia)
+void Piece::pushNeighbors(const QPointF& inertia)
 {
 	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
 		// Determine which piece to move
 		Piece *source, *target;
-		if (neighbor != immobile) {
+		if (m_rect.width() >= neighbor->m_rect.width() || m_rect.height() >= neighbor->m_rect.height()) {
 			source = this;
 			target = neighbor;
 		} else {
@@ -222,7 +222,7 @@ void Piece::pushNeighbors(Piece* immobile, const QPointF& inertia)
 		}
 
 		// Recurse, and keep inertia for stability.
-		target->pushNeighbors(immobile, vector);
+		target->pushNeighbors(vector);
 	}
 }
 

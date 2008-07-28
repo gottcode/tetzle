@@ -1,4 +1,5 @@
 2008-07-28 Graeme Gott <graeme@gottcode.org>
+	* Favor larger pieces in pushNeighbors.
 	* Show actual puzzle image in overview window.
 	* Add option to use entire image when generating a puzzle.
 

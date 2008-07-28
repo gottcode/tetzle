@@ -50,12 +50,12 @@ public:
 	void attach(Piece* piece);
 	void attachNeighbors();
 	void pushNeighbors()
-		{ pushNeighbors(this, QPointF()); }
+		{ pushNeighbors(QPointF()); }
 
 	void save(QXmlStreamWriter& xml) const;
 
 private:
-	void pushNeighbors(Piece* immobile, const QPointF& inertia);
+	void pushNeighbors(const QPointF& inertia);
 
 	int m_rotation;
 	QPoint m_pos;
