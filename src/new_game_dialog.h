@@ -21,6 +21,7 @@
 #define NEW_GAME_DIALOG_H
 
 #include <QDialog>
+class QCheckBox;
 class QComboBox;
 class QLabel;
 class QListWidget;
@@ -60,6 +61,7 @@ private:
 	QComboBox* m_images_filter;
 	QListWidget* m_images;
 	ThumbnailList* m_thumbnails;
+	QCheckBox* m_letterbox;
 	QPushButton* m_remove_button;
 	QPushButton* m_label_button;
 	QSlider* m_slider;

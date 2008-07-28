@@ -101,6 +101,7 @@ private:
 
 	int m_id;
 	int m_difficulty;
+	bool m_letterbox;
 	QString m_image_path;
 	int m_image_width;
 	int m_image_height;

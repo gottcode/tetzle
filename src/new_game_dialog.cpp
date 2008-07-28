@@ -24,6 +24,7 @@
 #include "label_manager.h"
 #include "thumbnail_list.h"
 
+#include <QCheckBox>
 #include <QComboBox>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
@@ -91,6 +92,9 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	connect(m_label_button, SIGNAL(clicked()), this, SLOT(changeLabels()));
 	image_buttons->addButton(m_label_button, QDialogButtonBox::ActionRole);
 
+	// Add letterbox selector
+	m_letterbox = new QCheckBox(tr("Use entire image"), this);
+
 	// Setup thumbnail list
 	m_thumbnails = new ThumbnailList(this);
 	m_image_labels = new LabelManager(this);
@@ -129,6 +133,7 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 		}
 	}
 	m_images->setCurrentItem(item);
+	m_letterbox->setChecked(settings.value("NewGame/Letterbox").toBool());
 	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
 	pieceCountChanged(m_slider->value());
 	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All")).toString());
@@ -155,14 +160,16 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	QGridLayout* layout = new QGridLayout(this);
 	layout->setColumnMinimumWidth(0, 6);
 	layout->setRowMinimumHeight(4, 12);
-	layout->setRowMinimumHeight(7, 18);
+	layout->setRowMinimumHeight(7, 12);
+	layout->setRowMinimumHeight(9, 18);
 	layout->addWidget(new QLabel(tr("<b>Image</b>"), this), 0, 0, 1, 2);
 	layout->addWidget(m_images_filter, 1, 1);
 	layout->addWidget(m_images, 2, 1);
 	layout->addWidget(image_buttons, 3, 1);
 	layout->addWidget(new QLabel(tr("<b>Pieces</b>"), this), 5, 0, 1, 2);
 	layout->addLayout(slider_layout, 6, 1);
-	layout->addWidget(buttons, 8, 1);
+	layout->addWidget(m_letterbox, 8, 0, 1, 2);
+	layout->addWidget(buttons, 10, 1);
 
 	// Disable buttons if there are no images
 	bool enabled = m_images->count() > 0;
@@ -189,6 +196,7 @@ void NewGameDialog::accept()
 	QSettings settings;
 	settings.setValue("NewGame/Pieces", m_slider->value());
 	settings.setValue("NewGame/Image", image);
+	settings.setValue("NewGame/Letterbox", m_letterbox->isChecked());
 
 	emit newGame(image, m_slider->value());
 }

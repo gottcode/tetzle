@@ -65,6 +65,7 @@ Board::Board(QWidget* parent)
 :	QGLWidget(parent),
 	m_id(0),
 	m_difficulty(0),
+	m_letterbox(false),
 	m_image_width(0),
 	m_image_height(0),
 	m_tile_size(0),
@@ -181,6 +182,7 @@ void Board::newGame(const QString& image, int difficulty)
 	m_id++;
 
 	// Create textures
+	m_letterbox = QSettings().value("NewGame/Letterbox").toBool();
 	m_difficulty = difficulty;
 	m_image_path = image;
 	loadImage();
@@ -286,6 +288,7 @@ void Board::openGame(int id)
 		board_zoom = attributes.value("zoom").toString().toInt();
 		m_pos.setX(attributes.value("x").toString().toInt());
 		m_pos.setY(attributes.value("y").toString().toInt());
+		m_letterbox = attributes.value("letterbox").toString().toInt();
 		loadImage();
 		if (version < 3) {
 			float old_scale = (16 * m_difficulty * pow(1.25, board_zoom * 0.5)) / qMax(m_image_width, m_image_height);
@@ -359,6 +362,7 @@ void Board::saveGame()
 	xml.writeAttribute("zoom", QString::number(m_scale_level));
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
+	xml.writeAttribute("letterbox", QString::number(m_letterbox));
 
 	foreach (Piece* piece, m_pieces)
 		piece->save(xml);
@@ -911,26 +915,57 @@ void Board::loadImage()
 	m_overview->setMinimumSize(overview.size());
 	m_overview->resize(overview.size());
 
-	// Find image size
+	// Find tile sizes
 	GLint max_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
-	if (max_size < qMax(source.width(), source.height()))
-		source = source.scaled(max_size, max_size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-	m_tile_size = qMin(source.width(), source.height()) / (m_difficulty * 8);
-	int groups_wide = source.width() / m_tile_size / 8;
-	int groups_tall = source.height() / m_tile_size / 8;
+	QSize size = source.size();
+	if (max_size < qMax(size.width(), size.height())) {
+		size.scale(max_size, max_size, Qt::KeepAspectRatio);
+	}
+	m_tile_size = qMin(size.width(), size.height()) / (8 * m_difficulty);
+
+	// Find puzzle and texture sizes
+	int groups_wide = size.width() / (8 * m_tile_size);
+	int groups_tall = size.height() / (8 * m_tile_size);
 	m_total_pieces = groups_wide * groups_tall * 16;
 	m_image_width = groups_wide * 8 * m_tile_size;
 	m_image_height = groups_tall * 8 * m_tile_size;
+	int x = 0;
+	int y = 0;
+	int sx = (size.width() - m_image_width) >> 1;
+	int sy = (size.height() - m_image_height) >> 1;
+	int sw = m_image_width;
+	int sh = m_image_height;
+
+	// Adjust values if showing entire image
+	if (m_letterbox) {
+		int width_tile_size = size.width() / (8 * groups_wide);
+		int height_tile_size = size.height() / (8 * groups_tall);
+		m_tile_size = qMax(width_tile_size, height_tile_size);
+		m_image_width = groups_wide * 8 * m_tile_size;
+		m_image_height = groups_tall * 8 * m_tile_size;
+
+		QSize scaled_size = source.size();
+		scaled_size.scale(m_image_width, m_image_height, Qt::KeepAspectRatio);
+		size = scaled_size;
+
+		x = (m_image_width - size.width()) >> 1;
+		y = (m_image_height - size.height()) >> 1;
+		sx = 0;
+		sy = 0;
+		sw = size.width();
+		sh = size.height();
+	}
 
 	// Create puzzle texture
+	source = source.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 	int image_texture_size = powerOfTwo(qMax(m_image_width, m_image_height));
 	m_image_ts = static_cast<float>(m_tile_size) / static_cast<float>(image_texture_size);
 	QImage texture(image_texture_size, image_texture_size, QImage::Format_RGB32);
 	{
 		QPainter painter(&texture);
-		painter.fillRect(texture.rect(), Qt::white);
-		painter.drawImage(0, 0, source, (source.width() - m_image_width) >> 1, (source.height() - m_image_height) >> 1, m_image_width, m_image_height, Qt::AutoColor | Qt::AvoidDither);
+		painter.fillRect(texture.rect(), Qt::darkGray);
+		painter.drawImage(x, y, source, sx, sy, sw, sh, Qt::AutoColor | Qt::AvoidDither);
 	}
 	glActiveTexture(GL_TEXTURE0);
 	glEnable(GL_TEXTURE_2D);
