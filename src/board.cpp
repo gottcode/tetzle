@@ -907,14 +907,6 @@ void Board::loadImage()
 	// Load puzzle image
 	QImage source("images/" + m_image_path);
 
-	// Create overview
-	QPixmap overview = QPixmap::fromImage(source, Qt::AutoColor | Qt::AvoidDither);
-	if (overview.width() > 400 || overview.height() > 400)
-		overview = overview.scaled(400, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-	m_overview->setPixmap(overview);
-	m_overview->setMinimumSize(overview.size());
-	m_overview->resize(overview.size());
-
 	// Find tile sizes
 	GLint max_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
@@ -972,6 +964,15 @@ void Board::loadImage()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	m_image = bindTexture(texture.mirrored(false, true));
+
+	// Create overview
+	QPixmap overview = QPixmap::fromImage(texture.copy(0, 0, m_image_width, m_image_height), Qt::AutoColor | Qt::AvoidDither);
+	if (overview.width() > 400 || overview.height() > 400) {
+		overview = overview.scaled(400, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	m_overview->setPixmap(overview);
+	m_overview->setMinimumSize(overview.size());
+	m_overview->resize(overview.size());
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
