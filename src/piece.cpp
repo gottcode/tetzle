@@ -229,12 +229,27 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		QPointF direction = vector / qMax(abs(vector.x()), abs(vector.y()));
 
 		// Push target until it is clear from current source
-		QRectF intersection;
-		while ((intersection = source_rect.intersected(target->boundingRect())).isValid()) {
-			float delta_x = roundUp(intersection.width() * direction.x());
-			float delta_y = roundUp(intersection.height() * direction.y());
-			target->moveBy(QPoint(delta_x, delta_y));
+		// We use a binary-search, pushing away if collision, retracting otherwise
+		QPoint orig = target->position();
+		QRect united = source_rect.united(target->boundingRect());
+		float min = 0.0f;
+		float max = united.width() * united.height();
+		while (true) {
+			float test = (min + max) / 2.0f;
+			float x = orig.x() + roundUp(test * direction.x());
+			float y = orig.y() + roundUp(test * direction.y());
+			target->moveTo( + x, y);
+			if (source->collidesWith(target))
+				min = test;
+			else {
+				max = test;
+				if (max - min < 1.0f)
+					break;
+				Q_ASSERT(max - min > 0.01f);
+			}
 		}
+		Q_ASSERT(min < max);
+		Q_ASSERT(!source->collidesWith(target));
 
 		// Recurse, and keep inertia for stability.
 		target->pushNeighbors(vector);

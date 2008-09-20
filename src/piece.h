@@ -41,6 +41,12 @@ public:
 
 	void moveBy(const QPoint& delta)
 		{ m_pos += delta; }
+	void moveTo(const QPoint& pos)
+		{ m_pos = pos; }
+	void moveTo(int x, int y)
+		{ m_pos.setX(x); m_pos.setY(y); }
+	const QPoint& position()
+		{ return m_pos; }
 	QPoint scenePos() const;
 	QRect boundingRect() const
 		{ return m_rect.translated(m_pos); }
