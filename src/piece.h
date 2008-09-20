@@ -44,6 +44,8 @@ public:
 	QPoint scenePos() const;
 	QRect boundingRect() const
 		{ return m_rect.translated(m_pos); }
+	QRect marginRect() const;
+	bool collidesWith(const Piece * other) const;
 
 	void rotateAround(Tile* tile);
 	void attach(Tile* tile);

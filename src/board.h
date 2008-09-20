@@ -43,7 +43,7 @@ public:
 	int tileSize() const
 		{ return m_tile_size; }
 	int margin() const
-		{ return 7.0f / m_scale; }
+		{ return 10.0f / m_scale; }
 
 public slots:
 	void newGame(const QString& image, int difficulty);

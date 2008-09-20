@@ -59,6 +59,21 @@ QPoint Piece::scenePos() const
 
 /*****************************************************************************/
 
+QRect Piece::marginRect() const
+{
+	int margin = m_board->margin();
+	return m_rect.translated(m_pos).adjusted(-margin, -margin, margin, margin);
+}
+
+/*****************************************************************************/
+
+bool Piece::collidesWith(const Piece * other) const
+{
+	return marginRect().intersects(other->boundingRect());
+}
+
+/*****************************************************************************/
+
 void Piece::rotateAround(Tile* tile)
 {
 	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
@@ -203,7 +218,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 			source = neighbor;
 			target = this;
 		}
-		QRect source_rect = source->boundingRect().adjusted(-10, -10, 10, 10);
+		QRect source_rect = source->marginRect();
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
