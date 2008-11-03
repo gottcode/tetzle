@@ -19,7 +19,7 @@
 
 #include "new_game_dialog.h"
 
-#include "add_image_dialog.h"
+#include "image_dialog.h"
 #include "label_image_dialog.h"
 #include "label_manager.h"
 #include "thumbnail_list.h"
@@ -30,6 +30,7 @@
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QImageReader>
@@ -112,14 +113,13 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	m_images->setResizeMode(QListView::Adjust);
 	m_images->setSpacing(6);
 	m_images->setUniformItemSizes(true);
+	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 	QListWidgetItem* item;
 	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Name | QDir::LocaleAware)) {
 		item = new QListWidgetItem(m_images);
 		item->setData(Qt::UserRole, image);
 		m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
 	}
-	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
-	m_thumbnails->start();
 
 	// Load values
 	QSettings settings;
@@ -213,11 +213,15 @@ void NewGameDialog::hideEvent(QHideEvent* event)
 
 void NewGameDialog::addImage()
 {
-	AddImageDialog images(this);
-	if (images.exec() == QDialog::Rejected)
+	ImageDialog dialog(this);
+	dialog.setMultipleSelections(true);
+	dialog.setPath(QSettings().value("AddImage/Path").toString());
+	if (dialog.exec() == QDialog::Rejected) {
 		return;
+	}
+	QSettings().setValue("AddImage/Path", QFileInfo(dialog.selectedFile()).absolutePath());
 
-	foreach (QString image, images.images) {
+	foreach (QString image, dialog.selectedFiles()) {
 		addImage(image);
 	}
 
@@ -408,7 +412,6 @@ void NewGameDialog::addImage(const QString& image)
 	QListWidgetItem* item = new QListWidgetItem(m_images);
 	item->setData(Qt::UserRole, image_file);
 	m_thumbnails->addItem(item, "images/" + image_file, QString("images/thumbnails/%1.png").arg(image_id));
-	m_thumbnails->start();
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
 }

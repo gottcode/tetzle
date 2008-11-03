@@ -80,7 +80,6 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 			delete item;
 		}
 	}
-	m_thumbnails->start();
 	m_games->setCurrentRow(0);
 
 	// Create buttons

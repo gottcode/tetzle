@@ -17,46 +17,28 @@
  *
  ***********************************************************************/
 
-#ifndef ADD_IMAGE_DIALOG_H
-#define ADD_IMAGE_DIALOG_H
+#ifndef THUMBNAIL_MODEL_H
+#define THUMBNAIL_MODEL_H
 
-#include <QDialog>
-#include <QMap>
-class QDirModel;
-class QListWidget;
-class QListWidgetItem;
-class QModelIndex;
-class QPushButton;
-class QSplitter;
-class QTreeView;
-class ThumbnailList;
+#include <QDirModel>
+class ThumbnailLoader;
 
-class AddImageDialog : public QDialog
-{
+class ThumbnailModel : public QDirModel {
 	Q_OBJECT
 public:
-	AddImageDialog(QWidget* parent = 0);
+	ThumbnailModel(QObject* parent = 0);
+	~ThumbnailModel();
 
-	QStringList images;
+	void clear();
 
-protected:
-	virtual void hideEvent(QHideEvent* event);
+	virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
 private slots:
-	void folderSelected(const QModelIndex& index);
-	void fileSelectionChanged();
-	void storePath();
+	void generated(const QString& file);
 
 private:
-	QSplitter* m_contents;
-	QDirModel* m_folders_model;
-	QTreeView* m_folders_view;
-	QListWidget* m_files_widget;
-	QPushButton* m_open_button;
-	QString m_current_folder;
-
-	QStringList m_preview_filters;
-	ThumbnailList* m_thumbnails;
+	ThumbnailLoader* m_loader;
+	QPixmap m_loading;
 };
 
-#endif // ADD_IMAGE_DIALOG_H
+#endif

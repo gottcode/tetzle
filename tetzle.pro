@@ -17,9 +17,9 @@ unix: !macx {
 	TARGET = Tetzle
 }
 
-HEADERS = src/add_image_dialog.h \
-	src/board.h \
+HEADERS = src/board.h \
 	src/dancing_links.h \
+	src/image_dialog.h \
 	src/label_image_dialog.h \
 	src/label_manager.h \
 	src/new_game_dialog.h \
@@ -27,13 +27,14 @@ HEADERS = src/add_image_dialog.h \
 	src/piece.h \
 	src/solver.h \
 	src/tile.h \
-	src/thumbnail.h \
 	src/thumbnail_list.h \
+	src/thumbnail_loader.h \
+	src/thumbnail_model.h \
 	src/window.h
 
-SOURCES = src/add_image_dialog.cpp \
-	src/board.cpp \
+SOURCES = src/board.cpp \
 	src/dancing_links.cpp \
+	src/image_dialog.cpp \
 	src/label_image_dialog.cpp \
 	src/label_manager.cpp \
 	src/main.cpp \
@@ -42,8 +43,9 @@ SOURCES = src/add_image_dialog.cpp \
 	src/piece.cpp \
 	src/solver.cpp \
 	src/tile.cpp \
-	src/thumbnail.cpp \
 	src/thumbnail_list.cpp \
+	src/thumbnail_loader.cpp \
+	src/thumbnail_model.cpp \
 	src/window.cpp
 
 macx {

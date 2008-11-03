@@ -17,26 +17,39 @@
  *
  ***********************************************************************/
 
-#ifndef THUMBNAIL_H
-#define THUMBNAIL_H
+#ifndef IMAGE_DIALOG_H
+#define IMAGE_DIALOG_H
 
-#include <QThread>
+#include <QDialog>
+class QDirModel;
+class QListView;
+class QModelIndex;
+class QSplitter;
+class QTreeView;
+class ThumbnailModel;
 
-class Thumbnail : public QThread
-{
+class ImageDialog : public QDialog {
 	Q_OBJECT
 public:
-	Thumbnail(const QString& image, const QString& thumbnail);
+	ImageDialog(QWidget* parent = 0);
 
-signals:
-	void generated(const QString& image);
+	QString selectedFile() const;
+	QStringList selectedFiles() const;
+	void setMultipleSelections(bool multiple);
+	void setPath(const QString& path);
 
 protected:
-	virtual void run();
+	virtual void hideEvent(QHideEvent* event);
+
+private slots:
+	void folderClicked(const QModelIndex& index);
 
 private:
-	QString m_image;
-	QString m_thumbnail;
+	QSplitter* m_contents;
+	QDirModel* m_folders;
+	QTreeView* m_folders_view;
+	ThumbnailModel* m_files;
+	QListView* m_files_view;
 };
 
-#endif // THUMBNAIL_H
+#endif

@@ -17,31 +17,41 @@
  *
  ***********************************************************************/
 
-#ifndef THUMBNAIL_LIST
-#define THUMBNAIL_LIST
+#ifndef THUMBNAIL_LOADER_H
+#define THUMBNAIL_LOADER_H
 
-#include <QMap>
-#include <QObject>
-#include <QPixmap>
-class QListWidgetItem;
-class ThumbnailLoader;
+#include <QMutex>
+#include <QThread>
+class QPixmap;
 
-class ThumbnailList : public QObject
-{
+class ThumbnailLoader : public QThread {
 	Q_OBJECT
 public:
-	ThumbnailList(QObject* parent = 0);
-	~ThumbnailList();
+	ThumbnailLoader();
 
-	void addItem(QListWidgetItem* item, const QString& image, const QString& thumbnail);
+	static QPixmap loadingIcon();
 
-private slots:
-	void generated(const QString& path);
+	void add(const QString& file, const QString& preview);
+	void stop();
+
+public slots:
+	void clear();
+
+signals:
+	void generated(const QString& file);
+
+protected:
+	virtual void run();
 
 private:
-	ThumbnailLoader* m_loader;
-	QPixmap m_loading;
-	QMap<QString, QListWidgetItem*> m_items;
+	bool m_done;
+	struct Thumbnail {
+		QString file;
+		QString preview;
+	};
+	QList<Thumbnail> m_thumbnails;
+	QMutex m_done_mutex;
+	QMutex m_thumbnails_mutex;
 };
 
-#endif // THUMBNAIL_LIST
+#endif
