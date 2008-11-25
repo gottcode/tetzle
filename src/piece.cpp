@@ -27,6 +27,78 @@
 #include <cmath>
 
 /*****************************************************************************/
+// Lightwheight Piece-lookalike.
+// Used for collision detection. Supports slicing in half to sub-pieces.
+// Collision-detection works by slicing and bounds-checking halves until either
+// no collision, or we've found single Tiles that actually collide
+struct PieceHelper {
+	QRect m_rect;
+	QList<Tile*> m_children;
+	const Piece * m_piece;
+	const Board * m_board;
+
+	PieceHelper(const PieceHelper &p) {
+		m_piece = p.m_piece;
+		m_board = p.m_board;
+	}
+
+	PieceHelper(const Piece *piece, const Board * board) {
+		m_piece = piece;
+		m_board = board;
+		m_children = m_piece->children();
+		foreach (Tile* tile, m_children) {
+			m_rect = m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->position()));
+		}
+	}
+
+	void split(PieceHelper &a, PieceHelper &b) const
+	{
+		Q_ASSERT(m_children.size() > 1);
+		bool is_fat = m_rect.width() > m_rect.height();
+		int splitline;
+		if (is_fat)
+			splitline = m_rect.center().x() - m_piece->position().x();
+		else
+			splitline = m_rect.center().y() - m_piece->position().y();
+
+		foreach (Tile* tile, m_children) {
+			PieceHelper *target = &a;
+			if (is_fat) {
+				if (tile->pos().x() >= splitline)
+					target = &b;
+			} else {
+				if (tile->pos().y() >= splitline)
+					target = &b;
+			}
+			target->m_children.append(tile);
+			target->m_rect = target->m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->position()));
+		}
+	}
+
+	bool collidesWith(const PieceHelper &other) const
+	{
+		if (m_children.size() <= 1) {
+			if (other.m_children.size() <= 1)
+				return m_rect.intersects(other.m_rect);
+			else
+				return other.collidesWith(*this);
+		} else {
+			PieceHelper a(*this), b(*this);
+			split(a,b);
+			if (a.m_rect.intersects(other.m_rect)) {
+				if (other.collidesWith(a))
+					return true;
+			}
+			if (b.m_rect.intersects(other.m_rect)) {
+				if (other.collidesWith(b))
+					return true;
+			}
+		}
+		return false;
+	}
+};
+
+/*****************************************************************************/
 
 inline float roundUp(float value)
 {
@@ -69,7 +141,13 @@ QRect Piece::marginRect() const
 
 bool Piece::collidesWith(const Piece * other) const
 {
-	return marginRect().intersects(other->boundingRect());
+	if (marginRect().intersects(other->boundingRect())) {
+		PieceHelper a(this, this->m_board), b(other, other->m_board);
+		bool retVal = a.collidesWith(b);
+		return retVal;
+	} else {
+		return false;
+	}
 }
 
 /*****************************************************************************/
@@ -238,7 +316,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 			float test = (min + max) / 2.0f;
 			float x = orig.x() + roundUp(test * direction.x());
 			float y = orig.y() + roundUp(test * direction.y());
-			target->moveTo( + x, y);
+			target->moveTo(x, y);
 			if (source->collidesWith(target))
 				min = test;
 			else {

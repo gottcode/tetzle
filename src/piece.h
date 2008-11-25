@@ -45,7 +45,7 @@ public:
 		{ m_pos = pos; }
 	void moveTo(int x, int y)
 		{ m_pos.setX(x); m_pos.setY(y); }
-	const QPoint& position()
+	const QPoint& position() const
 		{ return m_pos; }
 	QPoint scenePos() const;
 	QRect boundingRect() const

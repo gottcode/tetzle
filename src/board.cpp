@@ -130,7 +130,7 @@ QList<Piece*> Board::findCollidingPieces(Piece* piece) const
 	QRect rect = piece->marginRect();
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* parent = m_pieces.at(i);
-		if (parent != piece && parent->boundingRect().intersects(rect))
+		if (parent != piece && piece->collidesWith(parent))
 			list.append(parent);
 	}
 	return list;
@@ -143,7 +143,7 @@ Piece* Board::findCollidingPiece(Piece* piece) const
 	QRect rect = piece->marginRect();
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* parent = m_pieces.at(i);
-		if (parent != piece && parent->boundingRect().intersects(rect))
+		if (parent != piece && piece->collidesWith(parent))
 			return parent;
 	}
 	return 0;
