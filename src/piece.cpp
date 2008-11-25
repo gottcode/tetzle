@@ -77,19 +77,21 @@ struct PieceHelper {
 
 	bool collidesWith(const PieceHelper &other) const
 	{
+		int margin = m_board->margin();
+		QRect other_rect = other.m_rect.adjusted(-margin, -margin, margin, margin);
 		if (m_children.size() <= 1) {
 			if (other.m_children.size() <= 1)
-				return m_rect.intersects(other.m_rect);
+				return m_rect.intersects(other_rect);
 			else
 				return other.collidesWith(*this);
 		} else {
 			PieceHelper a(*this), b(*this);
 			split(a,b);
-			if (a.m_rect.intersects(other.m_rect)) {
+			if (a.m_rect.intersects(other_rect)) {
 				if (other.collidesWith(a))
 					return true;
 			}
-			if (b.m_rect.intersects(other.m_rect)) {
+			if (b.m_rect.intersects(other_rect)) {
 				if (other.collidesWith(b))
 					return true;
 			}
