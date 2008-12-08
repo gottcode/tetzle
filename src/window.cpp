@@ -96,6 +96,7 @@ Window::Window()
 	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
 	connect(m_board, SIGNAL(overviewShown()), this, SLOT(overviewShown()));
 	connect(m_board, SIGNAL(overviewHidden()), this, SLOT(overviewHidden()));
+	connect(m_board, SIGNAL(gridToggled(bool)), this, SLOT(gridToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int)), m_slider, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(zoomRangeChanged(int, int)), m_slider, SLOT(setRange(int, int)));
@@ -127,6 +128,8 @@ Window::Window()
 	menu->addSeparator();
 	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
 	m_toggle_overview_action->setEnabled(false);
+	m_toggle_grid_action = menu->addAction(tr("Show &Grid"), m_board, SLOT(toggleGrid()), tr("Ctrl+G"));
+	m_toggle_grid_action->setEnabled(false);
 
 	menu->addSeparator();
 
@@ -201,6 +204,7 @@ void Window::newGame()
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
 		m_toggle_overview_action->setEnabled(true);
+		m_toggle_grid_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	}
@@ -219,6 +223,7 @@ void Window::openGame()
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
 		m_toggle_overview_action->setEnabled(true);
+		m_toggle_grid_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	} else {
@@ -246,6 +251,17 @@ void Window::overviewShown()
 void Window::overviewHidden()
 {
 	m_toggle_overview_action->setText(tr("Show O&verview"));
+}
+
+/*****************************************************************************/
+
+void Window::gridToggled(bool visible)
+{
+	if (visible) {
+		m_toggle_grid_action->setText(tr("Hide &Grid"));
+	} else {
+		m_toggle_grid_action->setText(tr("Show &Grid"));
+	}
 }
 
 /*****************************************************************************/

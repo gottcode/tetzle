@@ -66,6 +66,7 @@ Board::Board(QWidget* parent)
 	m_id(0),
 	m_difficulty(0),
 	m_letterbox(false),
+	m_grid_visible(QSettings().value("Board/GridVisible", true).toBool()),
 	m_image_width(0),
 	m_image_height(0),
 	m_tile_size(0),
@@ -461,19 +462,21 @@ void Board::zoom(int value)
 		QPainter painter(&bumpmap);
 		painter.fillRect(bumpmap.rect(), QColor(128,128,128));
 
-		painter.setPen(QColor(224,224,224));
-		painter.drawLine(0, 0, bumpmap_size - 1, 0);
-		painter.drawLine(0, 1, 0, bumpmap_size - 2);
-		painter.setPen(QColor(32,32,32));
-		painter.drawLine(0, bumpmap_size - 1, bumpmap_size - 1, bumpmap_size - 1);
-		painter.drawLine(bumpmap_size - 1, 1, bumpmap_size - 1, bumpmap_size - 2);
+		if (m_grid_visible) {
+			painter.setPen(QColor(224,224,224));
+			painter.drawLine(0, 0, bumpmap_size - 1, 0);
+			painter.drawLine(0, 1, 0, bumpmap_size - 2);
+			painter.setPen(QColor(32,32,32));
+			painter.drawLine(0, bumpmap_size - 1, bumpmap_size - 1, bumpmap_size - 1);
+			painter.drawLine(bumpmap_size - 1, 1, bumpmap_size - 1, bumpmap_size - 2);
 
-		painter.setPen(QColor(160,160,160));
-		painter.drawLine(1, 1, bumpmap_size - 2, 1);
-		painter.drawLine(1, 2, 1, bumpmap_size - 3);
-		painter.setPen(QColor(96,96,96));
-		painter.drawLine(1, bumpmap_size - 2, bumpmap_size - 2, bumpmap_size - 2);
-		painter.drawLine(bumpmap_size - 2, 2, bumpmap_size - 2, bumpmap_size - 3);
+			painter.setPen(QColor(160,160,160));
+			painter.drawLine(1, 1, bumpmap_size - 2, 1);
+			painter.drawLine(1, 2, 1, bumpmap_size - 3);
+			painter.setPen(QColor(96,96,96));
+			painter.drawLine(1, bumpmap_size - 2, bumpmap_size - 2, bumpmap_size - 2);
+			painter.drawLine(bumpmap_size - 2, 2, bumpmap_size - 2, bumpmap_size - 3);
+		}
 	}
 	glActiveTexture(GL_TEXTURE1);
 	glEnable(GL_TEXTURE_2D);
@@ -510,6 +513,16 @@ void Board::toggleOverview()
 	bool visible = !m_overview->isVisible();
 	m_overview->setVisible(visible);
 	QSettings().setValue("Overview/Visible", visible);
+}
+
+/*****************************************************************************/
+
+void Board::toggleGrid()
+{
+	m_grid_visible = !m_grid_visible;
+	QSettings().setValue("Board/GridVisible", m_grid_visible);
+	zoom(m_scale_level);
+	emit gridToggled(m_grid_visible);
 }
 
 /*****************************************************************************/

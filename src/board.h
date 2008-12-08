@@ -55,10 +55,12 @@ public slots:
 	void zoomFit();
 	void zoom(int value);
 	void toggleOverview();
+	void toggleGrid();
 
 signals:
 	void overviewShown();
 	void overviewHidden();
+	void gridToggled(bool visible);
 	void statusMessage(const QString& message);
 	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
@@ -103,6 +105,7 @@ private:
 	int m_id;
 	int m_difficulty;
 	bool m_letterbox;
+	bool m_grid_visible;
 	QString m_image_path;
 	int m_image_width;
 	int m_image_height;
