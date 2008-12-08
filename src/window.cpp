@@ -287,19 +287,19 @@ void Window::showControls()
 	layout->setColumnMinimumWidth(1, 6);
 	layout->setRowMinimumHeight(7, 12);
 	layout->addWidget(new QLabel(tr("<b>Pick Up Pieces:</b>"), &dialog), 0, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Left Click"), &dialog), 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Left Click or Space"), &dialog), 0, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Drop Pieces:</b>"), &dialog), 1, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Left Click"), &dialog), 1, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Left Click or Space"), &dialog), 1, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Select Pieces:</b>"), &dialog), 2, 0, Qt::AlignRight | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("Left Drag"), &dialog), 2, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Rotate Pieces:</b>"), &dialog), 3, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Right Click or Control + Left Click"), &dialog), 3, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Right Click, Control + Left Click, or R"), &dialog), 3, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Drag Puzzle:</b>"), &dialog), 4, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Middle Click or Shift + Left Click"), &dialog), 4, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Middle Click, Shift + Left Click, or Arrows"), &dialog), 4, 2, Qt::AlignLeft | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("<b>Zoom Puzzle:</b>"), &dialog), 5, 0, Qt::AlignRight | Qt::AlignVCenter);
 	layout->addWidget(new QLabel(tr("Scrollwheel or +/-"), &dialog), 5, 2, Qt::AlignLeft | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("<b>Toggle Overview:</b>"), &dialog), 6, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(new QLabel(tr("Tab"), &dialog), 6, 2, Qt::AlignLeft | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("<b>Move Cursor:</b>"), &dialog), 6, 0, Qt::AlignRight | Qt::AlignVCenter);
+	layout->addWidget(new QLabel(tr("Move mouse or W,A,D,S"), &dialog), 6, 2, Qt::AlignLeft | Qt::AlignVCenter);
 
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
 	connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));

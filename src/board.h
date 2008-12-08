@@ -85,6 +85,9 @@ protected:
 private:
 	void startScrolling();
 	void stopScrolling();
+	void scroll(const QPoint& delta);
+	void togglePiecesUnderCursor();
+	void moveCursor(const QPoint& delta);
 	void grabPiece();
 	void releasePieces();
 	void rotatePiece();

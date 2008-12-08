@@ -674,8 +674,56 @@ void Board::hideEvent(QHideEvent* event)
 
 void Board::keyPressEvent(QKeyEvent* event)
 {
-	if (!event->isAutoRepeat()) {
-		m_action_key = event->key();
+	int offset = (event->modifiers() & Qt::ControlModifier) ? 1 : 10;
+	switch (event->key()) {
+		// Scroll left
+		case Qt::Key_Left:
+			scroll(QPoint(2 * offset, 0));
+			updateCursor();
+			break;
+		// Scroll up
+		case Qt::Key_Up:
+			scroll(QPoint(0, 2 * offset));
+			updateCursor();
+			break;
+		// Scroll right
+		case Qt::Key_Right:
+			scroll(QPoint(-2 * offset, 0));
+			updateCursor();
+			break;
+		// Scroll down
+		case Qt::Key_Down:
+			scroll(QPoint(0, -2 * offset));
+			updateCursor();
+			break;
+		// Grab or release piece
+		case Qt::Key_Space:
+			togglePiecesUnderCursor();
+			break;
+		// Rotate piece
+		case Qt::Key_R:
+			rotatePiece();
+			break;
+		// Move cursor up
+		case Qt::Key_W:
+			moveCursor(QPoint(0, -offset));
+			break;
+		// Move cursor left
+		case Qt::Key_A:
+			moveCursor(QPoint(-offset, 0));
+			break;
+		// Move cursor down
+		case Qt::Key_S:
+			moveCursor(QPoint(0, offset));
+			break;
+		// Move cursor right
+		case Qt::Key_D:
+			moveCursor(QPoint(offset, 0));
+			break;
+		default:
+			if (!event->isAutoRepeat()) {
+				m_action_key = event->key();
+			}
 	}
 	QGLWidget::keyPressEvent(event);
 }
@@ -718,31 +766,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 
 	switch (m_action_button) {
 	case Qt::LeftButton:
-		switch (m_action_key) {
-		case 0:
-			if (!m_selecting) {
-				if (tileUnderCursor(false)) {
-					grabPiece();
-				} else {
-					releasePieces();
-				}
-			} else {
-				selectPieces();
-			}
-			break;
-		case Qt::Key_Shift:
-			stopScrolling();
-			break;
-#if !defined(Q_OS_MAC)
-		case Qt::Key_Control:
-#else
-		case Qt::Key_Meta:
-#endif
-			rotatePiece();
-			break;
-		default:
-			break;
-		}
+		togglePiecesUnderCursor();
 		break;
 	case Qt::RightButton:
 		rotatePiece();
@@ -765,11 +789,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 	QPoint delta = (event->pos() - m_cursor_pos) / m_scale;
 
 	if (m_scrolling) {
-		// Move by delta
-		m_pos -= delta;
-		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->moveBy(-delta);
-		}
+		scroll(delta);
 	}
 
 	if (!m_active_tiles.isEmpty()) {
@@ -824,6 +844,55 @@ void Board::startScrolling()
 void Board::stopScrolling()
 {
 	m_scrolling = false;
+	updateCursor();
+}
+
+/*****************************************************************************/
+
+void Board::scroll(const QPoint& delta)
+{
+	m_pos -= delta;
+	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
+		i.key()->moveBy(-delta);
+	}
+	updateGL();
+}
+
+/*****************************************************************************/
+
+void Board::togglePiecesUnderCursor() {
+	switch (m_action_key) {
+	case 0:
+		if (!m_selecting) {
+			if (tileUnderCursor(false)) {
+				grabPiece();
+			} else {
+				releasePieces();
+			}
+		} else {
+			selectPieces();
+		}
+		break;
+	case Qt::Key_Shift:
+		stopScrolling();
+		break;
+#if !defined(Q_OS_MAC)
+	case Qt::Key_Control:
+#else
+	case Qt::Key_Meta:
+#endif
+		rotatePiece();
+		break;
+	default:
+		break;
+	}
+}
+
+/*****************************************************************************/
+
+void Board::moveCursor(const QPoint& delta)
+{
+	QCursor::setPos(cursor().pos() + delta);
 	updateCursor();
 }
 
