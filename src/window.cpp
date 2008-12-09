@@ -125,10 +125,8 @@ Window::Window()
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, SLOT(zoomFit()));
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
-	m_show_overview_action = menu->addAction(tr("&Show Overview"), m_board, SLOT(showOverview()), tr("Tab"));
-	m_show_overview_action->setEnabled(false);
-	m_hide_overview_action = menu->addAction(tr("&Hide Overview"), m_board, SLOT(hideOverview()), tr("Tab"));
-	m_hide_overview_action->setVisible(false);
+	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
+	m_toggle_overview_action->setEnabled(false);
 
 	menu->addSeparator();
 
@@ -202,7 +200,7 @@ void Window::newGame()
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
-		m_show_overview_action->setEnabled(true);
+		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	}
@@ -220,7 +218,7 @@ void Window::openGame()
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
-		m_show_overview_action->setEnabled(true);
+		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	} else {
@@ -232,7 +230,7 @@ void Window::openGame()
 
 void Window::gameFinished()
 {
-	m_show_overview_action->setEnabled(false);
+	m_toggle_overview_action->setEnabled(false);
 	m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
 }
 
@@ -240,16 +238,14 @@ void Window::gameFinished()
 
 void Window::overviewShown()
 {
-	m_hide_overview_action->setVisible(true);
-	m_show_overview_action->setVisible(false);
+	m_toggle_overview_action->setText(tr("Hide O&verview"));
 }
 
 /*****************************************************************************/
 
 void Window::overviewHidden()
 {
-	m_show_overview_action->setVisible(true);
-	m_hide_overview_action->setVisible(false);
+	m_toggle_overview_action->setText(tr("Show O&verview"));
 }
 
 /*****************************************************************************/

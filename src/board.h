@@ -54,8 +54,7 @@ public slots:
 	void zoomOut();
 	void zoomFit();
 	void zoom(int value);
-	void showOverview();
-	void hideOverview();
+	void toggleOverview();
 
 signals:
 	void overviewShown();

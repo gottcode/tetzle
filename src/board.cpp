@@ -505,18 +505,11 @@ void Board::zoom(int value)
 
 /*****************************************************************************/
 
-void Board::showOverview()
+void Board::toggleOverview()
 {
-	m_overview->show();
-	QSettings().setValue("Overview/Visible", true);
-}
-
-/*****************************************************************************/
-
-void Board::hideOverview()
-{
-	m_overview->hide();
-	QSettings().setValue("Overview/Visible", false);
+	bool visible = !m_overview->isVisible();
+	m_overview->setVisible(visible);
+	QSettings().setValue("Overview/Visible", visible);
 }
 
 /*****************************************************************************/
