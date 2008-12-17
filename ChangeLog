@@ -1,3 +1,6 @@
+2008-12-17 Graeme Gott <graeme@gottcode.org>
+	* Add panning and zooming to overview window.
+
 2008-12-08 Frank Tetzel <s1445051@mail.inf.tu-dresden.de>
 	* Add keyboard shortcuts.
 	* Add ability to toggle borders.

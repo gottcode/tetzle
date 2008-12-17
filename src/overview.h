@@ -17,60 +17,41 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef OVERVIEW_H
+#define OVERVIEW_H
 
-#include <QMainWindow>
-class QAction;
-class QLabel;
-class QSlider;
-class Board;
+#include <QGraphicsView>
+class QGraphicsPixmapItem;
 
-class ZoomSlider : public QWidget
+class Overview : public QGraphicsView
 {
 	Q_OBJECT
 public:
-	ZoomSlider(QWidget* parent = 0);
+	Overview(QWidget* parent = 0);
+
+	void load(const QImage& image);
 
 signals:
-	void valueChanged(int);
-
-public slots:
-	void setValue(int value);
-	void setRange(int min, int max);
-
-private:
-	QLabel* m_label;
-	QSlider* m_slider;
-};
-
-class Window : public QMainWindow
-{
-	Q_OBJECT
-public:
-	Window();
+	void toggled(bool visible);
 
 protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
+	virtual void hideEvent(QHideEvent* event);
+	virtual void moveEvent(QMoveEvent* event);
+	virtual void resizeEvent(QResizeEvent* event);
+	virtual void showEvent(QShowEvent* event);
+	virtual void wheelEvent(QWheelEvent* event);
 
 private slots:
-	void newGame();
-	void openGame();
-	void gameFinished();
-	void overviewToggled(bool visible);
-	void bordersToggled(bool visible);
-	void setFullScreen(bool enable);
-	void showControls();
-	void showAbout();
+	void zoomIn();
+	void zoomOut();
 
 private:
-	QAction* m_open_action;
-	QAction* m_zoom_fit_action;
-	QAction* m_toggle_overview_action;
-	QAction* m_toggle_borders_action;
-	ZoomSlider* m_slider;
-	Board* m_board;
+	void zoom();
+
+	float m_scale_start;
+	float m_scale_factor;
+	int m_scale_level;
+	QGraphicsPixmapItem* m_pixmap;
 };
 
-#endif // WINDOW_H
+#endif // OVERVIEW_H

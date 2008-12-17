@@ -94,8 +94,7 @@ Window::Window()
 	// Add contents
 	m_board = new Board(this);
 	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
-	connect(m_board, SIGNAL(overviewShown()), this, SLOT(overviewShown()));
-	connect(m_board, SIGNAL(overviewHidden()), this, SLOT(overviewHidden()));
+	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(bordersToggled(bool)), this, SLOT(bordersToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int)), m_slider, SLOT(setValue(int)));
@@ -242,16 +241,13 @@ void Window::gameFinished()
 
 /*****************************************************************************/
 
-void Window::overviewShown()
+void Window::overviewToggled(bool visible)
 {
-	m_toggle_overview_action->setText(tr("Hide O&verview"));
-}
-
-/*****************************************************************************/
-
-void Window::overviewHidden()
-{
-	m_toggle_overview_action->setText(tr("Show O&verview"));
+	if (visible) {
+		m_toggle_overview_action->setText(tr("Hide O&verview"));
+	} else {
+		m_toggle_overview_action->setText(tr("Show O&verview"));
+	}
 }
 
 /*****************************************************************************/

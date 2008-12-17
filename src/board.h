@@ -22,7 +22,7 @@
 
 #include <QGLWidget>
 #include <QHash>
-class QLabel;
+class Overview;
 class Piece;
 class Tile;
 
@@ -60,8 +60,7 @@ public slots:
 	void toggleBorders();
 
 signals:
-	void overviewShown();
-	void overviewHidden();
+	void overviewToggled(bool visible);
 	void bordersToggled(bool visible);
 	void statusMessage(const QString& message);
 	void retrievePiecesAvailable(bool available);
@@ -75,8 +74,6 @@ protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
 	virtual void paintGL();
-	virtual bool eventFilter(QObject* watched, QEvent* event);
-	virtual void hideEvent(QHideEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void keyReleaseEvent(QKeyEvent* event);
 	virtual void mousePressEvent(QMouseEvent* event);
@@ -115,7 +112,7 @@ private:
 	int m_image_width;
 	int m_image_height;
 	int m_tile_size;
-	QLabel* m_overview;
+	Overview* m_overview;
 
 	GLuint m_success;
 	GLuint m_image;

@@ -19,6 +19,7 @@
 
 #include "board.h"
 
+#include "overview.h"
 #include "piece.h"
 #include "solver.h"
 #include "tile.h"
@@ -98,11 +99,8 @@ Board::Board(QWidget* parent)
 	generateSuccessImage();
 
 	// Create overview dialog
-	m_overview = new QLabel(0, Qt::Tool);
-	m_overview->setWindowTitle(tr("Overview"));
-	m_overview->setAlignment(Qt::AlignCenter);
-	m_overview->installEventFilter(this);
-	m_overview->move(QSettings().value("Overview/Position").toPoint());
+	m_overview = new Overview;
+	connect(m_overview, SIGNAL(toggled(bool)), this, SIGNAL(overviewToggled(bool)));
 }
 
 /*****************************************************************************/
@@ -645,33 +643,6 @@ void Board::paintGL()
 
 /*****************************************************************************/
 
-bool Board::eventFilter(QObject* watched, QEvent* event)
-{
-	if (watched == m_overview) {
-		if (event->type() == QEvent::Hide) {
-			emit overviewHidden();
-		} else if (event->type() == QEvent::Show) {
-			emit overviewShown();
-		} else if (event->type() == QEvent::KeyPress) {
-			if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Tab)
-				m_overview->hide();
-		}
-		return false;
-	} else {
-		return QGLWidget::eventFilter(watched, event);
-	}
-}
-
-/*****************************************************************************/
-
-void Board::hideEvent(QHideEvent* event)
-{
-	QSettings().setValue("Overview/Position", m_overview->pos());
-	QGLWidget::hideEvent(event);
-}
-
-/*****************************************************************************/
-
 void Board::keyPressEvent(QKeyEvent* event)
 {
 	int offset = (event->modifiers() & Qt::ControlModifier) ? 1 : 10;
@@ -1061,13 +1032,7 @@ void Board::loadImage()
 	m_image = bindTexture(texture.mirrored(false, true));
 
 	// Create overview
-	QPixmap overview = QPixmap::fromImage(texture.copy(0, 0, m_image_width, m_image_height), Qt::AutoColor | Qt::AvoidDither);
-	if (overview.width() > 400 || overview.height() > 400) {
-		overview = overview.scaled(400, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-	}
-	m_overview->setPixmap(overview);
-	m_overview->setMinimumSize(overview.size());
-	m_overview->resize(overview.size());
+	m_overview->load(texture.copy(0, 0, m_image_width, m_image_height));
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
