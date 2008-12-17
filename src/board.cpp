@@ -66,7 +66,7 @@ Board::Board(QWidget* parent)
 	m_id(0),
 	m_difficulty(0),
 	m_letterbox(false),
-	m_grid_visible(QSettings().value("Board/GridVisible", true).toBool()),
+	m_borders_visible(QSettings().value("Board/BordersVisible", true).toBool()),
 	m_image_width(0),
 	m_image_height(0),
 	m_tile_size(0),
@@ -462,7 +462,7 @@ void Board::zoom(int value)
 		QPainter painter(&bumpmap);
 		painter.fillRect(bumpmap.rect(), QColor(128,128,128));
 
-		if (m_grid_visible) {
+		if (m_borders_visible) {
 			painter.setPen(QColor(224,224,224));
 			painter.drawLine(0, 0, bumpmap_size - 1, 0);
 			painter.drawLine(0, 1, 0, bumpmap_size - 2);
@@ -517,12 +517,12 @@ void Board::toggleOverview()
 
 /*****************************************************************************/
 
-void Board::toggleGrid()
+void Board::toggleBorders()
 {
-	m_grid_visible = !m_grid_visible;
-	QSettings().setValue("Board/GridVisible", m_grid_visible);
+	m_borders_visible = !m_borders_visible;
+	QSettings().setValue("Board/BordersVisible", m_borders_visible);
 	zoom(m_scale_level);
-	emit gridToggled(m_grid_visible);
+	emit bordersToggled(m_borders_visible);
 }
 
 /*****************************************************************************/

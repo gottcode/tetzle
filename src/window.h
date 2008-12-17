@@ -60,7 +60,7 @@ private slots:
 	void gameFinished();
 	void overviewShown();
 	void overviewHidden();
-	void gridToggled(bool visible);
+	void bordersToggled(bool visible);
 	void setFullScreen(bool enable);
 	void showControls();
 	void showAbout();
@@ -69,7 +69,7 @@ private:
 	QAction* m_open_action;
 	QAction* m_zoom_fit_action;
 	QAction* m_toggle_overview_action;
-	QAction* m_toggle_grid_action;
+	QAction* m_toggle_borders_action;
 	ZoomSlider* m_slider;
 	Board* m_board;
 };

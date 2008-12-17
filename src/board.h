@@ -44,6 +44,8 @@ public:
 		{ return m_tile_size; }
 	int margin() const
 		{ return 10.0f / m_scale; }
+	bool bordersVisible() const
+		{ return m_borders_visible; }
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -55,12 +57,12 @@ public slots:
 	void zoomFit();
 	void zoom(int value);
 	void toggleOverview();
-	void toggleGrid();
+	void toggleBorders();
 
 signals:
 	void overviewShown();
 	void overviewHidden();
-	void gridToggled(bool visible);
+	void bordersToggled(bool visible);
 	void statusMessage(const QString& message);
 	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
@@ -108,7 +110,7 @@ private:
 	int m_id;
 	int m_difficulty;
 	bool m_letterbox;
-	bool m_grid_visible;
+	bool m_borders_visible;
 	QString m_image_path;
 	int m_image_width;
 	int m_image_height;
