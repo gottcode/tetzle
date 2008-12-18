@@ -757,7 +757,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
-	QPoint delta = (event->pos() - m_cursor_pos) / m_scale;
+	QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
 
 	if (m_scrolling) {
 		scroll(delta);
@@ -806,7 +806,6 @@ void Board::wheelEvent(QWheelEvent* event)
 void Board::startScrolling()
 {
 	m_scrolling = true;
-	m_cursor_pos = mapFromGlobal(QCursor::pos());
 	setCursor(Qt::SizeAllCursor);
 }
 
@@ -879,7 +878,6 @@ void Board::grabPiece()
 		return;
 	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
 	m_active_tiles.insert(tile->parent(), tile);
-	m_cursor_pos = mapFromGlobal(QCursor::pos());
 
 	Piece* piece = tile->parent();
 	m_pieces.removeAll(piece);
@@ -1118,14 +1116,14 @@ void Board::updateCursor()
 
 QPoint Board::mapCursorPosition() const
 {
-	return mapPosition(mapFromGlobal(QCursor::pos()));
+	return mapPosition(m_cursor_pos);
 }
 
 /*****************************************************************************/
 
 QPoint Board::mapPosition(const QPoint& position) const
 {
-	return ((position - QPoint(width() >> 1, height() >> 1)) * (1.0f / m_scale)) + m_pos;
+	return (position / m_scale) - (QPoint(width() >> 1, height() >> 1) / m_scale) + m_pos;
 }
 
 /*****************************************************************************/

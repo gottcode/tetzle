@@ -1,3 +1,6 @@
+2008-12-18 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Mouse cursor drifted off pieces when moving.
+
 2008-12-17 Graeme Gott <graeme@gottcode.org>
 	* Tag version 1.2.0.
 	* Add panning and zooming to overview window.
