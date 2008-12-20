@@ -71,6 +71,7 @@ Board::Board(QWidget* parent)
 	m_image_width(0),
 	m_image_height(0),
 	m_tile_size(0),
+	m_bumpmap_size(0),
 	m_image(0),
 	m_bumpmap(0),
 	m_image_ts(0),
@@ -452,9 +453,9 @@ void Board::zoom(int value)
 		m_scale = 4.0f / m_tile_size;
 
 	// Create tile bumpmap texture
-	int bumpmap_size = m_tile_size * m_scale;
-	int bumpmap_texture_size = powerOfTwo(bumpmap_size);
-	m_bumpmap_ts = static_cast<float>(bumpmap_size) / static_cast<float>(bumpmap_texture_size);
+	m_bumpmap_size = qRound(m_tile_size * m_scale);
+	int bumpmap_texture_size = powerOfTwo(m_bumpmap_size);
+	m_bumpmap_ts = static_cast<float>(m_bumpmap_size) / static_cast<float>(bumpmap_texture_size);
 	QImage bumpmap(bumpmap_texture_size, bumpmap_texture_size, QImage::Format_RGB32);
 	{
 		QPainter painter(&bumpmap);
@@ -462,18 +463,18 @@ void Board::zoom(int value)
 
 		if (m_borders_visible) {
 			painter.setPen(QColor(224,224,224));
-			painter.drawLine(0, 0, bumpmap_size - 1, 0);
-			painter.drawLine(0, 1, 0, bumpmap_size - 2);
+			painter.drawLine(0, 0, m_bumpmap_size - 1, 0);
+			painter.drawLine(0, 1, 0, m_bumpmap_size - 2);
 			painter.setPen(QColor(32,32,32));
-			painter.drawLine(0, bumpmap_size - 1, bumpmap_size - 1, bumpmap_size - 1);
-			painter.drawLine(bumpmap_size - 1, 1, bumpmap_size - 1, bumpmap_size - 2);
+			painter.drawLine(0, m_bumpmap_size - 1, m_bumpmap_size - 1, m_bumpmap_size - 1);
+			painter.drawLine(m_bumpmap_size - 1, 1, m_bumpmap_size - 1, m_bumpmap_size - 2);
 
 			painter.setPen(QColor(160,160,160));
-			painter.drawLine(1, 1, bumpmap_size - 2, 1);
-			painter.drawLine(1, 2, 1, bumpmap_size - 3);
+			painter.drawLine(1, 1, m_bumpmap_size - 2, 1);
+			painter.drawLine(1, 2, 1, m_bumpmap_size - 3);
 			painter.setPen(QColor(96,96,96));
-			painter.drawLine(1, bumpmap_size - 2, bumpmap_size - 2, bumpmap_size - 2);
-			painter.drawLine(bumpmap_size - 2, 2, bumpmap_size - 2, bumpmap_size - 3);
+			painter.drawLine(1, m_bumpmap_size - 2, m_bumpmap_size - 2, m_bumpmap_size - 2);
+			painter.drawLine(m_bumpmap_size - 2, 2, m_bumpmap_size - 2, m_bumpmap_size - 3);
 		}
 	}
 	glActiveTexture(GL_TEXTURE1);
@@ -553,9 +554,7 @@ void Board::paintGL()
 
 	glPushMatrix();
 
-	glScalef(m_scale, m_scale, 1);
-	float inverse_scale = 1.0f / (m_scale * 2);
-	glTranslatef(width() * inverse_scale - m_pos.x(), height() * inverse_scale - m_pos.y(), 0);
+	glTranslatef((width() >> 1) - qRound(m_pos.x() * m_scale), (height() >> 1) - qRound(m_pos.y() * m_scale), 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_image);
@@ -570,7 +569,7 @@ void Board::paintGL()
 	glBegin(GL_QUADS);
 		foreach (Piece* piece, m_pieces) {
 			foreach (Tile* tile, piece->children()) {
-				draw(tile, tile->scenePos(), depth);
+				draw(tile, tile->scenePos() * m_scale, depth);
 			}
 			depth += depth_diff;
 		}
@@ -1132,8 +1131,8 @@ void Board::draw(Tile* tile, const QPoint& pos, float depth) const
 {
 	int x1 = pos.x();
 	int y1 = pos.y();
-	int x2 = x1 + m_tile_size;
-	int y2 = y1 + m_tile_size;
+	int x2 = x1 + m_bumpmap_size;
+	int y2 = y1 + m_bumpmap_size;
 
 	const QPointF* corners = m_corners[tile->parent()->rotation()];
 	float tx = tile->column() * m_image_ts;

@@ -112,6 +112,7 @@ private:
 	int m_image_width;
 	int m_image_height;
 	int m_tile_size;
+	int m_bumpmap_size;
 	Overview* m_overview;
 
 	GLuint m_success;

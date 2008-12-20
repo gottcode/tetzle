@@ -1,3 +1,6 @@
+2008-12-20 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Tile borders were not correctly scaled.
+
 2008-12-18 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Mouse cursor drifted off pieces when moving.
 
