@@ -649,21 +649,25 @@ void Board::keyPressEvent(QKeyEvent* event)
 		// Scroll left
 		case Qt::Key_Left:
 			scroll(QPoint(2 * offset, 0));
+			updateGL();
 			updateCursor();
 			break;
 		// Scroll up
 		case Qt::Key_Up:
 			scroll(QPoint(0, 2 * offset));
+			updateGL();
 			updateCursor();
 			break;
 		// Scroll right
 		case Qt::Key_Right:
 			scroll(QPoint(-2 * offset, 0));
+			updateGL();
 			updateCursor();
 			break;
 		// Scroll down
 		case Qt::Key_Down:
 			scroll(QPoint(0, -2 * offset));
+			updateGL();
 			updateCursor();
 			break;
 		// Grab or release piece
@@ -824,7 +828,6 @@ void Board::scroll(const QPoint& delta)
 	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 		i.key()->moveBy(-delta);
 	}
-	updateGL();
 }
 
 /*****************************************************************************/

@@ -1,3 +1,6 @@
+2008-12-21 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Held pieces jittered when scrolling.
+
 2008-12-20 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Tile borders were not correctly scaled.
 
