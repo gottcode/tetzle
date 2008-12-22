@@ -302,11 +302,11 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
-		while (abs(vector.x()) + abs(vector.y()) < 1)
+		while (fabs(vector.x()) + fabs(vector.y()) < 1)
 			vector = QPointF(rand() - (RAND_MAX/2), rand() - (RAND_MAX/2));
 
 		// Scale movement vector so that the largest dimension is 1
-		QPointF direction = vector / qMax(abs(vector.x()), abs(vector.y()));
+		QPointF direction = vector / qMax(fabs(vector.x()), fabs(vector.y()));
 
 		// Push target until it is clear from current source
 		// We use a binary-search, pushing away if collision, retracting otherwise
