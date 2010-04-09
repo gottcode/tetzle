@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +40,10 @@
 #include <QStatusBar>
 #include <QTimer>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 ZoomSlider::ZoomSlider(QWidget* parent)
-:	QWidget(parent)
+	: QWidget(parent)
 {
 	m_label = new QLabel(tr("0%"), this);
 	m_slider = new QSlider(Qt::Horizontal, this);
@@ -56,7 +56,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	layout->addWidget(m_slider);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void ZoomSlider::setValue(int value)
 {
@@ -64,22 +64,20 @@ void ZoomSlider::setValue(int value)
 	m_label->setText(tr("%1%").arg(value * 100 / m_slider->maximum()));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void ZoomSlider::setRange(int min, int max)
 {
 	m_slider->setRange(min, max);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Window::Window()
-:	m_board(0)
+	: m_board(0)
 {
 	setWindowTitle(tr("Tetzle"));
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
 	setWindowIcon(QIcon(":/tetzle.png"));
-#endif
 	resize(640, 480);
 
 	// Add statusbar
@@ -172,16 +170,17 @@ Window::Window()
 	timer->start(300000);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::changeEvent(QEvent* event)
 {
-	if (event->type() == QEvent::WindowStateChange)
+	if (event->type() == QEvent::WindowStateChange) {
 		m_board->updateGL();
+	}
 	return QMainWindow::changeEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::closeEvent(QCloseEvent* event)
 {
@@ -192,7 +191,7 @@ void Window::closeEvent(QCloseEvent* event)
 	QMainWindow::closeEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::newGame()
 {
@@ -210,7 +209,7 @@ void Window::newGame()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::openGame()
 {
@@ -231,7 +230,7 @@ void Window::openGame()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::gameFinished()
 {
@@ -239,7 +238,7 @@ void Window::gameFinished()
 	m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::overviewToggled(bool visible)
 {
@@ -250,7 +249,7 @@ void Window::overviewToggled(bool visible)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::bordersToggled(bool visible)
 {
@@ -261,17 +260,18 @@ void Window::bordersToggled(bool visible)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::setFullScreen(bool enable)
 {
-	if (enable)
+	if (enable) {
 		showFullScreen();
-	else
+	} else {
 		showNormal();
+	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::showControls()
 {
@@ -305,11 +305,15 @@ void Window::showControls()
 	dialog.exec();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Window::showAbout()
 {
-	QMessageBox::about(this, tr("About"), tr("<center><big><b>Tetzle 1.2.1</b></big><br/>A jigsaw puzzle with tetrominoes for pieces<br/><small>Copyright &copy; 2008 Graeme Gott</small></center>"));
+	QMessageBox::about(this, tr("About"), tr(
+		"<center><big><b>Tetzle 1.2.1</b></big><br/>"
+		"A jigsaw puzzle with tetrominoes for pieces<br/>"
+		"<small>Copyright &copy; 2008-2010 Graeme Gott</small></center>"
+	));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

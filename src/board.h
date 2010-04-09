@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,19 +33,14 @@ public:
 	Board(QWidget* parent = 0);
 	~Board();
 
-	void removePiece(Piece* piece);
-
 	QList<Piece*> findCollidingPieces(Piece* piece) const;
 	Piece* findCollidingPiece(Piece* piece) const;
+	void removePiece(Piece* piece);
 
-	int id() const
-		{ return m_id; }
-	int tileSize() const
-		{ return m_tile_size; }
-	int margin() const
-		{ return 10.0f / m_scale; }
-	bool bordersVisible() const
-		{ return m_borders_visible; }
+	int id() const;
+	int tileSize() const;
+	int margin() const;
+	bool bordersVisible() const;
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -104,6 +99,7 @@ private:
 	void finishGame();
 	void cleanup();
 
+private:
 	int m_id;
 	int m_difficulty;
 	bool m_letterbox;
@@ -143,4 +139,25 @@ private:
 	Qt::MouseButton m_action_button;
 };
 
-#endif // BOARD_H
+
+inline int Board::id() const
+{
+	return m_id;
+}
+
+inline int Board::tileSize() const
+{
+	return m_tile_size;
+}
+
+inline int Board::margin() const
+{
+	return 10.0f / m_scale;
+}
+
+inline bool Board::bordersVisible() const
+{
+	return m_borders_visible;
+}
+
+#endif

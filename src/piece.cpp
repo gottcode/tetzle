@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,120 +26,122 @@
 
 #include <cmath>
 
-/*****************************************************************************/
+namespace
+{
+
+//-----------------------------------------------------------------------------
+
 // Lightwheight Piece-lookalike.
 // Used for collision detection. Supports slicing in half to sub-pieces.
 // Collision-detection works by slicing and bounds-checking halves until either
 // no collision, or we've found single Tiles that actually collide
-struct PieceHelper {
+struct PieceHelper
+{
 	QRect m_rect;
 	QList<Tile*> m_children;
-	const Piece * m_piece;
-	const Board * m_board;
+	const Piece* m_piece;
+	const Board* m_board;
 
-	PieceHelper(const PieceHelper &p) {
+	PieceHelper(const PieceHelper& p)
+	{
 		m_piece = p.m_piece;
 		m_board = p.m_board;
 	}
 
-	PieceHelper(const Piece *piece, const Board * board) {
+	PieceHelper(const Piece* piece, const Board* board)
+	{
 		m_piece = piece;
 		m_board = board;
 		m_children = m_piece->children();
 		foreach (Tile* tile, m_children) {
-			m_rect = m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->position()));
+			m_rect = m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->scenePos()));
 		}
 	}
 
-	void split(PieceHelper &a, PieceHelper &b) const
+	void split(PieceHelper& a, PieceHelper& b) const
 	{
 		Q_ASSERT(m_children.size() > 1);
 		bool is_fat = m_rect.width() > m_rect.height();
 		int splitline;
-		if (is_fat)
-			splitline = m_rect.center().x() - m_piece->position().x();
-		else
-			splitline = m_rect.center().y() - m_piece->position().y();
+		if (is_fat) {
+			splitline = m_rect.center().x() - m_piece->scenePos().x();
+		} else {
+			splitline = m_rect.center().y() - m_piece->scenePos().y();
+		}
 
 		foreach (Tile* tile, m_children) {
-			PieceHelper *target = &a;
+			PieceHelper* target = &a;
 			if (is_fat) {
-				if (tile->pos().x() >= splitline)
+				if (tile->pos().x() >= splitline) {
 					target = &b;
+				}
 			} else {
-				if (tile->pos().y() >= splitline)
+				if (tile->pos().y() >= splitline) {
 					target = &b;
+				}
 			}
 			target->m_children.append(tile);
-			target->m_rect = target->m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->position()));
+			target->m_rect = target->m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->scenePos()));
 		}
 	}
 
-	bool collidesWith(const PieceHelper &other) const
+	bool collidesWith(const PieceHelper& other) const
 	{
 		int margin = m_board->margin();
 		QRect other_rect = other.m_rect.adjusted(-margin, -margin, margin, margin);
 		if (m_children.size() <= 1) {
-			if (other.m_children.size() <= 1)
+			if (other.m_children.size() <= 1) {
 				return m_rect.intersects(other_rect);
-			else
+			} else {
 				return other.collidesWith(*this);
+			}
 		} else {
 			PieceHelper a(*this), b(*this);
 			split(a,b);
 			if (a.m_rect.intersects(other_rect)) {
-				if (other.collidesWith(a))
+				if (other.collidesWith(a)) {
 					return true;
+				}
 			}
 			if (b.m_rect.intersects(other_rect)) {
-				if (other.collidesWith(b))
+				if (other.collidesWith(b)) {
 					return true;
+				}
 			}
 		}
 		return false;
 	}
 };
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 inline float roundUp(float value)
 {
 	return value >= 0.0f ? ceil(value) : floor(value);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
+
+}
+
+//-----------------------------------------------------------------------------
 
 Piece::Piece(int rotation, const QPoint& pos, Board* board)
-:	m_rotation(rotation),
+	: m_board(board),
+	m_rotation(rotation),
 	m_pos(pos),
-	m_rect(0, 0, 0, 0),
-	m_board(board)
+	m_rect(0, 0, 0, 0)
 {
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Piece::~Piece()
 {
 	qDeleteAll(m_children);
 }
 
-/*****************************************************************************/
-
-QPoint Piece::scenePos() const
-{
-	return m_pos;
-}
-
-/*****************************************************************************/
-
-QRect Piece::marginRect() const
-{
-	int margin = m_board->margin();
-	return m_rect.translated(m_pos).adjusted(-margin, -margin, margin, margin);
-}
-
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 bool Piece::collidesWith(const Piece * other) const
 {
@@ -152,31 +154,15 @@ bool Piece::collidesWith(const Piece * other) const
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void Piece::rotateAround(Tile* tile)
+QRect Piece::marginRect() const
 {
-	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
-
-	if (tile) {
-		QPoint pos = tile->scenePos() - scenePos();
-		m_pos += QPoint(pos.x() + pos.y(), pos.y() - pos.x());
-	}
-
-	m_rotation += 1;
-	if (m_rotation > 3)
-		m_rotation = 0;
-
-	QPoint pos;
-	foreach (Tile* tile, m_children) {
-		pos = tile->pos();
-		qSwap(pos.rx(), pos.ry());
-		pos.setX(-pos.x());
-		tile->setPos(pos);
-	}
+	int margin = m_board->margin();
+	return m_rect.translated(m_pos).adjusted(-margin, -margin, margin, margin);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Piece::attach(Tile* tile)
 {
@@ -185,7 +171,7 @@ void Piece::attach(Tile* tile)
 	m_rect = m_rect.united(tile->rect().translated(tile->pos()));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Piece::attach(Piece* piece)
 {
@@ -209,7 +195,7 @@ void Piece::attach(Piece* piece)
 	m_board->removePiece(piece);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Piece::attachNeighbors()
 {
@@ -222,12 +208,15 @@ void Piece::attachNeighbors()
 	case 0:
 		cos_size = m_board->tileSize();
 		break;
+
 	case 1:
 		sin_size = -m_board->tileSize();
 		break;
+
 	case 2:
 		cos_size = -m_board->tileSize();
 		break;
+
 	case 3:
 		sin_size = m_board->tileSize();
 		break;
@@ -242,8 +231,9 @@ void Piece::attachNeighbors()
 	QPoint delta;
 	int row, column;
 	foreach (Piece* piece, m_board->findCollidingPieces(this)) {
-		if (piece->m_rotation != m_rotation)
+		if (piece->m_rotation != m_rotation) {
 			continue;
+		}
 
 		foreach (Tile* child, m_children) {
 			foreach (Tile* tile, piece->children()) {
@@ -256,15 +246,19 @@ void Piece::attachNeighbors()
 				case 1002:
 					delta -= left;
 					break;
+
 				case 3002:
 					delta -= right;
 					break;
+
 				case 2001:
 					delta -= above;
 					break;
+
 				case 2003:
 					delta -= below;
 					break;
+
 				default:
 					continue;
 				}
@@ -284,7 +278,7 @@ void Piece::attachNeighbors()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Piece::pushNeighbors(const QPointF& inertia)
 {
@@ -302,15 +296,16 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
-		while (fabs(vector.x()) + fabs(vector.y()) < 1)
-			vector = QPointF(rand() - (RAND_MAX/2), rand() - (RAND_MAX/2));
+		while (fabs(vector.x()) + fabs(vector.y()) < 1) {
+			vector = QPointF(rand() - (RAND_MAX / 2), rand() - (RAND_MAX / 2));
+		}
 
 		// Scale movement vector so that the largest dimension is 1
 		QPointF direction = vector / qMax(fabs(vector.x()), fabs(vector.y()));
 
 		// Push target until it is clear from current source
 		// We use a binary-search, pushing away if collision, retracting otherwise
-		QPoint orig = target->position();
+		QPoint orig = target->scenePos();
 		QRect united = source_rect.united(target->boundingRect());
 		float min = 0.0f;
 		float max = united.width() * united.height();
@@ -319,12 +314,13 @@ void Piece::pushNeighbors(const QPointF& inertia)
 			float x = orig.x() + roundUp(test * direction.x());
 			float y = orig.y() + roundUp(test * direction.y());
 			target->moveTo(x, y);
-			if (source->collidesWith(target))
+			if (source->collidesWith(target)) {
 				min = test;
-			else {
+			} else {
 				max = test;
-				if (max - min < 1.0f)
+				if (max - min < 1.0f) {
 					break;
+				}
 				Q_ASSERT(max - min > 0.01f);
 			}
 		}
@@ -336,7 +332,32 @@ void Piece::pushNeighbors(const QPointF& inertia)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
+
+void Piece::rotateAround(Tile* tile)
+{
+	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
+
+	if (tile) {
+		QPoint pos = tile->scenePos() - scenePos();
+		m_pos += QPoint(pos.x() + pos.y(), pos.y() - pos.x());
+	}
+
+	m_rotation += 1;
+	if (m_rotation > 3) {
+		m_rotation = 0;
+	}
+
+	QPoint pos;
+	foreach (Tile* tile, m_children) {
+		pos = tile->pos();
+		qSwap(pos.rx(), pos.ry());
+		pos.setX(-pos.x());
+		tile->setPos(pos);
+	}
+}
+
+//-----------------------------------------------------------------------------
 
 void Piece::save(QXmlStreamWriter& xml) const
 {
@@ -344,10 +365,11 @@ void Piece::save(QXmlStreamWriter& xml) const
 	xml.writeAttribute("rotation", QString::number(m_rotation));
 
 	m_children.at(0)->save(xml, true);
-	for (int i = 1; i < m_children.count(); ++i)
+	for (int i = 1; i < m_children.count(); ++i) {
 		m_children.at(i)->save(xml);
+	}
 
 	xml.writeEndElement();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,11 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QListWidgetItem>
-#include <QPainter>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 ThumbnailList::ThumbnailList(QObject* parent)
-:	QObject(parent)
+	: QObject(parent)
 {
 	m_loading = ThumbnailLoader::loadingIcon();
 
@@ -37,15 +36,16 @@ ThumbnailList::ThumbnailList(QObject* parent)
 	connect(m_loader, SIGNAL(generated(const QString&)), this, SLOT(generated(const QString&)));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-ThumbnailList::~ThumbnailList() {
+ThumbnailList::~ThumbnailList()
+{
 	m_loader->stop();
 	m_loader->wait();
 	delete m_loader;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void ThumbnailList::addItem(QListWidgetItem* item, const QString& image, const QString& thumbnail)
 {
@@ -60,7 +60,7 @@ void ThumbnailList::addItem(QListWidgetItem* item, const QString& image, const Q
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void ThumbnailList::generated(const QString& path)
 {
@@ -69,4 +69,4 @@ void ThumbnailList::generated(const QString& path)
 	item->setIcon(QIcon(item->data(Qt::UserRole + 1).toString()));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

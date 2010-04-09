@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,37 +25,41 @@
 #include <QImageReader>
 #include <QPainter>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-namespace {
-	QString preview_path;
+namespace
+{
 
-	void fetchPreviewPath() {
-		QDir dir = QDir::home();
+QString preview_path;
+
+void fetchPreviewPath() {
+	QDir dir = QDir::home();
 #if defined(Q_OS_MAC)
-		preview_path = QDir::homePath() + "/Library/Application Support/GottCode/Previews/";
+	preview_path = QDir::homePath() + "/Library/Application Support/GottCode/Previews/";
 #elif defined(Q_OS_UNIX)
-		preview_path = getenv("$XDG_DATA_HOME");
-		if (preview_path.isEmpty()) {
-			preview_path = QDir::homePath() + "/.local/share/";
-		}
-		preview_path += "/gottcode/previews/";
+	preview_path = getenv("$XDG_DATA_HOME");
+	if (preview_path.isEmpty()) {
+		preview_path = QDir::homePath() + "/.local/share/";
+	}
+	preview_path += "/gottcode/previews/";
 #elif defined(Q_OS_WIN32)
-		preview_path = QDir::homePath() + "/Application Data/GottCode/Previews/";
+	preview_path = QDir::homePath() + "/Application Data/GottCode/Previews/";
 #endif
-		dir.mkpath(preview_path);
-	}
-
-	QString previewFileName(const QString& path) {
-		QByteArray hash = QCryptographicHash::hash(QFileInfo(path).canonicalFilePath().toUtf8(), QCryptographicHash::Sha1);
-		return QString(preview_path + hash.toHex() + ".png");
-	}
+	dir.mkpath(preview_path);
 }
 
-/*****************************************************************************/
+QString previewFileName(const QString& path) {
+	QByteArray hash = QCryptographicHash::hash(QFileInfo(path).canonicalFilePath().toUtf8(), QCryptographicHash::Sha1);
+	return QString(preview_path + hash.toHex() + ".png");
+}
+
+}
+
+//-----------------------------------------------------------------------------
 
 ThumbnailModel::ThumbnailModel(QObject* parent)
-: QDirModel(parent) {
+	: QDirModel(parent)
+{
 	fetchPreviewPath();
 
 	setFilter(QDir::Files);
@@ -71,23 +75,26 @@ ThumbnailModel::ThumbnailModel(QObject* parent)
 	connect(m_loader, SIGNAL(generated(const QString&)), this, SLOT(generated(const QString&)));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-ThumbnailModel::~ThumbnailModel() {
+ThumbnailModel::~ThumbnailModel()
+{
 	m_loader->stop();
 	m_loader->wait();
 	delete m_loader;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailModel::clear() {
+void ThumbnailModel::clear()
+{
 	m_loader->clear();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-QVariant ThumbnailModel::data(const QModelIndex& index, int role) const {
+QVariant ThumbnailModel::data(const QModelIndex& index, int role) const
+{
 	if (role == Qt::DisplayRole || isDir(index)) {
 		return QVariant();
 	} else if (role != Qt::DecorationRole) {
@@ -104,13 +111,14 @@ QVariant ThumbnailModel::data(const QModelIndex& index, int role) const {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailModel::generated(const QString& file) {
+void ThumbnailModel::generated(const QString& file)
+{
 	QModelIndex i = index(file);
 	if (i.isValid()) {
 		emit dataChanged(i, i);
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

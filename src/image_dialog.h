@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ class QSplitter;
 class QTreeView;
 class ThumbnailModel;
 
-class ImageDialog : public QDialog {
+class ImageDialog : public QDialog
+{
 	Q_OBJECT
 public:
 	ImageDialog(QWidget* parent = 0);

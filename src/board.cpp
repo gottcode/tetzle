@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,9 +46,12 @@ PFNGLACTIVETEXTUREARBPROC glActiveTexture = 0;
 PFNGLMULTITEXCOORD2FARBPROC glMultiTexCoord2f = 0;
 #endif
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-static int powerOfTwo(int value)
+namespace
+{
+
+int powerOfTwo(int value)
 {
 	value--;
 	value |= value >> 1;
@@ -60,10 +63,12 @@ static int powerOfTwo(int value)
 	return value;
 }
 
-/*****************************************************************************/
+}
+
+//-----------------------------------------------------------------------------
 
 Board::Board(QWidget* parent)
-:	QGLWidget(parent),
+	: QGLWidget(parent),
 	m_id(0),
 	m_difficulty(0),
 	m_letterbox(false),
@@ -100,20 +105,46 @@ Board::Board(QWidget* parent)
 	generateSuccessImage();
 
 	// Create overview dialog
-	m_overview = new Overview;
+	m_overview = new Overview(parent);
 	connect(m_overview, SIGNAL(toggled(bool)), this, SIGNAL(overviewToggled(bool)));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Board::~Board()
 {
 	cleanup();
 	deleteTexture(m_success);
-	delete m_overview;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
+
+QList<Piece*> Board::findCollidingPieces(Piece* piece) const
+{
+	QList<Piece*> list;
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		Piece* parent = m_pieces.at(i);
+		if (parent != piece && piece->collidesWith(parent)) {
+			list.append(parent);
+		}
+	}
+	return list;
+}
+
+//-----------------------------------------------------------------------------
+
+Piece* Board::findCollidingPiece(Piece* piece) const
+{
+	for (int i = m_pieces.count() - 1; i >= 0; --i) {
+		Piece* parent = m_pieces.at(i);
+		if (parent != piece && piece->collidesWith(parent)) {
+			return parent;
+		}
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 
 void Board::removePiece(Piece* piece)
 {
@@ -122,34 +153,7 @@ void Board::removePiece(Piece* piece)
 	piece = 0;
 }
 
-/*****************************************************************************/
-
-QList<Piece*> Board::findCollidingPieces(Piece* piece) const
-{
-	QList<Piece*> list;
-	QRect rect = piece->marginRect();
-	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece* parent = m_pieces.at(i);
-		if (parent != piece && piece->collidesWith(parent))
-			list.append(parent);
-	}
-	return list;
-}
-
-/*****************************************************************************/
-
-Piece* Board::findCollidingPiece(Piece* piece) const
-{
-	QRect rect = piece->marginRect();
-	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece* parent = m_pieces.at(i);
-		if (parent != piece && piece->collidesWith(parent))
-			return parent;
-	}
-	return 0;
-}
-
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::newGame(const QString& image, int difficulty)
 {
@@ -172,11 +176,8 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate ID
 	m_id = 0;
-	int id;
 	foreach (QString file, QDir("saves/").entryList(QDir::Files)) {
-		id = file.section(".", 0, 0).toInt();
-		if (id > m_id)
-			m_id = id;
+		m_id = qMax(m_id, file.section(".", 0, 0).toInt());
 	}
 	m_id++;
 
@@ -226,8 +227,9 @@ void Board::newGame(const QString& image, int difficulty)
 
 				// Rotate piece
 				rotations = rand() % 4;
-				for (int i = 0; i < rotations; ++i)
+				for (int i = 0; i < rotations; ++i) {
 					piece->rotateAround(piece->children().first());
+				}
 
 				// Position piece
 				piece->moveBy(QPoint(rand() % full_width, rand() % full_height) - piece->scenePos());
@@ -248,7 +250,7 @@ void Board::newGame(const QString& image, int difficulty)
 	emit retrievePiecesAvailable(true);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::openGame(int id)
 {
@@ -266,13 +268,15 @@ void Board::openGame(int id)
 	// Open saved game file
 	m_id = id;
 	QFile file(QString("saves/%1.xml").arg(m_id));
-	if (!file.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly)) {
 		return;
+	}
 	QXmlStreamReader xml(&file);
 
 	// Load textures
-	while (!xml.isStartElement())
+	while (!xml.isStartElement()) {
 		xml.readNext();
+	}
 	QXmlStreamAttributes attributes = xml.attributes();
 	int board_zoom = 0;
 	unsigned int version = attributes.value("version").toString().toUInt();
@@ -305,8 +309,9 @@ void Board::openGame(int id)
 	int rotation = -1;
 	while (!xml.atEnd()) {
 		xml.readNext();
-		if (!xml.isStartElement())
+		if (!xml.isStartElement()) {
 			continue;
+		}
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
 			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
@@ -339,16 +344,18 @@ void Board::openGame(int id)
 	emit retrievePiecesAvailable(true);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::saveGame()
 {
-	if (m_pieces.count() <= 1)
+	if (m_pieces.count() <= 1) {
 		return;
+	}
 
 	QFile file(QString("saves/%1.xml").arg(m_id));
-	if (!file.open(QIODevice::WriteOnly))
+	if (!file.open(QIODevice::WriteOnly)) {
 		return;
+	}
 
 	QXmlStreamWriter xml(&file);
 	xml.setAutoFormatting(true);
@@ -365,15 +372,16 @@ void Board::saveGame()
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 	xml.writeAttribute("letterbox", QString::number(m_letterbox));
 
-	foreach (Piece* piece, m_pieces)
+	foreach (Piece* piece, m_pieces) {
 		piece->save(xml);
+	}
 
 	xml.writeEndElement();
 
 	xml.writeEndDocument();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::retrievePieces()
 {
@@ -392,27 +400,26 @@ void Board::retrievePieces()
 	zoomFit();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::zoomIn()
 {
 	zoom(m_scale_level + 1);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::zoomOut()
 {
 	zoom(m_scale_level - 1);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::zoomFit()
 {
 	// Find bounding rectangle
 	QRect bounds(0, 0, 0, 0);
-	QRect tile_bounds;
 	foreach (Piece* piece, m_pieces) {
 		bounds = bounds.united(piece->boundingRect());
 	}
@@ -423,15 +430,12 @@ void Board::zoomFit()
 	bounds_scaled.scale(size(), Qt::KeepAspectRatio);
 	float new_tile_scale = static_cast<float>(bounds_scaled.width()) / static_cast<float>(bounds.width());
 	int scale_level = 2 * (log(new_tile_scale * m_tile_size * 0.25) / log(1.25));
-	if (scale_level < m_scale_level_min)
-		scale_level = m_scale_level_min;
-	if (scale_level > m_scale_level_max)
-		scale_level = m_scale_level_max;
+	scale_level = qBound(m_scale_level_min, scale_level, m_scale_level_max);
 
 	zoom(scale_level);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::zoom(int value)
 {
@@ -447,10 +451,12 @@ void Board::zoom(int value)
 	m_scale_level = value;
 	m_scale = pow(1.25, m_scale_level * 0.5) / (m_tile_size * 0.25);
 	m_scale = floor(m_scale * m_tile_size) / m_tile_size;
-	if (m_scale > 1.0f)
+	if (m_scale > 1.0f) {
 		m_scale = 1.0f;
-	if (m_scale * m_tile_size < 4.0f)
+	}
+	if (m_scale * m_tile_size < 4.0f) {
 		m_scale = 4.0f / m_tile_size;
+	}
 
 	// Create tile bumpmap texture
 	m_bumpmap_size = qRound(m_tile_size * m_scale);
@@ -505,7 +511,7 @@ void Board::zoom(int value)
 	emit zoomInAvailable(m_scale_level < m_scale_level_max);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::toggleOverview()
 {
@@ -514,7 +520,7 @@ void Board::toggleOverview()
 	QSettings().setValue("Overview/Visible", visible);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::toggleBorders()
 {
@@ -524,7 +530,7 @@ void Board::toggleBorders()
 	emit bordersToggled(m_borders_visible);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::initializeGL()
 {
@@ -533,7 +539,7 @@ void Board::initializeGL()
 	glClearColor(1, 1, 1, 1);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::resizeGL(int w, int h)
 {
@@ -545,7 +551,7 @@ void Board::resizeGL(int w, int h)
 	glLoadIdentity();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::paintGL()
 {
@@ -640,69 +646,78 @@ void Board::paintGL()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::keyPressEvent(QKeyEvent* event)
 {
 	int offset = (event->modifiers() & Qt::ControlModifier) ? 1 : 10;
 	switch (event->key()) {
-		// Scroll left
-		case Qt::Key_Left:
-			scroll(QPoint(2 * offset, 0));
-			updateGL();
-			updateCursor();
-			break;
-		// Scroll up
-		case Qt::Key_Up:
-			scroll(QPoint(0, 2 * offset));
-			updateGL();
-			updateCursor();
-			break;
-		// Scroll right
-		case Qt::Key_Right:
-			scroll(QPoint(-2 * offset, 0));
-			updateGL();
-			updateCursor();
-			break;
-		// Scroll down
-		case Qt::Key_Down:
-			scroll(QPoint(0, -2 * offset));
-			updateGL();
-			updateCursor();
-			break;
-		// Grab or release piece
-		case Qt::Key_Space:
-			togglePiecesUnderCursor();
-			break;
-		// Rotate piece
-		case Qt::Key_R:
-			rotatePiece();
-			break;
-		// Move cursor up
-		case Qt::Key_W:
-			moveCursor(QPoint(0, -offset));
-			break;
-		// Move cursor left
-		case Qt::Key_A:
-			moveCursor(QPoint(-offset, 0));
-			break;
-		// Move cursor down
-		case Qt::Key_S:
-			moveCursor(QPoint(0, offset));
-			break;
-		// Move cursor right
-		case Qt::Key_D:
-			moveCursor(QPoint(offset, 0));
-			break;
-		default:
-			if (!event->isAutoRepeat()) {
-				m_action_key = event->key();
-			}
+	// Scroll left
+	case Qt::Key_Left:
+		scroll(QPoint(2 * offset, 0));
+		updateGL();
+		updateCursor();
+		break;
+
+	// Scroll up
+	case Qt::Key_Up:
+		scroll(QPoint(0, 2 * offset));
+		updateGL();
+		updateCursor();
+		break;
+
+	// Scroll right
+	case Qt::Key_Right:
+		scroll(QPoint(-2 * offset, 0));
+		updateGL();
+		updateCursor();
+		break;
+
+	// Scroll down
+	case Qt::Key_Down:
+		scroll(QPoint(0, -2 * offset));
+		updateGL();
+		updateCursor();
+		break;
+
+	// Grab or release piece
+	case Qt::Key_Space:
+		togglePiecesUnderCursor();
+		break;
+
+	// Rotate piece
+	case Qt::Key_R:
+		rotatePiece();
+		break;
+
+	// Move cursor up
+	case Qt::Key_W:
+		moveCursor(QPoint(0, -offset));
+		break;
+
+	// Move cursor left
+	case Qt::Key_A:
+		moveCursor(QPoint(-offset, 0));
+		break;
+
+	// Move cursor down
+	case Qt::Key_S:
+		moveCursor(QPoint(0, offset));
+		break;
+
+	// Move cursor right
+	case Qt::Key_D:
+		moveCursor(QPoint(offset, 0));
+		break;
+	default:
+		if (!event->isAutoRepeat()) {
+			m_action_key = event->key();
+		}
 	}
 	QGLWidget::keyPressEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::keyReleaseEvent(QKeyEvent* event)
 {
@@ -712,7 +727,7 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 	QGLWidget::keyReleaseEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::mousePressEvent(QMouseEvent* event)
 {
@@ -730,7 +745,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 	QGLWidget::mousePressEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -742,12 +757,15 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	case Qt::LeftButton:
 		togglePiecesUnderCursor();
 		break;
+
 	case Qt::RightButton:
 		rotatePiece();
 		break;
+
 	case Qt::MidButton:
 		stopScrolling();
 		break;
+
 	default:
 		break;
 	}
@@ -756,7 +774,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	QGLWidget::mouseReleaseEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
@@ -770,13 +788,17 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 			i.key()->moveBy(delta);
 		}
-		if (m_active_tiles.size() == 1) // If exactly one tile is active, try attachNeighbors
+
+		// Attach neighbors if only one piece is active
+		if (m_active_tiles.size() == 1) {
 			m_active_tiles.constBegin().key()->attachNeighbors();
-		updateCompleted();
+			updateCompleted();
+		}
 
 		// Handle finishing game
-		if (m_pieces.count() == 1)
+		if (m_pieces.count() == 1) {
 			finishGame();
+		}
 	}
 
 	if (!m_selecting && m_action_button == Qt::LeftButton && m_action_key == 0) {
@@ -787,11 +809,12 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 	m_cursor_pos = event->pos();
 
-	if (!m_scrolling)
+	if (!m_scrolling) {
 		updateCursor();
+	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::wheelEvent(QWheelEvent* event)
 {
@@ -804,7 +827,7 @@ void Board::wheelEvent(QWheelEvent* event)
 	QGLWidget::wheelEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::startScrolling()
 {
@@ -812,7 +835,7 @@ void Board::startScrolling()
 	setCursor(Qt::SizeAllCursor);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::stopScrolling()
 {
@@ -820,7 +843,7 @@ void Board::stopScrolling()
 	updateCursor();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::scroll(const QPoint& delta)
 {
@@ -830,7 +853,7 @@ void Board::scroll(const QPoint& delta)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::togglePiecesUnderCursor() {
 	switch (m_action_key) {
@@ -845,9 +868,11 @@ void Board::togglePiecesUnderCursor() {
 			selectPieces();
 		}
 		break;
+
 	case Qt::Key_Shift:
 		stopScrolling();
 		break;
+
 #if !defined(Q_OS_MAC)
 	case Qt::Key_Control:
 #else
@@ -855,12 +880,13 @@ void Board::togglePiecesUnderCursor() {
 #endif
 		rotatePiece();
 		break;
+
 	default:
 		break;
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::moveCursor(const QPoint& delta)
 {
@@ -868,16 +894,18 @@ void Board::moveCursor(const QPoint& delta)
 	updateCursor();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::grabPiece()
 {
-	if (m_scrolling || m_finished)
+	if (m_scrolling || m_finished) {
 		return;
+	}
 
 	Tile* tile = tileUnderCursor(false);
-	if (tile == 0)
+	if (tile == 0) {
 		return;
+	}
 	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
 	m_active_tiles.insert(tile->parent(), tile);
 
@@ -889,12 +917,13 @@ void Board::grabPiece()
 	updateGL();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::releasePieces()
 {
-	if (m_scrolling || m_finished)
+	if (m_scrolling || m_finished) {
 		return;
+	}
 
 	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 		i.key()->attachNeighbors();
@@ -904,29 +933,33 @@ void Board::releasePieces()
 	updateCursor();
 	updateCompleted();
 
-	if (m_pieces.count() == 1)
+	if (m_pieces.count() == 1) {
 		finishGame();
+	}
 
 	updateGL();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::rotatePiece()
 {
-	if (m_scrolling || m_finished)
+	if (m_scrolling || m_finished) {
 		return;
+	}
 
 	if (m_active_tiles.isEmpty()) {
 		Tile* child = tileUnderCursor();
-		if (child == 0)
+		if (child == 0) {
 			return;
+		}
 		Piece* piece = child->parent();
 
 		piece->rotateAround(child);
 		piece->attachNeighbors();
-		if (m_active_tiles.isEmpty())
+		if (m_active_tiles.isEmpty()) {
 			piece->pushNeighbors();
+		}
 	} else {
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 			i.key()->rotateAround(i.value());
@@ -934,13 +967,14 @@ void Board::rotatePiece()
 	}
 	updateCompleted();
 
-	if (m_pieces.count() == 1)
+	if (m_pieces.count() == 1) {
 		finishGame();
+	}
 
 	updateGL();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::selectPieces()
 {
@@ -963,7 +997,7 @@ void Board::selectPieces()
 	updateCursor();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::loadImage()
 {
@@ -1064,7 +1098,7 @@ void Board::loadImage()
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::generateSuccessImage()
 {
@@ -1090,45 +1124,49 @@ void Board::generateSuccessImage()
 	m_success = bindTexture(success.mirrored(false, true));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::updateCursor()
 {
 	int state = 0;
-	if (!m_finished)
+	if (!m_finished) {
 		state = (tileUnderCursor(false) != 0 || m_selecting) | (!m_active_tiles.isEmpty() * 2);
+	}
 
 	switch (state) {
 	case 1:
 		setCursor(Qt::OpenHandCursor);
 		break;
+
 	case 2:
 		setCursor(Qt::ClosedHandCursor);
 		break;
+
 	case 3:
 		setCursor(Qt::PointingHandCursor);
 		break;
+
 	default:
 		unsetCursor();
 		break;
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 QPoint Board::mapCursorPosition() const
 {
 	return mapPosition(m_cursor_pos);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 QPoint Board::mapPosition(const QPoint& position) const
 {
 	return (position / m_scale) - (QPoint(width() >> 1, height() >> 1) / m_scale) + m_pos;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::draw(Tile* tile, const QPoint& pos, float depth) const
 {
@@ -1143,19 +1181,22 @@ void Board::draw(Tile* tile, const QPoint& pos, float depth) const
 
 	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[0].x(), ty + corners[0].y());
 	glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
-		glVertex3f(x1, y1, depth);
+	glVertex3f(x1, y1, depth);
+
 	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[1].x(), ty + corners[1].y());
 	glMultiTexCoord2f(GL_TEXTURE1, 0, m_bumpmap_ts);
-		glVertex3f(x1, y2, depth);
+	glVertex3f(x1, y2, depth);
+
 	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[2].x(), ty + corners[2].y());
 	glMultiTexCoord2f(GL_TEXTURE1, m_bumpmap_ts, m_bumpmap_ts);
-		glVertex3f(x2, y2, depth);
+	glVertex3f(x2, y2, depth);
+
 	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[3].x(), ty + corners[3].y());
 	glMultiTexCoord2f(GL_TEXTURE1, m_bumpmap_ts, 0);
-		glVertex3f(x2, y1, depth);
+	glVertex3f(x2, y1, depth);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::updateCompleted()
 {
@@ -1165,36 +1206,39 @@ void Board::updateCompleted()
 	emit statusMessage(tr("%1% complete").arg(m_completed));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Tile* Board::tileAt(const QPoint& pos, bool include_active) const
 {
 	Piece* piece;
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		piece = m_pieces.at(i);
-		if (!include_active && m_active_tiles.contains(piece))
+		if (!include_active && m_active_tiles.contains(piece)) {
 			continue;
+		}
 		if (piece->boundingRect().contains(pos)) {
 			foreach (Tile* tile, piece->children()) {
-				if (tile->boundingRect().contains(pos))
+				if (tile->boundingRect().contains(pos)) {
 					return tile;
+				}
 			}
 		}
 	}
 	return 0;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Tile* Board::tileUnderCursor(bool include_active)
 {
-	if (include_active && !m_active_tiles.isEmpty())
+	if (include_active && !m_active_tiles.isEmpty()) {
 		return m_active_tiles.constBegin().value();
-	else
+	} else {
 		return tileAt(mapCursorPosition(), include_active);
+	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::finishGame()
 {
@@ -1214,13 +1258,13 @@ void Board::finishGame()
 	zoomFit();
 	emit retrievePiecesAvailable(false);
 
-	QFile(QString("saves/%1.xml").arg(m_id)).remove();
+	QFile::remove(QString("saves/%1.xml").arg(m_id));
 	QSettings().remove("OpenGame/Image");
 
 	emit finished();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Board::cleanup()
 {
@@ -1240,4 +1284,4 @@ void Board::cleanup()
 	QSettings().remove("OpenGame/Image");
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #ifndef THUMBNAIL_LIST
 #define THUMBNAIL_LIST
 
-#include <QMap>
+#include <QHash>
 #include <QObject>
 #include <QPixmap>
 class QListWidgetItem;
@@ -41,7 +41,7 @@ private slots:
 private:
 	ThumbnailLoader* m_loader;
 	QPixmap m_loading;
-	QMap<QString, QListWidgetItem*> m_items;
+	QHash<QString, QListWidgetItem*> m_items;
 };
 
-#endif // THUMBNAIL_LIST
+#endif

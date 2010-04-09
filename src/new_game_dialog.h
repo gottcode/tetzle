@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ private slots:
 private:
 	void addImage(const QString& image);
 
+private:
 	LabelManager* m_image_labels;
 	QComboBox* m_images_filter;
 	QListWidget* m_images;
@@ -70,4 +71,4 @@ private:
 	QPushButton* m_accept_button;
 };
 
-#endif // NEW_GAME_DIALOG_H
+#endif

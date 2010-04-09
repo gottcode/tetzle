@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 #ifndef DANCING_LINKS_H
 #define DANCING_LINKS_H
 
-#include <list>
-#include <vector>
+#include <QLinkedList>
+#include <QVector>
 
 namespace DLX
 {
@@ -30,7 +30,7 @@ struct HeaderNode;
 struct Node
 {
 	Node()
-	:	left(0), right(0), up(0), down(0), column(0)
+		: left(0), right(0), up(0), down(0), column(0)
 	{
 	}
 
@@ -44,7 +44,7 @@ struct Node
 struct HeaderNode : public Node
 {
 	HeaderNode()
-	:	size(0), id(0)
+		: size(0), id(0)
 	{
 	}
 
@@ -61,21 +61,21 @@ class Matrix
 		{
 		}
 
-		virtual void operator()(const std::vector<Node*>&, unsigned int)
+		virtual void operator()(const QVector<Node*>&, unsigned int)
 		{
 		}
 	};
 
 	class GlobalCallback : public Callback
 	{
+		typedef void(*function)(const QVector<Node*>&, unsigned int);
 	public:
-		typedef void(*function)(const std::vector<Node*>&, unsigned int);
 		GlobalCallback(function f)
-		:	m_function(f)
+			: m_function(f)
 		{
 		}
 
-		virtual void operator()(const std::vector<Node*>& rows, unsigned int count)
+		virtual void operator()(const QVector<Node*>& rows, unsigned int count)
 		{
 			(*m_function)(rows, count);
 		}
@@ -85,17 +85,15 @@ class Matrix
 	};
 
 	template <typename T>
-	class MemberCallback : public Callback
-	{
+	class MemberCallback : public Callback {
+		typedef void(T::*function)(const QVector<Node*>& rows, unsigned int count);
 	public:
-		typedef void(T::*function)(const std::vector<Node*>& rows, unsigned int count);
 		MemberCallback(T* object, function f)
-		:	m_object(object),
-			m_function(f)
+			: m_object(object), m_function(f)
 		{
 		}
 
-		virtual void operator()(const std::vector<Node*>& rows, unsigned int count)
+		virtual void operator()(const QVector<Node*>& rows, unsigned int count)
 		{
 			(*m_object.*m_function)(rows, count);
 		}
@@ -114,44 +112,37 @@ public:
 
 	unsigned int search(unsigned int max_solutions = 0xFFFFFFFF)
 	{
-		m_max_solutions = max_solutions;
 		Callback solution;
-		m_solution = &solution;
-		solve(0);
-		return m_solutions;
+		return search(&solution, max_solutions);
 	}
 
-	unsigned int search(void(*function)(const std::vector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
+	unsigned int search(void(*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
 	{
-		m_max_solutions = max_solutions;
 		GlobalCallback solution(function);
-		m_solution = &solution;
-		solve(0);
-		return m_solutions;
+		return search(&solution, max_solutions);
 	}
 
 	template <typename C>
-	unsigned int search(C* object, void(C::*function)(const std::vector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
+	unsigned int search(C* object, void(C::*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
 	{
-		m_max_solutions = max_solutions;
 		MemberCallback<C> solution(object, function);
-		m_solution = &solution;
-		solve(0);
-		return m_solutions;
+		return search(&solution, max_solutions);
 	}
 
 private:
+	unsigned int search(Callback* solution, unsigned int max_solutions);
 	void solve(unsigned int k);
 	void cover(HeaderNode* column);
 	void uncover(HeaderNode* column);
 
+private:
 	unsigned int m_max_columns;
 
 	HeaderNode* m_header;
-	std::vector<HeaderNode> m_columns;
-	std::list<HeaderNode> m_rows;
-	std::list<Node> m_nodes;
-	std::vector<Node*> m_output;
+	QVector<HeaderNode> m_columns;
+	QLinkedList<HeaderNode> m_rows;
+	QLinkedList<Node> m_nodes;
+	QVector<Node*> m_output;
 
 	Callback* m_solution;
 	unsigned int m_solutions;
@@ -160,4 +151,4 @@ private:
 
 }
 
-#endif // DANCING_LINKS_H
+#endif

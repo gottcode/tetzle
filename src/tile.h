@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
-
 class Board;
 class Piece;
 
@@ -32,25 +31,16 @@ class Tile
 public:
 	Tile(int column, int row, const QPoint& pos, Board* board);
 
-	int column() const
-		{ return m_column; }
-	int row() const
-		{ return m_row; }
-	Piece* parent() const
-		{ return m_parent; }
-	QPoint pos() const
-		{ return m_pos; }
-
-	void setPos(const QPoint& pos)
-		{ m_pos = pos; }
-	void setParent(Piece* parent)
-		{ m_parent = parent; }
-
+	QRect boundingRect() const;
+	int column() const;
+	int row() const;
+	Piece* parent() const;
+	QPoint pos() const;
+	QRect rect() const;
 	QPoint scenePos() const;
-	QRect boundingRect() const
-		{ return m_rect.translated(scenePos()); }
-	QRect rect() const
-		{ return m_rect; }
+
+	void setPos(const QPoint& pos);
+	void setParent(Piece* parent);
 
 	void save(QXmlStreamWriter& xml, bool scene_pos = false) const;
 
@@ -64,4 +54,45 @@ private:
 	Board* m_board;
 };
 
-#endif // TILE_H
+
+inline QRect Tile::boundingRect() const
+{
+	return m_rect.translated(scenePos());
+}
+
+inline int Tile::column() const
+{
+	return m_column;
+}
+
+inline int Tile::row() const
+{
+	return m_row;
+}
+
+inline Piece* Tile::parent() const
+{
+	return m_parent;
+}
+
+inline QPoint Tile::pos() const
+{
+	return m_pos;
+}
+
+inline QRect Tile::rect() const
+{
+	return m_rect;
+}
+
+inline void Tile::setPos(const QPoint& pos)
+{
+	m_pos = pos;
+}
+
+inline void Tile::setParent(Piece* parent)
+{
+	m_parent = parent;
+}
+
+#endif

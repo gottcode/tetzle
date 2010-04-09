@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@
 #include <QSettings>
 #include <QVBoxLayout>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 LabelImageDialog::LabelImageDialog(const QString& image, LabelManager* manager, QString& filter, QWidget* parent)
-:	QDialog(parent),
+	: QDialog(parent),
 	m_image(image),
 	m_manager(manager),
 	m_filter(filter)
@@ -42,8 +42,9 @@ LabelImageDialog::LabelImageDialog(const QString& image, LabelManager* manager, 
 	connect(m_labels, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(labelChanged(QListWidgetItem*)));
 	QListWidgetItem* item;
 	foreach (QString label, m_manager->labels(true)) {
-		if (label == tr("All"))
+		if (label == tr("All")) {
 			continue;
+		}
 
 		item = new QListWidgetItem(m_labels);
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
@@ -97,7 +98,7 @@ LabelImageDialog::LabelImageDialog(const QString& image, LabelManager* manager, 
 	resize(QSettings().value("LabelImage/Size", sizeHint()).toSize());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelImageDialog::hideEvent(QHideEvent* event)
 {
@@ -105,7 +106,7 @@ void LabelImageDialog::hideEvent(QHideEvent* event)
 	QDialog::hideEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelImageDialog::addLabel()
 {
@@ -118,8 +119,9 @@ void LabelImageDialog::addLabel()
 	foreach (QString label, labels) {
 		if (untitled_label.exactMatch(label)) {
 			int id = untitled_label.cap(1).toInt();
-			if (id > max_untitled_label)
+			if (id > max_untitled_label) {
 				max_untitled_label = id;
+			}
 		}
 	}
 	max_untitled_label++;
@@ -137,32 +139,35 @@ void LabelImageDialog::addLabel()
 	m_manager->addLabel(item->text());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelImageDialog::removeLabel()
 {
 	QListWidgetItem* item = m_labels->currentItem();
-	if (!item)
+	if (!item) {
 		return;
+	}
 
 	QString label = item->text();
-	if (m_filter == label)
+	if (m_filter == label) {
 		m_filter = tr("All");
+	}
 	m_manager->removeLabel(label);
 	delete item;
 
 	m_remove_button->setEnabled(m_labels->count() > 0);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelImageDialog::labelChanged(QListWidgetItem* label)
 {
 	QString name = label->text();
 	QString old_name = label->data(Qt::UserRole).toString();
 	if (m_manager->renameLabel(name, old_name)) {
-		if (m_filter == old_name)
+		if (m_filter == old_name) {
 			m_filter = name;
+		}
 		label->setData(Qt::UserRole, name);
 	}
 
@@ -173,4 +178,4 @@ void LabelImageDialog::labelChanged(QListWidgetItem* label)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

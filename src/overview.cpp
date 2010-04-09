@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@
 #include <QSettings>
 #include <QWheelEvent>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Overview::Overview(QWidget* parent)
-:	QGraphicsView(parent),
+	: QGraphicsView(parent),
 	m_scale_start(0),
 	m_scale_factor(0),
 	m_scale_level(0),
@@ -48,7 +48,7 @@ Overview::Overview(QWidget* parent)
 	move(QSettings().value("Overview/Position", QPoint(0,0)).toPoint());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::load(const QImage& image)
 {
@@ -87,7 +87,7 @@ void Overview::load(const QImage& image)
 	zoom();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::hideEvent(QHideEvent* event)
 {
@@ -95,7 +95,7 @@ void Overview::hideEvent(QHideEvent* event)
 	QGraphicsView::hideEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::moveEvent(QMoveEvent* event)
 {
@@ -103,7 +103,7 @@ void Overview::moveEvent(QMoveEvent* event)
 	QGraphicsView::moveEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::resizeEvent(QResizeEvent* event)
 {
@@ -111,7 +111,7 @@ void Overview::resizeEvent(QResizeEvent* event)
 	QGraphicsView::resizeEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::showEvent(QShowEvent* event)
 {
@@ -119,7 +119,7 @@ void Overview::showEvent(QShowEvent* event)
 	QGraphicsView::showEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::wheelEvent(QWheelEvent* event)
 {
@@ -131,7 +131,7 @@ void Overview::wheelEvent(QWheelEvent* event)
 	event->accept();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::zoomIn()
 {
@@ -141,7 +141,7 @@ void Overview::zoomIn()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::zoomOut()
 {
@@ -151,7 +151,7 @@ void Overview::zoomOut()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Overview::zoom()
 {
@@ -159,4 +159,4 @@ void Overview::zoom()
 	setMatrix(QMatrix().scale(s, s));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

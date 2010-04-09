@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
-:	QDialog(parent)
+	: QDialog(parent)
 {
 	setWindowTitle(tr("Open Game"));
 
@@ -51,18 +51,21 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	QXmlStreamAttributes attributes;
 	foreach (QString game, QDir("saves/", "*.xml").entryList(QDir::Files, QDir::Time)) {
 		QFile file("saves/" + game);
-		if (!file.open(QIODevice::ReadOnly))
+		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
+		}
 		xml.setDevice(&file);
 
 		int id = game.section(".", 0, 0).toInt();
-		if (current_id == id)
+		if (current_id == id) {
 			continue;
+		}
 		item = new QListWidgetItem(m_games);
 
 		// Load details
-		while (!xml.isStartElement())
+		while (!xml.isStartElement()) {
 			xml.readNext();
+		}
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 3) {
 			QString image = attributes.value("image").toString();
@@ -118,18 +121,19 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	resize(QSettings().value("OpenGame/Size", sizeHint()).toSize());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void OpenGameDialog::accept()
 {
 	QDialog::accept();
 
 	QListWidgetItem* item = m_games->currentItem();
-	if (item)
+	if (item) {
 		emit openGame(item->data(Qt::UserRole).toInt());
+	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void OpenGameDialog::hideEvent(QHideEvent* event)
 {
@@ -137,20 +141,21 @@ void OpenGameDialog::hideEvent(QHideEvent* event)
 	QDialog::hideEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void OpenGameDialog::deleteGame()
 {
 	QListWidgetItem* item = m_games->currentItem();
-	if (!item)
+	if (!item) {
 		return;
+	}
 
 	if (QMessageBox::question(this, tr("Delete Game"), tr("Delete selected game?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString id = QString::number(item->data(Qt::UserRole).toInt());
-		QFile(QString("saves/%1.xml").arg(id)).remove();
+		QFile::remove(QString("saves/%1.xml").arg(id));
 		delete item;
 		m_accept_button->setEnabled(m_games->count() > 0);
 	};
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

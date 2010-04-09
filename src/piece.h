@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
-
 class Board;
 class Tile;
 
@@ -34,43 +33,67 @@ public:
 	Piece(int rotation, const QPoint& pos, Board* board);
 	~Piece();
 
-	int rotation() const
-		{ return m_rotation; }
-	QList<Tile*> children() const
-		{ return m_children; }
-
-	void moveBy(const QPoint& delta)
-		{ m_pos += delta; }
-	void moveTo(const QPoint& pos)
-		{ m_pos = pos; }
-	void moveTo(int x, int y)
-		{ m_pos.setX(x); m_pos.setY(y); }
-	const QPoint& position() const
-		{ return m_pos; }
-	QPoint scenePos() const;
-	QRect boundingRect() const
-		{ return m_rect.translated(m_pos); }
-	QRect marginRect() const;
 	bool collidesWith(const Piece * other) const;
+	QRect boundingRect() const;
+	QList<Tile*> children() const;
+	QRect marginRect() const;
+	int rotation() const;
+	QPoint scenePos() const;
 
-	void rotateAround(Tile* tile);
 	void attach(Tile* tile);
 	void attach(Piece* piece);
 	void attachNeighbors();
-	void pushNeighbors()
-		{ pushNeighbors(QPointF()); }
+	void moveBy(const QPoint& delta);
+	void moveTo(const QPoint& pos);
+	void moveTo(int x, int y);
+	void pushNeighbors(const QPointF& inertia = QPointF());
+	void rotateAround(Tile* tile);
 
 	void save(QXmlStreamWriter& xml) const;
 
 private:
-	void pushNeighbors(const QPointF& inertia);
-
+	Board* m_board;
 	int m_rotation;
 	QPoint m_pos;
 	QRect m_rect;
-
 	QList<Tile*> m_children;
-	Board* m_board;
 };
 
-#endif // PIECE_H
+
+inline QRect Piece::boundingRect() const
+{
+	return m_rect.translated(m_pos);
+}
+
+inline QList<Tile*> Piece::children() const
+{
+	return m_children;
+}
+
+inline int Piece::rotation() const
+{
+	return m_rotation;
+}
+
+inline QPoint Piece::scenePos() const
+{
+	return m_pos;
+}
+
+inline void Piece::moveBy(const QPoint& delta)
+{
+	m_pos += delta;
+}
+
+inline void Piece::moveTo(const QPoint& pos)
+{
+	m_pos = pos;
+}
+
+inline void Piece::moveTo(int x, int y)
+{
+	m_pos.setX(x);
+	m_pos.setY(y);
+}
+
+#endif

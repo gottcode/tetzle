@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,45 +23,43 @@
 
 #include <algorithm>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 namespace
 {
 
-	struct Piece
-	{
-		Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
+struct Piece
+{
+	Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
 
-		QPoint cells[4];
-		int width;
-		int height;
-	};
+	QPoint cells[4];
+	int width;
+	int height;
+};
 
-	Piece::Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
-	:	width(0),
-		height(0)
-	{
-		cells[0] = p1;
-		cells[1] = p2;
-		cells[2] = p3;
-		cells[3] = p4;
-		for (int i = 0; i < 4; ++i) {
-			if (width < cells[i].x())
-				width = cells[i].x();
-			if (height < cells[i].y())
-				height = cells[i].y();
-		}
+Piece::Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
+	: width(0),
+	height(0)
+{
+	cells[0] = p1;
+	cells[1] = p2;
+	cells[2] = p3;
+	cells[3] = p4;
+	for (int i = 0; i < 4; ++i) {
+		width = qMax(width, cells[i].x());
+		height = qMax(height, cells[i].y());
 	}
+}
 
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Solver::Solver(int columns, int rows, int total)
-:	m_columns(columns),
+	: m_columns(columns),
 	m_rows(rows)
 {
-	std::vector<Piece> p;
+	QList<Piece> p;
 
 	// Add S
 	p.push_back(Piece(QPoint(1,0), QPoint(2,0), QPoint(0,1), QPoint(1,1)));
@@ -93,14 +91,16 @@ Solver::Solver(int columns, int rows, int total)
 	// Create matrix
 	DLX::Matrix matrix(columns * rows);
 
-	int size = p.size();
-	std::vector<int> ids;
-	for (int i = 0; i < size; ++i)
+	int size = p.count();
+	QList<int> ids;
+	for (int i = 0; i < size; ++i) {
 		ids.push_back(i);
+	}
 
-	std::vector<int> cells;
-	for (int i = 0; i < columns * rows; ++i)
+	QList<int> cells;
+	for (int i = 0; i < columns * rows; ++i) {
 		cells.push_back(i);
+	}
 	std::random_shuffle(cells.begin(), cells.end());
 
 	int cell, col, row;
@@ -125,9 +125,9 @@ Solver::Solver(int columns, int rows, int total)
 	matrix.search(this, &Solver::solution, total);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void Solver::solution(const std::vector<DLX::Node*>& rows, unsigned int count)
+void Solver::solution(const QVector<DLX::Node*>& rows, unsigned int count)
 {
 	QList< QList<QPoint> > pieces;
 	QList<QPoint> piece;
@@ -145,4 +145,4 @@ void Solver::solution(const std::vector<DLX::Node*>& rows, unsigned int count)
 	solutions.append(pieces);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,15 +26,17 @@
 #include <QPainter>
 #include <QSize>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 ThumbnailLoader::ThumbnailLoader()
-: m_done(false) {
+	: m_done(false)
+{
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-QPixmap ThumbnailLoader::loadingIcon() {
+QPixmap ThumbnailLoader::loadingIcon()
+{
 	QPixmap icon = QPixmap(100, 100);
 	icon.fill(QColor(0, 0, 0, 0));
 	{
@@ -66,9 +68,10 @@ QPixmap ThumbnailLoader::loadingIcon() {
 	return icon;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailLoader::add(const QString& file, const QString& preview) {
+void ThumbnailLoader::add(const QString& file, const QString& preview)
+{
 	m_thumbnails_mutex.lock();
 	Thumbnail thumb = { file, preview };
 	m_thumbnails.prepend(thumb);
@@ -79,25 +82,28 @@ void ThumbnailLoader::add(const QString& file, const QString& preview) {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailLoader::stop() {
+void ThumbnailLoader::stop()
+{
 	m_done_mutex.lock();
 	m_done = true;
 	m_done_mutex.unlock();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailLoader::clear() {
+void ThumbnailLoader::clear()
+{
 	m_thumbnails_mutex.lock();
 	m_thumbnails.clear();
 	m_thumbnails_mutex.unlock();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ThumbnailLoader::run() {
+void ThumbnailLoader::run()
+{
 	forever {
 		// Fetch next thumbnail to process
 		m_thumbnails_mutex.lock();
@@ -145,4 +151,4 @@ void ThumbnailLoader::run() {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

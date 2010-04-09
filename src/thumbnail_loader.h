@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@
 #include <QThread>
 class QPixmap;
 
-class ThumbnailLoader : public QThread {
+class ThumbnailLoader : public QThread
+{
 	Q_OBJECT
 public:
 	ThumbnailLoader();

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,20 +49,25 @@
 
 #include <cmath>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-static QString hash(const QString& path)
+namespace {
+
+QString hash(const QString& path)
 {
 	QFile file(path);
-	if (!file.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly)) {
 		return QString();
+	}
 	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
 }
 
-/*****************************************************************************/
+}
+
+//-----------------------------------------------------------------------------
 
 NewGameDialog::NewGameDialog(QWidget* parent)
-:	QDialog(parent)
+	: QDialog(parent)
 {
 	setWindowTitle(tr("New Game"));
 
@@ -128,8 +133,9 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	if (!image.isEmpty()) {
 		for (int i = m_images->count() - 1; i >= 0; --i) {
 			item = m_images->item(i);
-			if (item->data(Qt::UserRole) == image)
+			if (item->data(Qt::UserRole) == image) {
 				break;
+			}
 		}
 	}
 	m_images->setCurrentItem(item);
@@ -137,8 +143,9 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
 	pieceCountChanged(m_slider->value());
 	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All")).toString());
-	if (index == -1)
+	if (index == -1) {
 		index = 0;
+	}
 	m_images_filter->setCurrentIndex(index);
 
 	// Add dialog buttons
@@ -181,15 +188,16 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::accept()
 {
 	QDialog::accept();
 
 	QListWidgetItem* item = m_images->currentItem();
-	if (!item)
+	if (!item) {
 		return;
+	}
 
 	QString image = item->data(Qt::UserRole).toString();
 
@@ -201,7 +209,7 @@ void NewGameDialog::accept()
 	emit newGame(image, m_slider->value());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::hideEvent(QHideEvent* event)
 {
@@ -209,7 +217,7 @@ void NewGameDialog::hideEvent(QHideEvent* event)
 	QDialog::hideEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::addImage()
 {
@@ -228,13 +236,14 @@ void NewGameDialog::addImage()
 	m_accept_button->setEnabled(m_images->count() > 0);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::removeImage()
 {
 	QListWidgetItem* item = m_images->currentItem();
-	if (!item)
+	if (!item) {
 		return;
+	}
 	QString current_image = item->data(Qt::UserRole).toString();
 
 	QList<QString> games;
@@ -243,13 +252,15 @@ void NewGameDialog::removeImage()
 	QXmlStreamAttributes attributes;
 	foreach (QString game, QDir("saves/", "*.xml").entryList(QDir::Files)) {
 		QFile file("saves/" + game);
-		if (!file.open(QIODevice::ReadOnly))
+		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
+		}
 		xml.setDevice(&file);
 
 		// Load details
-		while (!xml.isStartElement())
+		while (!xml.isStartElement()) {
 			xml.readNext();
+		}
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 3) {
 			if (attributes.value("image").toString() == current_image) {
@@ -266,10 +277,10 @@ void NewGameDialog::removeImage()
 	}
 	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString image_id = current_image.section(".", 0, 0);
-		QFile("images/" + current_image).remove();
-		QFile(QString("images/thumbnails/%1.png").arg(image_id)).remove();
+		QFile::remove("images/" + current_image);
+		QFile::remove(QString("images/thumbnails/%1.png").arg(image_id));
 		foreach (QString game, games) {
-			QFile("saves/" + game).remove();
+			QFile::remove("saves/" + game);
 		}
 		delete item;
 		m_image_labels->removeImage(current_image);
@@ -284,13 +295,14 @@ void NewGameDialog::removeImage()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::changeLabels()
 {
 	QListWidgetItem* item = m_images->currentItem();
-	if (!item)
+	if (!item) {
 		return;
+	}
 
 	QString filter = m_images_filter->currentText();
 	LabelImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_labels, filter, this);
@@ -299,24 +311,24 @@ void NewGameDialog::changeLabels()
 	m_images_filter->clear();
 	m_images_filter->addItems(m_image_labels->labels());
 	int index = m_images_filter->findText(filter);
-	if (index == -1)
+	if (index == -1) {
 		index = 0;
+	}
 	m_images_filter->setCurrentIndex(index);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::imageSelected(QListWidgetItem* item)
 {
-	if (!item)
+	bool enabled = item != 0;
+	if (!enabled) {
 		return;
+	}
 
 	QString image = item->data(Qt::UserRole).toString();
-	bool enabled = item != 0;
 	m_label_button->setEnabled(enabled);
 	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
-	if (!enabled)
-		return;
 
 	m_image_size = QImageReader("images/" + image).size();
 
@@ -327,20 +339,22 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 		tile_size = minimum_size / (max * 8);
 		columns = m_image_size.width() / tile_size / 8;
 		rows = m_image_size.height() / tile_size / 8;
-		if (columns * rows * 16 >= 1000)
+		if (columns * rows * 16 >= 1000) {
 			break;
+		}
 		++max;
 	}
 
 	int value = 2;
-	if (m_images->count() > 1)
+	if (m_images->count() > 1) {
 		value = max * static_cast<float>(m_slider->value()) / static_cast<float>(m_slider->maximum()) + 0.5f;
+	}
 	m_slider->setRange(1, max);
 	m_slider->setValue(value);
 	pieceCountChanged(m_slider->value());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::pieceCountChanged(int value)
 {
@@ -352,7 +366,7 @@ void NewGameDialog::pieceCountChanged(int value)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::filterImages(const QString& filter)
 {
@@ -381,7 +395,7 @@ void NewGameDialog::filterImages(const QString& filter)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void NewGameDialog::addImage(const QString& image)
 {
@@ -400,8 +414,9 @@ void NewGameDialog::addImage(const QString& image)
 	int id = 0;
 	foreach (QString file, QDir("images/", "*.*").entryList(QDir::Files)) {
 		id = file.section(".", 0, 0).toInt();
-		if (id > image_id)
+		if (id > image_id) {
 			image_id = id;
+		}
 	}
 	image_id++;
 	QString image_file = QString("%1.%2").arg(image_id).arg(QFileInfo(image).suffix().toLower());
@@ -416,4 +431,4 @@ void NewGameDialog::addImage(const QString& image)
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

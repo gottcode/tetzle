@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,7 @@
 
 #include <QList>
 #include <QPoint>
-
-#include <vector>
+#include <QVector>
 namespace DLX
 {
 	struct Node;
@@ -37,10 +36,11 @@ public:
 	QList< QList< QList<QPoint> > > solutions;
 
 private:
-	void solution(const std::vector<DLX::Node*>& rows, unsigned int count);
+	void solution(const QVector<DLX::Node*>& rows, unsigned int count);
 
+private:
 	int m_columns;
 	int m_rows;
 };
 
-#endif // SOLVER_H
+#endif

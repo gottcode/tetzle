@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #include "board.h"
 #include "piece.h"
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 Tile::Tile(int column, int row, const QPoint& pos, Board* board)
-:	m_column(column),
+	: m_column(column),
 	m_row(row),
 	m_pos(pos),
 	m_rect(0, 0, board->tileSize(), board->tileSize()),
@@ -34,20 +34,21 @@ Tile::Tile(int column, int row, const QPoint& pos, Board* board)
 {
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 QPoint Tile::scenePos() const
 {
 	return m_pos + parent()->scenePos();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void Tile::save(QXmlStreamWriter& xml, bool scene_pos) const
 {
 	QPoint pos = m_pos;
-	if (scene_pos)
+	if (scene_pos) {
 		pos = scenePos();
+	}
 
 	QXmlStreamAttributes attributes;
 	attributes.append("column", QString::number(m_column));
@@ -58,4 +59,4 @@ void Tile::save(QXmlStreamWriter& xml, bool scene_pos) const
 	xml.writeAttributes(attributes);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

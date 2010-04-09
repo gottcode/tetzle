@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #include <QDir>
 #include <QSettings>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 LabelManager::LabelManager(QObject* parent)
-:	QObject(parent)
+	: QObject(parent)
 {
 	QSettings file("images/labels", QSettings::IniFormat);
 	file.beginGroup("Labels");
@@ -37,14 +37,15 @@ LabelManager::LabelManager(QObject* parent)
 		QMutableStringListIterator i(images);
 		while (i.hasNext()) {
 			i.next();
-			if (!folder.exists(i.value()))
+			if (!folder.exists(i.value())) {
 				i.remove();
+			}
 		}
 		m_labels[label] = images;
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 QStringList LabelManager::labels(bool list_empty) const
 {
@@ -52,8 +53,9 @@ QStringList LabelManager::labels(bool list_empty) const
 	if (!list_empty) {
 		QMap<QString, QStringList>::const_iterator i;
 		for (i = m_labels.constBegin(); i != m_labels.constEnd(); ++i) {
-			if (!i.value().isEmpty())
+			if (!i.value().isEmpty()) {
 				labels.append(i.key());
+			}
 		}
 	} else {
 		labels = m_labels.keys();
@@ -63,7 +65,7 @@ QStringList LabelManager::labels(bool list_empty) const
 	return labels;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 QStringList LabelManager::images(const QString& label) const
 {
@@ -74,19 +76,20 @@ QStringList LabelManager::images(const QString& label) const
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 bool LabelManager::isLabelEmpty(const QString& label) const
 {
 	return images(label).isEmpty();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 bool LabelManager::addLabel(const QString& label)
 {
-	if (label == tr("All") || label.isEmpty() || m_labels.constFind(label) != m_labels.constEnd())
+	if (label == tr("All") || label.isEmpty() || m_labels.constFind(label) != m_labels.constEnd()) {
 		return false;
+	}
 
 	m_labels.insert(label, QStringList());
 	storeLabels();
@@ -94,12 +97,13 @@ bool LabelManager::addLabel(const QString& label)
 	return true;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 bool LabelManager::renameLabel(const QString& label, const QString& old_label)
 {
-	if (m_labels.constFind(label) != m_labels.constEnd() || m_labels.constFind(old_label) == m_labels.constEnd() || label.isEmpty())
+	if (m_labels.constFind(label) != m_labels.constEnd() || m_labels.constFind(old_label) == m_labels.constEnd() || label.isEmpty()) {
 		return false;
+	}
 
 	m_labels.insert(label, m_labels.take(old_label));
 	storeLabels();
@@ -107,12 +111,13 @@ bool LabelManager::renameLabel(const QString& label, const QString& old_label)
 	return true;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 bool LabelManager::removeLabel(const QString& label)
 {
-	if (m_labels.constFind(label) == m_labels.constEnd())
+	if (m_labels.constFind(label) == m_labels.constEnd()) {
 		return false;
+	}
 
 	m_labels.remove(label);
 	storeLabels();
@@ -120,7 +125,7 @@ bool LabelManager::removeLabel(const QString& label)
 	return true;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelManager::addImage(const QString& image, const QString& label)
 {
@@ -131,7 +136,7 @@ void LabelManager::addImage(const QString& image, const QString& label)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelManager::removeImage(const QString& image, const QString& label)
 {
@@ -142,7 +147,7 @@ void LabelManager::removeImage(const QString& image, const QString& label)
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelManager::removeImage(const QString& image)
 {
@@ -154,7 +159,7 @@ void LabelManager::removeImage(const QString& image)
 	storeLabels();
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 void LabelManager::storeLabels()
 {
@@ -168,4 +173,4 @@ void LabelManager::storeLabels()
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

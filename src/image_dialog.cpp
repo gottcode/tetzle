@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,11 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
 ImageDialog::ImageDialog(QWidget* parent)
-: QDialog(parent) {
+	: QDialog(parent)
+{
 	setWindowTitle(tr("Open Image"));
 
 	// Setup folders
@@ -92,9 +93,10 @@ ImageDialog::ImageDialog(QWidget* parent)
 	setPath(QDir::homePath());
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-QString ImageDialog::selectedFile() const {
+QString ImageDialog::selectedFile() const
+{
 	QStringList files = selectedFiles();
 	if (!files.isEmpty()) {
 		return files.first();
@@ -103,9 +105,10 @@ QString ImageDialog::selectedFile() const {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-QStringList ImageDialog::selectedFiles() const {
+QStringList ImageDialog::selectedFiles() const
+{
 	QStringList result;
 	QModelIndexList indexes = m_files_view->selectionModel()->selectedIndexes();
 	foreach (const QModelIndex& index, indexes) {
@@ -114,9 +117,10 @@ QStringList ImageDialog::selectedFiles() const {
 	return result;
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ImageDialog::setMultipleSelections(bool multiple) {
+void ImageDialog::setMultipleSelections(bool multiple)
+{
 	if (multiple) {
 		m_files_view->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	} else {
@@ -124,9 +128,10 @@ void ImageDialog::setMultipleSelections(bool multiple) {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ImageDialog::setPath(const QString& path) {
+void ImageDialog::setPath(const QString& path)
+{
 	QFileInfo info(path);
 	if (!info.exists()) {
 		return;
@@ -149,20 +154,22 @@ void ImageDialog::setPath(const QString& path) {
 	}
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ImageDialog::hideEvent(QHideEvent* event) {
+void ImageDialog::hideEvent(QHideEvent* event)
+{
 	QSettings settings("GottCode");
 	settings.setValue("OpenImage/Size", size());
 	settings.setValue("OpenImage/Splitter", m_contents->saveState());
 	QDialog::hideEvent(event);
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 
-void ImageDialog::folderClicked(const QModelIndex& index) {
+void ImageDialog::folderClicked(const QModelIndex& index)
+{
 	m_files->clear();
 	m_files_view->setRootIndex(m_files->index(m_folders->filePath(index)));
 }
 
-/*****************************************************************************/
+//-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,10 +48,11 @@ private slots:
 private:
 	void zoom();
 
+private:
 	float m_scale_start;
 	float m_scale_factor;
 	int m_scale_level;
 	QGraphicsPixmapItem* m_pixmap;
 };
 
-#endif // OVERVIEW_H
+#endif

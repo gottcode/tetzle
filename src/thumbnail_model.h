@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,8 @@
 #include <QDirModel>
 class ThumbnailLoader;
 
-class ThumbnailModel : public QDirModel {
+class ThumbnailModel : public QDirModel
+{
 	Q_OBJECT
 public:
 	ThumbnailModel(QObject* parent = 0);
