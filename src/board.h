@@ -39,6 +39,10 @@ public:
 
 	int id() const;
 	int margin() const;
+	GLuint imageTexture() const;
+	GLuint shadowTexture() const;
+	float tileTextureSize() const;
+	const QPointF* corners(int rotation) const;
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -84,11 +88,9 @@ private:
 	void selectPieces();
 
 	void loadImage();
-	void generateSuccessImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
-	void draw(Tile* tile, const QPoint& pos) const;
 	void updateCompleted();
 	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
 	Tile* tileUnderCursor(bool include_active = true);
@@ -101,8 +103,9 @@ private:
 	QString m_image_path;
 	Overview* m_overview;
 
-	GLuint m_success;
 	GLuint m_image;
+	GLuint m_shadow;
+	GLuint m_success;
 	float m_image_ts;
 	QPointF m_corners[4][4];
 	QSize m_success_size;
@@ -138,6 +141,26 @@ inline int Board::id() const
 inline int Board::margin() const
 {
 	return 10.0f / m_scale;
+}
+
+inline GLuint Board::imageTexture() const
+{
+	return m_image;
+}
+
+inline GLuint Board::shadowTexture() const
+{
+	return m_shadow;
+}
+
+inline float Board::tileTextureSize() const
+{
+	return m_image_ts;
+}
+
+inline const QPointF* Board::corners(int rotation) const
+{
+	return m_corners[rotation];
 }
 
 #endif

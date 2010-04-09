@@ -1,4 +1,5 @@
 2010-04-09 Graeme Gott <graeme@gottcode.org>
+	* Add drop shadows.
 	* Improve board generation.
 	* Remove beveled borders.
 	* Change storage location.

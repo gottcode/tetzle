@@ -87,8 +87,6 @@ Board::Board(QWidget* parent)
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 	setMouseTracking(true);
-	glInit();
-	generateSuccessImage();
 
 	// Create overview dialog
 	m_overview = new Overview(parent);
@@ -100,6 +98,7 @@ Board::Board(QWidget* parent)
 Board::~Board()
 {
 	cleanup();
+	deleteTexture(m_shadow);
 	deleteTexture(m_success);
 }
 
@@ -449,6 +448,31 @@ void Board::initializeGL()
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Load shadow image
+	m_shadow = bindTexture(QImage(":/shadow.png"));
+
+	// Create success message
+	QFont font("Sans", 24);
+	QFontMetrics metrics(font);
+	int width = metrics.width(tr("Success"));
+	int height = metrics.height();
+	m_success_size = QSize(width + height, height * 2);
+	QImage success(powerOfTwo(m_success_size.width()), powerOfTwo(m_success_size.height()), QImage::Format_ARGB32);
+	{
+		QPainter painter(&success);
+		painter.fillRect(success.rect(), Qt::transparent);
+		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(QColor(0, 0, 0, 200));
+		painter.drawRoundedRect(0, 0, width + height, height * 2, 10, 10);
+
+		painter.setFont(font);
+		painter.setPen(Qt::white);
+		painter.drawText(height / 2, height / 2 + metrics.ascent(), tr("Success"));
+	}
+	m_success = bindTexture(success.mirrored(false, true));
 }
 
 //-----------------------------------------------------------------------------
@@ -470,23 +494,16 @@ void Board::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
+	// Draw pieces
 	glPushMatrix();
-
 	glScalef(m_scale, m_scale, 0);
 	glTranslatef((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y(), 0);
-
-	glBindTexture(GL_TEXTURE_2D, m_image);
-
-	glBegin(GL_QUADS);
-		foreach (Piece* piece, m_pieces) {
-			foreach (Tile* tile, piece->children()) {
-				draw(tile, tile->scenePos());
-			}
-		}
-	glEnd();
-
+	for (int i = 0; i < m_pieces.count(); ++i) {
+		m_pieces.at(i)->draw();
+	}
 	glPopMatrix();
 
+	// Draw selection rectangle
 	if (m_selecting) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glPushAttrib(GL_CURRENT_BIT);
@@ -513,6 +530,7 @@ void Board::paintGL()
 		glPopAttrib();
 	}
 
+	// Draw success message
 	if (m_finished) {
 		glBindTexture(GL_TEXTURE_2D, m_success);
 
@@ -946,24 +964,24 @@ void Board::loadImage()
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
-	m_corners[0][1] = QPointF(0,m_image_ts);
+	m_corners[0][1] = QPointF(m_image_ts,0);
 	m_corners[0][2] = QPointF(m_image_ts,m_image_ts);
-	m_corners[0][3] = QPointF(m_image_ts,0);
+	m_corners[0][3] = QPointF(0,m_image_ts);
 
-	m_corners[1][0] = m_corners[0][1];
-	m_corners[1][1] = m_corners[0][2];
-	m_corners[1][2] = m_corners[0][3];
-	m_corners[1][3] = m_corners[0][0];
+	m_corners[1][0] = m_corners[0][3];
+	m_corners[1][1] = m_corners[0][0];
+	m_corners[1][2] = m_corners[0][1];
+	m_corners[1][3] = m_corners[0][2];
 
 	m_corners[2][0] = m_corners[0][2];
 	m_corners[2][1] = m_corners[0][3];
 	m_corners[2][2] = m_corners[0][0];
 	m_corners[2][3] = m_corners[0][1];
 
-	m_corners[3][0] = m_corners[0][3];
-	m_corners[3][1] = m_corners[0][0];
-	m_corners[3][2] = m_corners[0][1];
-	m_corners[3][3] = m_corners[0][2];
+	m_corners[3][0] = m_corners[0][1];
+	m_corners[3][1] = m_corners[0][2];
+	m_corners[3][2] = m_corners[0][3];
+	m_corners[3][3] = m_corners[0][0];
 
 	// Calculate zoom range
 	m_scale_level_min = 2;
@@ -972,30 +990,6 @@ void Board::loadImage()
 
 	// Show overview
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::generateSuccessImage()
-{
-	QFontMetrics metrics(QFont("Sans", 24));
-	int width = metrics.width(tr("Success"));
-	int height = metrics.height();
-	m_success_size = QSize(width + height, height * 2);
-	QImage success(powerOfTwo(m_success_size.width()), powerOfTwo(m_success_size.height()), QImage::Format_ARGB32);
-	{
-		QPainter painter(&success);
-		painter.fillRect(success.rect(), QColor(0, 0, 0, 0));
-		painter.setPen(Qt::NoPen);
-		painter.setBrush(QColor(0, 0, 0, 200));
-		painter.setRenderHint(QPainter::Antialiasing, true);
-		painter.drawRoundRect(0, 0, width + height, height * 2, 10);
-		painter.setFont(QFont("Sans", 24));
-		painter.setPen(Qt::white);
-		painter.setRenderHint(QPainter::TextAntialiasing, true);
-		painter.drawText(height / 2, height / 2 + metrics.ascent(), tr("Success"));
-	}
-	m_success = bindTexture(success.mirrored(false, true));
 }
 
 //-----------------------------------------------------------------------------
@@ -1038,32 +1032,6 @@ QPoint Board::mapCursorPosition() const
 QPoint Board::mapPosition(const QPoint& position) const
 {
 	return (position / m_scale) - (QPoint(width() >> 1, height() >> 1) / m_scale) + m_pos;
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::draw(Tile* tile, const QPoint& pos) const
-{
-	int x1 = pos.x();
-	int y1 = pos.y();
-	int x2 = x1 + Tile::size();
-	int y2 = y1 + Tile::size();
-
-	const QPointF* corners = m_corners[tile->parent()->rotation()];
-	float tx = tile->column() * m_image_ts;
-	float ty = tile->row() * m_image_ts;
-
-	glTexCoord2f(tx + corners[0].x(), ty + corners[0].y());
-	glVertex2i(x1, y1);
-
-	glTexCoord2f(tx + corners[1].x(), ty + corners[1].y());
-	glVertex2i(x1, y2);
-
-	glTexCoord2f(tx + corners[2].x(), ty + corners[2].y());
-	glVertex2i(x2, y2);
-
-	glTexCoord2f(tx + corners[3].x(), ty + corners[3].y());
-	glVertex2i(x2, y1);
 }
 
 //-----------------------------------------------------------------------------

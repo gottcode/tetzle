@@ -50,13 +50,9 @@ SOURCES = src/board.cpp \
 	src/thumbnail_model.cpp \
 	src/window.cpp
 
-macx {
-	ICON = icons/tetzle.icns
-} else:unix {
-	RESOURCES = icons/icon.qrc
-} else:win32 {
-	RC_FILE = icons/icon.rc
-}
+RESOURCES = data/data.qrc icons/icon.qrc
+macx:ICON = icons/tetzle.icns
+win32:RC_FILE = icons/icon.rc
 
 unix: !macx {
 	isEmpty(PREFIX) {

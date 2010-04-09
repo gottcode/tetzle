@@ -48,7 +48,12 @@ public:
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotateAround(Tile* tile);
 
+	void draw() const;
 	void save(QXmlStreamWriter& xml) const;
+
+private:
+	void updateShadow();
+	bool containsTile(int column, int row);
 
 private:
 	Board* m_board;
@@ -56,6 +61,7 @@ private:
 	QPoint m_pos;
 	QRect m_rect;
 	QList<Tile*> m_children;
+	QList<Tile*> m_shadow;
 };
 
 

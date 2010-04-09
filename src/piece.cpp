@@ -26,6 +26,10 @@
 
 #include <cmath>
 
+#ifndef GL_CLAMP_TO_EDGE
+ #define GL_CLAMP_TO_EDGE 0x812F
+#endif
+
 namespace
 {
 
@@ -130,7 +134,8 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	: m_board(board),
 	m_rotation(0),
 	m_pos(pos),
-	m_children(tiles)
+	m_children(tiles),
+	m_shadow(tiles)
 {
 	// Add tiles
 	QPoint first_pos = m_children.first()->pos();
@@ -139,6 +144,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 		tile->setPos(tile->pos() - first_pos);
 		m_rect = m_rect.united(tile->rect().translated(tile->pos()));
 	}
+	updateShadow();
 
 	// Rotate
 	Tile* tile = m_children.first();
@@ -191,6 +197,10 @@ void Piece::attach(Piece* piece)
 	}
 	m_children += tiles;
 	piece->m_children.clear();
+
+	// Update shadow
+	m_shadow += piece->m_shadow;
+	updateShadow();
 
 	// Update bounding rectangle
 	m_rect = m_rect.united(piece->m_rect.translated(delta));
@@ -363,6 +373,73 @@ void Piece::rotateAround(Tile* tile)
 
 //-----------------------------------------------------------------------------
 
+void Piece::draw() const
+{
+	int x1, y1, x2, y2;
+	QPointF pos;
+	Tile* tile;
+
+	// Draw shadow
+	glColor3f(0, 0, 0);
+	glBindTexture(GL_TEXTURE_2D, m_board->shadowTexture());
+	glBegin(GL_QUADS);
+	for (int i = 0; i < m_shadow.count(); ++i) {
+		pos = m_shadow.at(i)->scenePos();
+		x1 = pos.x() - 16;
+		y1 = pos.y() - 16;
+		x2 = x1 + 64;
+		y2 = y1 + 64;
+
+		glTexCoord2i(0, 0);
+		glVertex2i(x1, y1);
+
+		glTexCoord2i(1, 0);
+		glVertex2i(x2, y1);
+
+		glTexCoord2i(1, 1);
+		glVertex2i(x2, y2);
+
+		glTexCoord2i(0, 1);
+		glVertex2i(x1, y2);
+	}
+	glEnd();
+
+	// Draw tiles
+	glColor3f(1, 1, 1);
+	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBegin(GL_QUADS);
+	for (int i = 0; i < m_children.count(); ++i) {
+		tile = m_children.at(i);
+
+		pos = tile->scenePos();
+		x1 = pos.x();
+		y1 = pos.y();
+		x2 = x1 + Tile::size();
+		y2 = y1 + Tile::size();
+
+		const QPointF* corners = m_board->corners(rotation());
+		float tx = tile->column() * m_board->tileTextureSize();
+		float ty = tile->row() * m_board->tileTextureSize();
+
+		glTexCoord2f(tx + corners[0].x(), ty + corners[0].y());
+		glVertex2i(x1, y1);
+
+		glTexCoord2f(tx + corners[1].x(), ty + corners[1].y());
+		glVertex2i(x2, y1);
+
+		glTexCoord2f(tx + corners[2].x(), ty + corners[2].y());
+		glVertex2i(x2, y2);
+
+		glTexCoord2f(tx + corners[3].x(), ty + corners[3].y());
+		glVertex2i(x1, y2);
+	}
+	glEnd();
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::save(QXmlStreamWriter& xml) const
 {
 	xml.writeStartElement("piece");
@@ -375,6 +452,37 @@ void Piece::save(QXmlStreamWriter& xml) const
 	}
 
 	xml.writeEndElement();
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::updateShadow()
+{
+	QMutableListIterator<Tile*> i(m_shadow);
+	while (i.hasNext()) {
+		Tile* tile = i.next();
+		if ( containsTile(tile->column() - 1, tile->row())
+			&& containsTile(tile->column() + 1, tile->row())
+			&& containsTile(tile->column(), tile->row() - 1)
+			&& containsTile(tile->column(), tile->row() + 1) ) {
+			i.remove();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+bool Piece::containsTile(int column, int row)
+{
+	bool result = false;
+	for (int i = 0; i < m_children.count(); ++i) {
+		const Tile* tile = m_children.at(i);
+		if (tile->column() == column && tile->row() == row) {
+			result = true;
+			break;
+		}
+	}
+	return result;
 }
 
 //-----------------------------------------------------------------------------
