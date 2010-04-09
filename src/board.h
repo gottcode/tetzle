@@ -40,7 +40,6 @@ public:
 	int id() const;
 	int tileSize() const;
 	int margin() const;
-	bool bordersVisible() const;
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -52,11 +51,9 @@ public slots:
 	void zoomFit();
 	void zoom(int value);
 	void toggleOverview();
-	void toggleBorders();
 
 signals:
 	void overviewToggled(bool visible);
-	void bordersToggled(bool visible);
 	void statusMessage(const QString& message);
 	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
@@ -92,7 +89,7 @@ private:
 	void updateCursor();
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
-	void draw(Tile* tile, const QPoint& pos, float depth) const;
+	void draw(Tile* tile, const QPoint& pos) const;
 	void updateCompleted();
 	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
 	Tile* tileUnderCursor(bool include_active = true);
@@ -103,19 +100,15 @@ private:
 	int m_id;
 	int m_difficulty;
 	bool m_letterbox;
-	bool m_borders_visible;
 	QString m_image_path;
 	int m_image_width;
 	int m_image_height;
 	int m_tile_size;
-	int m_bumpmap_size;
 	Overview* m_overview;
 
 	GLuint m_success;
 	GLuint m_image;
-	GLuint m_bumpmap;
 	float m_image_ts;
-	float m_bumpmap_ts;
 	QPointF m_corners[4][4];
 	QSize m_success_size;
 
@@ -153,11 +146,6 @@ inline int Board::tileSize() const
 inline int Board::margin() const
 {
 	return 10.0f / m_scale;
-}
-
-inline bool Board::bordersVisible() const
-{
-	return m_borders_visible;
 }
 
 #endif

@@ -93,7 +93,6 @@ Window::Window()
 	m_board = new Board(this);
 	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
 	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
-	connect(m_board, SIGNAL(bordersToggled(bool)), this, SLOT(bordersToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int)), m_slider, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(zoomRangeChanged(int, int)), m_slider, SLOT(setRange(int, int)));
@@ -125,9 +124,6 @@ Window::Window()
 	menu->addSeparator();
 	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
 	m_toggle_overview_action->setEnabled(false);
-	m_toggle_borders_action = menu->addAction(tr("Show &Borders"), m_board, SLOT(toggleBorders()), tr("Ctrl+B"));
-	m_toggle_borders_action->setEnabled(false);
-	bordersToggled(m_board->bordersVisible());
 
 	menu->addSeparator();
 
@@ -203,7 +199,6 @@ void Window::newGame()
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
 		m_toggle_overview_action->setEnabled(true);
-		m_toggle_borders_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	}
@@ -222,7 +217,6 @@ void Window::openGame()
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
 		m_toggle_overview_action->setEnabled(true);
-		m_toggle_borders_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	} else {
@@ -246,17 +240,6 @@ void Window::overviewToggled(bool visible)
 		m_toggle_overview_action->setText(tr("Hide O&verview"));
 	} else {
 		m_toggle_overview_action->setText(tr("Show O&verview"));
-	}
-}
-
-//-----------------------------------------------------------------------------
-
-void Window::bordersToggled(bool visible)
-{
-	if (visible) {
-		m_toggle_borders_action->setText(tr("Hide &Borders"));
-	} else {
-		m_toggle_borders_action->setText(tr("Show &Borders"));
 	}
 }
 

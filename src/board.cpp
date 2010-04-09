@@ -40,12 +40,6 @@
 #include <cmath>
 #include <ctime>
 
-#if defined(Q_OS_WIN32)
-#include <GL/glext.h>
-PFNGLACTIVETEXTUREARBPROC glActiveTexture = 0;
-PFNGLMULTITEXCOORD2FARBPROC glMultiTexCoord2f = 0;
-#endif
-
 //-----------------------------------------------------------------------------
 
 namespace
@@ -72,15 +66,11 @@ Board::Board(QWidget* parent)
 	m_id(0),
 	m_difficulty(0),
 	m_letterbox(false),
-	m_borders_visible(QSettings().value("Board/BordersVisible", true).toBool()),
 	m_image_width(0),
 	m_image_height(0),
 	m_tile_size(0),
-	m_bumpmap_size(0),
 	m_image(0),
-	m_bumpmap(0),
 	m_image_ts(0),
-	m_bumpmap_ts(0),
 	m_total_pieces(0),
 	m_completed(0),
 	m_pos(0, 0),
@@ -98,10 +88,6 @@ Board::Board(QWidget* parent)
 	setFocus();
 	setMouseTracking(true);
 	glInit();
-#if defined(Q_OS_WIN32)
-	glActiveTexture = (PFNGLACTIVETEXTUREARBPROC) wglGetProcAddress("glActiveTextureARB");
-	glMultiTexCoord2f = (PFNGLMULTITEXCOORD2FARBPROC) wglGetProcAddress("glMultiTexCoord2fARB");
-#endif
 	generateSuccessImage();
 
 	// Create overview dialog
@@ -458,45 +444,6 @@ void Board::zoom(int value)
 		m_scale = 4.0f / m_tile_size;
 	}
 
-	// Create tile bumpmap texture
-	m_bumpmap_size = qRound(m_tile_size * m_scale);
-	int bumpmap_texture_size = powerOfTwo(m_bumpmap_size);
-	m_bumpmap_ts = static_cast<float>(m_bumpmap_size) / static_cast<float>(bumpmap_texture_size);
-	QImage bumpmap(bumpmap_texture_size, bumpmap_texture_size, QImage::Format_RGB32);
-	{
-		QPainter painter(&bumpmap);
-		painter.fillRect(bumpmap.rect(), QColor(128,128,128));
-
-		if (m_borders_visible) {
-			painter.setPen(QColor(224,224,224));
-			painter.drawLine(0, 0, m_bumpmap_size - 1, 0);
-			painter.drawLine(0, 1, 0, m_bumpmap_size - 2);
-			painter.setPen(QColor(32,32,32));
-			painter.drawLine(0, m_bumpmap_size - 1, m_bumpmap_size - 1, m_bumpmap_size - 1);
-			painter.drawLine(m_bumpmap_size - 1, 1, m_bumpmap_size - 1, m_bumpmap_size - 2);
-
-			painter.setPen(QColor(160,160,160));
-			painter.drawLine(1, 1, m_bumpmap_size - 2, 1);
-			painter.drawLine(1, 2, 1, m_bumpmap_size - 3);
-			painter.setPen(QColor(96,96,96));
-			painter.drawLine(1, m_bumpmap_size - 2, m_bumpmap_size - 2, m_bumpmap_size - 2);
-			painter.drawLine(m_bumpmap_size - 2, 2, m_bumpmap_size - 2, m_bumpmap_size - 3);
-		}
-	}
-	glActiveTexture(GL_TEXTURE1);
-	glEnable(GL_TEXTURE_2D);
-
-	glDeleteTextures(1, &m_bumpmap);
-	glGenTextures(1, &m_bumpmap);
-	glBindTexture(GL_TEXTURE_2D, m_bumpmap);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	QImage buf = convertToGLFormat(bumpmap.mirrored(false, true));
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bumpmap_texture_size, bumpmap_texture_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, buf.bits());
-
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
 	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
@@ -522,21 +469,14 @@ void Board::toggleOverview()
 
 //-----------------------------------------------------------------------------
 
-void Board::toggleBorders()
-{
-	m_borders_visible = !m_borders_visible;
-	QSettings().setValue("Board/BordersVisible", m_borders_visible);
-	zoom(m_scale_level);
-	emit bordersToggled(m_borders_visible);
-}
-
-//-----------------------------------------------------------------------------
-
 void Board::initializeGL()
 {
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	glColor4f(1, 1, 1, 1);
 	glClearColor(1, 1, 1, 1);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 //-----------------------------------------------------------------------------
@@ -560,37 +500,23 @@ void Board::paintGL()
 
 	glPushMatrix();
 
-	glTranslatef((width() >> 1) - qRound(m_pos.x() * m_scale), (height() >> 1) - qRound(m_pos.y() * m_scale), 0);
+	glScalef(m_scale, m_scale, 0);
+	glTranslatef((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y(), 0);
 
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_image);
 
-	glActiveTexture(GL_TEXTURE1);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-	glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
-	glBindTexture(GL_TEXTURE_2D, m_bumpmap);
-
-	float depth = 0;
-	float depth_diff = 1.0f / m_pieces.count();
 	glBegin(GL_QUADS);
 		foreach (Piece* piece, m_pieces) {
 			foreach (Tile* tile, piece->children()) {
-				draw(tile, tile->scenePos() * m_scale, depth);
+				draw(tile, tile->scenePos());
 			}
-			depth += depth_diff;
 		}
 	glEnd();
 
 	glPopMatrix();
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	if (m_selecting) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glPushAttrib(GL_CURRENT_BIT);
 
 		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
@@ -613,14 +539,9 @@ void Board::paintGL()
 		glEnd();
 
 		glPopAttrib();
-		glDisable(GL_BLEND);
 	}
 
 	if (m_finished) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_success);
 
 		int w = powerOfTwo(m_success_size.width());
@@ -641,8 +562,6 @@ void Board::paintGL()
 			glTexCoord2f(1, 0);
 			glVertex3f(x + w, y, 2);
 		glEnd();
-
-		glDisable(GL_BLEND);
 	}
 }
 
@@ -1059,8 +978,6 @@ void Board::loadImage()
 		painter.fillRect(texture.rect(), Qt::darkGray);
 		painter.drawImage(x, y, source, sx, sy, sw, sh, Qt::AutoColor | Qt::AvoidDither);
 	}
-	glActiveTexture(GL_TEXTURE0);
-	glEnable(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	m_image = bindTexture(texture.mirrored(false, true));
@@ -1119,8 +1036,6 @@ void Board::generateSuccessImage()
 		painter.setRenderHint(QPainter::TextAntialiasing, true);
 		painter.drawText(height / 2, height / 2 + metrics.ascent(), tr("Success"));
 	}
-	glActiveTexture(GL_TEXTURE0);
-	glEnable(GL_TEXTURE_2D);
 	m_success = bindTexture(success.mirrored(false, true));
 }
 
@@ -1168,32 +1083,28 @@ QPoint Board::mapPosition(const QPoint& position) const
 
 //-----------------------------------------------------------------------------
 
-void Board::draw(Tile* tile, const QPoint& pos, float depth) const
+void Board::draw(Tile* tile, const QPoint& pos) const
 {
 	int x1 = pos.x();
 	int y1 = pos.y();
-	int x2 = x1 + m_bumpmap_size;
-	int y2 = y1 + m_bumpmap_size;
+	int x2 = x1 + m_tile_size;
+	int y2 = y1 + m_tile_size;
 
 	const QPointF* corners = m_corners[tile->parent()->rotation()];
 	float tx = tile->column() * m_image_ts;
 	float ty = tile->row() * m_image_ts;
 
-	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[0].x(), ty + corners[0].y());
-	glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
-	glVertex3f(x1, y1, depth);
+	glTexCoord2f(tx + corners[0].x(), ty + corners[0].y());
+	glVertex2i(x1, y1);
 
-	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[1].x(), ty + corners[1].y());
-	glMultiTexCoord2f(GL_TEXTURE1, 0, m_bumpmap_ts);
-	glVertex3f(x1, y2, depth);
+	glTexCoord2f(tx + corners[1].x(), ty + corners[1].y());
+	glVertex2i(x1, y2);
 
-	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[2].x(), ty + corners[2].y());
-	glMultiTexCoord2f(GL_TEXTURE1, m_bumpmap_ts, m_bumpmap_ts);
-	glVertex3f(x2, y2, depth);
+	glTexCoord2f(tx + corners[2].x(), ty + corners[2].y());
+	glVertex2i(x2, y2);
 
-	glMultiTexCoord2f(GL_TEXTURE0, tx + corners[3].x(), ty + corners[3].y());
-	glMultiTexCoord2f(GL_TEXTURE1, m_bumpmap_ts, 0);
-	glVertex3f(x2, y1, depth);
+	glTexCoord2f(tx + corners[3].x(), ty + corners[3].y());
+	glVertex2i(x2, y1);
 }
 
 //-----------------------------------------------------------------------------
@@ -1269,7 +1180,6 @@ void Board::finishGame()
 void Board::cleanup()
 {
 	deleteTexture(m_image);
-	glDeleteTextures(1, &m_bumpmap);
 
 	m_active_tiles.clear();
 	qDeleteAll(m_pieces);
