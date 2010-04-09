@@ -31,7 +31,8 @@ HEADERS = src/board.h \
 	src/thumbnail_list.h \
 	src/thumbnail_loader.h \
 	src/thumbnail_model.h \
-	src/window.h
+	src/window.h \
+	src/zoom_slider.h
 
 SOURCES = src/board.cpp \
 	src/dancing_links.cpp \
@@ -48,7 +49,8 @@ SOURCES = src/board.cpp \
 	src/thumbnail_list.cpp \
 	src/thumbnail_loader.cpp \
 	src/thumbnail_model.cpp \
-	src/window.cpp
+	src/window.cpp \
+	src/zoom_slider.cpp
 
 RESOURCES = data/data.qrc icons/icon.qrc
 macx:ICON = icons/tetzle.icns

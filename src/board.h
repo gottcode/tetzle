@@ -52,7 +52,7 @@ public slots:
 	void zoomIn();
 	void zoomOut();
 	void zoomFit();
-	void zoom(int value);
+	void zoom(int level);
 	void toggleOverview();
 
 signals:
@@ -61,8 +61,7 @@ signals:
 	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);
-	void zoomChanged(int zoom);
-	void zoomRangeChanged(int min, int max);
+	void zoomChanged(int level, float factor);
 	void finished();
 
 protected:
@@ -121,8 +120,6 @@ private:
 	QPoint m_cursor_pos;
 	QPoint m_select_pos;
 	int m_scale_level;
-	int m_scale_level_min;
-	int m_scale_level_max;
 	float m_scale;
 	bool m_scrolling;
 	bool m_selecting;
@@ -140,7 +137,7 @@ inline int Board::id() const
 
 inline int Board::margin() const
 {
-	return 10.0f / m_scale;
+	return 10;
 }
 
 inline GLuint Board::imageTexture() const

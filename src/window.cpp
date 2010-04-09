@@ -22,6 +22,7 @@
 #include "board.h"
 #include "new_game_dialog.h"
 #include "open_game_dialog.h"
+#include "zoom_slider.h"
 
 #include <QAction>
 #include <QApplication>
@@ -30,46 +31,14 @@
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFileInfo>
-#include <QHBoxLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
-#include <QSlider>
 #include <QStatusBar>
 #include <QTimer>
-
-//-----------------------------------------------------------------------------
-
-ZoomSlider::ZoomSlider(QWidget* parent)
-	: QWidget(parent)
-{
-	m_label = new QLabel(tr("0%"), this);
-	m_slider = new QSlider(Qt::Horizontal, this);
-	m_slider->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	connect(m_slider, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
-
-	QHBoxLayout* layout = new QHBoxLayout(this);
-	layout->setContentsMargins(10, 0, 10, 0);
-	layout->addWidget(m_label);
-	layout->addWidget(m_slider);
-}
-
-//-----------------------------------------------------------------------------
-
-void ZoomSlider::setValue(int value)
-{
-	m_slider->setValue(value);
-	m_label->setText(tr("%1%").arg(value * 100 / m_slider->maximum()));
-}
-
-//-----------------------------------------------------------------------------
-
-void ZoomSlider::setRange(int min, int max)
-{
-	m_slider->setRange(min, max);
-}
 
 //-----------------------------------------------------------------------------
 
@@ -94,8 +63,7 @@ Window::Window()
 	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
 	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
-	connect(m_board, SIGNAL(zoomChanged(int)), m_slider, SLOT(setValue(int)));
-	connect(m_board, SIGNAL(zoomRangeChanged(int, int)), m_slider, SLOT(setRange(int, int)));
+	connect(m_board, SIGNAL(zoomChanged(int, float)), m_slider, SLOT(setValue(int, float)));
 	connect(m_slider, SIGNAL(valueChanged(int)), m_board, SLOT(zoom(int)));
 	setCentralWidget(m_board);
 

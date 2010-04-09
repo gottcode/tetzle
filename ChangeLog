@@ -1,4 +1,5 @@
 2010-04-09 Graeme Gott <graeme@gottcode.org>
+	* Change zoom algorithm.
 	* Add drop shadows.
 	* Improve board generation.
 	* Remove beveled borders.

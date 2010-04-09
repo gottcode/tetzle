@@ -59,6 +59,8 @@ int powerOfTwo(int value)
 	return value;
 }
 
+const float scale_levels[] = { 0.125, 0.15625, 0.1875, 0.25, 0.3125, 0.40625, 0.5, 0.625, 0.78125, 1.0 };
+
 }
 
 //-----------------------------------------------------------------------------
@@ -74,9 +76,7 @@ Board::Board(QWidget* parent)
 	m_total_pieces(0),
 	m_completed(0),
 	m_pos(0, 0),
-	m_scale_level(0),
-	m_scale_level_min(0),
-	m_scale_level_max(0),
+	m_scale_level(9),
 	m_scale(0),
 	m_scrolling(false),
 	m_selecting(false),
@@ -382,38 +382,31 @@ void Board::zoomFit()
 	}
 	m_pos = bounds.center();
 
-	// Find scale level to show bounding rectangle
-	QSize bounds_scaled = bounds.size();
-	bounds_scaled.scale(size(), Qt::KeepAspectRatio);
-	float new_tile_scale = static_cast<float>(bounds_scaled.width()) / static_cast<float>(bounds.width());
-	int scale_level = 2 * (log(new_tile_scale * Tile::size() * 0.25) / log(1.25));
-	scale_level = qBound(m_scale_level_min, scale_level, m_scale_level_max);
+	// Find scale factor
+	float sx = static_cast<float>(width()) / static_cast<float>(bounds.width());
+	float sy = static_cast<float>(height()) / static_cast<float>(bounds.height());
+	float scale = qMin(1.0f, qMin(sx, sy));
 
+	// Find closest scale level
+	int scale_level = 9;
+	for (int i = 0; i < 9; ++i) {
+		if ((scale - scale_levels[i]) < 0.0f) {
+			scale_level = (i - 1);
+			break;
+		}
+	}
 	zoom(scale_level);
 }
 
 //-----------------------------------------------------------------------------
 
-void Board::zoom(int value)
+void Board::zoom(int level)
 {
-	if (value > m_scale_level_max) {
-		value = m_scale_level_max;
-	} else if (value < m_scale_level_min) {
-		value = m_scale_level_min;
-	}
-
 	QPoint old_pos = mapCursorPosition();
 
 	// Calculate new scale value
-	m_scale_level = value;
-	m_scale = pow(1.25, m_scale_level * 0.5) / (Tile::size() * 0.25);
-	m_scale = floor(m_scale * Tile::size()) / Tile::size();
-	if (m_scale > 1.0f) {
-		m_scale = 1.0f;
-	}
-	if (m_scale * Tile::size() < 4.0f) {
-		m_scale = 4.0f / Tile::size();
-	}
+	m_scale_level = qBound(0, level, 9);
+	m_scale = scale_levels[m_scale_level];
 
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
@@ -424,9 +417,9 @@ void Board::zoom(int value)
 
 	// Update scene
 	updateGL();
-	emit zoomChanged(m_scale_level);
-	emit zoomOutAvailable(m_scale_level > m_scale_level_min);
-	emit zoomInAvailable(m_scale_level < m_scale_level_max);
+	emit zoomChanged(m_scale_level, m_scale);
+	emit zoomOutAvailable(m_scale_level > 0);
+	emit zoomInAvailable(m_scale_level < 9);
 }
 
 //-----------------------------------------------------------------------------
@@ -982,11 +975,6 @@ void Board::loadImage()
 	m_corners[3][1] = m_corners[0][2];
 	m_corners[3][2] = m_corners[0][3];
 	m_corners[3][3] = m_corners[0][0];
-
-	// Calculate zoom range
-	m_scale_level_min = 2;
-	m_scale_level_max = ceil(2 * (log(Tile::size() * 0.25) / log(1.25)));
-	emit zoomRangeChanged(m_scale_level_min, m_scale_level_max);
 
 	// Show overview
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());

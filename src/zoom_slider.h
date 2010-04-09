@@ -17,39 +17,28 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef ZOOM_SLIDER_H
+#define ZOOM_SLIDER_H
 
-#include <QMainWindow>
-class QAction;
-class Board;
-class ZoomSlider;
+#include <QWidget>
+class QLabel;
+class QSlider;
 
-class Window : public QMainWindow
+class ZoomSlider : public QWidget
 {
 	Q_OBJECT
 public:
-	Window();
+	ZoomSlider(QWidget* parent = 0);
 
-protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
+signals:
+	void valueChanged(int);
 
-private slots:
-	void newGame();
-	void openGame();
-	void gameFinished();
-	void overviewToggled(bool visible);
-	void setFullScreen(bool enable);
-	void showControls();
-	void showAbout();
+public slots:
+	void setValue(int level, float factor);
 
 private:
-	QAction* m_open_action;
-	QAction* m_zoom_fit_action;
-	QAction* m_toggle_overview_action;
-	ZoomSlider* m_slider;
-	Board* m_board;
+	QLabel* m_label;
+	QSlider* m_slider;
 };
 
 #endif
