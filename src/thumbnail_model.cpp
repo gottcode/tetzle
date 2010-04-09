@@ -22,6 +22,7 @@
 #include "thumbnail_loader.h"
 
 #include <QCryptographicHash>
+#include <QDesktopServices>
 #include <QImageReader>
 #include <QPainter>
 
@@ -30,25 +31,8 @@
 namespace
 {
 
-QString preview_path;
-
-void fetchPreviewPath() {
-	QDir dir = QDir::home();
-#if defined(Q_OS_MAC)
-	preview_path = QDir::homePath() + "/Library/Application Support/GottCode/Previews/";
-#elif defined(Q_OS_UNIX)
-	preview_path = getenv("$XDG_DATA_HOME");
-	if (preview_path.isEmpty()) {
-		preview_path = QDir::homePath() + "/.local/share/";
-	}
-	preview_path += "/gottcode/previews/";
-#elif defined(Q_OS_WIN32)
-	preview_path = QDir::homePath() + "/Application Data/GottCode/Previews/";
-#endif
-	dir.mkpath(preview_path);
-}
-
 QString previewFileName(const QString& path) {
+	static QString preview_path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/../thumbnails/";
 	QByteArray hash = QCryptographicHash::hash(QFileInfo(path).canonicalFilePath().toUtf8(), QCryptographicHash::Sha1);
 	return QString(preview_path + hash.toHex() + ".png");
 }
@@ -60,8 +44,6 @@ QString previewFileName(const QString& path) {
 ThumbnailModel::ThumbnailModel(QObject* parent)
 	: QDirModel(parent)
 {
-	fetchPreviewPath();
-
 	setFilter(QDir::Files);
 	QStringList filters;
 	foreach (QByteArray type, QImageReader::supportedImageFormats()) {

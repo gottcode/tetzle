@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include <QApplication>
+#include <QDesktopServices>
 #include <QDir>
 #include <QLocale>
 #include <QSettings>
@@ -50,21 +51,12 @@ int main(int argc, char** argv)
 #endif
 
 	QDir dir = QDir::home();
-#if defined(Q_OS_MAC)
-	QString path = QDir::homePath() + "/Library/Application Support/GottCode/Tetzle/";
-#elif defined(Q_OS_UNIX)
-	QString path = getenv("$XDG_DATA_HOME");
-	if (path.isEmpty())
-		path = QDir::homePath() + "/.local/share/";
-	path += "/games/tetzle/";
-#elif defined(Q_OS_WIN32)
-	QString path = QDir::homePath() + "/Application Data/GottCode/Tetzle/";
-#endif
+	QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
 	dir.mkpath(path);
-	dir.mkpath(path + "images/");
-	dir.mkpath(path + "images/thumbnails/");
-	dir.mkpath(path + "previews/");
-	dir.mkpath(path + "saves/");
+	dir.mkpath(path + "/images/");
+	dir.mkpath(path + "/images/thumbnails/");
+	dir.mkpath(path + "/saves/");
+	dir.mkpath(path + "/../thumbnails/");
 	QDir::setCurrent(path);
 
 	// Update settings layout
