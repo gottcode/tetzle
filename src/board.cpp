@@ -28,6 +28,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QImageReader>
 #include <QLabel>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -38,6 +39,7 @@
 #include <QXmlStreamWriter>
 
 #include <cmath>
+#include <cstdlib>
 #include <ctime>
 
 //-----------------------------------------------------------------------------
@@ -65,12 +67,10 @@ Board::Board(QWidget* parent)
 	: QGLWidget(parent),
 	m_id(0),
 	m_difficulty(0),
-	m_letterbox(false),
-	m_image_width(0),
-	m_image_height(0),
-	m_tile_size(0),
 	m_image(0),
 	m_image_ts(0),
+	m_columns(0),
+	m_rows(0),
 	m_total_pieces(0),
 	m_completed(0),
 	m_pos(0, 0),
@@ -168,59 +168,38 @@ void Board::newGame(const QString& image, int difficulty)
 	m_id++;
 
 	// Create textures
-	m_letterbox = QSettings().value("NewGame/Letterbox").toBool();
 	m_difficulty = difficulty;
 	m_image_path = image;
 	loadImage();
 
 	// Create tiles
-	int columns = m_image_width / m_tile_size / 8 * 8;
-	int rows = m_image_height / m_tile_size / 8 * 8;
-	QVector< QVector<Tile*> > tiles = QVector< QVector<Tile*> >(columns, QVector<Tile*>(rows));
-	for (int c = 0; c < columns; ++c) {
-		for (int r = 0; r < rows; ++r) {
-			tiles[c][r] = new Tile(c, r, QPoint(m_tile_size * c, m_tile_size * r), this);
+	QVector< QVector<Tile*> > tiles = QVector< QVector<Tile*> >(m_columns, QVector<Tile*>(m_rows));
+	for (int c = 0; c < m_columns; ++c) {
+		for (int r = 0; r < m_rows; ++r) {
+			tiles[c][r] = new Tile(c, r);
 		}
 	}
 
 	// Create pieces
-	int groups_wide = columns / 8;
-	int groups_tall = rows / 8;
-	srand(time(0));
-	Solver solver(8, 8, groups_wide * groups_tall);
-	Piece* piece = 0;
-	Tile* tile = 0;
-	int rotations = 0;
-	int full_width = m_image_width * 2;
-	int full_height = m_image_height * 2;
-	for (int c = 0; c < groups_wide; ++c) {
-		for (int r = 0; r < groups_tall; ++r) {
-			foreach (const QList<QPoint>& group, solver.solutions[r * groups_wide + c]) {
-				tile = tiles.at(group.at(0).x() + (c * 8)).at(group.at(0).y() + (r * 8));
-
-				// Create piece
-				piece = new Piece(0, tile->pos(), this);
-				m_pieces.append(piece);
-
-				// Add tiles to piece
-				tile->setPos(QPoint(0, 0));
-				piece->attach(tile);
-				for (int i = 1; i < 4; ++i) {
-					tile = tiles.at(group.at(i).x() + (c * 8)).at(group.at(i).y() + (r * 8));
-					tile->setPos(tile->pos() - piece->scenePos());
-					piece->attach(tile);
-				}
-
-				// Rotate piece
-				rotations = rand() % 4;
-				for (int i = 0; i < rotations; ++i) {
-					piece->rotateAround(piece->children().first());
-				}
-
-				// Position piece
-				piece->moveBy(QPoint(rand() % full_width, rand() % full_height) - piece->scenePos());
-			}
+	std::srand(std::time(0));
+	Solver solver(m_columns, m_rows);
+	int full_width = m_columns * Tile::size() * 2;
+	int full_height = m_rows * Tile::size() * 2;
+	QList< QList<QPoint> > pieces = solver.pieces();
+	foreach (const QList<QPoint>& group, pieces) {
+		// Find tiles for piece
+		QList<Tile*> children;
+		foreach (const QPoint& tile, group) {
+			children.append( tiles[tile.x()][tile.y()] );
 		}
+
+		// Create piece
+		Tile* tile = children.first();
+		Piece* piece = new Piece(QPoint(Tile::size() * tile->column(), Tile::size() * tile->row()), rand() % 4, children, this);
+		m_pieces.append(piece);
+
+		// Position piece
+		piece->moveBy(QPoint(rand() % full_width, rand() % full_height) - piece->scenePos());
 	}
 
 	// Don't cover other pieces
@@ -266,7 +245,7 @@ void Board::openGame(int id)
 	QXmlStreamAttributes attributes = xml.attributes();
 	int board_zoom = 0;
 	unsigned int version = attributes.value("version").toString().toUInt();
-	if (xml.name() == QLatin1String("tetzle") && version <= 3) {
+	if (xml.name() == QLatin1String("tetzle") && version == 4) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo("images/" + m_image_path).exists()) {
 			dialog.hide();
@@ -278,40 +257,34 @@ void Board::openGame(int id)
 		board_zoom = attributes.value("zoom").toString().toInt();
 		m_pos.setX(attributes.value("x").toString().toInt());
 		m_pos.setY(attributes.value("y").toString().toInt());
-		m_letterbox = attributes.value("letterbox").toString().toInt();
 		loadImage();
-		if (version < 3) {
-			float old_scale = (16 * m_difficulty * pow(1.25, board_zoom * 0.5)) / qMax(m_image_width, m_image_height);
-			board_zoom = log(old_scale * (m_tile_size * 0.25)) / log(1.25) * 2;
-		}
 	} else {
 		xml.raiseError(tr("Unknown data format"));
 	}
 
-	// Load tiles
-	Piece* piece = 0;
-	Tile* tile = 0;
+	// Load pieces
 	QPoint pos;
 	int rotation = -1;
+	QList<Tile*> tiles;
+
 	while (!xml.atEnd()) {
 		xml.readNext();
+
+		if (xml.isEndElement() && xml.name() == QLatin1String("piece")) {
+			m_pieces.append( new Piece(pos, rotation, tiles, this) );
+		}
 		if (!xml.isStartElement()) {
 			continue;
 		}
+
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
+			tiles.append( new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt()) );
+		} else if (xml.name() == QLatin1String("piece")) {
+			attributes = xml.attributes();
 			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
-			if (!piece) {
-				piece = new Piece(rotation != -1 ? rotation : attributes.value("rotation").toString().toInt(), pos, this);
-				m_pieces.append(piece);
-				pos = QPoint(0, 0);
-			}
-			tile = new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt(), pos, this);
-			piece->attach(tile);
-		} else if (xml.name() == QLatin1String("group")) {
-			piece = 0;
-			QStringRef r = xml.attributes().value("rotation");
-			rotation = !r.isEmpty() ? r.toString().toInt() : -1;
+			rotation = attributes.value("rotation").toString().toInt();
+			tiles.clear();
 		} else if (xml.name() != QLatin1String("overview")) {
 			xml.raiseError(tr("Unknown element '%1'").arg(xml.name().toString()));
 		}
@@ -348,7 +321,7 @@ void Board::saveGame()
 	xml.writeStartDocument();
 
 	xml.writeStartElement("tetzle");
-	xml.writeAttribute("version", "3");
+	xml.writeAttribute("version", "4");
 	xml.writeAttribute("image", m_image_path);
 	xml.writeAttribute("difficulty", QString::number(m_difficulty));
 	xml.writeAttribute("pieces", QString::number(m_total_pieces));
@@ -356,7 +329,6 @@ void Board::saveGame()
 	xml.writeAttribute("zoom", QString::number(m_scale_level));
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
-	xml.writeAttribute("letterbox", QString::number(m_letterbox));
 
 	foreach (Piece* piece, m_pieces) {
 		piece->save(xml);
@@ -415,7 +387,7 @@ void Board::zoomFit()
 	QSize bounds_scaled = bounds.size();
 	bounds_scaled.scale(size(), Qt::KeepAspectRatio);
 	float new_tile_scale = static_cast<float>(bounds_scaled.width()) / static_cast<float>(bounds.width());
-	int scale_level = 2 * (log(new_tile_scale * m_tile_size * 0.25) / log(1.25));
+	int scale_level = 2 * (log(new_tile_scale * Tile::size() * 0.25) / log(1.25));
 	scale_level = qBound(m_scale_level_min, scale_level, m_scale_level_max);
 
 	zoom(scale_level);
@@ -435,13 +407,13 @@ void Board::zoom(int value)
 
 	// Calculate new scale value
 	m_scale_level = value;
-	m_scale = pow(1.25, m_scale_level * 0.5) / (m_tile_size * 0.25);
-	m_scale = floor(m_scale * m_tile_size) / m_tile_size;
+	m_scale = pow(1.25, m_scale_level * 0.5) / (Tile::size() * 0.25);
+	m_scale = floor(m_scale * Tile::size()) / Tile::size();
 	if (m_scale > 1.0f) {
 		m_scale = 1.0f;
 	}
-	if (m_scale * m_tile_size < 4.0f) {
-		m_scale = 4.0f / m_tile_size;
+	if (m_scale * Tile::size() < 4.0f) {
+		m_scale = 4.0f / Tile::size();
 	}
 
 	// Update mouse cursor position
@@ -495,7 +467,7 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
 	glPushMatrix();
@@ -523,19 +495,19 @@ void Board::paintGL()
 
 		glColor4f(0, 0, 1, 0.25);
 		glBegin(GL_QUADS);
-			glVertex3f(box.x(), box.y(), 1.9);
-			glVertex3f(box.x(), box.y() + box.height(), 1.9);
-			glVertex3f(box.x() + box.width(), box.y() + box.height(), 1.9);
-			glVertex3f(box.x() + box.width(), box.y(), 1.9);
+			glVertex2i(box.x(), box.y());
+			glVertex2i(box.x(), box.y() + box.height());
+			glVertex2i(box.x() + box.width(), box.y() + box.height());
+			glVertex2i(box.x() + box.width(), box.y());
 		glEnd();
 
 		glColor3f(0, 0, 1);
 		glBegin(GL_LINE_STRIP);
-			glVertex3f(box.x(), box.y(), 2);
-			glVertex3f(box.x(), box.y() + box.height(), 2);
-			glVertex3f(box.x() + box.width(), box.y() + box.height(), 2);
-			glVertex3f(box.x() + box.width(), box.y(), 2);
-			glVertex3f(box.x(), box.y(), 2);
+			glVertex2i(box.x(), box.y());
+			glVertex2i(box.x(), box.y() + box.height());
+			glVertex2i(box.x() + box.width(), box.y() + box.height());
+			glVertex2i(box.x() + box.width(), box.y());
+			glVertex2i(box.x(), box.y());
 		glEnd();
 
 		glPopAttrib();
@@ -550,17 +522,17 @@ void Board::paintGL()
 		int y = (height() >> 1) - (m_success_size.height() >> 1);
 
 		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex3f(x, y, 2);
+			glTexCoord2i(0, 0);
+			glVertex2i(x, y);
 
-			glTexCoord2f(0, 1);
-			glVertex3f(x, y + h, 2);
+			glTexCoord2i(0, 1);
+			glVertex2i(x, y + h);
 
-			glTexCoord2f(1, 1);
-			glVertex3f(x + w, y + h, 2);
+			glTexCoord2i(1, 1);
+			glVertex2i(x + w, y + h);
 
-			glTexCoord2f(1, 0);
-			glVertex3f(x + w, y, 2);
+			glTexCoord2i(1, 0);
+			glVertex2i(x + w, y);
 		glEnd();
 	}
 }
@@ -905,7 +877,7 @@ void Board::selectPieces()
 		Piece* piece = m_pieces.at(i);
 		if (rect.contains(piece->boundingRect())) {
 			Tile* tile = piece->children().at(rand() % piece->children().count());
-			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % m_tile_size, rand() % m_tile_size));
+			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
 			m_active_tiles.insert(piece, tile);
 			m_pieces.removeAll(piece);
 			m_pieces.append(piece);
@@ -924,66 +896,53 @@ void Board::loadImage()
 	QSettings().setValue("OpenGame/Image", m_image_path);
 
 	// Load puzzle image
-	QImage source("images/" + m_image_path);
+	QImageReader source("images/" + m_image_path);
 
-	// Find tile sizes
+	// Find image size
+	QSize size = source.size();
 	GLint max_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
-	QSize size = source.size();
+	max_size /= 2;
 	if (max_size < qMax(size.width(), size.height())) {
 		size.scale(max_size, max_size, Qt::KeepAspectRatio);
 	}
-	m_tile_size = qMin(size.width(), size.height()) / (8 * m_difficulty);
 
-	// Find puzzle and texture sizes
-	int groups_wide = size.width() / (8 * m_tile_size);
-	int groups_tall = size.height() / (8 * m_tile_size);
-	m_total_pieces = groups_wide * groups_tall * 16;
-	m_image_width = groups_wide * 8 * m_tile_size;
-	m_image_height = groups_tall * 8 * m_tile_size;
-	int x = 0;
-	int y = 0;
-	int sx = (size.width() - m_image_width) >> 1;
-	int sy = (size.height() - m_image_height) >> 1;
-	int sw = m_image_width;
-	int sh = m_image_height;
-
-	// Adjust values if showing entire image
-	if (m_letterbox) {
-		int width_tile_size = size.width() / (8 * groups_wide);
-		int height_tile_size = size.height() / (8 * groups_tall);
-		m_tile_size = qMax(width_tile_size, height_tile_size);
-		m_image_width = groups_wide * 8 * m_tile_size;
-		m_image_height = groups_tall * 8 * m_tile_size;
-
-		QSize scaled_size = source.size();
-		scaled_size.scale(m_image_width, m_image_height, Qt::KeepAspectRatio);
-		size = scaled_size;
-
-		x = (m_image_width - size.width()) >> 1;
-		y = (m_image_height - size.height()) >> 1;
-		sx = 0;
-		sy = 0;
-		sw = size.width();
-		sh = size.height();
+	// Find puzzle dimensions
+	m_columns = size.width();
+	m_rows = size.height();
+	int tile_size = Tile::size();
+	if (m_columns > m_rows) {
+		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
+		m_columns = 4 * m_difficulty;
+		m_rows = qRound(m_columns * ratio);
+		tile_size = qMin(tile_size, size.width() / m_columns);
+	} else {
+		float ratio = static_cast<float>(m_columns) / static_cast<float>(m_rows);
+		m_rows = 4 * m_difficulty;
+		m_columns = qRound(m_rows * ratio);
+		tile_size = qMin(tile_size, size.height() / m_rows);
 	}
+	m_total_pieces = (m_columns * m_rows) / 4;
 
 	// Create puzzle texture
-	source = source.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	int image_texture_size = powerOfTwo(qMax(m_image_width, m_image_height));
-	m_image_ts = static_cast<float>(m_tile_size) / static_cast<float>(image_texture_size);
+	QSize scaled_size = size;
+	size = QSize(m_columns * tile_size, m_rows * tile_size);
+	scaled_size.scale(size, Qt::KeepAspectRatioByExpanding);
+	source.setScaledSize(scaled_size);
+	source.setScaledClipRect(QRect((scaled_size.width() - size.width()) / 2, (scaled_size.height() - size.height()) / 2, size.width(), size.height()));
+
+	int image_texture_size = powerOfTwo(qMax(size.width(), size.height()));
+	m_image_ts = static_cast<float>(tile_size) / static_cast<float>(image_texture_size);
 	QImage texture(image_texture_size, image_texture_size, QImage::Format_RGB32);
+	texture.fill(QColor(Qt::darkGray).rgb());
 	{
 		QPainter painter(&texture);
-		painter.fillRect(texture.rect(), Qt::darkGray);
-		painter.drawImage(x, y, source, sx, sy, sw, sh, Qt::AutoColor | Qt::AvoidDither);
+		painter.drawImage(0, 0, source.read(), 0, 0, size.width(), size.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	m_image = bindTexture(texture.mirrored(false, true));
 
 	// Create overview
-	m_overview->load(texture.copy(0, 0, m_image_width, m_image_height));
+	m_overview->load(texture.copy(0, 0, size.width(), size.height()));
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
@@ -1008,7 +967,7 @@ void Board::loadImage()
 
 	// Calculate zoom range
 	m_scale_level_min = 2;
-	m_scale_level_max = ceil(2 * (log(m_tile_size * 0.25) / log(1.25)));
+	m_scale_level_max = ceil(2 * (log(Tile::size() * 0.25) / log(1.25)));
 	emit zoomRangeChanged(m_scale_level_min, m_scale_level_max);
 
 	// Show overview
@@ -1087,8 +1046,8 @@ void Board::draw(Tile* tile, const QPoint& pos) const
 {
 	int x1 = pos.x();
 	int y1 = pos.y();
-	int x2 = x1 + m_tile_size;
-	int y2 = y1 + m_tile_size;
+	int x2 = x1 + Tile::size();
+	int y2 = y1 + Tile::size();
 
 	const QPointF* corners = m_corners[tile->parent()->rotation()];
 	float tx = tile->column() * m_image_ts;

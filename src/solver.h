@@ -31,16 +31,22 @@ namespace DLX
 class Solver
 {
 public:
-	Solver(int columns, int rows, int total = 1);
+	Solver(int columns, int rows);
 
-	QList< QList< QList<QPoint> > > solutions;
+	QList< QList<QPoint> > pieces() const;
 
 private:
+	void solve();
 	void solution(const QVector<DLX::Node*>& rows, unsigned int count);
 
 private:
 	int m_columns;
 	int m_rows;
+	QList< QList<QPoint> > m_pieces;
 };
+
+inline QList< QList<QPoint> > Solver::pieces() const {
+	return m_pieces;
+}
 
 #endif

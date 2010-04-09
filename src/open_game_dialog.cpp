@@ -67,7 +67,7 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 			xml.readNext();
 		}
 		attributes = xml.attributes();
-		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 3) {
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
 			QString image = attributes.value("image").toString();
 			if (!QFileInfo("images/" + image).exists()) {
 				delete item;

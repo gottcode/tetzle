@@ -126,12 +126,25 @@ inline float roundUp(float value)
 
 //-----------------------------------------------------------------------------
 
-Piece::Piece(int rotation, const QPoint& pos, Board* board)
+Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board)
 	: m_board(board),
-	m_rotation(rotation),
+	m_rotation(0),
 	m_pos(pos),
-	m_rect(0, 0, 0, 0)
+	m_children(tiles)
 {
+	// Add tiles
+	QPoint first_pos = m_children.first()->pos();
+	foreach (Tile* tile, m_children) {
+		tile->setParent(this);
+		tile->setPos(tile->pos() - first_pos);
+		m_rect = m_rect.united(tile->rect().translated(tile->pos()));
+	}
+
+	// Rotate
+	Tile* tile = m_children.first();
+	for (int i = 0; i < rotation; ++i) {
+		rotateAround(tile);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -160,15 +173,6 @@ QRect Piece::marginRect() const
 {
 	int margin = m_board->margin();
 	return m_rect.translated(m_pos).adjusted(-margin, -margin, margin, margin);
-}
-
-//-----------------------------------------------------------------------------
-
-void Piece::attach(Tile* tile)
-{
-	tile->setParent(this);
-	m_children.append(tile);
-	m_rect = m_rect.united(tile->rect().translated(tile->pos()));
 }
 
 //-----------------------------------------------------------------------------
@@ -206,19 +210,19 @@ void Piece::attachNeighbors()
 	int sin_size = 0;
 	switch (m_rotation) {
 	case 0:
-		cos_size = m_board->tileSize();
+		cos_size = Tile::size();
 		break;
 
 	case 1:
-		sin_size = -m_board->tileSize();
+		sin_size = -Tile::size();
 		break;
 
 	case 2:
-		cos_size = -m_board->tileSize();
+		cos_size = -Tile::size();
 		break;
 
 	case 3:
-		sin_size = m_board->tileSize();
+		sin_size = Tile::size();
 		break;
 	}
 	QPoint left(-cos_size, sin_size);
@@ -336,7 +340,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 void Piece::rotateAround(Tile* tile)
 {
-	m_rect.setRect(-m_rect.bottom() - 1 + m_board->tileSize(), m_rect.left(), m_rect.height(), m_rect.width());
+	m_rect.setRect(-m_rect.bottom() - 1 + Tile::size(), m_rect.left(), m_rect.height(), m_rect.width());
 
 	if (tile) {
 		QPoint pos = tile->scenePos() - scenePos();
@@ -361,11 +365,12 @@ void Piece::rotateAround(Tile* tile)
 
 void Piece::save(QXmlStreamWriter& xml) const
 {
-	xml.writeStartElement("group");
+	xml.writeStartElement("piece");
+	xml.writeAttribute("x", QString::number(m_pos.x()));
+	xml.writeAttribute("y", QString::number(m_pos.y()));
 	xml.writeAttribute("rotation", QString::number(m_rotation));
 
-	m_children.at(0)->save(xml, true);
-	for (int i = 1; i < m_children.count(); ++i) {
+	for (int i = 0; i < m_children.count(); ++i) {
 		m_children.at(i)->save(xml);
 	}
 

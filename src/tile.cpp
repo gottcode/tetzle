@@ -24,13 +24,11 @@
 
 //-----------------------------------------------------------------------------
 
-Tile::Tile(int column, int row, const QPoint& pos, Board* board)
-	: m_column(column),
+Tile::Tile(int column, int row)
+	: m_parent(0),
+	m_column(column),
 	m_row(row),
-	m_pos(pos),
-	m_rect(0, 0, board->tileSize(), board->tileSize()),
-	m_parent(0),
-	m_board(board)
+	m_pos(column * size(), row * size())
 {
 }
 
@@ -43,18 +41,11 @@ QPoint Tile::scenePos() const
 
 //-----------------------------------------------------------------------------
 
-void Tile::save(QXmlStreamWriter& xml, bool scene_pos) const
+void Tile::save(QXmlStreamWriter& xml) const
 {
-	QPoint pos = m_pos;
-	if (scene_pos) {
-		pos = scenePos();
-	}
-
 	QXmlStreamAttributes attributes;
 	attributes.append("column", QString::number(m_column));
 	attributes.append("row", QString::number(m_row));
-	attributes.append("x", QString::number(pos.x()));
-	attributes.append("y", QString::number(pos.y()));
 	xml.writeEmptyElement("tile");
 	xml.writeAttributes(attributes);
 }

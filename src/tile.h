@@ -23,41 +23,46 @@
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
-class Board;
 class Piece;
 
 class Tile
 {
 public:
-	Tile(int column, int row, const QPoint& pos, Board* board);
+	Tile(int column, int row);
 
 	QRect boundingRect() const;
 	int column() const;
 	int row() const;
 	Piece* parent() const;
 	QPoint pos() const;
-	QRect rect() const;
 	QPoint scenePos() const;
 
 	void setPos(const QPoint& pos);
 	void setParent(Piece* parent);
 
-	void save(QXmlStreamWriter& xml, bool scene_pos = false) const;
+	static QRect rect()
+	{
+		return QRect(0, 0, 32, 32);
+	}
+
+	static int size()
+	{
+		return 32;
+	}
+
+	void save(QXmlStreamWriter& xml) const;
 
 private:
+	Piece* m_parent;
 	int m_column;
 	int m_row;
 	QPoint m_pos;
-	QRect m_rect;
-
-	Piece* m_parent;
-	Board* m_board;
 };
 
 
 inline QRect Tile::boundingRect() const
 {
-	return m_rect.translated(scenePos());
+	return rect().translated(scenePos());
 }
 
 inline int Tile::column() const
@@ -78,11 +83,6 @@ inline Piece* Tile::parent() const
 inline QPoint Tile::pos() const
 {
 	return m_pos;
-}
-
-inline QRect Tile::rect() const
-{
-	return m_rect;
 }
 
 inline void Tile::setPos(const QPoint& pos)

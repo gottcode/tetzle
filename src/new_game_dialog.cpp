@@ -24,7 +24,6 @@
 #include "label_manager.h"
 #include "thumbnail_list.h"
 
-#include <QCheckBox>
 #include <QComboBox>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
@@ -98,9 +97,6 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	connect(m_label_button, SIGNAL(clicked()), this, SLOT(changeLabels()));
 	image_buttons->addButton(m_label_button, QDialogButtonBox::ActionRole);
 
-	// Add letterbox selector
-	m_letterbox = new QCheckBox(tr("Use entire image"), this);
-
 	// Setup thumbnail list
 	m_thumbnails = new ThumbnailList(this);
 	m_image_labels = new LabelManager(this);
@@ -139,7 +135,6 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 		}
 	}
 	m_images->setCurrentItem(item);
-	m_letterbox->setChecked(settings.value("NewGame/Letterbox").toBool());
 	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
 	pieceCountChanged(m_slider->value());
 	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All")).toString());
@@ -167,16 +162,14 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	QGridLayout* layout = new QGridLayout(this);
 	layout->setColumnMinimumWidth(0, 6);
 	layout->setRowMinimumHeight(4, 12);
-	layout->setRowMinimumHeight(7, 12);
-	layout->setRowMinimumHeight(9, 18);
+	layout->setRowMinimumHeight(7, 18);
 	layout->addWidget(new QLabel(tr("<b>Image</b>"), this), 0, 0, 1, 2);
 	layout->addWidget(m_images_filter, 1, 1);
 	layout->addWidget(m_images, 2, 1);
 	layout->addWidget(image_buttons, 3, 1);
 	layout->addWidget(new QLabel(tr("<b>Pieces</b>"), this), 5, 0, 1, 2);
 	layout->addLayout(slider_layout, 6, 1);
-	layout->addWidget(m_letterbox, 8, 0, 1, 2);
-	layout->addWidget(buttons, 10, 1);
+	layout->addWidget(buttons, 8, 1);
 
 	// Disable buttons if there are no images
 	bool enabled = m_images->count() > 0;
@@ -204,7 +197,6 @@ void NewGameDialog::accept()
 	QSettings settings;
 	settings.setValue("NewGame/Pieces", m_slider->value());
 	settings.setValue("NewGame/Image", image);
-	settings.setValue("NewGame/Letterbox", m_letterbox->isChecked());
 
 	emit newGame(image, m_slider->value());
 }
@@ -262,7 +254,7 @@ void NewGameDialog::removeImage()
 			xml.readNext();
 		}
 		attributes = xml.attributes();
-		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 3) {
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
 			if (attributes.value("image").toString() == current_image) {
 				games.append(game);
 			}
@@ -331,25 +323,19 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader("images/" + image).size();
-
-	int minimum_size = qMin(m_image_size.width(), m_image_size.height());
-	int max = 1;
-	int tile_size, columns, rows;
-	while (true) {
-		tile_size = minimum_size / (max * 8);
-		columns = m_image_size.width() / tile_size / 8;
-		rows = m_image_size.height() / tile_size / 8;
-		if (columns * rows * 16 >= 1000) {
-			break;
-		}
-		++max;
+	if (m_image_size.width() > m_image_size.height()) {
+		m_ratio = static_cast<float>(m_image_size.height()) / static_cast<float>(m_image_size.width());
+	} else {
+		m_ratio = static_cast<float>(m_image_size.width()) / static_cast<float>(m_image_size.height());
 	}
 
-	int value = 2;
+	int max = qRound(std::sqrt(250.0f / m_ratio));
+	int min = qRound(std::sqrt(2.5f / m_ratio));
+	int value = min;
 	if (m_images->count() > 1) {
-		value = max * static_cast<float>(m_slider->value()) / static_cast<float>(m_slider->maximum()) + 0.5f;
+		value = qRound(static_cast<float>(max * m_slider->value()) / static_cast<float>(m_slider->maximum()));
 	}
-	m_slider->setRange(1, max);
+	m_slider->setRange(min, max);
 	m_slider->setValue(value);
 	pieceCountChanged(m_slider->value());
 }
@@ -359,10 +345,9 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 void NewGameDialog::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
-		int size = qMin(m_image_size.width(), m_image_size.height()) / (value * 8);
-		int columns = m_image_size.width() / size / 8;
-		int rows = m_image_size.height() / size / 8;
-		m_count->setText(QString("%L1").arg(columns * rows * 16));
+		int side1 = 4 * value;
+		int side2 = qRound(side1 * m_ratio);
+		m_count->setText(QString("%L1").arg(side1 * side2 / 4));
 	}
 }
 

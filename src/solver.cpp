@@ -55,81 +55,90 @@ Piece::Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint&
 
 //-----------------------------------------------------------------------------
 
-Solver::Solver(int columns, int rows, int total)
+Solver::Solver(int columns, int rows)
 	: m_columns(columns),
 	m_rows(rows)
+{
+	do {
+		m_pieces.clear();
+		solve();
+	} while (m_pieces.isEmpty());
+}
+
+//-----------------------------------------------------------------------------
+
+void Solver::solve()
 {
 	QList<Piece> p;
 
 	// Add S
-	p.push_back(Piece(QPoint(1,0), QPoint(2,0), QPoint(0,1), QPoint(1,1)));
-	p.push_back(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
+	p.append(Piece(QPoint(1,0), QPoint(2,0), QPoint(0,1), QPoint(1,1)));
+	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
 	// Add Z
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,1)));
-	p.push_back(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,1)));
+	p.append(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
 	// Add O
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(1,1)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(1,1)));
 	// Add T
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,0)));
-	p.push_back(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
-	p.push_back(Piece(QPoint(0,1), QPoint(1,1), QPoint(1,0), QPoint(2,1)));
-	p.push_back(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,0)));
+	p.append(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
+	p.append(Piece(QPoint(0,1), QPoint(1,1), QPoint(1,0), QPoint(2,1)));
+	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
 	// Add J
-	p.push_back(Piece(QPoint(1,0), QPoint(1,1), QPoint(0,2), QPoint(1,2)));
-	p.push_back(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(2,1)));
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(0,2)));
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(2,1)));
+	p.append(Piece(QPoint(1,0), QPoint(1,1), QPoint(0,2), QPoint(1,2)));
+	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(2,1)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(0,2)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(2,1)));
 	// Add L
-	p.push_back(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(1,2)));
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(0,1)));
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(1,2)));
-	p.push_back(Piece(QPoint(0,1), QPoint(1,1), QPoint(2,0), QPoint(2,1)));
+	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(1,2)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(0,1)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(1,2)));
+	p.append(Piece(QPoint(0,1), QPoint(1,1), QPoint(2,0), QPoint(2,1)));
 	// Add I
-	p.push_back(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(3,0)));
-	p.push_back(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(0,3)));
+	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(3,0)));
+	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(0,3)));
 
 	// Create matrix
-	DLX::Matrix matrix(columns * rows);
+	DLX::Matrix matrix(m_columns * m_rows);
 
-	int size = p.count();
+	int size = p.size();
 	QList<int> ids;
 	for (int i = 0; i < size; ++i) {
-		ids.push_back(i);
+		ids.append(i);
 	}
 
 	QList<int> cells;
-	for (int i = 0; i < columns * rows; ++i) {
-		cells.push_back(i);
+	for (int i = 0; i < m_columns * m_rows; ++i) {
+		cells.append(i);
 	}
 	std::random_shuffle(cells.begin(), cells.end());
 
 	int cell, col, row;
-	for (int i = 0; i < columns * rows; ++i) {
+	for (int i = 0; i < m_columns * m_rows; ++i) {
 		cell = cells.at(i);
-		row = cell / columns;
-		col = cell - (row * columns);
+		row = cell / m_columns;
+		col = cell - (row * m_columns);
 
 		std::random_shuffle(ids.begin(), ids.end());
 		for (int i = 0; i < size; ++i) {
 			const Piece& piece = p.at(ids.at(i));
-			if (piece.width + col < columns && piece.height + row < rows) {
+			if (piece.width + col < m_columns && piece.height + row < m_rows) {
 				matrix.addRow();
 				for (int i = 0; i < 4; ++i) {
-					matrix.addElement((piece.cells[i].y() + row) * columns + piece.cells[i].x() + col);
+					matrix.addElement((piece.cells[i].y() + row) * m_columns + piece.cells[i].x() + col);
 				}
 			}
 		}
 	}
 
 	// Generate solution
-	matrix.search(this, &Solver::solution, total);
+	matrix.search(this, &Solver::solution, 1, m_columns * m_rows);
 }
 
 //-----------------------------------------------------------------------------
 
 void Solver::solution(const QVector<DLX::Node*>& rows, unsigned int count)
 {
-	QList< QList<QPoint> > pieces;
 	QList<QPoint> piece;
 	for (unsigned int i = 0; i < count; ++i) {
 		piece.clear();
@@ -140,9 +149,8 @@ void Solver::solution(const QVector<DLX::Node*>& rows, unsigned int count)
 			piece.append(QPoint(c, r));
 			j = j->right;
 		} while (j != rows[i]);
-		pieces.append(piece);
+		m_pieces.append(piece);
 	}
-	solutions.append(pieces);
 }
 
 //-----------------------------------------------------------------------------

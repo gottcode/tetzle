@@ -25,7 +25,8 @@ DLX::Matrix::Matrix(unsigned int max_columns)
 	: m_max_columns(max_columns),
 	m_columns(max_columns),
 	m_output(max_columns),
-	m_solutions(0)
+	m_solutions(0),
+	m_tries(0)
 {
 	m_header = new HeaderNode;
 	m_header->column = m_header;
@@ -88,12 +89,15 @@ void DLX::Matrix::addElement(unsigned int c)
 
 //-----------------------------------------------------------------------------
 
-unsigned int DLX::Matrix::search(Callback* solution, unsigned int max_solutions)
+unsigned int DLX::Matrix::search(Callback* solution, unsigned int max_solutions, unsigned int max_tries)
 {
 	m_solution = solution;
 
 	m_solutions = 0;
 	m_max_solutions = max_solutions;
+
+	m_tries = 0;
+	m_max_tries = max_tries;
 
 	solve(0);
 	return m_solutions;
@@ -131,7 +135,7 @@ void DLX::Matrix::solve(unsigned int k)
 
 		solve(next_k);
 
-		if (m_solutions >= m_max_solutions) {
+		if (m_solutions >= m_max_solutions || ++m_tries >= m_max_tries) {
 			return;
 		}
 

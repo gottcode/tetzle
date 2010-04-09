@@ -38,7 +38,6 @@ public:
 	void removePiece(Piece* piece);
 
 	int id() const;
-	int tileSize() const;
 	int margin() const;
 
 public slots:
@@ -99,11 +98,7 @@ private:
 private:
 	int m_id;
 	int m_difficulty;
-	bool m_letterbox;
 	QString m_image_path;
-	int m_image_width;
-	int m_image_height;
-	int m_tile_size;
 	Overview* m_overview;
 
 	GLuint m_success;
@@ -112,6 +107,8 @@ private:
 	QPointF m_corners[4][4];
 	QSize m_success_size;
 
+	int m_columns;
+	int m_rows;
 	QList<Piece*> m_pieces;
 	QHash<Piece*, Tile*> m_active_tiles;
 	int m_total_pieces;
@@ -136,11 +133,6 @@ private:
 inline int Board::id() const
 {
 	return m_id;
-}
-
-inline int Board::tileSize() const
-{
-	return m_tile_size;
 }
 
 inline int Board::margin() const

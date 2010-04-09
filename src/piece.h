@@ -30,7 +30,7 @@ class Tile;
 class Piece
 {
 public:
-	Piece(int rotation, const QPoint& pos, Board* board);
+	Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board);
 	~Piece();
 
 	bool collidesWith(const Piece * other) const;
@@ -40,7 +40,6 @@ public:
 	int rotation() const;
 	QPoint scenePos() const;
 
-	void attach(Tile* tile);
 	void attach(Piece* piece);
 	void attachNeighbors();
 	void moveBy(const QPoint& delta);

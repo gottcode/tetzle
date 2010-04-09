@@ -85,7 +85,8 @@ class Matrix
 	};
 
 	template <typename T>
-	class MemberCallback : public Callback {
+	class MemberCallback : public Callback
+	{
 		typedef void(T::*function)(const QVector<Node*>& rows, unsigned int count);
 	public:
 		MemberCallback(T* object, function f)
@@ -110,27 +111,27 @@ public:
 	void addRow();
 	void addElement(unsigned int column);
 
-	unsigned int search(unsigned int max_solutions = 0xFFFFFFFF)
+	unsigned int search(unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
 	{
 		Callback solution;
-		return search(&solution, max_solutions);
+		return search(&solution, max_solutions, max_tries);
 	}
 
-	unsigned int search(void(*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
+	unsigned int search(void(*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
 	{
 		GlobalCallback solution(function);
-		return search(&solution, max_solutions);
+		return search(&solution, max_solutions, max_tries);
 	}
 
 	template <typename C>
-	unsigned int search(C* object, void(C::*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF)
+	unsigned int search(C* object, void(C::*function)(const QVector<Node*>& rows, unsigned int count), unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
 	{
 		MemberCallback<C> solution(object, function);
-		return search(&solution, max_solutions);
+		return search(&solution, max_solutions, max_tries);
 	}
 
 private:
-	unsigned int search(Callback* solution, unsigned int max_solutions);
+	unsigned int search(Callback* solution, unsigned int max_solutions, unsigned int max_tries);
 	void solve(unsigned int k);
 	void cover(HeaderNode* column);
 	void uncover(HeaderNode* column);
@@ -147,6 +148,8 @@ private:
 	Callback* m_solution;
 	unsigned int m_solutions;
 	unsigned int m_max_solutions;
+	unsigned int m_tries;
+	unsigned int m_max_tries;
 };
 
 }
