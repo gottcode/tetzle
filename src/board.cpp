@@ -19,6 +19,7 @@
 
 #include "board.h"
 
+#include "message.h"
 #include "overview.h"
 #include "piece.h"
 #include "solver.h"
@@ -29,7 +30,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QImageReader>
-#include <QLabel>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
@@ -44,9 +44,6 @@
 
 //-----------------------------------------------------------------------------
 
-namespace
-{
-
 int powerOfTwo(int value)
 {
 	value--;
@@ -58,6 +55,11 @@ int powerOfTwo(int value)
 	value++;
 	return value;
 }
+
+//-----------------------------------------------------------------------------
+
+namespace
+{
 
 const float scale_levels[] = { 0.125, 0.15625, 0.1875, 0.25, 0.3125, 0.40625, 0.5, 0.625, 0.78125, 1.0 };
 
@@ -88,6 +90,8 @@ Board::Board(QWidget* parent)
 	setFocus();
 	setMouseTracking(true);
 
+	m_message = new Message(this);
+
 	// Create overview dialog
 	m_overview = new Overview(parent);
 	connect(m_overview, SIGNAL(toggled(bool)), this, SIGNAL(overviewToggled(bool)));
@@ -99,7 +103,7 @@ Board::~Board()
 {
 	cleanup();
 	deleteTexture(m_shadow);
-	deleteTexture(m_success);
+	delete m_message;
 }
 
 //-----------------------------------------------------------------------------
@@ -153,11 +157,9 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Update player about status
 	emit statusMessage("");
-	window()->setCursor(Qt::WaitCursor);
-	QLabel dialog(tr("Creating puzzle; please wait."), this, Qt::Dialog);
-	dialog.setMargin(12);
-	dialog.show();
-	qApp->processEvents();
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+	m_message->setText(tr("Please Wait"));
+	m_message->setVisible(true);
 
 	// Generate ID
 	m_id = 0;
@@ -208,7 +210,8 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 
 	// Draw tiles
-	window()->unsetCursor();
+	m_message->setVisible(false);
+	QApplication::restoreOverrideCursor();
 	zoomFit();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
@@ -223,11 +226,9 @@ void Board::openGame(int id)
 
 	// Update player about status
 	emit statusMessage("");
-	window()->setCursor(Qt::WaitCursor);
-	QLabel dialog(tr("Loading puzzle; please wait."), this, Qt::Dialog);
-	dialog.setMargin(12);
-	dialog.show();
-	qApp->processEvents();
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+	m_message->setText(tr("Please Wait"));
+	m_message->setVisible(true);
 
 	// Open saved game file
 	m_id = id;
@@ -247,7 +248,7 @@ void Board::openGame(int id)
 	if (xml.name() == QLatin1String("tetzle") && version == 4) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo("images/" + m_image_path).exists()) {
-			dialog.hide();
+			QApplication::restoreOverrideCursor();
 			QMessageBox::warning(this, tr("Error"), tr("Missing image."));
 			cleanup();
 			return;
@@ -289,14 +290,15 @@ void Board::openGame(int id)
 		}
 	}
 	if (xml.hasError()) {
-		dialog.hide();
+		QApplication::restoreOverrideCursor();
 		QMessageBox::warning(this, tr("Error"), tr("Error parsing XML file.\n\n%1").arg(xml.errorString()));
 		cleanup();
 		return;
 	}
 
 	// Draw tiles
-	window()->unsetCursor();
+	m_message->setVisible(false);
+	QApplication::restoreOverrideCursor();
 	zoom(board_zoom);
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
@@ -444,28 +446,6 @@ void Board::initializeGL()
 
 	// Load shadow image
 	m_shadow = bindTexture(QImage(":/shadow.png"));
-
-	// Create success message
-	QFont font("Sans", 24);
-	QFontMetrics metrics(font);
-	int width = metrics.width(tr("Success"));
-	int height = metrics.height();
-	m_success_size = QSize(width + height, height * 2);
-	QImage success(powerOfTwo(m_success_size.width()), powerOfTwo(m_success_size.height()), QImage::Format_ARGB32);
-	{
-		QPainter painter(&success);
-		painter.fillRect(success.rect(), Qt::transparent);
-		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-
-		painter.setPen(Qt::NoPen);
-		painter.setBrush(QColor(0, 0, 0, 200));
-		painter.drawRoundedRect(0, 0, width + height, height * 2, 10, 10);
-
-		painter.setFont(font);
-		painter.setPen(Qt::white);
-		painter.drawText(height / 2, height / 2 + metrics.ascent(), tr("Success"));
-	}
-	m_success = bindTexture(success.mirrored(false, true));
 }
 
 //-----------------------------------------------------------------------------
@@ -523,29 +503,8 @@ void Board::paintGL()
 		glPopAttrib();
 	}
 
-	// Draw success message
-	if (m_finished) {
-		glBindTexture(GL_TEXTURE_2D, m_success);
-
-		int w = powerOfTwo(m_success_size.width());
-		int h = powerOfTwo(m_success_size.height());
-		int x = (width() >> 1) - (m_success_size.width() >> 1);
-		int y = (height() >> 1) - (m_success_size.height() >> 1);
-
-		glBegin(GL_QUADS);
-			glTexCoord2i(0, 0);
-			glVertex2i(x, y);
-
-			glTexCoord2i(0, 1);
-			glVertex2i(x, y + h);
-
-			glTexCoord2i(1, 1);
-			glVertex2i(x + w, y + h);
-
-			glTexCoord2i(1, 0);
-			glVertex2i(x + w, y);
-		glEnd();
-	}
+	// Draw message
+	m_message->draw();
 }
 
 //-----------------------------------------------------------------------------
@@ -1088,6 +1047,9 @@ void Board::finishGame()
 	QSettings().remove("OpenGame/Image");
 
 	emit finished();
+
+	m_message->setText(tr("Success"));
+	m_message->setVisible(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -1096,6 +1058,7 @@ void Board::cleanup()
 {
 	deleteTexture(m_image);
 
+	m_message->setVisible(false);
 	m_active_tiles.clear();
 	qDeleteAll(m_pieces);
 	m_pieces.clear();

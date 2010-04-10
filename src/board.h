@@ -22,6 +22,7 @@
 
 #include <QGLWidget>
 #include <QHash>
+class Message;
 class Overview;
 class Piece;
 class Tile;
@@ -101,13 +102,12 @@ private:
 	int m_difficulty;
 	QString m_image_path;
 	Overview* m_overview;
+	Message* m_message;
 
 	GLuint m_image;
 	GLuint m_shadow;
-	GLuint m_success;
 	float m_image_ts;
 	QPointF m_corners[4][4];
-	QSize m_success_size;
 
 	int m_columns;
 	int m_rows;
