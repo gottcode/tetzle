@@ -57,8 +57,8 @@ public slots:
 	void toggleOverview();
 
 signals:
+	void completionChanged(int value);
 	void overviewToggled(bool visible);
-	void statusMessage(const QString& message);
 	void retrievePiecesAvailable(bool available);
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);

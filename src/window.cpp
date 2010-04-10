@@ -36,6 +36,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QProgressBar>
 #include <QSettings>
 #include <QStatusBar>
 #include <QTimer>
@@ -54,13 +55,14 @@ Window::Window()
 	m_slider->setVisible(false);
 	statusBar()->addPermanentWidget(m_slider);
 
-	QLabel* status_message = new QLabel(this);
-	status_message->setContentsMargins(10, 0, 10, 0);
-	statusBar()->addPermanentWidget(status_message);
+	QProgressBar* status_completed = new QProgressBar(this);
+	status_completed->setRange(0, 100);
+	status_completed->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+	statusBar()->addPermanentWidget(status_completed);
 
 	// Add contents
 	m_board = new Board(this);
-	connect(m_board, SIGNAL(statusMessage(const QString&)), status_message, SLOT(setText(const QString&)));
+	connect(m_board, SIGNAL(completionChanged(int)), status_completed, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int, float)), m_slider, SLOT(setValue(int, float)));

@@ -156,7 +156,7 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 
 	// Update player about status
-	emit statusMessage("");
+	emit completionChanged(0);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
@@ -225,7 +225,7 @@ void Board::openGame(int id)
 	cleanup();
 
 	// Update player about status
-	emit statusMessage("");
+	emit completionChanged(0);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
@@ -988,7 +988,7 @@ void Board::updateCompleted()
 	int t = 100 * (m_pieces.count() - 1);
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
-	emit statusMessage(tr("%1% complete").arg(m_completed));
+	emit completionChanged(m_completed);
 }
 
 //-----------------------------------------------------------------------------
