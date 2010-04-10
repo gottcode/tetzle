@@ -21,7 +21,6 @@
 #define OVERVIEW_H
 
 #include <QGraphicsView>
-class QGraphicsPixmapItem;
 
 class Overview : public QGraphicsView
 {
@@ -41,18 +40,16 @@ protected:
 	virtual void showEvent(QShowEvent* event);
 	virtual void wheelEvent(QWheelEvent* event);
 
-private slots:
+private:
 	void zoomIn();
 	void zoomOut();
-
-private:
 	void zoom();
 
 private:
 	float m_scale_start;
 	float m_scale_factor;
 	int m_scale_level;
-	QGraphicsPixmapItem* m_pixmap;
+	bool m_default;
 };
 
 #endif

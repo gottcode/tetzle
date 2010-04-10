@@ -30,8 +30,7 @@ Overview::Overview(QWidget* parent)
 	: QGraphicsView(parent),
 	m_scale_start(0),
 	m_scale_factor(0),
-	m_scale_level(0),
-	m_pixmap(0)
+	m_scale_level(0)
 {
 	setWindowTitle(tr("Overview"));
 	setWindowFlags(Qt::Tool);
@@ -43,9 +42,15 @@ Overview::Overview(QWidget* parent)
 	QGraphicsScene* scene = new QGraphicsScene;
 	setScene(scene);
 
-	// Restore size and position
-	resize(QSettings().value("Overview/Size", QSize(401,401)).toSize());
-	move(QSettings().value("Overview/Position", QPoint(0,0)).toPoint());
+	// Restore geometry
+	QSettings settings;
+	if (settings.contains("Overview/Geometry")) {
+		restoreGeometry(settings.value("Overview/Geometry").toByteArray());
+	} else {
+		resize(400, 400);
+		setMinimumSize(size());
+	}
+	m_default = settings.value("Overview/Default", true).toBool();
 }
 
 //-----------------------------------------------------------------------------
@@ -53,8 +58,7 @@ Overview::Overview(QWidget* parent)
 void Overview::load(const QImage& image)
 {
 	// Remove previous overview
-	delete m_pixmap;
-	m_pixmap = 0;
+	scene()->clear();
 	resetMatrix();
 
 	// Set scale
@@ -72,19 +76,25 @@ void Overview::load(const QImage& image)
 	m_scale_level = 0;
 
 	// Resize window
-	QSize scene_size = sceneRect().toRect().size();
-	scene_size.scale(400, 400, Qt::KeepAspectRatio);
-	bool default_size = (width() == scene_size.width() + 1) && (height() == scene_size.height() + 1);
-	setMinimumSize(size.width() + 1, size.height() + 1);
+	bool default_size = m_default;
+	setMinimumSize(size);
 	if (default_size) {
 		resize(minimumSize());
 	}
 
 	// Show overview
-	m_pixmap = scene()->addPixmap(QPixmap::fromImage(image, Qt::AutoColor | Qt::AvoidDither));
-	m_pixmap->setTransformationMode(Qt::SmoothTransformation);
-	scene()->setSceneRect(m_pixmap->boundingRect());
+	QGraphicsPixmapItem* pixmap = scene()->addPixmap(QPixmap::fromImage(image, Qt::AutoColor | Qt::AvoidDither));
+	pixmap->setTransformationMode(Qt::SmoothTransformation);
+	scene()->setSceneRect(pixmap->boundingRect());
 	zoom();
+}
+
+//-----------------------------------------------------------------------------
+
+void Overview::moveEvent(QMoveEvent* event)
+{
+	QSettings().setValue("Overview/Geometry", saveGeometry());
+	QGraphicsView::moveEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -97,17 +107,12 @@ void Overview::hideEvent(QHideEvent* event)
 
 //-----------------------------------------------------------------------------
 
-void Overview::moveEvent(QMoveEvent* event)
-{
-	QSettings().setValue("Overview/Position", pos());
-	QGraphicsView::moveEvent(event);
-}
-
-//-----------------------------------------------------------------------------
-
 void Overview::resizeEvent(QResizeEvent* event)
 {
-	QSettings().setValue("Overview/Size", size());
+	m_default = (size() == minimumSize());
+	QSettings settings;
+	settings.setValue("Overview/Default", m_default);
+	settings.setValue("Overview/Geometry", saveGeometry());
 	QGraphicsView::resizeEvent(event);
 }
 

@@ -1,4 +1,5 @@
 2010-04-09 Graeme Gott <graeme@gottcode.org>
+	* Improve handling of overview window.
 	* Add message class.
 	* Change zoom algorithm.
 	* Add drop shadows.

@@ -1058,6 +1058,7 @@ void Board::cleanup()
 {
 	deleteTexture(m_image);
 
+	m_overview->scene()->clear();
 	m_message->setVisible(false);
 	m_active_tiles.clear();
 	qDeleteAll(m_pieces);
