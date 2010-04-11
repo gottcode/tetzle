@@ -373,6 +373,13 @@ void Piece::rotateAround(Tile* tile)
 
 //-----------------------------------------------------------------------------
 
+void Piece::setSelected(bool selected)
+{
+	m_shadow_color = !selected ? Qt::black : m_board->palette().color(QPalette::Highlight);
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::draw() const
 {
 	int x1, y1, x2, y2;
@@ -380,7 +387,7 @@ void Piece::draw() const
 	Tile* tile;
 
 	// Draw shadow
-	glColor3f(0, 0, 0);
+	m_board->qglColor(m_shadow_color);
 	glBindTexture(GL_TEXTURE_2D, m_board->shadowTexture());
 	glBegin(GL_QUADS);
 	for (int i = 0; i < m_shadow.count(); ++i) {
@@ -405,7 +412,7 @@ void Piece::draw() const
 	glEnd();
 
 	// Draw tiles
-	glColor3f(1, 1, 1);
+	glColor4f(1, 1, 1, 1);
 	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

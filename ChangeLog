@@ -1,4 +1,5 @@
 2010-04-11 Graeme Gott <graeme@gottcode.org>
+	* Improve selection rectangle.
 	* Share the zooming algorithm between windows.
 
 2010-04-10 Graeme Gott <graeme@gottcode.org>

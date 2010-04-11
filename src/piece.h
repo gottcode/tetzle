@@ -20,6 +20,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include <QColor>
 #include <QList>
 #include <QPoint>
 #include <QRect>
@@ -47,6 +48,7 @@ public:
 	void moveTo(int x, int y);
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotateAround(Tile* tile);
+	void setSelected(bool selected);
 
 	void draw() const;
 	void save(QXmlStreamWriter& xml) const;
@@ -60,6 +62,7 @@ private:
 	int m_rotation;
 	QPoint m_pos;
 	QRect m_rect;
+	QColor m_shadow_color;
 	QList<Tile*> m_children;
 	QList<Tile*> m_shadow;
 };

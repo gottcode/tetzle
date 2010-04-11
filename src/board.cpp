@@ -464,22 +464,28 @@ void Board::paintGL()
 		glPushAttrib(GL_CURRENT_BIT);
 
 		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
+		int x1 = box.x();
+		int y1 = box.y();
+		int x2 = x1 + box.width();
+		int y2 = y1 + box.height();
 
-		glColor4f(0, 0, 1, 0.25);
+		QColor highlight = palette().color(QPalette::Highlight);
+		QColor fill = highlight;
+		fill.setAlpha(48);
+		qglColor(fill);
 		glBegin(GL_QUADS);
-			glVertex2i(box.x(), box.y());
-			glVertex2i(box.x(), box.y() + box.height());
-			glVertex2i(box.x() + box.width(), box.y() + box.height());
-			glVertex2i(box.x() + box.width(), box.y());
+			glVertex2i(x1, y1);
+			glVertex2i(x2, y1);
+			glVertex2i(x2, y2);
+			glVertex2i(x1, y2);
 		glEnd();
 
-		glColor3f(0, 0, 1);
-		glBegin(GL_LINE_STRIP);
-			glVertex2i(box.x(), box.y());
-			glVertex2i(box.x(), box.y() + box.height());
-			glVertex2i(box.x() + box.width(), box.y() + box.height());
-			glVertex2i(box.x() + box.width(), box.y());
-			glVertex2i(box.x(), box.y());
+		qglColor(highlight.darker());
+		glBegin(GL_LINE_LOOP);
+			glVertex2i(x1, y1);
+			glVertex2i(x2, y1);
+			glVertex2i(x2, y2);
+			glVertex2i(x1, y2);
 		glEnd();
 
 		glPopAttrib();
@@ -645,7 +651,14 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 	}
 
 	if (!m_selecting && m_action_button == Qt::LeftButton && m_action_key == 0) {
-		m_selecting = (event->pos() - m_select_pos).manhattanLength() >= 7;
+		m_selecting = (event->pos() - m_select_pos).manhattanLength() >= QApplication::startDragDistance();
+	}
+	if (m_selecting) {
+		QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
+		for (int i = 0; i < m_pieces.count(); ++i) {
+			Piece* piece = m_pieces.at(i);
+			piece->setSelected(rect.intersects(piece->boundingRect()));
+		}
 	}
 
 	updateGL();
@@ -827,7 +840,8 @@ void Board::selectPieces()
 	QRect rect = QRect(cursor, mapPosition(m_select_pos)).normalized();
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* piece = m_pieces.at(i);
-		if (rect.contains(piece->boundingRect())) {
+		piece->setSelected(false);
+		if (rect.intersects(piece->boundingRect())) {
 			Tile* tile = piece->children().at(rand() % piece->children().count());
 			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
 			m_active_tiles.insert(piece, tile);
