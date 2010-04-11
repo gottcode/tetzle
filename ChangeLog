@@ -1,3 +1,6 @@
+2010-04-10 Graeme Gott <graeme@gottcode.org>
+	* Update Mac support.
+
 2010-04-09 Graeme Gott <graeme@gottcode.org>
 	* Use a progressbar to show puzzle completion.
 	* Improve handling of overview window.
