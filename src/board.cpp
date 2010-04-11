@@ -884,12 +884,12 @@ void Board::loadImage()
 	if (m_columns > m_rows) {
 		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
 		m_columns = 4 * m_difficulty;
-		m_rows = qRound(m_columns * ratio);
+		m_rows = qMax(qRound(m_columns * ratio), 1);
 		tile_size = qMin(tile_size, size.width() / m_columns);
 	} else {
 		float ratio = static_cast<float>(m_columns) / static_cast<float>(m_rows);
 		m_rows = 4 * m_difficulty;
-		m_columns = qRound(m_rows * ratio);
+		m_columns = qMax(qRound(m_rows * ratio), 1);
 		tile_size = qMin(tile_size, size.height() / m_rows);
 	}
 	m_total_pieces = (m_columns * m_rows) / 4;

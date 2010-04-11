@@ -346,7 +346,7 @@ void NewGameDialog::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
 		int side1 = 4 * value;
-		int side2 = qRound(side1 * m_ratio);
+		int side2 = qMax(qRound(side1 * m_ratio), 1);
 		m_count->setText(QString("%L1").arg(side1 * side2 / 4));
 	}
 }

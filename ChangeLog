@@ -1,4 +1,5 @@
 2010-04-10 Graeme Gott <graeme@gottcode.org>
+	* Prevent puzzles with no pieces.
 	* Update Mac support.
 
 2010-04-09 Graeme Gott <graeme@gottcode.org>
