@@ -19,6 +19,8 @@
 
 #include "overview.h"
 
+#include "zoom_slider.h"
+
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QSettings>
@@ -28,13 +30,13 @@
 
 Overview::Overview(QWidget* parent)
 	: QGraphicsView(parent),
-	m_scale_start(0),
-	m_scale_factor(0),
+	m_min_scale_level(0),
 	m_scale_level(0)
 {
 	setWindowTitle(tr("Overview"));
 	setWindowFlags(Qt::Tool);
 
+	setBackgroundRole(QPalette::Window);
 	setRenderHint(QPainter::SmoothPixmapTransform, true);
 	setDragMode(ScrollHandDrag);
 	setFrameStyle(NoFrame);
@@ -59,24 +61,16 @@ void Overview::load(const QImage& image)
 {
 	// Remove previous overview
 	scene()->clear();
-	resetMatrix();
 
-	// Set scale
-	QSize size = image.size();
-	if (size.width() > 400 || size.height() > 400) {
-		size.scale(400, 400, Qt::KeepAspectRatio);
-		float max_image = qMax(image.width(), image.height());
-		float min_image = qMax(size.width(), size.height());
-		m_scale_start = min_image / max_image;
-		m_scale_factor = 0.1f - (m_scale_start / 9.f);
-	} else {
-		m_scale_start = 1.f;
-		m_scale_factor = 0.f;
-	}
-	m_scale_level = 0;
+	// Find minimum scale
+	float scalex = 400.0f / image.width();
+	float scaley = 400.0f / image.width();
+	m_min_scale_level = ZoomSlider::scaleLevel(qMin(scalex, scaley));
+	zoom(m_min_scale_level);
 
 	// Resize window
 	bool default_size = m_default;
+	QSize size = transform().mapRect(image.rect()).size();
 	setMinimumSize(size);
 	if (default_size) {
 		resize(minimumSize());
@@ -86,7 +80,7 @@ void Overview::load(const QImage& image)
 	QGraphicsPixmapItem* pixmap = scene()->addPixmap(QPixmap::fromImage(image, Qt::AutoColor | Qt::AvoidDither));
 	pixmap->setTransformationMode(Qt::SmoothTransformation);
 	scene()->setSceneRect(pixmap->boundingRect());
-	zoom();
+	centerOn(pixmap);
 }
 
 //-----------------------------------------------------------------------------
@@ -140,28 +134,28 @@ void Overview::wheelEvent(QWheelEvent* event)
 
 void Overview::zoomIn()
 {
-	if (m_scale_level < 9) {
-		m_scale_level++;
-		zoom();
-	}
+	zoom(m_scale_level + 1);
 }
 
 //-----------------------------------------------------------------------------
 
 void Overview::zoomOut()
 {
-	if (m_scale_level > 0) {
-		m_scale_level--;
-		zoom();
-	}
+	zoom(m_scale_level - 1);
 }
 
 //-----------------------------------------------------------------------------
 
-void Overview::zoom()
+void Overview::zoom(int level)
 {
-	float s = m_scale_start + (m_scale_factor * m_scale_level);
-	setMatrix(QMatrix().scale(s, s));
+	m_scale_level = qBound(m_min_scale_level, level, 9);
+	float s = ZoomSlider::scaleFactor(m_scale_level);
+	resetTransform();
+	scale(s, s);
+
+	Qt::ScrollBarPolicy policy = (m_scale_level > m_min_scale_level) ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff;
+	setHorizontalScrollBarPolicy(policy);
+	setVerticalScrollBarPolicy(policy);
 }
 
 //-----------------------------------------------------------------------------

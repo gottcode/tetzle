@@ -43,11 +43,10 @@ protected:
 private:
 	void zoomIn();
 	void zoomOut();
-	void zoom();
+	void zoom(int level);
 
 private:
-	float m_scale_start;
-	float m_scale_factor;
+	int m_min_scale_level;
 	int m_scale_level;
 	bool m_default;
 };

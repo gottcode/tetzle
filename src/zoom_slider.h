@@ -30,6 +30,9 @@ class ZoomSlider : public QWidget
 public:
 	ZoomSlider(QWidget* parent = 0);
 
+	static float scaleFactor(int level);
+	static int scaleLevel(float factor);
+
 signals:
 	void valueChanged(int);
 

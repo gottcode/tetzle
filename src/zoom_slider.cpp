@@ -25,6 +25,15 @@
 
 //-----------------------------------------------------------------------------
 
+namespace
+{
+
+const float scale_levels[] = { 0.125, 0.15625, 0.1875, 0.25, 0.3125, 0.40625, 0.5, 0.625, 0.78125, 1.0 };
+
+}
+
+//-----------------------------------------------------------------------------
+
 ZoomSlider::ZoomSlider(QWidget* parent)
 	: QWidget(parent)
 {
@@ -39,6 +48,28 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	layout->setSpacing(0);
 	layout->addWidget(m_label);
 	layout->addWidget(m_slider);
+}
+
+//-----------------------------------------------------------------------------
+
+float ZoomSlider::scaleFactor(int level)
+{
+	return scale_levels[qBound(0, level, 9)];
+}
+
+//-----------------------------------------------------------------------------
+
+int ZoomSlider::scaleLevel(float factor)
+{
+	factor = qBound(0.0f, factor, 1.0f);
+	int level = 9;
+	for (int i = 0; i < 9; ++i) {
+		if ((factor - scale_levels[i]) < 0.0f) {
+			level = (i - 1);
+			break;
+		}
+	}
+	return level;
 }
 
 //-----------------------------------------------------------------------------

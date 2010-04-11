@@ -24,6 +24,7 @@
 #include "piece.h"
 #include "solver.h"
 #include "tile.h"
+#include "zoom_slider.h"
 
 #include <QApplication>
 #include <QDir>
@@ -54,15 +55,6 @@ int powerOfTwo(int value)
 	value |= value >> 16;
 	value++;
 	return value;
-}
-
-//-----------------------------------------------------------------------------
-
-namespace
-{
-
-const float scale_levels[] = { 0.125, 0.15625, 0.1875, 0.25, 0.3125, 0.40625, 0.5, 0.625, 0.78125, 1.0 };
-
 }
 
 //-----------------------------------------------------------------------------
@@ -387,17 +379,7 @@ void Board::zoomFit()
 	// Find scale factor
 	float sx = static_cast<float>(width()) / static_cast<float>(bounds.width());
 	float sy = static_cast<float>(height()) / static_cast<float>(bounds.height());
-	float scale = qMin(1.0f, qMin(sx, sy));
-
-	// Find closest scale level
-	int scale_level = 9;
-	for (int i = 0; i < 9; ++i) {
-		if ((scale - scale_levels[i]) < 0.0f) {
-			scale_level = (i - 1);
-			break;
-		}
-	}
-	zoom(scale_level);
+	zoom(ZoomSlider::scaleLevel(qMin(sx, sy)));
 }
 
 //-----------------------------------------------------------------------------
@@ -408,7 +390,7 @@ void Board::zoom(int level)
 
 	// Calculate new scale value
 	m_scale_level = qBound(0, level, 9);
-	m_scale = scale_levels[m_scale_level];
+	m_scale = ZoomSlider::scaleFactor(m_scale_level);
 
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
@@ -900,6 +882,7 @@ void Board::loadImage()
 	scaled_size.scale(size, Qt::KeepAspectRatioByExpanding);
 	source.setScaledSize(scaled_size);
 	source.setScaledClipRect(QRect((scaled_size.width() - size.width()) / 2, (scaled_size.height() - size.height()) / 2, size.width(), size.height()));
+	QImage image = source.read();
 
 	int image_texture_size = powerOfTwo(qMax(size.width(), size.height()));
 	m_image_ts = static_cast<float>(tile_size) / static_cast<float>(image_texture_size);
@@ -907,12 +890,12 @@ void Board::loadImage()
 	texture.fill(QColor(Qt::darkGray).rgb());
 	{
 		QPainter painter(&texture);
-		painter.drawImage(0, 0, source.read(), 0, 0, size.width(), size.height(), Qt::AutoColor | Qt::AvoidDither);
+		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
 	m_image = bindTexture(texture.mirrored(false, true));
 
 	// Create overview
-	m_overview->load(texture.copy(0, 0, size.width(), size.height()));
+	m_overview->load(image.scaled(image.size() * 0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
