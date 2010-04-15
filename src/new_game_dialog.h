@@ -58,15 +58,17 @@ private:
 
 private:
 	TagManager* m_image_tags;
-	QComboBox* m_images_filter;
 	QListWidget* m_images;
 	ThumbnailList* m_thumbnails;
+	QComboBox* m_images_filter;
 	QPushButton* m_remove_button;
 	QPushButton* m_tag_button;
+
 	QSlider* m_slider;
 	QLabel* m_count;
 	QSize m_image_size;
 	float m_ratio;
+
 	QPushButton* m_accept_button;
 };
 

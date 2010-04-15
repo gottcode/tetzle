@@ -1,4 +1,5 @@
 2010-04-15 Graeme Gott <graeme@gottcode.org>
+	* Use groupboxes in new game dialog.
 	* Replace ImageDialog with QFileDialog.
 	* Rename labels to tags.
 
