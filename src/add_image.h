@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,39 +17,22 @@
  *
  ***********************************************************************/
 
-#ifndef OPEN_GAME_DIALOG_H
-#define OPEN_GAME_DIALOG_H
+#ifndef ADD_IMAGE_H
+#define ADD_IMAGE_H
 
-#include <QDialog>
-class QListWidget;
-class QPushButton;
-class ThumbnailList;
+class QDragEnterEvent;
+class QDropEvent;
+class QString;
+class QStringList;
+class QWidget;
 
-class OpenGameDialog : public QDialog
+class AddImage
 {
-	Q_OBJECT
 public:
-	OpenGameDialog(int current_id, QWidget* parent = 0);
-
-public slots:
-	virtual void accept();
-
-signals:
-	void newGame(const QStringList& files = QStringList());
-	void openGame(int id);
-
-protected:
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
-	virtual void hideEvent(QHideEvent* event);
-
-private slots:
-	void deleteGame();
-
-private:
-	QListWidget* m_games;
-	ThumbnailList* m_thumbnails;
-	QPushButton* m_accept_button;
+	static void dragEnterEvent(QDragEnterEvent* event);
+	static QStringList dropEvent(QDropEvent* event);
+	static QStringList getOpenFileNames(QWidget* parent = 0);
+	static QString supportedFormats();
 };
 
 #endif

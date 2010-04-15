@@ -1,4 +1,5 @@
 2010-04-15 Graeme Gott <graeme@gottcode.org>
+	* Add images dropped on game.
 	* Use image hash as file name.
 	* Use groupboxes in new game dialog.
 	* Replace ImageDialog with QFileDialog.

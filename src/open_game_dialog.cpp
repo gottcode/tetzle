@@ -19,6 +19,7 @@
 
 #include "open_game_dialog.h"
 
+#include "add_image.h"
 #include "thumbnail_list.h"
 
 #include <QDialogButtonBox>
@@ -34,9 +35,10 @@
 //-----------------------------------------------------------------------------
 
 OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
-	: QDialog(parent)
+	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
 {
 	setWindowTitle(tr("Open Game"));
+	setAcceptDrops(true);
 
 	// Setup thumbnail list
 	m_thumbnails = new ThumbnailList(this);
@@ -130,6 +132,24 @@ void OpenGameDialog::accept()
 	QListWidgetItem* item = m_games->currentItem();
 	if (item) {
 		emit openGame(item->data(Qt::UserRole).toInt());
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void OpenGameDialog::dragEnterEvent(QDragEnterEvent* event)
+{
+	AddImage::dragEnterEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void OpenGameDialog::dropEvent(QDropEvent* event)
+{
+	QStringList files = AddImage::dropEvent(event);
+	if (!files.isEmpty()) {
+		reject();
+		emit newGame(files);
 	}
 }
 

@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 	app.setApplicationName("Tetzle");
 	app.setOrganizationDomain("gottcode.org");
 	app.setOrganizationName("GottCode");
+	QStringList files = app.arguments().mid(1);
 
 	QTranslator qt_translator;
 	qt_translator.load("qt_" + QLocale::system().name());
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
 		settings.setValue("Version", 1);
 	}
 
-	Window window;
+	Window window(files);
 
 	return app.exec();
 }

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Tetzle
-Exec=tetzle
+Exec=tetzle %F
 Icon=tetzle
 Terminal=false
 Type=Application

@@ -19,13 +19,13 @@
 
 #include "new_game_dialog.h"
 
+#include "add_image.h"
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
 #include "thumbnail_list.h"
 
 #include <QComboBox>
 #include <QCryptographicHash>
-#include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFile>
@@ -63,10 +63,11 @@ QString hash(const QString& path)
 
 //-----------------------------------------------------------------------------
 
-NewGameDialog::NewGameDialog(QWidget* parent)
+NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
 {
 	setWindowTitle(tr("New Game"));
+	setAcceptDrops(true);
 
 	// Create image widgets
 	QGroupBox* image_box = new QGroupBox(tr("Image"), this);
@@ -185,6 +186,13 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 
 	// Resize dialog
 	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
+
+	// Add images
+	foreach (const QString& file, files) {
+		if (QDir::match(AddImage::supportedFormats(), file)) {
+			addImage(file);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -209,6 +217,23 @@ void NewGameDialog::accept()
 
 //-----------------------------------------------------------------------------
 
+void NewGameDialog::dragEnterEvent(QDragEnterEvent* event)
+{
+	AddImage::dragEnterEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameDialog::dropEvent(QDropEvent* event)
+{
+	QStringList files = AddImage::dropEvent(event);
+	foreach (const QString& file, files) {
+		addImage(file);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 void NewGameDialog::hideEvent(QHideEvent* event)
 {
 	QSettings().setValue("NewGame/Size", size());
@@ -219,20 +244,11 @@ void NewGameDialog::hideEvent(QHideEvent* event)
 
 void NewGameDialog::addImage()
 {
-	QString dir = QSettings().value("AddImage/Path", QDesktopServices::storageLocation(QDesktopServices::PicturesLocation)).toString();
-
-	QStringList filters;
-	foreach (QByteArray type, QImageReader::supportedImageFormats()) {
-		filters.append("*." + type);
-	}
-	QString filter_string = "Images(" + filters.join(" ") + ")";
-
-	QStringList images = QFileDialog::getOpenFileNames(this, tr("Open Image"), dir, filter_string);
+	QStringList images = AddImage::getOpenFileNames(this);
 	if (images.isEmpty()) {
 		return;
 	}
 
-	QSettings().setValue("AddImage/Path", QFileInfo(images.first()).absolutePath());
 	foreach (QString image, images) {
 		addImage(image);
 	}

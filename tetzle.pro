@@ -17,7 +17,8 @@ unix: !macx {
 	TARGET = Tetzle
 }
 
-HEADERS = src/board.h \
+HEADERS = src/add_image.h \
+	src/board.h \
 	src/dancing_links.h \
 	src/message.h \
 	src/new_game_dialog.h \
@@ -33,7 +34,8 @@ HEADERS = src/board.h \
 	src/window.h \
 	src/zoom_slider.h
 
-SOURCES = src/board.cpp \
+SOURCES = src/add_image.cpp \
+	src/board.cpp \
 	src/dancing_links.cpp \
 	src/main.cpp \
 	src/message.cpp \

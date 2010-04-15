@@ -29,14 +29,16 @@ class Window : public QMainWindow
 {
 	Q_OBJECT
 public:
-	Window();
+	Window(const QStringList& files = QStringList());
 
 protected:
 	virtual void changeEvent(QEvent* event);
 	virtual void closeEvent(QCloseEvent* event);
+	virtual void dragEnterEvent(QDragEnterEvent* event);
+	virtual void dropEvent(QDropEvent* event);
 
 private slots:
-	void newGame();
+	void newGame(const QStringList& files = QStringList());
 	void openGame();
 	void gameFinished();
 	void overviewToggled(bool visible);

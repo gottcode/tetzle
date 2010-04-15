@@ -34,7 +34,7 @@ class NewGameDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	NewGameDialog(QWidget* parent = 0);
+	NewGameDialog(const QStringList& files, QWidget* parent = 0);
 
 public slots:
 	virtual void accept();
@@ -43,6 +43,8 @@ signals:
 	void newGame(const QString& image, int difficulty);
 
 protected:
+	virtual void dragEnterEvent(QDragEnterEvent* event);
+	virtual void dropEvent(QDropEvent* event);
 	virtual void hideEvent(QHideEvent* event);
 
 private slots:

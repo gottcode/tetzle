@@ -19,6 +19,7 @@
 
 #include "window.h"
 
+#include "add_image.h"
 #include "board.h"
 #include "new_game_dialog.h"
 #include "open_game_dialog.h"
@@ -43,11 +44,12 @@
 
 //-----------------------------------------------------------------------------
 
-Window::Window()
+Window::Window(const QStringList& files)
 	: m_board(0)
 {
 	setWindowTitle(tr("Tetzle"));
 	setWindowIcon(QIcon(":/tetzle.png"));
+	setAcceptDrops(true);
 	resize(640, 480);
 
 	// Add statusbar
@@ -123,11 +125,15 @@ Window::Window()
 
 	// Start or load a game
 	show();
-	if (QDir("saves/", "*.xml").count()) {
-		m_open_action->setEnabled(true);
-		openGame();
+	if (files.isEmpty()) {
+		if (QDir("saves/", "*.xml").count()) {
+			m_open_action->setEnabled(true);
+			openGame();
+		} else {
+			newGame();
+		}
 	} else {
-		newGame();
+		newGame(files);
 	}
 
 	// Create auto-save timer
@@ -159,11 +165,28 @@ void Window::closeEvent(QCloseEvent* event)
 
 //-----------------------------------------------------------------------------
 
-void Window::newGame()
+void Window::dragEnterEvent(QDragEnterEvent* event)
+{
+	AddImage::dragEnterEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void Window::dropEvent(QDropEvent* event)
+{
+	QStringList files = AddImage::dropEvent(event);
+	if (!files.isEmpty()) {
+		newGame(files);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Window::newGame(const QStringList& files)
 {
 	m_board->saveGame();
 
-	NewGameDialog dialog(this);
+	NewGameDialog dialog(files, this);
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
 	if (dialog.exec() == QDialog::Accepted) {
@@ -182,7 +205,7 @@ void Window::openGame()
 
 	OpenGameDialog dialog(m_board->id(), this);
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
-	connect(&dialog, SIGNAL(newGame()), this, SLOT(newGame()));
+	connect(&dialog, SIGNAL(newGame(const QStringList&)), this, SLOT(newGame(const QStringList&)));
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
