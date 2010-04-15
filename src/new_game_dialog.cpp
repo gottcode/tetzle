@@ -37,13 +37,10 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QMessageBox>
-#include <QPainter>
-#include <QPixmapCache>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QSettings>
 #include <QSlider>
-#include <QToolTip>
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
 
@@ -59,7 +56,7 @@ QString hash(const QString& path)
 	if (!file.open(QIODevice::ReadOnly)) {
 		return QString();
 	}
-	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
+	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex();
 }
 
 }
@@ -399,34 +396,30 @@ void NewGameDialog::filterImages(const QString& filter)
 
 void NewGameDialog::addImage(const QString& image)
 {
-	// Check for duplicates
 	QString image_hash = hash(image);
-	foreach (QString file, QDir("images/", "*.*").entryList(QDir::Files)) {
-		QString file_hash = hash("images/" + file);
-		if (image_hash == file_hash) {
-			QMessageBox::warning(this, tr("Error"), tr("The image '%1' is already in the program.").arg(image));
-			return;
+	QString path = image_hash + "." + QFileInfo(image).suffix().toLower();
+
+	QListWidgetItem* item = 0;
+	if (!QDir("images").exists(path)) {
+		// Copy image
+		QFile file(image);
+		file.copy("images/" + path);
+
+		// Add to list of images
+		item = new QListWidgetItem(m_images);
+		item->setData(Qt::UserRole, path);
+		m_thumbnails->addItem(item, "images/" + path, QString("images/thumbnails/%1.png").arg(image_hash));
+	} else {
+		// Find in list of images
+		for (int i = 0; i < m_images->count(); ++i) {
+			if (m_images->item(i)->data(Qt::UserRole).toString() == path) {
+				item = m_images->item(i);
+				break;
+			}
 		}
 	}
 
-	// Store image
-	int image_id = 0;
-	int id = 0;
-	foreach (QString file, QDir("images/", "*.*").entryList(QDir::Files)) {
-		id = file.section(".", 0, 0).toInt();
-		if (id > image_id) {
-			image_id = id;
-		}
-	}
-	image_id++;
-	QString image_file = QString("%1.%2").arg(image_id).arg(QFileInfo(image).suffix().toLower());
-	QFile file(image);
-	file.copy("images/" + image_file);
-
-	// Show in list of images
-	QListWidgetItem* item = new QListWidgetItem(m_images);
-	item->setData(Qt::UserRole, image_file);
-	m_thumbnails->addItem(item, "images/" + image_file, QString("images/thumbnails/%1.png").arg(image_id));
+	// Select in list of images
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
 }
