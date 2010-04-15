@@ -20,8 +20,8 @@
 #include "new_game_dialog.h"
 
 #include "image_dialog.h"
-#include "label_image_dialog.h"
-#include "label_manager.h"
+#include "tag_image_dialog.h"
+#include "tag_manager.h"
 #include "thumbnail_list.h"
 
 #include <QComboBox>
@@ -92,18 +92,18 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	connect(m_remove_button, SIGNAL(clicked()), this, SLOT(removeImage()));
 	image_buttons->addButton(m_remove_button, QDialogButtonBox::ActionRole);
 
-	m_label_button = new QPushButton(tr("Label As..."), this);
-	m_label_button->setAutoDefault(false);
-	connect(m_label_button, SIGNAL(clicked()), this, SLOT(changeLabels()));
-	image_buttons->addButton(m_label_button, QDialogButtonBox::ActionRole);
+	m_tag_button = new QPushButton(tr("Tag"), this);
+	m_tag_button->setAutoDefault(false);
+	connect(m_tag_button, SIGNAL(clicked()), this, SLOT(changeTags()));
+	image_buttons->addButton(m_tag_button, QDialogButtonBox::ActionRole);
 
 	// Setup thumbnail list
 	m_thumbnails = new ThumbnailList(this);
-	m_image_labels = new LabelManager(this);
+	m_image_tags = new TagManager(this);
 
 	// Add image selector
 	m_images_filter = new QComboBox(this);
-	m_images_filter->addItems(m_image_labels->labels());
+	m_images_filter->addItems(m_image_tags->tags());
 	connect(m_images_filter, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(filterImages(const QString&)));
 
 	m_images = new QListWidget(this);
@@ -137,7 +137,7 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	m_images->setCurrentItem(item);
 	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
 	pieceCountChanged(m_slider->value());
-	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All")).toString());
+	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All Tags")).toString());
 	if (index == -1) {
 		index = 0;
 	}
@@ -174,7 +174,7 @@ NewGameDialog::NewGameDialog(QWidget* parent)
 	// Disable buttons if there are no images
 	bool enabled = m_images->count() > 0;
 	m_accept_button->setEnabled(enabled);
-	m_label_button->setEnabled(enabled);
+	m_tag_button->setEnabled(enabled);
 	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
 
 	// Resize dialog
@@ -275,7 +275,7 @@ void NewGameDialog::removeImage()
 			QFile::remove("saves/" + game);
 		}
 		delete item;
-		m_image_labels->removeImage(current_image);
+		m_image_tags->removeImage(current_image);
 		m_accept_button->setEnabled(m_images->count() > 0);
 		if (!m_accept_button->isEnabled()) {
 			m_slider->setMaximum(-1);
@@ -289,7 +289,7 @@ void NewGameDialog::removeImage()
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::changeLabels()
+void NewGameDialog::changeTags()
 {
 	QListWidgetItem* item = m_images->currentItem();
 	if (!item) {
@@ -297,11 +297,11 @@ void NewGameDialog::changeLabels()
 	}
 
 	QString filter = m_images_filter->currentText();
-	LabelImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_labels, filter, this);
+	TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, filter, this);
 	dialog.exec();
 
 	m_images_filter->clear();
-	m_images_filter->addItems(m_image_labels->labels());
+	m_images_filter->addItems(m_image_tags->tags());
 	int index = m_images_filter->findText(filter);
 	if (index == -1) {
 		index = 0;
@@ -319,7 +319,7 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 	}
 
 	QString image = item->data(Qt::UserRole).toString();
-	m_label_button->setEnabled(enabled);
+	m_tag_button->setEnabled(enabled);
 	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader("images/" + image).size();
@@ -357,7 +357,7 @@ void NewGameDialog::filterImages(const QString& filter)
 {
 	QSettings().setValue("NewGame/Filter", filter);
 
-	QStringList images = m_image_labels->images(filter);
+	QStringList images = m_image_tags->images(filter);
 
 	QListWidgetItem* item;
 	int count = m_images->count();

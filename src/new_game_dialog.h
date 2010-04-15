@@ -27,7 +27,7 @@ class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QSlider;
-class LabelManager;
+class TagManager;
 class ThumbnailList;
 
 class NewGameDialog : public QDialog
@@ -48,7 +48,7 @@ protected:
 private slots:
 	void addImage();
 	void removeImage();
-	void changeLabels();
+	void changeTags();
 	void imageSelected(QListWidgetItem* item);
 	void pieceCountChanged(int value);
 	void filterImages(const QString& filter);
@@ -57,12 +57,12 @@ private:
 	void addImage(const QString& image);
 
 private:
-	LabelManager* m_image_labels;
+	TagManager* m_image_tags;
 	QComboBox* m_images_filter;
 	QListWidget* m_images;
 	ThumbnailList* m_thumbnails;
 	QPushButton* m_remove_button;
-	QPushButton* m_label_button;
+	QPushButton* m_tag_button;
 	QSlider* m_slider;
 	QLabel* m_count;
 	QSize m_image_size;

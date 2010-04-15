@@ -17,35 +17,35 @@
  *
  ***********************************************************************/
 
-#ifndef LABEL_IMAGE_DIALOG_H
-#define LABEL_IMAGE_DIALOG_H
+#ifndef TAG_IMAGE_DIALOG_H
+#define TAG_IMAGE_DIALOG_H
 
 #include <QDialog>
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
-class LabelManager;
+class TagManager;
 
-class LabelImageDialog : public QDialog
+class TagImageDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	LabelImageDialog(const QString& image, LabelManager* manager, QString& filter, QWidget* parent = 0);
+	TagImageDialog(const QString& image, TagManager* manager, QString& filter, QWidget* parent = 0);
 
 protected:
 	virtual void hideEvent(QHideEvent* event);
 
 private slots:
-	void addLabel();
-	void removeLabel();
-	void labelChanged(QListWidgetItem* label);
+	void addTag();
+	void removeTag();
+	void tagChanged(QListWidgetItem* tag);
 
 private:
 	QString m_image;
-	LabelManager* m_manager;
+	TagManager* m_manager;
 	QString& m_filter;
 
-	QListWidget* m_labels;
+	QListWidget* m_tags;
 	QPushButton* m_remove_button;
 };
 

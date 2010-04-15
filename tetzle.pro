@@ -20,8 +20,6 @@ unix: !macx {
 HEADERS = src/board.h \
 	src/dancing_links.h \
 	src/image_dialog.h \
-	src/label_image_dialog.h \
-	src/label_manager.h \
 	src/message.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
@@ -29,6 +27,8 @@ HEADERS = src/board.h \
 	src/piece.h \
 	src/solver.h \
 	src/tile.h \
+	src/tag_image_dialog.h \
+	src/tag_manager.h \
 	src/thumbnail_list.h \
 	src/thumbnail_loader.h \
 	src/thumbnail_model.h \
@@ -38,8 +38,6 @@ HEADERS = src/board.h \
 SOURCES = src/board.cpp \
 	src/dancing_links.cpp \
 	src/image_dialog.cpp \
-	src/label_image_dialog.cpp \
-	src/label_manager.cpp \
 	src/main.cpp \
 	src/message.cpp \
 	src/new_game_dialog.cpp \
@@ -48,6 +46,8 @@ SOURCES = src/board.cpp \
 	src/piece.cpp \
 	src/solver.cpp \
 	src/tile.cpp \
+	src/tag_image_dialog.cpp \
+	src/tag_manager.cpp \
 	src/thumbnail_list.cpp \
 	src/thumbnail_loader.cpp \
 	src/thumbnail_model.cpp \

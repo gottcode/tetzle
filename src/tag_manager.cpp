@@ -17,23 +17,23 @@
  *
  ***********************************************************************/
 
-#include "label_manager.h"
+#include "tag_manager.h"
 
 #include <QDir>
 #include <QSettings>
 
 //-----------------------------------------------------------------------------
 
-LabelManager::LabelManager(QObject* parent)
+TagManager::TagManager(QObject* parent)
 	: QObject(parent)
 {
-	QSettings file("images/labels", QSettings::IniFormat);
-	file.beginGroup("Labels");
-	QStringList labels = file.childKeys();
+	QSettings file("images/tags", QSettings::IniFormat);
+	file.beginGroup("Tags");
+	QStringList tags = file.childKeys();
 	QStringList images;
 	QDir folder("images/", "*.*");
-	foreach (QString label, labels) {
-		images = file.value(label).toStringList();
+	foreach (QString tag, tags) {
+		images = file.value(tag).toStringList();
 		QMutableStringListIterator i(images);
 		while (i.hasNext()) {
 			i.next();
@@ -41,36 +41,36 @@ LabelManager::LabelManager(QObject* parent)
 				i.remove();
 			}
 		}
-		m_labels[label] = images;
+		m_tags[tag] = images;
 	}
 }
 
 //-----------------------------------------------------------------------------
 
-QStringList LabelManager::labels(bool list_empty) const
+QStringList TagManager::tags(bool list_empty) const
 {
-	QStringList labels;
+	QStringList tags;
 	if (!list_empty) {
 		QMap<QString, QStringList>::const_iterator i;
-		for (i = m_labels.constBegin(); i != m_labels.constEnd(); ++i) {
+		for (i = m_tags.constBegin(); i != m_tags.constEnd(); ++i) {
 			if (!i.value().isEmpty()) {
-				labels.append(i.key());
+				tags.append(i.key());
 			}
 		}
 	} else {
-		labels = m_labels.keys();
+		tags = m_tags.keys();
 	}
-	labels.sort();
-	labels.prepend(tr("All"));
-	return labels;
+	tags.sort();
+	tags.prepend(tr("All Tags"));
+	return tags;
 }
 
 //-----------------------------------------------------------------------------
 
-QStringList LabelManager::images(const QString& label) const
+QStringList TagManager::images(const QString& tag) const
 {
-	if (label != tr("All")) {
-		return m_labels.value(label);
+	if (tag != tr("All Tags")) {
+		return m_tags.value(tag);
 	} else {
 		return QDir("images/", "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
 	}
@@ -78,95 +78,95 @@ QStringList LabelManager::images(const QString& label) const
 
 //-----------------------------------------------------------------------------
 
-bool LabelManager::isLabelEmpty(const QString& label) const
+bool TagManager::isTagEmpty(const QString& tag) const
 {
-	return images(label).isEmpty();
+	return images(tag).isEmpty();
 }
 
 //-----------------------------------------------------------------------------
 
-bool LabelManager::addLabel(const QString& label)
+bool TagManager::addTag(const QString& tag)
 {
-	if (label == tr("All") || label.isEmpty() || m_labels.constFind(label) != m_labels.constEnd()) {
+	if (tag == tr("All Tags") || tag.isEmpty() || m_tags.constFind(tag) != m_tags.constEnd()) {
 		return false;
 	}
 
-	m_labels.insert(label, QStringList());
-	storeLabels();
+	m_tags.insert(tag, QStringList());
+	storeTags();
 
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 
-bool LabelManager::renameLabel(const QString& label, const QString& old_label)
+bool TagManager::renameTag(const QString& tag, const QString& old_tag)
 {
-	if (m_labels.constFind(label) != m_labels.constEnd() || m_labels.constFind(old_label) == m_labels.constEnd() || label.isEmpty()) {
+	if (m_tags.constFind(tag) != m_tags.constEnd() || m_tags.constFind(old_tag) == m_tags.constEnd() || tag.isEmpty()) {
 		return false;
 	}
 
-	m_labels.insert(label, m_labels.take(old_label));
-	storeLabels();
+	m_tags.insert(tag, m_tags.take(old_tag));
+	storeTags();
 
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 
-bool LabelManager::removeLabel(const QString& label)
+bool TagManager::removeTag(const QString& tag)
 {
-	if (m_labels.constFind(label) == m_labels.constEnd()) {
+	if (m_tags.constFind(tag) == m_tags.constEnd()) {
 		return false;
 	}
 
-	m_labels.remove(label);
-	storeLabels();
+	m_tags.remove(tag);
+	storeTags();
 
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 
-void LabelManager::addImage(const QString& image, const QString& label)
+void TagManager::addImage(const QString& image, const QString& tag)
 {
-	QMap<QString, QStringList>::iterator i = m_labels.find(label);
-	if (i != m_labels.end() && !i.value().contains(image)) {
+	QMap<QString, QStringList>::iterator i = m_tags.find(tag);
+	if (i != m_tags.end() && !i.value().contains(tag)) {
 		i.value().append(image);
-		storeLabels();
+		storeTags();
 	}
 }
 
 //-----------------------------------------------------------------------------
 
-void LabelManager::removeImage(const QString& image, const QString& label)
+void TagManager::removeImage(const QString& image, const QString& tag)
 {
-	QMap<QString, QStringList>::iterator i = m_labels.find(label);
-	if (i != m_labels.end()) {
+	QMap<QString, QStringList>::iterator i = m_tags.find(tag);
+	if (i != m_tags.end()) {
 		i.value().removeAll(image);
-		storeLabels();
+		storeTags();
 	}
 }
 
 //-----------------------------------------------------------------------------
 
-void LabelManager::removeImage(const QString& image)
+void TagManager::removeImage(const QString& image)
 {
-	QMutableMapIterator<QString, QStringList> i(m_labels);
+	QMutableMapIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
 		i.value().removeAll(image);
 	}
-	storeLabels();
+	storeTags();
 }
 
 //-----------------------------------------------------------------------------
 
-void LabelManager::storeLabels()
+void TagManager::storeTags()
 {
-	QSettings file("images/labels", QSettings::IniFormat);
+	QSettings file("images/tags", QSettings::IniFormat);
 	file.clear();
-	file.beginGroup("Labels");
-	QMapIterator<QString, QStringList> i(m_labels);
+	file.beginGroup("Tags");
+	QMapIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
 		file.setValue(i.key(), i.value());

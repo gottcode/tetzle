@@ -17,34 +17,34 @@
  *
  ***********************************************************************/
 
-#ifndef LABEL_MANAGER_H
-#define LABEL_MANAGER_H
+#ifndef TAG_MANAGER_H
+#define TAG_MANAGER_H
 
 #include <QMap>
 #include <QSet>
 #include <QStringList>
 
-class LabelManager : public QObject
+class TagManager : public QObject
 {
 public:
-	LabelManager(QObject* parent = 0);
+	TagManager(QObject* parent = 0);
 
-	QStringList labels(bool list_empty = false) const;
-	QStringList images(const QString& label) const;
-	bool isLabelEmpty(const QString& label) const;
+	QStringList tags(bool list_empty = false) const;
+	QStringList images(const QString& tag) const;
+	bool isTagEmpty(const QString& tag) const;
 
-	bool addLabel(const QString& label);
-	bool renameLabel(const QString& label, const QString& old_label);
-	bool removeLabel(const QString& label);
-	void addImage(const QString& image, const QString& label);
-	void removeImage(const QString& image, const QString& label);
+	bool addTag(const QString& tag);
+	bool renameTag(const QString& tag, const QString& old_tag);
+	bool removeTag(const QString& tag);
+	void addImage(const QString& image, const QString& tag);
+	void removeImage(const QString& image, const QString& tag);
 	void removeImage(const QString& image);
 
 private:
-	void storeLabels();
+	void storeTags();
 
 private:
-	QMap<QString, QStringList> m_labels;
+	QMap<QString, QStringList> m_tags;
 };
 
 #endif

@@ -1,3 +1,6 @@
+2010-04-15 Graeme Gott <graeme@gottcode.org>
+	* Rename labels to tags.
+
 2010-04-11 Graeme Gott <graeme@gottcode.org>
 	* Improve selection rectangle.
 	* Share the zooming algorithm between windows.
