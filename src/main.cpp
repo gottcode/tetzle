@@ -47,7 +47,6 @@ int main(int argc, char** argv)
 	dir.mkpath(path + "/images/");
 	dir.mkpath(path + "/images/thumbnails/");
 	dir.mkpath(path + "/saves/");
-	dir.mkpath(path + "/../thumbnails/");
 	QDir::setCurrent(path);
 
 	// Update settings layout

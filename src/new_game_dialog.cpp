@@ -19,16 +19,17 @@
 
 #include "new_game_dialog.h"
 
-#include "image_dialog.h"
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
 #include "thumbnail_list.h"
 
 #include <QComboBox>
 #include <QCryptographicHash>
+#include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFile>
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -213,15 +214,21 @@ void NewGameDialog::hideEvent(QHideEvent* event)
 
 void NewGameDialog::addImage()
 {
-	ImageDialog dialog(this);
-	dialog.setMultipleSelections(true);
-	dialog.setPath(QSettings().value("AddImage/Path").toString());
-	if (dialog.exec() == QDialog::Rejected) {
+	QString dir = QSettings().value("AddImage/Path", QDesktopServices::storageLocation(QDesktopServices::PicturesLocation)).toString();
+
+	QStringList filters;
+	foreach (QByteArray type, QImageReader::supportedImageFormats()) {
+		filters.append("*." + type);
+	}
+	QString filter_string = "Images(" + filters.join(" ") + ")";
+
+	QStringList images = QFileDialog::getOpenFileNames(this, tr("Open Image"), dir, filter_string);
+	if (images.isEmpty()) {
 		return;
 	}
-	QSettings().setValue("AddImage/Path", QFileInfo(dialog.selectedFile()).absolutePath());
 
-	foreach (QString image, dialog.selectedFiles()) {
+	QSettings().setValue("AddImage/Path", QFileInfo(images.first()).absolutePath());
+	foreach (QString image, images) {
 		addImage(image);
 	}
 

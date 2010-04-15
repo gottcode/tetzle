@@ -1,4 +1,5 @@
 2010-04-15 Graeme Gott <graeme@gottcode.org>
+	* Replace ImageDialog with QFileDialog.
 	* Rename labels to tags.
 
 2010-04-11 Graeme Gott <graeme@gottcode.org>

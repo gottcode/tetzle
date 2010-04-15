@@ -19,7 +19,6 @@ unix: !macx {
 
 HEADERS = src/board.h \
 	src/dancing_links.h \
-	src/image_dialog.h \
 	src/message.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
@@ -31,13 +30,11 @@ HEADERS = src/board.h \
 	src/tag_manager.h \
 	src/thumbnail_list.h \
 	src/thumbnail_loader.h \
-	src/thumbnail_model.h \
 	src/window.h \
 	src/zoom_slider.h
 
 SOURCES = src/board.cpp \
 	src/dancing_links.cpp \
-	src/image_dialog.cpp \
 	src/main.cpp \
 	src/message.cpp \
 	src/new_game_dialog.cpp \
@@ -50,7 +47,6 @@ SOURCES = src/board.cpp \
 	src/tag_manager.cpp \
 	src/thumbnail_list.cpp \
 	src/thumbnail_loader.cpp \
-	src/thumbnail_model.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 
