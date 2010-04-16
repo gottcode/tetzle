@@ -87,12 +87,6 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	m_images->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	m_images->setUniformItemSizes(true);
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
-	QListWidgetItem* item;
-	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Name | QDir::LocaleAware)) {
-		item = new QListWidgetItem(m_images);
-		item->setData(Qt::UserRole, image);
-		m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
-	}
 
 	// Add image filter
 	m_images_filter = new QComboBox(image_box);
@@ -106,10 +100,12 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 
 	m_remove_button = new QPushButton(tr("Remove"), image_box);
 	m_remove_button->setAutoDefault(false);
+	m_remove_button->setEnabled(false);
 	connect(m_remove_button, SIGNAL(clicked()), this, SLOT(removeImage()));
 
 	m_tag_button = new QPushButton(tr("Tag"), image_box);
 	m_tag_button->setAutoDefault(false);
+	m_tag_button->setEnabled(false);
 	connect(m_tag_button, SIGNAL(clicked()), this, SLOT(changeTags()));
 
 	// Create pieces widgets
@@ -124,27 +120,6 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	m_count->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	m_count->setMinimumWidth(m_count->fontMetrics().width("9,999"));
 
-	// Load values
-	QSettings settings;
-	item = m_images->item(0);
-	QString image = settings.value("NewGame/Image").toString();
-	if (!image.isEmpty()) {
-		for (int i = m_images->count() - 1; i >= 0; --i) {
-			item = m_images->item(i);
-			if (item->data(Qt::UserRole) == image) {
-				break;
-			}
-		}
-	}
-	m_images->setCurrentItem(item);
-	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
-	pieceCountChanged(m_slider->value());
-	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All Tags")).toString());
-	if (index == -1) {
-		index = 0;
-	}
-	m_images_filter->setCurrentIndex(index);
-
 	// Add dialog buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(this);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
@@ -152,6 +127,7 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 
 	m_accept_button = buttons->addButton(QDialogButtonBox::Ok);
 	m_accept_button->setDefault(true);
+	m_accept_button->setEnabled(false);
 
 	QPushButton* cancel_button = buttons->addButton(QDialogButtonBox::Cancel);
 	cancel_button->setAutoDefault(false);
@@ -178,21 +154,44 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	layout->addWidget(pieces_box);
 	layout->addWidget(buttons);
 
-	// Disable buttons if there are no images
-	bool enabled = m_images->count() > 0;
-	m_accept_button->setEnabled(enabled);
-	m_tag_button->setEnabled(enabled);
-	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
+	// Load images
+	QListWidgetItem* item;
+	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Name | QDir::LocaleAware)) {
+		item = new QListWidgetItem(m_images);
+		item->setData(Qt::UserRole, image);
+		m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
+	}
 
-	// Resize dialog
-	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
+	// Load values
+	QSettings settings;
+	item = m_images->item(0);
+	QString image = settings.value("NewGame/Image").toString();
+	if (!image.isEmpty()) {
+		for (int i = m_images->count() - 1; i >= 0; --i) {
+			item = m_images->item(i);
+			if (item->data(Qt::UserRole) == image) {
+				break;
+			}
+		}
+	}
+	m_images->setCurrentItem(item);
+	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
+	pieceCountChanged(m_slider->value());
+	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All Tags")).toString());
+	if (index == -1) {
+		index = 0;
+	}
+	m_images_filter->setCurrentIndex(index);
 
-	// Add images
+	// Add new images
 	foreach (const QString& file, files) {
 		if (QDir::match(AddImage::supportedFormats(), file)) {
 			addImage(file);
 		}
 	}
+
+	// Resize dialog
+	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
 }
 
 //-----------------------------------------------------------------------------
@@ -252,8 +251,6 @@ void NewGameDialog::addImage()
 	foreach (QString image, images) {
 		addImage(image);
 	}
-
-	m_accept_button->setEnabled(m_images->count() > 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -342,13 +339,15 @@ void NewGameDialog::changeTags()
 void NewGameDialog::imageSelected(QListWidgetItem* item)
 {
 	bool enabled = item != 0;
+	m_accept_button->setEnabled(enabled);
+	m_tag_button->setEnabled(enabled);
+	m_remove_button->setEnabled(enabled);
 	if (!enabled) {
 		return;
 	}
 
 	QString image = item->data(Qt::UserRole).toString();
-	m_tag_button->setEnabled(enabled);
-	m_remove_button->setEnabled(enabled && QSettings().value("OpenGame/Image").toString() != image);
+	m_remove_button->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader("images/" + image).size();
 	if (m_image_size.width() > m_image_size.height()) {

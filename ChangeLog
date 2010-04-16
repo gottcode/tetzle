@@ -1,3 +1,6 @@
+2010-04-16 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Buttons in new game dialog were not always correctly enabled.
+
 2010-04-15 Graeme Gott <graeme@gottcode.org>
 	* Add images dropped on game.
 	* Use image hash as file name.
