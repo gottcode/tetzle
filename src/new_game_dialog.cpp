@@ -158,7 +158,7 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 
 	// Load images
 	QListWidgetItem* item;
-	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Name | QDir::LocaleAware)) {
+	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
 		item = new QListWidgetItem(m_images);
 		item->setData(Qt::UserRole, image);
 		m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");

@@ -1,4 +1,5 @@
 2010-04-17 Graeme Gott <graeme@gottcode.org>
+	* Make sorting consistent across runs.
 	* Reset tag filter when adding images.
 	* Use jhead to auto-rotate images.
 

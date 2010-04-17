@@ -40,6 +40,7 @@ TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QStrin
 
 	// Setup tags
 	m_tags = new QListWidget(this);
+	m_tags->setSortingEnabled(true);
 	connect(m_tags, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(tagChanged(QListWidgetItem*)));
 	QListWidgetItem* item;
 	foreach (QString tag, m_manager->tags(true)) {
