@@ -40,15 +40,9 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	setWindowTitle(tr("Open Game"));
 	setAcceptDrops(true);
 
-	// Setup thumbnail list
-	m_thumbnails = new ThumbnailList(this);
-
 	// List saved games
-	m_games = new QListWidget(this);
-	m_games->setIconSize(QSize(100, 100));
+	m_games = new ThumbnailList(this);
 	m_games->setSpacing(2);
-	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-	QListWidgetItem* item;
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
 	QStringList files = games();
@@ -63,7 +57,6 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 		if (current_id == id) {
 			continue;
 		}
-		item = new QListWidgetItem(m_games);
 
 		// Load details
 		while (!xml.isStartElement()) {
@@ -73,16 +66,13 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
 			QString image = attributes.value("image").toString();
 			if (!QFileInfo("images/" + image).exists()) {
-				delete item;
 				continue;
 			}
 			int pieces = attributes.value("pieces").toString().toInt();
 			int complete = attributes.value("complete").toString().toInt();
+			QListWidgetItem* item = m_games->addImage("images/" + image);
 			item->setText(tr("%L1 pieces\n%2% complete").arg(pieces).arg(complete));
 			item->setData(Qt::UserRole, id);
-			m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
-		} else {
-			delete item;
 		}
 	}
 	m_games->setCurrentRow(0);

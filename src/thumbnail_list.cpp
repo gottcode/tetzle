@@ -19,45 +19,88 @@
 
 #include "thumbnail_list.h"
 
-#include "thumbnail_loader.h"
-
+#include <QtConcurrentRun>
 #include <QDateTime>
 #include <QFileInfo>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QListWidgetItem>
+#include <QImage>
+#include <QImageReader>
+#include <QPainter>
+#include <QSignalMapper>
 
 //-----------------------------------------------------------------------------
 
-ThumbnailList::ThumbnailList(QObject* parent)
-	: QObject(parent)
+namespace
 {
-	m_loading = ThumbnailLoader::loadingIcon();
 
-	m_loader = new ThumbnailLoader;
-	connect(m_loader, SIGNAL(generated(const QString&)), this, SLOT(generated(const QString&)));
+void createThumbnail(const QString& file, const QString& preview)
+{
+	QImageReader source(file);
+	QSize size = source.size();
+	if (size.width() > 92 || size.height() > 92) {
+		size.scale(92, 92, Qt::KeepAspectRatio);
+		source.setScaledSize(size);
+	}
+
+	QImage thumbnail(100, 100, QImage::Format_ARGB32);
+	thumbnail.fill(0);
+	{
+		QPainter painter(&thumbnail);
+		painter.translate(46 - (size.width() / 2), 46 - (size.height() / 2));
+		painter.fillRect(0, 0, size.width() + 8, size.height() + 8, QColor(0, 0, 0, 50));
+		painter.fillRect(1, 1, size.width() + 6, size.height() + 6, QColor(0, 0, 0, 75));
+		painter.fillRect(2, 2, size.width() + 4, size.height() + 4, Qt::white);
+		painter.drawImage(4, 4, source.read(), 0, 0, -1, -1, Qt::AutoColor | Qt::AvoidDither);
+	}
+	thumbnail.save(preview, 0, 0);
+}
+
 }
 
 //-----------------------------------------------------------------------------
 
-ThumbnailList::~ThumbnailList()
+ThumbnailList::ThumbnailList(QWidget* parent)
+	: QListWidget(parent)
 {
-	m_loader->stop();
-	m_loader->wait();
-	delete m_loader;
+	setIconSize(QSize(100, 100));
+	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+	m_mapper = new QSignalMapper(this);
+	connect(m_mapper, SIGNAL(mapped(QString)), this, SLOT(generated(QString)));
 }
 
 //-----------------------------------------------------------------------------
 
-void ThumbnailList::addItem(QListWidgetItem* item, const QString& image, const QString& thumbnail)
+QListWidgetItem* ThumbnailList::addImage(const QString& image)
 {
-	QFileInfo info(thumbnail);
-	if (!info.exists() || info.lastModified() < QFileInfo(image).lastModified()) {
-		item->setIcon(m_loading);
+	QListWidgetItem* item = new QListWidgetItem(this);
+
+	QFileInfo image_info(image);
+	QFileInfo thumb_info("images/thumbnails/" + image_info.baseName() + ".png");
+	QString thumbnail = thumb_info.filePath();
+
+	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {
+		item->setIcon(QPixmap(":/loading.png"));
 		item->setData(Qt::UserRole + 1, thumbnail);
 		m_items[image] = item;
-		m_loader->add(image, thumbnail);
+
+		QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
+		connect(watcher, SIGNAL(finished()), m_mapper, SLOT(map()));
+		connect(watcher, SIGNAL(finished()), watcher, SLOT(deleteLater()));
+		m_mapper->setMapping(watcher, image);
+
+		QFuture<void> future = QtConcurrent::run(createThumbnail, image, thumbnail);
+		watcher->setFuture(future);
+		m_futures.addFuture(future);
+
+		setCursor(Qt::BusyCursor);
 	} else {
 		item->setIcon(QPixmap(thumbnail));
 	}
+
+	return item;
 }
 
 //-----------------------------------------------------------------------------
@@ -66,7 +109,11 @@ void ThumbnailList::generated(const QString& path)
 {
 	Q_ASSERT(m_items.contains(path));
 	QListWidgetItem* item = m_items[path];
-	item->setIcon(QIcon(item->data(Qt::UserRole + 1).toString()));
+	item->setIcon(QPixmap(item->data(Qt::UserRole + 1).toString()));
+	if (m_futures.futures().last().isFinished()) {
+		m_futures.clearFutures();
+		unsetCursor();
+	}
 }
 
 //-----------------------------------------------------------------------------

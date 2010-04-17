@@ -20,28 +20,28 @@
 #ifndef THUMBNAIL_LIST
 #define THUMBNAIL_LIST
 
+#include <QFutureSynchronizer>
 #include <QHash>
-#include <QObject>
+#include <QListWidget>
 #include <QPixmap>
 class QListWidgetItem;
-class ThumbnailLoader;
+class QSignalMapper;
 
-class ThumbnailList : public QObject
+class ThumbnailList : public QListWidget
 {
 	Q_OBJECT
 public:
-	ThumbnailList(QObject* parent = 0);
-	~ThumbnailList();
+	ThumbnailList(QWidget* parent = 0);
 
-	void addItem(QListWidgetItem* item, const QString& image, const QString& thumbnail);
+	QListWidgetItem* addImage(const QString& image);
 
 private slots:
 	void generated(const QString& path);
 
 private:
-	ThumbnailLoader* m_loader;
-	QPixmap m_loading;
 	QHash<QString, QListWidgetItem*> m_items;
+	QSignalMapper* m_mapper;
+	QFutureSynchronizer<void> m_futures;
 };
 
 #endif

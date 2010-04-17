@@ -1,4 +1,5 @@
 2010-04-17 Graeme Gott <graeme@gottcode.org>
+	* Refactor thumbnail loading.
 	* Improve detection of saved games.
 	* Make sorting consistent across runs.
 	* Reset tag filter when adding images.

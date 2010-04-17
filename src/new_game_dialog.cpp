@@ -75,18 +75,15 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	QGroupBox* image_box = new QGroupBox(tr("Image"), this);
 
 	// Set up thumbnail list
-	m_thumbnails = new ThumbnailList(this);
 	m_image_tags = new TagManager(this);
 
 	// Add image selector
-	m_images = new QListWidget(this);
+	m_images = new ThumbnailList(image_box);
 	m_images->setViewMode(QListView::IconMode);
 	m_images->setGridSize(QSize(112, 112));
-	m_images->setIconSize(QSize(100, 100));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setMovement(QListView::Static);
 	m_images->setResizeMode(QListView::Adjust);
-	m_images->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	m_images->setUniformItemSizes(true);
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 
@@ -159,9 +156,8 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	// Load images
 	QListWidgetItem* item;
 	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
-		item = new QListWidgetItem(m_images);
+		item = m_images->addImage("images/" + image);
 		item->setData(Qt::UserRole, image);
-		m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
 	}
 
 	// Load values
@@ -399,25 +395,23 @@ void NewGameDialog::filterImages(const QString& filter)
 
 void NewGameDialog::addImage(const QString& image)
 {
-	QString image_hash = hash(image);
-	QString path = image_hash + "." + QFileInfo(image).suffix().toLower();
+	QString filename = hash(image) + "." + QFileInfo(image).suffix().toLower();
 
 	QListWidgetItem* item = 0;
-	if (!QDir("images").exists(path)) {
+	if (!QDir("images").exists(filename)) {
 		// Copy and rotate image
-		QFile::copy(image, "images/" + path);
+		QFile::copy(image, "images/" + filename);
 		QProcess rotate;
-		rotate.start(QString("jhead -autorot images/%1").arg(path));
+		rotate.start(QString("jhead -autorot images/%1").arg(filename));
 		rotate.waitForFinished(-1);
 
 		// Add to list of images
-		item = new QListWidgetItem(m_images);
-		item->setData(Qt::UserRole, path);
-		m_thumbnails->addItem(item, "images/" + path, QString("images/thumbnails/%1.png").arg(image_hash));
+		item = m_images->addImage("images/" + filename);
+		item->setData(Qt::UserRole, filename);
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {
-			if (m_images->item(i)->data(Qt::UserRole).toString() == path) {
+			if (m_images->item(i)->data(Qt::UserRole).toString() == filename) {
 				item = m_images->item(i);
 				break;
 			}
