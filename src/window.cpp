@@ -30,7 +30,6 @@
 #include <QCloseEvent>
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QDir>
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QLabel>
@@ -125,13 +124,9 @@ Window::Window(const QStringList& files)
 
 	// Start or load a game
 	show();
-	if (files.isEmpty()) {
-		if (QDir("saves/", "*.xml").count()) {
-			m_open_action->setEnabled(true);
-			openGame();
-		} else {
-			newGame();
-		}
+	m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
+	if (files.isEmpty() && m_open_action->isEnabled()) {
+		openGame();
 	} else {
 		newGame(files);
 	}
@@ -190,7 +185,7 @@ void Window::newGame(const QStringList& files)
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
 	if (dialog.exec() == QDialog::Accepted) {
-		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
@@ -208,12 +203,12 @@ void Window::openGame()
 	connect(&dialog, SIGNAL(newGame(const QStringList&)), this, SLOT(newGame(const QStringList&)));
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
-		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 1);
+		m_open_action->setEnabled(OpenGameDialog::games().count() > 1);
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->setVisible(true);
 	} else {
-		m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 	}
 }
 
@@ -222,7 +217,7 @@ void Window::openGame()
 void Window::gameFinished()
 {
 	m_toggle_overview_action->setEnabled(false);
-	m_open_action->setEnabled(QDir("saves/", "*.xml").count() > 0);
+	m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 }
 
 //-----------------------------------------------------------------------------

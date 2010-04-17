@@ -31,6 +31,8 @@ class OpenGameDialog : public QDialog
 public:
 	OpenGameDialog(int current_id, QWidget* parent = 0);
 
+	static QStringList games();
+
 public slots:
 	virtual void accept();
 

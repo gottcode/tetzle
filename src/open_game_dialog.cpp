@@ -51,7 +51,8 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	QListWidgetItem* item;
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
-	foreach (QString game, QDir("saves/", "*.xml").entryList(QDir::Files, QDir::Time)) {
+	QStringList files = games();
+	foreach (QString game, files) {
 		QFile file("saves/" + game);
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
@@ -81,7 +82,6 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 			item->setData(Qt::UserRole, id);
 			m_thumbnails->addItem(item, "images/" + image, "images/thumbnails/" + image.section(".", 0, 0) + ".png");
 		} else {
-			xml.raiseError(tr("Unknown data format"));
 			delete item;
 		}
 	}
@@ -121,6 +121,39 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 
 	// Resize dialog
 	resize(QSettings().value("OpenGame/Size", sizeHint()).toSize());
+}
+
+//-----------------------------------------------------------------------------
+
+QStringList OpenGameDialog::games()
+{
+	QStringList result;
+
+	QXmlStreamReader xml;
+	QXmlStreamAttributes attributes;
+
+	QStringList files = QDir("saves/", "*.xml").entryList(QDir::Files, QDir::Time);
+	foreach (QString game, files) {
+		// Load XML file
+		QFile file("saves/" + game);
+		if (!file.open(QIODevice::ReadOnly)) {
+			continue;
+		}
+		xml.setDevice(&file);
+
+		// Load version
+		while (!xml.isStartElement()) {
+			xml.readNext();
+		}
+		attributes = xml.attributes();
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
+			if (QFileInfo("images/" + attributes.value("image").toString()).exists()) {
+				result.append(game);
+			}
+		}
+	}
+
+	return result;
 }
 
 //-----------------------------------------------------------------------------
