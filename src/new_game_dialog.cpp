@@ -24,6 +24,7 @@
 #include "tag_manager.h"
 #include "thumbnail_list.h"
 
+#include <QApplication>
 #include <QComboBox>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
@@ -185,11 +186,7 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	m_images_filter->setCurrentIndex(index);
 
 	// Add new images
-	foreach (const QString& file, files) {
-		if (QDir::match(AddImage::supportedFormats(), file)) {
-			addImage(file);
-		}
-	}
+	addImages(files);
 
 	// Resize dialog
 	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
@@ -226,10 +223,7 @@ void NewGameDialog::dragEnterEvent(QDragEnterEvent* event)
 
 void NewGameDialog::dropEvent(QDropEvent* event)
 {
-	QStringList files = AddImage::dropEvent(event);
-	foreach (const QString& file, files) {
-		addImage(file);
-	}
+	addImages(AddImage::dropEvent(event));
 }
 
 //-----------------------------------------------------------------------------
@@ -244,14 +238,7 @@ void NewGameDialog::hideEvent(QHideEvent* event)
 
 void NewGameDialog::addImage()
 {
-	QStringList images = AddImage::getOpenFileNames(this);
-	if (images.isEmpty()) {
-		return;
-	}
-
-	foreach (QString image, images) {
-		addImage(image);
-	}
+	addImages(AddImage::getOpenFileNames(this));
 }
 
 //-----------------------------------------------------------------------------
@@ -440,6 +427,27 @@ void NewGameDialog::addImage(const QString& image)
 	// Select in list of images
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameDialog::addImages(const QStringList& images)
+{
+	if (images.isEmpty()) {
+		return;
+	}
+
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+
+	m_images_filter->setCurrentIndex(0);
+	foreach (const QString& image, images) {
+		if (QDir::match(AddImage::supportedFormats(), image)) {
+			addImage(image);
+		}
+		QApplication::processEvents();
+	}
+
+	QApplication::restoreOverrideCursor();
 }
 
 //-----------------------------------------------------------------------------

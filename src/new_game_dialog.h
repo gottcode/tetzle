@@ -57,6 +57,7 @@ private slots:
 
 private:
 	void addImage(const QString& image);
+	void addImages(const QStringList& images);
 
 private:
 	TagManager* m_image_tags;
