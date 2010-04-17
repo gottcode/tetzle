@@ -37,6 +37,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QMessageBox>
+#include <QProcess>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QSettings>
@@ -416,9 +417,11 @@ void NewGameDialog::addImage(const QString& image)
 
 	QListWidgetItem* item = 0;
 	if (!QDir("images").exists(path)) {
-		// Copy image
-		QFile file(image);
-		file.copy("images/" + path);
+		// Copy and rotate image
+		QFile::copy(image, "images/" + path);
+		QProcess rotate;
+		rotate.start(QString("jhead -autorot images/%1").arg(path));
+		rotate.waitForFinished(-1);
 
 		// Add to list of images
 		item = new QListWidgetItem(m_images);

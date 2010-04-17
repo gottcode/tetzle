@@ -1,3 +1,6 @@
+2010-04-17 Graeme Gott <graeme@gottcode.org>
+	* Use jhead to auto-rotate images.
+
 2010-04-16 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Buttons in new game dialog were not always correctly enabled.
 
