@@ -1,3 +1,6 @@
+2010-04-19 Graeme Gott <graeme@gottcode.org>
+	* Add auto-rotating on Windows and the Mac.
+
 2010-04-17 Graeme Gott <graeme@gottcode.org>
 	* Refactor thumbnail loading.
 	* Improve detection of saved games.

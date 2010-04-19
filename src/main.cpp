@@ -32,6 +32,21 @@ int main(int argc, char** argv)
 	app.setApplicationName("Tetzle");
 	app.setOrganizationDomain("gottcode.org");
 	app.setOrganizationName("GottCode");
+
+	QDir dir(app.applicationDirPath());
+	if (dir.exists("jhead") || dir.exists("jhead.exe")) {
+		QString path = QString::fromLocal8Bit(qgetenv("PATH"));
+#if !defined(Q_OS_WIN)
+		QChar separator = ':';
+#else
+		QChar separator = ';';
+#endif
+		if (!path.split(separator).contains(dir.absolutePath())) {
+			path += separator + dir.absolutePath();
+			qputenv("PATH", path.toLocal8Bit());
+		}
+	}
+
 	QStringList files = app.arguments().mid(1);
 
 	QTranslator qt_translator;
@@ -42,7 +57,7 @@ int main(int argc, char** argv)
 	tetzle_translator.load("tetzle_" + QLocale::system().name());
 	app.installTranslator(&tetzle_translator);
 
-	QDir dir = QDir::home();
+	dir = QDir::home();
 	QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
 	dir.mkpath(path);
 	dir.mkpath(path + "/images/");
