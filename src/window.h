@@ -22,6 +22,7 @@
 
 #include <QMainWindow>
 class QAction;
+class QProgressBar;
 class Board;
 class ZoomSlider;
 
@@ -51,6 +52,7 @@ private:
 	QAction* m_zoom_fit_action;
 	QAction* m_toggle_overview_action;
 	ZoomSlider* m_slider;
+	QProgressBar* m_completed;
 	Board* m_board;
 };
 

@@ -53,17 +53,20 @@ Window::Window(const QStringList& files)
 
 	// Add statusbar
 	m_slider = new ZoomSlider(this);
-	m_slider->setVisible(false);
 	statusBar()->addPermanentWidget(m_slider);
 
-	QProgressBar* status_completed = new QProgressBar(this);
-	status_completed->setRange(0, 100);
-	status_completed->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-	statusBar()->addPermanentWidget(status_completed);
+	m_completed = new QProgressBar(this);
+	m_completed->setRange(0, 100);
+	m_completed->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+	statusBar()->addPermanentWidget(m_completed);
+
+	statusBar()->setMinimumHeight(statusBar()->sizeHint().height());
+	m_slider->hide();
+	m_completed->hide();
 
 	// Add contents
 	m_board = new Board(this);
-	connect(m_board, SIGNAL(completionChanged(int)), status_completed, SLOT(setValue(int)));
+	connect(m_board, SIGNAL(completionChanged(int)), m_completed, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(zoomChanged(int, float)), m_slider, SLOT(setValue(int, float)));
@@ -183,12 +186,14 @@ void Window::newGame(const QStringList& files)
 
 	NewGameDialog dialog(files, this);
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
+	connect(&dialog, SIGNAL(accepted()), m_completed, SLOT(hide()));
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
-		m_slider->setVisible(true);
+		m_slider->show();
+		m_completed->show();
 	}
 }
 
@@ -200,13 +205,15 @@ void Window::openGame()
 
 	OpenGameDialog dialog(m_board->id(), this);
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
+	connect(&dialog, SIGNAL(accepted()), m_completed, SLOT(hide()));
 	connect(&dialog, SIGNAL(newGame(const QStringList&)), this, SLOT(newGame(const QStringList&)));
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_open_action->setEnabled(OpenGameDialog::games().count() > 1);
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
-		m_slider->setVisible(true);
+		m_slider->show();
+		m_completed->show();
 	} else {
 		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 	}

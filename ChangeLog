@@ -1,3 +1,6 @@
+2010-04-21 Graeme Gott <graeme@gottcode.org>
+	* Hide completion bar when opening a game.
+
 2010-04-19 Graeme Gott <graeme@gottcode.org>
 	* Add auto-rotating on Windows and the Mac.
 
