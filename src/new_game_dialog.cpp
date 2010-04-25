@@ -39,6 +39,7 @@
 #include <QListWidget>
 #include <QMessageBox>
 #include <QProcess>
+#include <QProgressDialog>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QSettings>
@@ -427,19 +428,32 @@ void NewGameDialog::addImage(const QString& image)
 
 void NewGameDialog::addImages(const QStringList& images)
 {
-	if (images.isEmpty()) {
+	int count = images.count();
+	if (count == 0) {
 		return;
 	}
+
+	QProgressDialog progress(tr("Copying images..."), tr("Cancel"), 0, count, this);
+	progress.setMinimumDuration(500);
+	progress.setWindowModality(Qt::WindowModal);
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
 	m_images_filter->setCurrentIndex(0);
-	foreach (const QString& image, images) {
+	for (int i = 0; i < count; i++) {
+		progress.setValue(i);
+		if (progress.wasCanceled()) {
+			break;
+		}
+
+		QString image = images.at(i);
 		if (QDir::match(AddImage::supportedFormats(), image)) {
 			addImage(image);
 		}
+
 		QApplication::processEvents();
 	}
+	progress.setValue(count);
 
 	QApplication::restoreOverrideCursor();
 }

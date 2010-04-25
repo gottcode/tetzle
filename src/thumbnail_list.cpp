@@ -37,6 +37,10 @@ namespace
 
 void createThumbnail(const QString& file, const QString& preview)
 {
+	if (!QFile::exists(file)) {
+		return;
+	}
+
 	QImageReader source(file);
 	QSize size = source.size();
 	if (size.width() > 92 || size.height() > 92) {
