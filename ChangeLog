@@ -1,4 +1,5 @@
 2010-04-25 Graeme Gott <graeme@gottcode.org>
+	* Highlight held pieces as well as selected ones.
 	* Allow player to change colors.
 	* Allow player to cancel adding images.
 

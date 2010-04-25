@@ -784,6 +784,7 @@ void Board::grabPiece()
 	Piece* piece = tile->parent();
 	m_pieces.removeAll(piece);
 	m_pieces.append(piece);
+	piece->setSelected(true);
 	updateCursor();
 
 	updateGL();
@@ -800,6 +801,7 @@ void Board::releasePieces()
 	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 		i.key()->attachNeighbors();
 		i.key()->pushNeighbors();
+		i.key()->setSelected(false);
 	}
 	m_active_tiles.clear();
 	updateCursor();
@@ -856,13 +858,15 @@ void Board::selectPieces()
 	QRect rect = QRect(cursor, mapPosition(m_select_pos)).normalized();
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* piece = m_pieces.at(i);
-		piece->setSelected(false);
 		if (rect.intersects(piece->boundingRect())) {
 			Tile* tile = piece->children().at(rand() % piece->children().count());
 			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
 			m_active_tiles.insert(piece, tile);
 			m_pieces.removeAll(piece);
 			m_pieces.append(piece);
+			piece->setSelected(true);
+		} else {
+			piece->setSelected(false);
 		}
 	}
 
@@ -1049,6 +1053,7 @@ void Board::finishGame()
 			piece->rotateAround(0);
 		}
 	}
+	piece->setSelected(false);
 
 	m_overview->hide();
 	m_active_tiles.clear();
