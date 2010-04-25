@@ -18,7 +18,9 @@ unix: !macx {
 }
 
 HEADERS = src/add_image.h \
+	src/appearance_dialog.h \
 	src/board.h \
+	src/color_button.h \
 	src/dancing_links.h \
 	src/message.h \
 	src/new_game_dialog.h \
@@ -34,7 +36,9 @@ HEADERS = src/add_image.h \
 	src/zoom_slider.h
 
 SOURCES = src/add_image.cpp \
+	src/appearance_dialog.cpp \
 	src/board.cpp \
+	src/color_button.cpp \
 	src/dancing_links.cpp \
 	src/main.cpp \
 	src/message.cpp \

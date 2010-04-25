@@ -20,6 +20,7 @@
 #include "window.h"
 
 #include "add_image.h"
+#include "appearance_dialog.h"
 #include "board.h"
 #include "new_game_dialog.h"
 #include "open_game_dialog.h"
@@ -98,7 +99,6 @@ Window::Window(const QStringList& files)
 	menu->addSeparator();
 	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
 	m_toggle_overview_action->setEnabled(false);
-
 	menu->addSeparator();
 
 	QAction* fullscreen_action = menu->addAction(tr("Fullscreen"));
@@ -109,6 +109,8 @@ Window::Window(const QStringList& files)
 #else
 	fullscreen_action->setShortcut(tr("Ctrl+F"));
 #endif
+	menu->addSeparator();
+	menu->addAction(tr("Appearance"), this, SLOT(showAppearance()));
 
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&Controls"), this, SLOT(showControls()));
@@ -246,6 +248,16 @@ void Window::setFullScreen(bool enable)
 		showFullScreen();
 	} else {
 		showNormal();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Window::showAppearance()
+{
+	AppearanceDialog dialog(this);
+	if (dialog.exec() == QDialog::Accepted) {
+		m_board->setColors(dialog.colors());
 	}
 }
 

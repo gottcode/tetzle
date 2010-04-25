@@ -133,6 +133,7 @@ inline float roundUp(float value)
 Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board)
 	: m_board(board),
 	m_rotation(0),
+	m_selected(false),
 	m_pos(pos),
 	m_children(tiles),
 	m_shadow(tiles)
@@ -145,6 +146,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 		m_rect = m_rect.united(tile->rect().translated(tile->pos()));
 	}
 	updateShadow();
+	setSelected(false);
 
 	// Rotate
 	Tile* tile = m_children.first();
@@ -375,7 +377,8 @@ void Piece::rotateAround(Tile* tile)
 
 void Piece::setSelected(bool selected)
 {
-	m_shadow_color = !selected ? Qt::black : m_board->palette().color(QPalette::Highlight);
+	m_selected = selected;
+	m_shadow_color = m_board->palette().color(!m_selected ? QPalette::Text : QPalette::Highlight);
 }
 
 //-----------------------------------------------------------------------------

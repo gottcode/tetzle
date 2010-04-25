@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,44 +17,35 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef APPEARANCE_DIALOG_H
+#define APPEARANCE_DIALOG_H
 
-#include <QMainWindow>
-class QAction;
-class QProgressBar;
-class Board;
-class ZoomSlider;
+#include <QDialog>
+class QAbstractButton;
+class QLabel;
+class ColorButton;
 
-class Window : public QMainWindow
+class AppearanceDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	Window(const QStringList& files = QStringList());
+	AppearanceDialog(QWidget* parent = 0);
 
-protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
+	QPalette colors() const;
+
+public slots:
+	void accept();
 
 private slots:
-	void newGame(const QStringList& files = QStringList());
-	void openGame();
-	void gameFinished();
-	void overviewToggled(bool visible);
-	void setFullScreen(bool enable);
-	void showAppearance();
-	void showControls();
-	void showAbout();
+	void restoreDefaults();
+	void updatePreview();
 
 private:
-	QAction* m_open_action;
-	QAction* m_zoom_fit_action;
-	QAction* m_toggle_overview_action;
-	ZoomSlider* m_slider;
-	QProgressBar* m_completed;
-	Board* m_board;
+	ColorButton* m_background;
+	ColorButton* m_shadow;
+	ColorButton* m_highlight;
+	QLabel* m_preview;
 };
 
 #endif
+

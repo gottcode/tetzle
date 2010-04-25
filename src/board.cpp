@@ -19,6 +19,7 @@
 
 #include "board.h"
 
+#include "appearance_dialog.h"
 #include "message.h"
 #include "overview.h"
 #include "piece.h"
@@ -132,6 +133,17 @@ void Board::removePiece(Piece* piece)
 	m_pieces.removeAll(piece);
 	delete piece;
 	piece = 0;
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::setColors(const QPalette& palette)
+{
+	qglClearColor(palette.color(QPalette::Base));
+	setPalette(palette);
+	foreach (Piece* piece, m_pieces) {
+		piece->setSelected(piece->selected());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -421,13 +433,17 @@ void Board::initializeGL()
 {
 	glDisable(GL_DEPTH_TEST);
 	glColor4f(1, 1, 1, 1);
-	glClearColor(1, 1, 1, 1);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Load shadow image
 	m_shadow = bindTexture(QImage(":/shadow.png"));
+
+	// Load colors
+	AppearanceDialog dialog;
+	dialog.accept();
+	setColors(dialog.colors());
 }
 
 //-----------------------------------------------------------------------------

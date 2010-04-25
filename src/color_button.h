@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2009, 2010 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,44 +17,43 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef COLOR_BUTTON_H
+#define COLOR_BUTTON_H
 
-#include <QMainWindow>
-class QAction;
-class QProgressBar;
-class Board;
-class ZoomSlider;
+#include <QColor>
+#include <QPushButton>
 
-class Window : public QMainWindow
+class ColorButton : public QPushButton
 {
 	Q_OBJECT
 public:
-	Window(const QStringList& files = QStringList());
+	ColorButton(QWidget* parent = 0);
 
-protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
+	QColor color() const;
+	QString toString() const;
+
+public slots:
+	void setColor(const QColor& color);
+
+signals:
+	void changed(const QColor& color);
 
 private slots:
-	void newGame(const QStringList& files = QStringList());
-	void openGame();
-	void gameFinished();
-	void overviewToggled(bool visible);
-	void setFullScreen(bool enable);
-	void showAppearance();
-	void showControls();
-	void showAbout();
+	void chooseColor();
 
 private:
-	QAction* m_open_action;
-	QAction* m_zoom_fit_action;
-	QAction* m_toggle_overview_action;
-	ZoomSlider* m_slider;
-	QProgressBar* m_completed;
-	Board* m_board;
+	QColor m_color;
 };
+
+
+inline QColor ColorButton::color() const
+{
+	return m_color;
+}
+
+inline QString ColorButton::toString() const
+{
+	return m_color.name();
+}
 
 #endif

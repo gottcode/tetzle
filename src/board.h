@@ -44,6 +44,7 @@ public:
 	GLuint shadowTexture() const;
 	float tileTextureSize() const;
 	const QPointF* corners(int rotation) const;
+	void setColors(const QPalette& palette);
 
 public slots:
 	void newGame(const QString& image, int difficulty);

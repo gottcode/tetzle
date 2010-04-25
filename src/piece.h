@@ -40,6 +40,7 @@ public:
 	QRect marginRect() const;
 	int rotation() const;
 	QPoint scenePos() const;
+	bool selected() const;
 
 	void attach(Piece* piece);
 	void attachNeighbors();
@@ -60,6 +61,7 @@ private:
 private:
 	Board* m_board;
 	int m_rotation;
+	bool m_selected;
 	QPoint m_pos;
 	QRect m_rect;
 	QColor m_shadow_color;
@@ -86,6 +88,11 @@ inline int Piece::rotation() const
 inline QPoint Piece::scenePos() const
 {
 	return m_pos;
+}
+
+inline bool Piece::selected() const
+{
+	return m_selected;
 }
 
 inline void Piece::moveBy(const QPoint& delta)
