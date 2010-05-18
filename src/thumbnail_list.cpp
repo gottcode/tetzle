@@ -19,6 +19,8 @@
 
 #include "thumbnail_list.h"
 
+#include "path.h"
+
 #include <QtConcurrentRun>
 #include <QDateTime>
 #include <QFileInfo>
@@ -82,7 +84,7 @@ QListWidgetItem* ThumbnailList::addImage(const QString& image)
 	QListWidgetItem* item = new QListWidgetItem(this);
 
 	QFileInfo image_info(image);
-	QFileInfo thumb_info("images/thumbnails/" + image_info.baseName() + ".png");
+	QFileInfo thumb_info(Path::thumbnail(image_info.baseName()));
 	QString thumbnail = thumb_info.filePath();
 
 	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {

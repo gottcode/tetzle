@@ -20,6 +20,7 @@
 #include "new_game_dialog.h"
 
 #include "add_image.h"
+#include "path.h"
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
 #include "thumbnail_list.h"
@@ -156,8 +157,8 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 
 	// Load images
 	QListWidgetItem* item;
-	foreach (QString image, QDir("images/", "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
-		item = m_images->addImage("images/" + image);
+	foreach (QString image, QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
+		item = m_images->addImage(Path::image(image));
 		item->setData(Qt::UserRole, image);
 	}
 
@@ -252,8 +253,8 @@ void NewGameDialog::removeImage()
 
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
-	foreach (QString game, QDir("saves/", "*.xml").entryList(QDir::Files)) {
-		QFile file("saves/" + game);
+	foreach (QString game, QDir(Path::saves(), "*.xml").entryList(QDir::Files)) {
+		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
 		}
@@ -279,10 +280,10 @@ void NewGameDialog::removeImage()
 	}
 	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString image_id = current_image.section(".", 0, 0);
-		QFile::remove("images/" + current_image);
-		QFile::remove(QString("images/thumbnails/%1.png").arg(image_id));
+		QFile::remove(Path::image(current_image));
+		QFile::remove(Path::thumbnail(image_id));
 		foreach (QString game, games) {
-			QFile::remove("saves/" + game);
+			QFile::remove(Path::save(game));
 		}
 		delete item;
 		m_image_tags->removeImage(current_image);
@@ -334,7 +335,7 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 	QString image = item->data(Qt::UserRole).toString();
 	m_remove_button->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
-	m_image_size = QImageReader("images/" + image).size();
+	m_image_size = QImageReader(Path::image(image)).size();
 	if (m_image_size.width() > m_image_size.height()) {
 		m_ratio = static_cast<float>(m_image_size.height()) / static_cast<float>(m_image_size.width());
 	} else {
@@ -399,15 +400,15 @@ void NewGameDialog::addImage(const QString& image)
 	QString filename = hash(image) + "." + QFileInfo(image).suffix().toLower();
 
 	QListWidgetItem* item = 0;
-	if (!QDir("images").exists(filename)) {
+	if (!QDir(Path::images()).exists(filename)) {
 		// Copy and rotate image
-		QFile::copy(image, "images/" + filename);
+		QFile::copy(image, Path::image(filename));
 		QProcess rotate;
-		rotate.start(QString("jhead -autorot images/%1").arg(filename));
+		rotate.start(QString("jhead -autorot \"%1\"").arg(Path::image(filename)));
 		rotate.waitForFinished(-1);
 
 		// Add to list of images
-		item = m_images->addImage("images/" + filename);
+		item = m_images->addImage(Path::image(filename));
 		item->setData(Qt::UserRole, filename);
 	} else {
 		// Find in list of images

@@ -18,12 +18,12 @@
  ***********************************************************************/
 
 #include <QApplication>
-#include <QDesktopServices>
 #include <QDir>
 #include <QLocale>
 #include <QSettings>
 #include <QTranslator>
 
+#include "path.h"
 #include "window.h"
 
 int main(int argc, char** argv)
@@ -57,13 +57,12 @@ int main(int argc, char** argv)
 	tetzle_translator.load("tetzle_" + QLocale::system().name());
 	app.installTranslator(&tetzle_translator);
 
+	QString path = Path::datapath();
 	dir = QDir::home();
-	QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
 	dir.mkpath(path);
 	dir.mkpath(path + "/images/");
 	dir.mkpath(path + "/images/thumbnails/");
 	dir.mkpath(path + "/saves/");
-	QDir::setCurrent(path);
 
 	// Update settings layout
 	QSettings settings;

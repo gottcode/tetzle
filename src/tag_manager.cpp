@@ -19,6 +19,8 @@
 
 #include "tag_manager.h"
 
+#include "path.h"
+
 #include <QDir>
 #include <QSettings>
 
@@ -27,11 +29,11 @@
 TagManager::TagManager(QObject* parent)
 	: QObject(parent)
 {
-	QSettings file("images/tags", QSettings::IniFormat);
+	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
 	QStringList tags = file.childKeys();
 	QStringList images;
-	QDir folder("images/", "*.*");
+	QDir folder(Path::images(), "*.*");
 	foreach (QString tag, tags) {
 		images = file.value(tag).toStringList();
 		QMutableStringListIterator i(images);
@@ -72,7 +74,7 @@ QStringList TagManager::images(const QString& tag) const
 	if (tag != tr("All Tags")) {
 		return m_tags.value(tag);
 	} else {
-		return QDir("images/", "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
+		return QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
 	}
 }
 
@@ -163,7 +165,7 @@ void TagManager::removeImage(const QString& image)
 
 void TagManager::storeTags()
 {
-	QSettings file("images/tags", QSettings::IniFormat);
+	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.clear();
 	file.beginGroup("Tags");
 	QMapIterator<QString, QStringList> i(m_tags);

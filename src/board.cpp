@@ -22,6 +22,7 @@
 #include "appearance_dialog.h"
 #include "message.h"
 #include "overview.h"
+#include "path.h"
 #include "piece.h"
 #include "solver.h"
 #include "tile.h"
@@ -154,7 +155,7 @@ void Board::newGame(const QString& image, int difficulty)
 	cleanup();
 
 	// Prevent starting a game with a missing image
-	if (!QFileInfo("images/" + image).exists()) {
+	if (!QFileInfo(Path::image(image)).exists()) {
 		QMessageBox::warning(this, tr("Error"), tr("Missing image."));
 		return;
 	}
@@ -167,7 +168,7 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate ID
 	m_id = 0;
-	foreach (QString file, QDir("saves/").entryList(QDir::Files)) {
+	foreach (QString file, QDir(Path::saves()).entryList(QDir::Files)) {
 		m_id = qMax(m_id, file.section(".", 0, 0).toInt());
 	}
 	m_id++;
@@ -236,7 +237,7 @@ void Board::openGame(int id)
 
 	// Open saved game file
 	m_id = id;
-	QFile file(QString("saves/%1.xml").arg(m_id));
+	QFile file(Path::save(m_id));
 	if (!file.open(QIODevice::ReadOnly)) {
 		return;
 	}
@@ -251,7 +252,7 @@ void Board::openGame(int id)
 	unsigned int version = attributes.value("version").toString().toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version == 4) {
 		m_image_path = attributes.value("image").toString();
-		if (!QFileInfo("images/" + m_image_path).exists()) {
+		if (!QFileInfo(Path::image(m_image_path)).exists()) {
 			QApplication::restoreOverrideCursor();
 			QMessageBox::warning(this, tr("Error"), tr("Missing image."));
 			cleanup();
@@ -316,7 +317,7 @@ void Board::saveGame()
 		return;
 	}
 
-	QFile file(QString("saves/%1.xml").arg(m_id));
+	QFile file(Path::save(m_id));
 	if (!file.open(QIODevice::WriteOnly)) {
 		return;
 	}
@@ -882,7 +883,7 @@ void Board::loadImage()
 	QSettings().setValue("OpenGame/Image", m_image_path);
 
 	// Load puzzle image
-	QImageReader source("images/" + m_image_path);
+	QImageReader source(Path::image(m_image_path));
 
 	// Find image size
 	QSize size = source.size();
@@ -1061,7 +1062,7 @@ void Board::finishGame()
 	zoomFit();
 	emit retrievePiecesAvailable(false);
 
-	QFile::remove(QString("saves/%1.xml").arg(m_id));
+	QFile::remove(Path::save(m_id));
 	QSettings().remove("OpenGame/Image");
 
 	emit finished();

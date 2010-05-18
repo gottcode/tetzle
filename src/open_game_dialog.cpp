@@ -20,6 +20,7 @@
 #include "open_game_dialog.h"
 
 #include "add_image.h"
+#include "path.h"
 #include "thumbnail_list.h"
 
 #include <QDialogButtonBox>
@@ -47,7 +48,7 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	QXmlStreamAttributes attributes;
 	QStringList files = games();
 	foreach (QString game, files) {
-		QFile file("saves/" + game);
+		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
 		}
@@ -65,12 +66,12 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
 			QString image = attributes.value("image").toString();
-			if (!QFileInfo("images/" + image).exists()) {
+			if (!QFileInfo(Path::image(image)).exists()) {
 				continue;
 			}
 			int pieces = attributes.value("pieces").toString().toInt();
 			int complete = attributes.value("complete").toString().toInt();
-			QListWidgetItem* item = m_games->addImage("images/" + image);
+			QListWidgetItem* item = m_games->addImage(Path::image(image));
 			item->setText(tr("%L1 pieces\n%2% complete").arg(pieces).arg(complete));
 			item->setData(Qt::UserRole, id);
 		}
@@ -122,10 +123,10 @@ QStringList OpenGameDialog::games()
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
 
-	QStringList files = QDir("saves/", "*.xml").entryList(QDir::Files, QDir::Time);
+	QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files, QDir::Time);
 	foreach (QString game, files) {
 		// Load XML file
-		QFile file("saves/" + game);
+		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
 		}
@@ -137,7 +138,7 @@ QStringList OpenGameDialog::games()
 		}
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
-			if (QFileInfo("images/" + attributes.value("image").toString()).exists()) {
+			if (QFileInfo(Path::image(attributes.value("image").toString())).exists()) {
 				result.append(game);
 			}
 		}
@@ -195,7 +196,7 @@ void OpenGameDialog::deleteGame()
 
 	if (QMessageBox::question(this, tr("Delete Game"), tr("Delete selected game?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString id = QString::number(item->data(Qt::UserRole).toInt());
-		QFile::remove(QString("saves/%1.xml").arg(id));
+		QFile::remove(Path::save(id));
 		delete item;
 		m_accept_button->setEnabled(m_games->count() > 0);
 	};

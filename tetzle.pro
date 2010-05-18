@@ -26,6 +26,7 @@ HEADERS = src/add_image.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
 	src/overview.h \
+	src/path.h \
 	src/piece.h \
 	src/solver.h \
 	src/tile.h \
@@ -45,6 +46,7 @@ SOURCES = src/add_image.cpp \
 	src/new_game_dialog.cpp \
 	src/open_game_dialog.cpp \
 	src/overview.cpp \
+	src/path.cpp \
 	src/piece.cpp \
 	src/solver.cpp \
 	src/tile.cpp \
