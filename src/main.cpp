@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,18 +66,16 @@ int main(int argc, char** argv)
 
 	// Update settings layout
 	QSettings settings;
-	if (settings.value("Version", 0).toInt() < 1) {
+	if (settings.value("Version", 0).toInt() < 2) {
 		settings.setValue("NewGame/Image", settings.value("Image"));
 		settings.remove("Image");
 		settings.setValue("NewGame/Pieces", settings.value("Pieces"));
 		settings.remove("Pieces");
 		settings.setValue("AddImage/Path", settings.value("AddImagePath"));
 		settings.remove("AddImagePath");
-		if (settings.contains("MaximumPreviews")) {
-			settings.setValue("AddImage/MaximumPreviews", settings.value("MaximumPreviews"));
-			settings.remove("MaximumPreviews");
-		}
-		settings.setValue("Version", 1);
+		settings.remove("MaximumPreviews");
+		settings.remove("AddImage/MaximumPreviews");
+		settings.setValue("Version", 2);
 	}
 
 	Window window(files);
