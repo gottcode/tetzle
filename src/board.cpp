@@ -432,6 +432,8 @@ void Board::toggleOverview()
 
 void Board::initializeGL()
 {
+	glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 	glColor4f(1, 1, 1, 1);
 	glEnable(GL_TEXTURE_2D);
@@ -489,7 +491,7 @@ void Board::paintGL()
 		int y1 = box.y();
 		int x2 = x1 + box.width();
 		int y2 = y1 + box.height();
-		GLint verts[] = { x1,y1, x2,y1, x2,y2, x1,y2 };
+		GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
 		glVertexPointer(2, GL_INT, 0, &verts);
 
 		QColor highlight = palette().color(QPalette::Highlight);
@@ -933,24 +935,24 @@ void Board::loadImage()
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
-	m_corners[0][1] = QPointF(m_image_ts,0);
+	m_corners[0][1] = QPointF(0,m_image_ts);
 	m_corners[0][2] = QPointF(m_image_ts,m_image_ts);
-	m_corners[0][3] = QPointF(0,m_image_ts);
+	m_corners[0][3] = QPointF(m_image_ts,0);
 
-	m_corners[1][0] = m_corners[0][3];
-	m_corners[1][1] = m_corners[0][0];
-	m_corners[1][2] = m_corners[0][1];
-	m_corners[1][3] = m_corners[0][2];
+	m_corners[1][0] = m_corners[0][1];
+	m_corners[1][1] = m_corners[0][2];
+	m_corners[1][2] = m_corners[0][3];
+	m_corners[1][3] = m_corners[0][0];
 
 	m_corners[2][0] = m_corners[0][2];
 	m_corners[2][1] = m_corners[0][3];
 	m_corners[2][2] = m_corners[0][0];
 	m_corners[2][3] = m_corners[0][1];
 
-	m_corners[3][0] = m_corners[0][1];
-	m_corners[3][1] = m_corners[0][2];
-	m_corners[3][2] = m_corners[0][3];
-	m_corners[3][3] = m_corners[0][0];
+	m_corners[3][0] = m_corners[0][3];
+	m_corners[3][1] = m_corners[0][0];
+	m_corners[3][2] = m_corners[0][1];
+	m_corners[3][3] = m_corners[0][2];
 
 	// Show overview
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());

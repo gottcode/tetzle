@@ -493,8 +493,8 @@ void Piece::updateVerts()
 
 		m_tex_coords.append(tx + corners[1].x());
 		m_tex_coords.append(ty + corners[1].y());
-		m_verts.append(x2);
-		m_verts.append(y1);
+		m_verts.append(x1);
+		m_verts.append(y2);
 
 		m_tex_coords.append(tx + corners[2].x());
 		m_tex_coords.append(ty + corners[2].y());
@@ -503,8 +503,8 @@ void Piece::updateVerts()
 
 		m_tex_coords.append(tx + corners[3].x());
 		m_tex_coords.append(ty + corners[3].y());
-		m_verts.append(x1);
-		m_verts.append(y2);
+		m_verts.append(x2);
+		m_verts.append(y1);
 	}
 
 	// Update shadow verts
@@ -525,20 +525,20 @@ void Piece::updateVerts()
 		m_shadow_verts.append(x1);
 		m_shadow_verts.append(y1);
 
-		m_shadow_tex_coords.append(1);
-		m_shadow_tex_coords.append(0);
-		m_shadow_verts.append(x2);
-		m_shadow_verts.append(y1);
-
-		m_shadow_tex_coords.append(1);
-		m_shadow_tex_coords.append(1);
-		m_shadow_verts.append(x2);
-		m_shadow_verts.append(y2);
-
 		m_shadow_tex_coords.append(0);
 		m_shadow_tex_coords.append(1);
 		m_shadow_verts.append(x1);
 		m_shadow_verts.append(y2);
+
+		m_shadow_tex_coords.append(1);
+		m_shadow_tex_coords.append(1);
+		m_shadow_verts.append(x2);
+		m_shadow_verts.append(y2);
+
+		m_shadow_tex_coords.append(1);
+		m_shadow_tex_coords.append(0);
+		m_shadow_verts.append(x2);
+		m_shadow_verts.append(y1);
 	}
 }
 

@@ -56,8 +56,8 @@ void Message::draw() const
 	int y1 = (m_parent->height() - m_size.height()) / 2;
 	int x2 = x1 + m_size.width();
 	int y2 = y1 + m_size.height();
-	GLint verts[] = { x1,y1, x2,y1, x2,y2, x1,y2 };
-	GLshort tex_coords[] = { 0,0, 1,0, 1,1, 0,1 };
+	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
+	GLshort tex_coords[] = { 0,0, 0,1, 1,1, 1,0 };
 
 	glVertexPointer(2, GL_INT, 0, &verts);
 	glTexCoordPointer(2, GL_SHORT, 0, &tex_coords);
