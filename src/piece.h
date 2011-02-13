@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ public:
 
 private:
 	void updateShadow();
+	void updateVerts();
 	bool containsTile(int column, int row);
 
 private:
@@ -67,6 +68,11 @@ private:
 	QColor m_shadow_color;
 	QList<Tile*> m_children;
 	QList<Tile*> m_shadow;
+
+	QVector<int> m_verts;
+	QVector<float> m_tex_coords;
+	QVector<int> m_shadow_verts;
+	QVector<short> m_shadow_tex_coords;
 };
 
 
@@ -98,17 +104,7 @@ inline bool Piece::selected() const
 inline void Piece::moveBy(const QPoint& delta)
 {
 	m_pos += delta;
-}
-
-inline void Piece::moveTo(const QPoint& pos)
-{
-	m_pos = pos;
-}
-
-inline void Piece::moveTo(int x, int y)
-{
-	m_pos.setX(x);
-	m_pos.setY(y);
+	updateVerts();
 }
 
 #endif

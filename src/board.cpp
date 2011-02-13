@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -437,6 +437,8 @@ void Board::initializeGL()
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// Load shadow image
 	m_shadow = bindTexture(QImage(":/shadow.png"));
@@ -480,30 +482,27 @@ void Board::paintGL()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glPushAttrib(GL_CURRENT_BIT);
 
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
 		int x1 = box.x();
 		int y1 = box.y();
 		int x2 = x1 + box.width();
 		int y2 = y1 + box.height();
+		GLint verts[] = { x1,y1, x2,y1, x2,y2, x1,y2 };
+		glVertexPointer(2, GL_INT, 0, &verts);
 
 		QColor highlight = palette().color(QPalette::Highlight);
 		QColor fill = highlight;
 		fill.setAlpha(48);
+
 		qglColor(fill);
-		glBegin(GL_QUADS);
-			glVertex2i(x1, y1);
-			glVertex2i(x2, y1);
-			glVertex2i(x2, y2);
-			glVertex2i(x1, y2);
-		glEnd();
+		glDrawArrays(GL_QUADS, 0, 4);
 
 		qglColor(highlight.darker());
-		glBegin(GL_LINE_LOOP);
-			glVertex2i(x1, y1);
-			glVertex2i(x2, y1);
-			glVertex2i(x2, y2);
-			glVertex2i(x1, y2);
-		glEnd();
+		glDrawArrays(GL_LINE_LOOP, 0, 4);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		glPopAttrib();
 	}

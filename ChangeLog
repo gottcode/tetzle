@@ -1,3 +1,6 @@
+2011-02-13 Graeme Gott <graeme@gottcode.org>
+	* Use vertex arrays for rendering.
+
 2010-05-18 Graeme Gott <graeme@gottcode.org>
 	* Don't change working directory.
 

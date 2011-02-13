@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,20 +56,12 @@ void Message::draw() const
 	int y1 = (m_parent->height() - m_size.height()) / 2;
 	int x2 = x1 + m_size.width();
 	int y2 = y1 + m_size.height();
+	GLint verts[] = { x1,y1, x2,y1, x2,y2, x1,y2 };
+	GLshort tex_coords[] = { 0,0, 1,0, 1,1, 0,1 };
 
-	glBegin(GL_QUADS);
-		glTexCoord2i(0, 0);
-		glVertex2i(x1, y1);
-
-		glTexCoord2i(1, 0);
-		glVertex2i(x2, y1);
-
-		glTexCoord2i(1, 1);
-		glVertex2i(x2, y2);
-
-		glTexCoord2i(0, 1);
-		glVertex2i(x1, y2);
-	glEnd();
+	glVertexPointer(2, GL_INT, 0, &verts);
+	glTexCoordPointer(2, GL_SHORT, 0, &tex_coords);
+	glDrawArrays(GL_QUADS, 0, 4);
 }
 
 //-----------------------------------------------------------------------------

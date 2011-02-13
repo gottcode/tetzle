@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,9 +149,13 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	setSelected(false);
 
 	// Rotate
-	Tile* tile = m_children.first();
-	for (int i = 0; i < rotation; ++i) {
-		rotateAround(tile);
+	if (rotation) {
+		Tile* tile = m_children.first();
+		for (int i = 0; i < rotation; ++i) {
+			rotateAround(tile);
+		}
+	} else {
+		updateVerts();
 	}
 }
 
@@ -209,6 +213,8 @@ void Piece::attach(Piece* piece)
 
 	// Remove old parent
 	m_board->removePiece(piece);
+
+	updateVerts();
 }
 
 //-----------------------------------------------------------------------------
@@ -327,9 +333,8 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		float max = united.width() * united.height();
 		while (true) {
 			float test = (min + max) / 2.0f;
-			float x = orig.x() + roundUp(test * direction.x());
-			float y = orig.y() + roundUp(test * direction.y());
-			target->moveTo(x, y);
+			target->m_pos.rx() = orig.x() + roundUp(test * direction.x());
+			target->m_pos.ry() = orig.y() + roundUp(test * direction.y());
 			if (source->collidesWith(target)) {
 				min = test;
 			} else {
@@ -340,6 +345,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 				Q_ASSERT(max - min > 0.01f);
 			}
 		}
+		target->updateVerts();
 		Q_ASSERT(min < max);
 		Q_ASSERT(!source->collidesWith(target));
 
@@ -371,6 +377,8 @@ void Piece::rotateAround(Tile* tile)
 		pos.setX(-pos.x());
 		tile->setPos(pos);
 	}
+
+	updateVerts();
 }
 
 //-----------------------------------------------------------------------------
@@ -385,67 +393,27 @@ void Piece::setSelected(bool selected)
 
 void Piece::draw() const
 {
-	int x1, y1, x2, y2;
-	QPointF pos;
-	Tile* tile;
-
 	// Draw shadow
 	m_board->qglColor(m_shadow_color);
 	glBindTexture(GL_TEXTURE_2D, m_board->shadowTexture());
-	glBegin(GL_QUADS);
-	for (int i = 0; i < m_shadow.count(); ++i) {
-		pos = m_shadow.at(i)->scenePos();
-		x1 = pos.x() - 16;
-		y1 = pos.y() - 16;
-		x2 = x1 + 64;
-		y2 = y1 + 64;
 
-		glTexCoord2i(0, 0);
-		glVertex2i(x1, y1);
-
-		glTexCoord2i(1, 0);
-		glVertex2i(x2, y1);
-
-		glTexCoord2i(1, 1);
-		glVertex2i(x2, y2);
-
-		glTexCoord2i(0, 1);
-		glVertex2i(x1, y2);
-	}
-	glEnd();
+	glVertexPointer(2, GL_INT, 0, m_shadow_verts.constData());
+	glTexCoordPointer(2, GL_SHORT, 0, m_shadow_tex_coords.constData());
+	glDrawArrays(GL_QUADS, 0, m_shadow.count() * 4);
 
 	// Draw tiles
+	glDisable(GL_BLEND);
+
 	glColor4f(1, 1, 1, 1);
 	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBegin(GL_QUADS);
-	for (int i = 0; i < m_children.count(); ++i) {
-		tile = m_children.at(i);
 
-		pos = tile->scenePos();
-		x1 = pos.x();
-		y1 = pos.y();
-		x2 = x1 + Tile::size();
-		y2 = y1 + Tile::size();
+	glVertexPointer(2, GL_INT, 0, m_verts.constData());
+	glTexCoordPointer(2, GL_FLOAT, 0, m_tex_coords.constData());
+	glDrawArrays(GL_QUADS, 0, m_children.count() * 4);
 
-		const QPointF* corners = m_board->corners(rotation());
-		float tx = tile->column() * m_board->tileTextureSize();
-		float ty = tile->row() * m_board->tileTextureSize();
-
-		glTexCoord2f(tx + corners[0].x(), ty + corners[0].y());
-		glVertex2i(x1, y1);
-
-		glTexCoord2f(tx + corners[1].x(), ty + corners[1].y());
-		glVertex2i(x2, y1);
-
-		glTexCoord2f(tx + corners[2].x(), ty + corners[2].y());
-		glVertex2i(x2, y2);
-
-		glTexCoord2f(tx + corners[3].x(), ty + corners[3].y());
-		glVertex2i(x1, y2);
-	}
-	glEnd();
+	glEnable(GL_BLEND);
 }
 
 //-----------------------------------------------------------------------------
@@ -493,6 +461,85 @@ bool Piece::containsTile(int column, int row)
 		}
 	}
 	return result;
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::updateVerts()
+{
+	// Update tile verts
+	m_verts.clear();
+	m_verts.reserve(m_children.count() * 8);
+	m_tex_coords.clear();
+	m_tex_coords.reserve(m_children.count() * 8);
+
+	for (int i = 0; i < m_children.count(); ++i) {
+		Tile* tile = m_children.at(i);
+
+		QPointF pos = tile->scenePos();
+		int x1 = pos.x();
+		int y1 = pos.y();
+		int x2 = x1 + Tile::size();
+		int y2 = y1 + Tile::size();
+
+		const QPointF* corners = m_board->corners(rotation());
+		float tx = tile->column() * m_board->tileTextureSize();
+		float ty = tile->row() * m_board->tileTextureSize();
+
+		m_tex_coords.append(tx + corners[0].x());
+		m_tex_coords.append(ty + corners[0].y());
+		m_verts.append(x1);
+		m_verts.append(y1);
+
+		m_tex_coords.append(tx + corners[1].x());
+		m_tex_coords.append(ty + corners[1].y());
+		m_verts.append(x2);
+		m_verts.append(y1);
+
+		m_tex_coords.append(tx + corners[2].x());
+		m_tex_coords.append(ty + corners[2].y());
+		m_verts.append(x2);
+		m_verts.append(y2);
+
+		m_tex_coords.append(tx + corners[3].x());
+		m_tex_coords.append(ty + corners[3].y());
+		m_verts.append(x1);
+		m_verts.append(y2);
+	}
+
+	// Update shadow verts
+	m_shadow_verts.clear();
+	m_shadow_verts.reserve(m_children.count() * 8);
+	m_shadow_tex_coords.clear();
+	m_shadow_tex_coords.reserve(m_children.count() * 8);
+
+	for (int i = 0; i < m_shadow.count(); ++i) {
+		QPointF pos = m_shadow.at(i)->scenePos();
+		int x1 = pos.x() - 16;
+		int y1 = pos.y() - 16;
+		int x2 = x1 + 64;
+		int y2 = y1 + 64;
+
+		m_shadow_tex_coords.append(0);
+		m_shadow_tex_coords.append(0);
+		m_shadow_verts.append(x1);
+		m_shadow_verts.append(y1);
+
+		m_shadow_tex_coords.append(1);
+		m_shadow_tex_coords.append(0);
+		m_shadow_verts.append(x2);
+		m_shadow_verts.append(y1);
+
+		m_shadow_tex_coords.append(1);
+		m_shadow_tex_coords.append(1);
+		m_shadow_verts.append(x2);
+		m_shadow_verts.append(y2);
+
+		m_shadow_tex_coords.append(0);
+		m_shadow_tex_coords.append(1);
+		m_shadow_verts.append(x1);
+		m_shadow_verts.append(y2);
+	}
 }
 
 //-----------------------------------------------------------------------------
