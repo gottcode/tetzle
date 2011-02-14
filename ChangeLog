@@ -1,3 +1,6 @@
+2011-02-14 Graeme Gott <graeme@gottcode.org>
+	* Use drawElements instead of drawArrays.
+
 2011-02-13 Graeme Gott <graeme@gottcode.org>
 	* Render counter-clockwise and cull hidden faces.
 	* Use vertex arrays for rendering.

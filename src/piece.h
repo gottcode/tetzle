@@ -20,13 +20,15 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include "vertex_array.h"
+class Board;
+class Tile;
+
 #include <QColor>
 #include <QList>
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
-class Board;
-class Tile;
 
 class Piece
 {
@@ -69,10 +71,8 @@ private:
 	QList<Tile*> m_children;
 	QList<Tile*> m_shadow;
 
-	QVector<int> m_verts;
-	QVector<float> m_tex_coords;
-	QVector<int> m_shadow_verts;
-	QVector<short> m_shadow_tex_coords;
+	VertexArray m_verts;
+	VertexArray m_shadow_verts;
 };
 
 
