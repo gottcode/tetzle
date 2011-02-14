@@ -33,6 +33,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QImageReader>
+#include <QMatrix4x4>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
@@ -471,11 +472,18 @@ void Board::paintGL()
 	glLoadIdentity();
 
 	// Draw pieces
+	QRect viewport = rect();
+	QMatrix4x4 matrix;
+	matrix.scale(m_scale, m_scale);
+	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
+
 	glPushMatrix();
-	glScalef(m_scale, m_scale, 0);
-	glTranslatef((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y(), 0);
+	glMultMatrixd(matrix.constData());
 	for (int i = 0; i < m_pieces.count(); ++i) {
-		m_pieces.at(i)->draw();
+		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+		if (viewport.intersects(r)) {
+			m_pieces.at(i)->draw();
+		}
 	}
 	glPopMatrix();
 
