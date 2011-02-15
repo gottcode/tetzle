@@ -433,15 +433,21 @@ void Board::toggleOverview()
 
 void Board::initializeGL()
 {
-	glFrontFace(GL_CCW);
-	glEnable(GL_CULL_FACE);
+	// Disable unused OpenGL features
 	glDisable(GL_DEPTH_TEST);
-	glColor4f(1, 1, 1, 1);
-	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+
+	// Enable OpenGL features
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	// Set OpenGL parameters
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(1, 1, 1, 1);
+	glFrontFace(GL_CCW);
 
 	// Load shadow image
 	m_shadow = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
