@@ -26,10 +26,6 @@
 
 #include <cmath>
 
-#ifndef GL_CLAMP_TO_EDGE
- #define GL_CLAMP_TO_EDGE 0x812F
-#endif
-
 namespace
 {
 
@@ -400,15 +396,11 @@ void Piece::draw() const
 	m_shadow_verts.draw();
 
 	// Draw tiles
-	glDisable(GL_BLEND);
-
 	glColor4f(1, 1, 1, 1);
 	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+	glDisable(GL_BLEND);
 	m_verts.draw();
-
 	glEnable(GL_BLEND);
 }
 

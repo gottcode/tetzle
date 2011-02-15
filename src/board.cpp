@@ -444,7 +444,7 @@ void Board::initializeGL()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// Load shadow image
-	m_shadow = bindTexture(QImage(":/shadow.png"));
+	m_shadow = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
 
 	// Load colors
 	AppearanceDialog dialog;
@@ -489,10 +489,9 @@ void Board::paintGL()
 
 	// Draw selection rectangle
 	if (m_selecting) {
-		glBindTexture(GL_TEXTURE_2D, 0);
 		glPushAttrib(GL_CURRENT_BIT);
-
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
 
 		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
 		int x1 = box.x();
@@ -512,8 +511,8 @@ void Board::paintGL()
 		qglColor(highlight.darker());
 		glDrawArrays(GL_LINE_LOOP, 0, 4);
 
+		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
 		glPopAttrib();
 	}
 
@@ -930,13 +929,13 @@ void Board::loadImage()
 
 	int image_texture_size = powerOfTwo(qMax(size.width(), size.height()));
 	m_image_ts = static_cast<float>(tile_size) / static_cast<float>(image_texture_size);
-	QImage texture(image_texture_size, image_texture_size, QImage::Format_RGB32);
-	texture.fill(QColor(Qt::darkGray).rgb());
+	QImage texture(image_texture_size, image_texture_size, QImage::Format_ARGB32);
+	texture.fill(QColor(Qt::darkGray).rgba());
 	{
 		QPainter painter(&texture);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	m_image = bindTexture(texture.mirrored(false, true));
+	m_image = bindTexture(texture, GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
 
 	// Create overview
 	m_overview->load(image.scaled(image.size() * 0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation));
