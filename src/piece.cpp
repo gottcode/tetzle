@@ -456,7 +456,7 @@ bool Piece::containsTile(int column, int row)
 void Piece::updateVerts()
 {
 	// Update tile verts
-	m_verts.clear();
+	m_verts.beginUpdate();
 	for (int i = 0; i < m_children.count(); ++i) {
 		Tile* tile = m_children.at(i);
 
@@ -475,9 +475,10 @@ void Piece::updateVerts()
 		m_verts.append(x2,y2, tx + corners[2].x(),ty + corners[2].y());
 		m_verts.append(x2,y1, tx + corners[3].x(),ty + corners[3].y());
 	}
+	m_verts.endUpdate();
 
 	// Update shadow verts
-	m_shadow_verts.clear();
+	m_shadow_verts.beginUpdate();
 	for (int i = 0; i < m_shadow.count(); ++i) {
 		QPoint pos = m_shadow.at(i)->scenePos();
 		int x1 = pos.x() - 16;
@@ -490,6 +491,7 @@ void Piece::updateVerts()
 		m_shadow_verts.append(x2,y2, 1,1);
 		m_shadow_verts.append(x2,y1, 1,0);
 	}
+	m_shadow_verts.endUpdate();
 }
 
 //-----------------------------------------------------------------------------
