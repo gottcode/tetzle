@@ -30,8 +30,25 @@ public:
 	void draw() const;
 
 private:
-	QVector<GLint> m_verts;
-	QVector<GLfloat> m_tex_coords;
+	struct Vertex
+	{
+		GLint x;
+		GLint y;
+		GLfloat s;
+		GLfloat t;
+
+		Vertex(GLint x_ = 0, GLint y_ = 0, GLfloat s_ = 0, GLfloat t_ = 0)
+			: x(x_), y(y_), s(s_), t(t_)
+		{
+		}
+
+		bool operator==(const Vertex& other) const
+		{
+			return (x == other.x) && (y == other.y) && (s == other.s) && (t == other.t);
+		}
+	};
+
+	QVector<Vertex> m_vertices;
 	QVector<GLushort> m_indices;
 };
 

@@ -23,23 +23,11 @@
 
 void VertexArray::append(GLint x, GLint y, GLfloat s, GLfloat t)
 {
-	int index = -1;
-	int count = m_verts.count();
-	for (int i = 0; i < count; ++i) {
-		if ((m_verts.at(i) == x) &&
-			(m_tex_coords.at(i) == s) &&
-			(m_verts.at(++i) == y) &&
-			(m_tex_coords.at(i) == t)) {
-			index = i >> 1;
-			break;
-		}
-	}
+	Vertex vertex(x, y, s, t);
+	int index = m_vertices.indexOf(vertex);
 	if (index == -1) {
-		index = count >> 1;
-		m_verts.append(x);
-		m_verts.append(y);
-		m_tex_coords.append(s);
-		m_tex_coords.append(t);
+		index = m_vertices.count();
+		m_vertices += vertex;
 	}
 	m_indices.append(index);
 }
@@ -48,8 +36,7 @@ void VertexArray::append(GLint x, GLint y, GLfloat s, GLfloat t)
 
 void VertexArray::clear()
 {
-	m_verts.clear();
-	m_tex_coords.clear();
+	m_vertices.clear();
 	m_indices.clear();
 }
 
@@ -57,8 +44,8 @@ void VertexArray::clear()
 
 void VertexArray::draw() const
 {
-	glVertexPointer(2, GL_INT, 0, m_verts.constData());
-	glTexCoordPointer(2, GL_FLOAT, 0, m_tex_coords.constData());
+	glVertexPointer(2, GL_INT, sizeof(Vertex), &m_vertices.at(0).x);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &m_vertices.at(0).s);
 	glDrawElements(GL_QUADS, m_indices.count(), GL_UNSIGNED_SHORT, m_indices.constData());
 }
 
