@@ -142,11 +142,18 @@ void Board::removePiece(Piece* piece)
 
 void Board::setColors(const QPalette& palette)
 {
-	qglClearColor(palette.color(QPalette::Base));
+	qglClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
 	foreach (Piece* piece, m_pieces) {
 		piece->setSelected(piece->selected());
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::updateSceneRectangle(Piece* piece)
+{
+	m_scene = m_scene.united(piece->marginRect());
 }
 
 //-----------------------------------------------------------------------------
@@ -251,6 +258,7 @@ void Board::openGame(int id)
 	}
 	QXmlStreamAttributes attributes = xml.attributes();
 	int board_zoom = 0;
+	QRect rect;
 	unsigned int version = attributes.value("version").toString().toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version == 4) {
 		m_image_path = attributes.value("image").toString();
@@ -264,6 +272,11 @@ void Board::openGame(int id)
 		board_zoom = attributes.value("zoom").toString().toInt();
 		m_pos.setX(attributes.value("x").toString().toInt());
 		m_pos.setY(attributes.value("y").toString().toInt());
+		QStringList values = attributes.value("rect").toString().split(",");
+		rect.setRect(values.value(0).toInt(),
+			values.value(1). toInt(),
+			values.value(2).toInt(),
+			values.value(3).toInt());
 		loadImage();
 	} else {
 		xml.raiseError(tr("Unknown data format"));
@@ -303,6 +316,15 @@ void Board::openGame(int id)
 		return;
 	}
 
+	// Load scene rectangle
+	m_scene = QRect(0,0,0,0);
+	foreach (Piece* piece, m_pieces) {
+		updateSceneRectangle(piece);
+	}
+	if (rect.contains(m_scene)) {
+		m_scene = rect;
+	}
+
 	// Draw tiles
 	m_message->setVisible(false);
 	QApplication::restoreOverrideCursor();
@@ -337,6 +359,11 @@ void Board::saveGame()
 	xml.writeAttribute("zoom", QString::number(m_scale_level));
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
+	xml.writeAttribute("rect", QString("%1,%2,%3,%4").
+		arg(m_scene.x())
+		.arg(m_scene.y())
+		.arg(m_scene.width())
+		.arg(m_scene.height()));
 
 	foreach (Piece* piece, m_pieces) {
 		piece->save(xml);
@@ -355,6 +382,9 @@ void Board::retrievePieces()
 	if (!m_active_tiles.isEmpty()) {
 		releasePieces();
 	}
+
+	// Reset scene rectangle
+	m_scene = QRect(0,0,0,0);
 
 	// Move all pieces to center of view
 	foreach (Piece* piece, m_pieces) {
@@ -478,7 +508,7 @@ void Board::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
-	// Draw pieces
+	// Transform viewport
 	QRect viewport = rect();
 	QMatrix4x4 matrix;
 	matrix.scale(m_scale, m_scale);
@@ -486,6 +516,26 @@ void Board::paintGL()
 
 	glPushMatrix();
 	glMultMatrixd(matrix.constData());
+
+	// Draw scene rectangle
+	glPushAttrib(GL_CURRENT_BIT);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+
+	qglColor(palette().color(QPalette::Base));
+	int x1 = m_scene.x();
+	int y1 = m_scene.y();
+	int x2 = x1 + m_scene.width();
+	int y2 = y1 + m_scene.height();
+	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
+	glVertexPointer(2, GL_INT, 0, &verts);
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glPopAttrib();
+
+	// Draw pieces
 	VertexArray::uploadData();
 	for (int i = 0; i < m_pieces.count(); ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
@@ -1101,6 +1151,7 @@ void Board::cleanup()
 	m_completed = 0;
 	m_id = 0;
 
+	m_scene = QRect(0,0,0,0);
 	m_scrolling = false;
 	m_pos = QPoint(0, 0);
 	m_finished = false;

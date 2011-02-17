@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ public:
 	float tileTextureSize() const;
 	const QPointF* corners(int rotation) const;
 	void setColors(const QPalette& palette);
+	void updateSceneRectangle(Piece* piece);
 
 public slots:
 	void newGame(const QString& image, int difficulty);
@@ -114,6 +115,7 @@ private:
 	int m_rows;
 	QList<Piece*> m_pieces;
 	QHash<Piece*, Tile*> m_active_tiles;
+	QRect m_scene;
 	int m_total_pieces;
 	int m_completed;
 

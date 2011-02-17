@@ -492,6 +492,9 @@ void Piece::updateVerts()
 		m_shadow_verts.append(x2,y1, 1,0);
 	}
 	m_shadow_verts.endUpdate();
+
+	// Update scene rectangle
+	m_board->updateSceneRectangle(this);
 }
 
 //-----------------------------------------------------------------------------
