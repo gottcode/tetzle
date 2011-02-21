@@ -26,7 +26,6 @@
 #include "piece.h"
 #include "solver.h"
 #include "tile.h"
-#include "vertex_array.h"
 #include "zoom_slider.h"
 
 #include <QApplication>
@@ -536,7 +535,6 @@ void Board::paintGL()
 	glPopAttrib();
 
 	// Draw pieces
-	VertexArray::uploadData();
 	for (int i = 0; i < m_pieces.count(); ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {

@@ -25,21 +25,9 @@
 class VertexArray
 {
 public:
-	VertexArray();
-	~VertexArray();
-
-	void beginUpdate();
 	void append(GLint x, GLint y, GLfloat s, GLfloat t);
-	void endUpdate();
+	void clear();
 	void draw() const;
-
-	static void uploadData();
-
-private:
-	VertexArray(const VertexArray&);
-	VertexArray& operator=(const VertexArray&);
-
-	void freeRegion();
 
 private:
 	struct Vertex
@@ -60,43 +48,8 @@ private:
 		}
 	};
 
-	struct Region
-	{
-		int start;
-		int end;
-
-		Region()
-			: start(-1), end(-1)
-		{
-		}
-
-		int length() const
-		{
-			return end - start;
-		}
-
-		bool merge(const Region& other)
-		{
-			if (start == other.end) {
-				start = other.start;
-				return true;
-			} else if (end == other.start) {
-				end = other.end;
-				return true;
-			} else {
-				return false;
-			}
-		}
-	};
-
-	// Data
 	QVector<Vertex> m_vertices;
 	QVector<GLushort> m_indices;
-	Region m_region;
-
-	// Shared data
-	static QVector<Vertex> m_shared_data;
-	static QList<Region> m_free_regions;
 };
 
 #endif
