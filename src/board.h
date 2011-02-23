@@ -95,6 +95,7 @@ private:
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
+	void updateSceneRectangle();
 	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
 	Tile* tileUnderCursor(bool include_active = true);
 	void finishGame();

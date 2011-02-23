@@ -1,4 +1,5 @@
 2011-02-23 Graeme Gott <graeme@gottcode.org>
+	* Update scene rectangle when creating or finishing a game.
 	* Use scene rectangle to determine best fit.
 	* Show wait cursor when retrieving pieces.
 	* FIXED: Saved games were not deleted by open dialog.

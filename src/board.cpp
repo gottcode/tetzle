@@ -222,6 +222,9 @@ void Board::newGame(const QString& image, int difficulty)
 		piece->pushNeighbors();
 	}
 
+	// Make scene rectangle be as small as possible
+	updateSceneRectangle();
+
 	// Draw tiles
 	m_message->setVisible(false);
 	QApplication::restoreOverrideCursor();
@@ -316,10 +319,7 @@ void Board::openGame(int id)
 	}
 
 	// Load scene rectangle
-	m_scene = QRect(0,0,0,0);
-	foreach (Piece* piece, m_pieces) {
-		updateSceneRectangle(piece);
-	}
+	updateSceneRectangle();
 	if (rect.contains(m_scene)) {
 		m_scene = rect;
 	}
@@ -394,10 +394,7 @@ void Board::retrievePieces()
 	}
 
 	// Reset scene rectangle
-	m_scene = QRect(0,0,0,0);
-	foreach (Piece* piece, m_pieces) {
-		updateSceneRectangle(piece);
-	}
+	updateSceneRectangle();
 
 	// Clear message and cursor
 	m_message->setVisible(false);
@@ -1080,6 +1077,16 @@ void Board::updateCompleted()
 
 //-----------------------------------------------------------------------------
 
+void Board::updateSceneRectangle()
+{
+	m_scene = QRect(0,0,0,0);
+	foreach (Piece* piece, m_pieces) {
+		updateSceneRectangle(piece);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 Tile* Board::tileAt(const QPoint& pos, bool include_active) const
 {
 	Piece* piece;
@@ -1123,6 +1130,7 @@ void Board::finishGame()
 			piece->rotateAround(0);
 		}
 	}
+	updateSceneRectangle();
 	piece->setSelected(false);
 
 	m_overview->hide();
