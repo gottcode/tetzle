@@ -195,8 +195,7 @@ void OpenGameDialog::deleteGame()
 	}
 
 	if (QMessageBox::question(this, tr("Delete Game"), tr("Delete selected game?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
-		QString id = QString::number(item->data(Qt::UserRole).toInt());
-		QFile::remove(Path::save(id));
+		QFile::remove(Path::save(item->data(Qt::UserRole).toInt()));
 		delete item;
 		m_accept_button->setEnabled(m_games->count() > 0);
 	};

@@ -1,4 +1,5 @@
 2011-02-23 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Saved games were not deleted by open dialog.
 	* Use QRegions for collision detection.
 
 2011-02-21 Graeme Gott <graeme@gottcode.org>
