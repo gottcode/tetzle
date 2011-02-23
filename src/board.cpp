@@ -425,16 +425,9 @@ void Board::zoomOut()
 
 void Board::zoomFit()
 {
-	// Find bounding rectangle
-	QRect bounds(0, 0, 0, 0);
-	foreach (Piece* piece, m_pieces) {
-		bounds = bounds.united(piece->boundingRect());
-	}
-	m_pos = bounds.center();
-
-	// Find scale factor
-	float sx = static_cast<float>(width()) / static_cast<float>(bounds.width());
-	float sy = static_cast<float>(height()) / static_cast<float>(bounds.height());
+	m_pos = m_scene.center();
+	float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
+	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
 	zoom(ZoomSlider::scaleLevel(qMin(sx, sy)));
 }
 
