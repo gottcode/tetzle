@@ -42,6 +42,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+#include <algorithm>
+
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -197,9 +199,8 @@ void Board::newGame(const QString& image, int difficulty)
 	// Create pieces
 	std::srand(std::time(0));
 	Solver solver(m_columns, m_rows);
-	int full_width = m_columns * Tile::size() * 2;
-	int full_height = m_rows * Tile::size() * 2;
 	QList< QList<QPoint> > pieces = solver.pieces();
+	std::random_shuffle(pieces.begin(), pieces.end());
 	foreach (const QList<QPoint>& group, pieces) {
 		// Find tiles for piece
 		QList<Tile*> children;
@@ -208,22 +209,10 @@ void Board::newGame(const QString& image, int difficulty)
 		}
 
 		// Create piece
-		Tile* tile = children.first();
-		Piece* piece = new Piece(QPoint(Tile::size() * tile->column(), Tile::size() * tile->row()), rand() % 4, children, this);
+		Piece* piece = new Piece(QPoint(0, 0), rand() % 4, children, this);
 		m_pieces.append(piece);
-
-		// Position piece
-		piece->moveBy(QPoint(rand() % full_width, rand() % full_height) - piece->scenePos());
-	}
-
-	// Don't cover other pieces
-	m_scale = 1;
-	foreach (Piece* piece, m_pieces) {
 		piece->pushNeighbors();
 	}
-
-	// Make scene rectangle be as small as possible
-	updateSceneRectangle();
 
 	// Draw tiles
 	m_message->setVisible(false);
@@ -383,13 +372,16 @@ void Board::retrievePieces()
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
 	// Make sure all pieces are free
-	if (!m_active_tiles.isEmpty()) {
-		releasePieces();
-	}
+	QList<Piece*> pieces = m_pieces;
+	m_pieces.clear();
+	m_active_tiles.clear();
 
 	// Move all pieces to center of view
-	foreach (Piece* piece, m_pieces) {
+	std::random_shuffle(pieces.begin(), pieces.end());
+	foreach (Piece* piece, pieces) {
+		m_pieces.append(piece);
 		piece->moveBy(m_pos - piece->boundingRect().center());
+		piece->setSelected(false);
 		piece->pushNeighbors();
 	}
 
