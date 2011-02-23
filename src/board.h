@@ -40,6 +40,7 @@ public:
 
 	int id() const;
 	int margin() const;
+	QRect marginRect(const QRect& rect) const;
 	GLuint imageTexture() const;
 	GLuint shadowTexture() const;
 	float tileTextureSize() const;
@@ -141,6 +142,11 @@ inline int Board::id() const
 inline int Board::margin() const
 {
 	return 10;
+}
+
+inline QRect Board::marginRect(const QRect& rect) const
+{
+	return rect.adjusted(-margin(), -margin(), margin(), margin());
 }
 
 inline GLuint Board::imageTexture() const

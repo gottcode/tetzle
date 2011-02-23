@@ -36,10 +36,9 @@ public:
 	Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board);
 	~Piece();
 
-	bool collidesWith(const Piece * other) const;
+	bool collidesWith(const Piece* other) const;
 	QRect boundingRect() const;
 	QList<Tile*> children() const;
-	QRect marginRect() const;
 	int rotation() const;
 	QPoint scenePos() const;
 	bool selected() const;
@@ -57,6 +56,7 @@ public:
 	void save(QXmlStreamWriter& xml) const;
 
 private:
+	void updateCollisionRegions();
 	void updateShadow();
 	void updateVerts();
 	bool containsTile(int column, int row);
@@ -73,6 +73,10 @@ private:
 
 	VertexArray m_verts;
 	VertexArray m_shadow_verts;
+
+	bool m_changed;
+	QRegion m_collision_region;
+	QRegion m_collision_region_expanded;
 };
 
 

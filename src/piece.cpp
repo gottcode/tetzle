@@ -26,113 +26,16 @@
 
 #include <cmath>
 
-namespace
-{
-
-//-----------------------------------------------------------------------------
-
-// Lightwheight Piece-lookalike.
-// Used for collision detection. Supports slicing in half to sub-pieces.
-// Collision-detection works by slicing and bounds-checking halves until either
-// no collision, or we've found single Tiles that actually collide
-struct PieceHelper
-{
-	QRect m_rect;
-	QList<Tile*> m_children;
-	const Piece* m_piece;
-	const Board* m_board;
-
-	PieceHelper(const PieceHelper& p)
-	{
-		m_piece = p.m_piece;
-		m_board = p.m_board;
-	}
-
-	PieceHelper(const Piece* piece, const Board* board)
-	{
-		m_piece = piece;
-		m_board = board;
-		m_children = m_piece->children();
-		foreach (Tile* tile, m_children) {
-			m_rect = m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->scenePos()));
-		}
-	}
-
-	void split(PieceHelper& a, PieceHelper& b) const
-	{
-		Q_ASSERT(m_children.size() > 1);
-		bool is_fat = m_rect.width() > m_rect.height();
-		int splitline;
-		if (is_fat) {
-			splitline = m_rect.center().x() - m_piece->scenePos().x();
-		} else {
-			splitline = m_rect.center().y() - m_piece->scenePos().y();
-		}
-
-		foreach (Tile* tile, m_children) {
-			PieceHelper* target = &a;
-			if (is_fat) {
-				if (tile->pos().x() >= splitline) {
-					target = &b;
-				}
-			} else {
-				if (tile->pos().y() >= splitline) {
-					target = &b;
-				}
-			}
-			target->m_children.append(tile);
-			target->m_rect = target->m_rect.united(tile->rect().translated(tile->pos()).translated(m_piece->scenePos()));
-		}
-	}
-
-	bool collidesWith(const PieceHelper& other) const
-	{
-		int margin = m_board->margin();
-		QRect other_rect = other.m_rect.adjusted(-margin, -margin, margin, margin);
-		if (m_children.size() <= 1) {
-			if (other.m_children.size() <= 1) {
-				return m_rect.intersects(other_rect);
-			} else {
-				return other.collidesWith(*this);
-			}
-		} else {
-			PieceHelper a(*this), b(*this);
-			split(a,b);
-			if (a.m_rect.intersects(other_rect)) {
-				if (other.collidesWith(a)) {
-					return true;
-				}
-			}
-			if (b.m_rect.intersects(other_rect)) {
-				if (other.collidesWith(b)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-};
-
-//-----------------------------------------------------------------------------
-
-inline float roundUp(float value)
-{
-	return value >= 0.0f ? ceil(value) : floor(value);
-}
-
-//-----------------------------------------------------------------------------
-
-}
-
 //-----------------------------------------------------------------------------
 
 Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board)
 	: m_board(board),
 	m_rotation(0),
-	m_selected(false),
+	m_selected(true),
 	m_pos(pos),
 	m_children(tiles),
-	m_shadow(tiles)
+	m_shadow(tiles),
+	m_changed(false)
 {
 	// Add tiles
 	QPoint first_pos = m_children.first()->pos();
@@ -142,7 +45,6 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 		m_rect = m_rect.united(tile->rect().translated(tile->pos()));
 	}
 	updateShadow();
-	setSelected(false);
 
 	// Rotate
 	if (rotation) {
@@ -153,6 +55,8 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	} else {
 		updateVerts();
 	}
+
+	setSelected(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -164,23 +68,13 @@ Piece::~Piece()
 
 //-----------------------------------------------------------------------------
 
-bool Piece::collidesWith(const Piece * other) const
+bool Piece::collidesWith(const Piece* other) const
 {
-	if (marginRect().intersects(other->boundingRect())) {
-		PieceHelper a(this, this->m_board), b(other, other->m_board);
-		bool retVal = a.collidesWith(b);
-		return retVal;
+	if (m_board->marginRect(boundingRect()).intersects(other->boundingRect())) {
+		return m_collision_region_expanded.intersects(other->m_collision_region);
 	} else {
 		return false;
 	}
-}
-
-//-----------------------------------------------------------------------------
-
-QRect Piece::marginRect() const
-{
-	int margin = m_board->margin();
-	return m_rect.translated(m_pos).adjusted(-margin, -margin, margin, margin);
 }
 
 //-----------------------------------------------------------------------------
@@ -218,6 +112,10 @@ void Piece::attach(Piece* piece)
 void Piece::attachNeighbors()
 {
 	int margin = m_board->margin();
+
+	if (m_changed) {
+		updateCollisionRegions();
+	}
 
 	// Create offset vectors
 	int cos_size = 0;
@@ -303,19 +201,20 @@ void Piece::pushNeighbors(const QPointF& inertia)
 	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
 		// Determine which piece to move
 		Piece *source, *target;
-		if (m_rect.width() >= neighbor->m_rect.width() || m_rect.height() >= neighbor->m_rect.height()) {
+		if (m_children.count() >= neighbor->m_children.count()) {
 			source = this;
 			target = neighbor;
 		} else {
 			source = neighbor;
 			target = this;
 		}
-		QRect source_rect = source->marginRect();
+		QRect source_rect = m_board->marginRect(source->boundingRect());
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
-		while (fabs(vector.x()) + fabs(vector.y()) < 1) {
-			vector = QPointF(rand() - (RAND_MAX / 2), rand() - (RAND_MAX / 2));
+		while (vector.manhattanLength() < 1.0) {
+			vector.setX( (rand() % Tile::size()) - (Tile::size() / 2) );
+			vector.setY( (rand() % Tile::size()) - (Tile::size() / 2) );
 		}
 
 		// Scale movement vector so that the largest dimension is 1
@@ -329,8 +228,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		float max = united.width() * united.height();
 		while (true) {
 			float test = (min + max) / 2.0f;
-			target->m_pos.rx() = orig.x() + roundUp(test * direction.x());
-			target->m_pos.ry() = orig.y() + roundUp(test * direction.y());
+			target->m_pos = orig + (test * direction).toPoint();
 			if (source->collidesWith(target)) {
 				min = test;
 			} else {
@@ -383,6 +281,10 @@ void Piece::setSelected(bool selected)
 {
 	m_selected = selected;
 	m_shadow_color = m_board->palette().color(!m_selected ? QPalette::Text : QPalette::Highlight);
+
+	if (!m_selected && m_changed) {
+		updateCollisionRegions();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -422,6 +324,20 @@ void Piece::save(QXmlStreamWriter& xml) const
 
 //-----------------------------------------------------------------------------
 
+void Piece::updateCollisionRegions()
+{
+	m_changed = false;
+	m_collision_region = QRegion();
+	m_collision_region_expanded = QRegion();
+	for (int i = 0; i < m_children.count(); ++i) {
+		QRect rect = m_children.at(i)->boundingRect();
+		m_collision_region += rect;
+		m_collision_region_expanded += m_board->marginRect(rect);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::updateShadow()
 {
 	QMutableListIterator<Tile*> i(m_shadow);
@@ -455,6 +371,11 @@ bool Piece::containsTile(int column, int row)
 
 void Piece::updateVerts()
 {
+	m_changed = true;
+	if (!m_selected) {
+		updateCollisionRegions();
+	}
+
 	// Update tile verts
 	m_verts.clear();
 	for (int i = 0; i < m_children.count(); ++i) {

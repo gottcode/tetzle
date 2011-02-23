@@ -152,7 +152,7 @@ void Board::setColors(const QPalette& palette)
 
 void Board::updateSceneRectangle(Piece* piece)
 {
-	m_scene = m_scene.united(piece->marginRect());
+	m_scene = m_scene.united(marginRect(piece->boundingRect()));
 }
 
 //-----------------------------------------------------------------------------
@@ -865,8 +865,8 @@ void Board::releasePieces()
 
 	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
 		i.key()->attachNeighbors();
-		i.key()->pushNeighbors();
 		i.key()->setSelected(false);
+		i.key()->pushNeighbors();
 	}
 	m_active_tiles.clear();
 	updateCursor();
