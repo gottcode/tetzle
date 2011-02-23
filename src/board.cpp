@@ -377,19 +377,31 @@ void Board::saveGame()
 
 void Board::retrievePieces()
 {
+	// Inform user this will take awhile
+	m_message->setText(tr("Please Wait"));
+	m_message->setVisible(true);
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+
 	// Make sure all pieces are free
 	if (!m_active_tiles.isEmpty()) {
 		releasePieces();
 	}
-
-	// Reset scene rectangle
-	m_scene = QRect(0,0,0,0);
 
 	// Move all pieces to center of view
 	foreach (Piece* piece, m_pieces) {
 		piece->moveBy(m_pos - piece->boundingRect().center());
 		piece->pushNeighbors();
 	}
+
+	// Reset scene rectangle
+	m_scene = QRect(0,0,0,0);
+	foreach (Piece* piece, m_pieces) {
+		updateSceneRectangle(piece);
+	}
+
+	// Clear message and cursor
+	m_message->setVisible(false);
+	QApplication::restoreOverrideCursor();
 
 	// Update view
 	zoomFit();
