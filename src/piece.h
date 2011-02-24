@@ -46,10 +46,8 @@ public:
 	void attach(Piece* piece);
 	void attachNeighbors();
 	void moveBy(const QPoint& delta);
-	void moveTo(const QPoint& pos);
-	void moveTo(int x, int y);
 	void pushNeighbors(const QPointF& inertia = QPointF());
-	void rotateAround(Tile* tile);
+	void rotate(const QPoint& origin = QPoint());
 	void setSelected(bool selected);
 
 	void draw() const;
@@ -58,6 +56,7 @@ public:
 private:
 	void updateCollisionRegions();
 	void updateShadow();
+	void updateTiles();
 	void updateVerts();
 	bool containsTile(int column, int row);
 

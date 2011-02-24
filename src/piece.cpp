@@ -37,20 +37,13 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	m_shadow(tiles),
 	m_changed(false)
 {
-	// Add tiles
-	QPoint first_pos = m_children.first()->pos();
-	foreach (Tile* tile, m_children) {
-		tile->setParent(this);
-		tile->setPos(tile->pos() - first_pos);
-		m_rect = m_rect.united(tile->rect().translated(tile->pos()));
-	}
+	updateTiles();
 	updateShadow();
 
 	// Rotate
 	if (rotation) {
-		Tile* tile = m_children.first();
 		for (int i = 0; i < rotation; ++i) {
-			rotateAround(tile);
+			rotate();
 		}
 	} else {
 		updateVerts();
@@ -83,25 +76,29 @@ void Piece::attach(Piece* piece)
 {
 	Q_ASSERT(piece != this);
 
+	// Update position
 	QPoint delta = piece->m_pos - m_pos;
+	if (delta.x() < 0) {
+		m_pos.rx() += delta.x();
+	}
+	if (delta.y() < 0) {
+		m_pos.ry() += delta.y();
+	}
 
-	// Change parent of piece's children
+	// Update position of attached tiles
 	QList<Tile*> tiles = piece->m_children;
 	foreach (Tile* tile, tiles) {
 		tile->setPos(tile->pos() + delta);
-		tile->setParent(this);
 	}
 	m_children += tiles;
 	piece->m_children.clear();
+	updateTiles();
 
 	// Update shadow
 	m_shadow += piece->m_shadow;
 	updateShadow();
 
-	// Update bounding rectangle
-	m_rect = m_rect.united(piece->m_rect.translated(delta));
-
-	// Remove old parent
+	// Remove attached piece
 	m_board->removePiece(piece);
 
 	updateVerts();
@@ -250,26 +247,30 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 //-----------------------------------------------------------------------------
 
-void Piece::rotateAround(Tile* tile)
+void Piece::rotate(const QPoint& origin)
 {
-	m_rect.setRect(-m_rect.bottom() - 1 + Tile::size(), m_rect.left(), m_rect.height(), m_rect.width());
-
-	if (tile) {
-		QPoint pos = tile->scenePos() - scenePos();
-		m_pos += QPoint(pos.x() + pos.y(), pos.y() - pos.x());
+	// Rotate 90 degrees counter-clockwise around origin
+	if (!origin.isNull()) {
+		QPoint pos = m_pos;
+		pos.ry() += m_rect.height();
+		m_pos.setX( origin.y() + origin.x() - pos.y() );
+		m_pos.setY( origin.y() - origin.x() + pos.x() );
 	}
+	m_rect.setRect(0, 0, m_rect.height(), m_rect.width());
 
-	m_rotation += 1;
-	if (m_rotation > 3) {
-		m_rotation = 0;
-	}
-
+	// Rotate tiles 90 degrees counter-clockwise
 	QPoint pos;
 	foreach (Tile* tile, m_children) {
 		pos = tile->pos();
 		qSwap(pos.rx(), pos.ry());
-		pos.setX(-pos.x());
+		pos.setX(-pos.x() + m_rect.width() - Tile::size());
 		tile->setPos(pos);
+	}
+
+	// Track how many rotations have occured
+	m_rotation += 1;
+	if (m_rotation > 3) {
+		m_rotation = 0;
 	}
 
 	updateVerts();
@@ -365,6 +366,34 @@ bool Piece::containsTile(int column, int row)
 		}
 	}
 	return result;
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::updateTiles()
+{
+	int count = m_children.count();
+
+	// Find bounding rectangle
+	QPoint top_left = m_children.first()->pos();
+	QPoint bottom_right = m_children.first()->pos() + QPoint(Tile::size(), Tile::size());
+	QPoint pos;
+	for (int i = 0; i < count; ++i) {
+		pos = m_children.at(i)->pos();
+		top_left.setX( qMin(pos.x(), top_left.x()) );
+		top_left.setY( qMin(pos.y(), top_left.y()) );
+		bottom_right.setX( qMax(pos.x() + Tile::size(), bottom_right.x()) );
+		bottom_right.setY( qMax(pos.y() + Tile::size(), bottom_right.y()) );
+	}
+	m_rect.setRect(0, 0, bottom_right.x() - top_left.x(), bottom_right.y() - top_left.y());
+
+	// Shift tiles to be inside rectangle
+	Tile* tile;
+	for (int i = 0; i < count; ++i) {
+		tile = m_children.at(i);
+		tile->setParent(this);
+		tile->setPos(tile->pos() - top_left);
+	}
 }
 
 //-----------------------------------------------------------------------------

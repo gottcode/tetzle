@@ -896,14 +896,14 @@ void Board::rotatePiece()
 		}
 		Piece* piece = child->parent();
 
-		piece->rotateAround(child);
+		piece->rotate(mapCursorPosition());
 		piece->attachNeighbors();
 		if (m_active_tiles.isEmpty()) {
 			piece->pushNeighbors();
 		}
 	} else {
 		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->rotateAround(i.value());
+			i.key()->rotate(mapCursorPosition());
 		}
 	}
 	updateCompleted();
@@ -1132,7 +1132,7 @@ void Board::finishGame()
 	Piece* piece = m_pieces.first();
 	if (piece->rotation() > 0) {
 		for (int i = piece->rotation(); i < 4; ++i) {
-			piece->rotateAround(0);
+			piece->rotate();
 		}
 	}
 	updateSceneRectangle();
