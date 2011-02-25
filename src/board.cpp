@@ -146,7 +146,7 @@ void Board::setColors(const QPalette& palette)
 	qglClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
 	foreach (Piece* piece, m_pieces) {
-		piece->setSelected(piece->selected());
+		piece->setSelected(piece->isSelected());
 	}
 }
 
@@ -929,8 +929,7 @@ void Board::selectPieces()
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* piece = m_pieces.at(i);
 		if (rect.intersects(piece->boundingRect())) {
-			Tile* tile = piece->children().at(rand() % piece->children().count());
-			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
+			piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
 			m_active_pieces.append(piece);
 			m_pieces.removeAll(piece);
 			piece->setSelected(true);

@@ -39,12 +39,10 @@ public:
 	bool collidesWith(const Piece* other) const;
 	bool contains(const QPoint& pos) const;
 	QRect boundingRect() const;
-	QList<Tile*> children() const;
+	bool isSelected() const;
 	int rotation() const;
 	QPoint scenePos() const;
-	bool selected() const;
 
-	void attach(Piece* piece);
 	void attachNeighbors();
 	void moveBy(const QPoint& delta);
 	void pushNeighbors(const QPointF& inertia = QPointF());
@@ -55,22 +53,23 @@ public:
 	void save(QXmlStreamWriter& xml) const;
 
 private:
+	void attach(Piece* piece);
+	bool containsTile(int column, int row);
 	void updateCollisionRegions();
 	void updateShadow();
 	void updateTiles();
 	void updateVerts();
-	bool containsTile(int column, int row);
 
 private:
 	Board* m_board;
-	int m_rotation;
-	bool m_selected;
 	QPoint m_pos;
 	QRect m_rect;
-	QColor m_shadow_color;
-	QList<Tile*> m_children;
+	QList<Tile*> m_tiles;
 	QList<Tile*> m_shadow;
+	int m_rotation;
+	bool m_selected;
 
+	QColor m_shadow_color;
 	VertexArray m_verts;
 	VertexArray m_shadow_verts;
 
@@ -80,19 +79,19 @@ private:
 };
 
 
-inline bool Piece::contains(const QPoint& pos) const
-{
-	return m_collision_region.contains(pos);
-}
-
 inline QRect Piece::boundingRect() const
 {
 	return m_rect.translated(m_pos);
 }
 
-inline QList<Tile*> Piece::children() const
+inline bool Piece::contains(const QPoint& pos) const
 {
-	return m_children;
+	return m_collision_region.contains(pos);
+}
+
+inline bool Piece::isSelected() const
+{
+	return m_selected;
 }
 
 inline int Piece::rotation() const
@@ -103,11 +102,6 @@ inline int Piece::rotation() const
 inline QPoint Piece::scenePos() const
 {
 	return m_pos;
-}
-
-inline bool Piece::selected() const
-{
-	return m_selected;
 }
 
 inline void Piece::moveBy(const QPoint& delta)

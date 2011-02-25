@@ -30,11 +30,11 @@
 
 Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board)
 	: m_board(board),
+	m_pos(pos),
+	m_tiles(tiles),
+	m_shadow(tiles),
 	m_rotation(0),
 	m_selected(true),
-	m_pos(pos),
-	m_children(tiles),
-	m_shadow(tiles),
 	m_changed(false)
 {
 	updateTiles();
@@ -56,7 +56,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 
 Piece::~Piece()
 {
-	qDeleteAll(m_children);
+	qDeleteAll(m_tiles);
 }
 
 //-----------------------------------------------------------------------------
@@ -68,40 +68,6 @@ bool Piece::collidesWith(const Piece* other) const
 	} else {
 		return false;
 	}
-}
-
-//-----------------------------------------------------------------------------
-
-void Piece::attach(Piece* piece)
-{
-	Q_ASSERT(piece != this);
-
-	// Update position
-	QPoint delta = piece->m_pos - m_pos;
-	if (delta.x() < 0) {
-		m_pos.rx() += delta.x();
-	}
-	if (delta.y() < 0) {
-		m_pos.ry() += delta.y();
-	}
-
-	// Update position of attached tiles
-	QList<Tile*> tiles = piece->m_children;
-	foreach (Tile* tile, tiles) {
-		tile->setPos(tile->pos() + delta);
-	}
-	m_children += tiles;
-	piece->m_children.clear();
-	updateTiles();
-
-	// Update shadow
-	m_shadow += piece->m_shadow;
-	updateShadow();
-
-	// Remove attached piece
-	m_board->removePiece(piece);
-
-	updateVerts();
 }
 
 //-----------------------------------------------------------------------------
@@ -148,8 +114,8 @@ void Piece::attachNeighbors()
 			continue;
 		}
 
-		foreach (Tile* child, m_children) {
-			foreach (Tile* tile, piece->children()) {
+		foreach (Tile* child, m_shadow) {
+			foreach (Tile* tile, piece->m_shadow) {
 				delta = tile->scenePos() - child->scenePos();
 
 				// Determine which neighbor the child is of the tile
@@ -198,7 +164,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
 		// Determine which piece to move
 		Piece *source, *target;
-		if (m_children.count() >= neighbor->m_children.count()) {
+		if (m_tiles.count() >= neighbor->m_tiles.count()) {
 			source = this;
 			target = neighbor;
 		} else {
@@ -219,7 +185,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 		// Push target until it is clear from current source
 		// We use a binary-search, pushing away if collision, retracting otherwise
-		QPoint orig = target->scenePos();
+		QPoint orig = target->m_pos;
 		QRect united = source_rect.united(target->boundingRect());
 		float min = 0.0f;
 		float max = united.width() * united.height();
@@ -260,11 +226,12 @@ void Piece::rotate(const QPoint& origin)
 
 	// Rotate tiles 90 degrees counter-clockwise
 	QPoint pos;
-	foreach (Tile* tile, m_children) {
-		pos = tile->pos();
+	int count = m_tiles.count();
+	for (int i = 0; i < count; ++i) {
+		pos = m_tiles.at(i)->pos();
 		qSwap(pos.rx(), pos.ry());
 		pos.setX(-pos.x() + m_rect.width() - Tile::size());
-		tile->setPos(pos);
+		m_tiles.at(i)->setPos(pos);
 	}
 
 	// Track how many rotations have occured
@@ -316,11 +283,61 @@ void Piece::save(QXmlStreamWriter& xml) const
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 	xml.writeAttribute("rotation", QString::number(m_rotation));
 
-	for (int i = 0; i < m_children.count(); ++i) {
-		m_children.at(i)->save(xml);
+	for (int i = 0; i < m_tiles.count(); ++i) {
+		m_tiles.at(i)->save(xml);
 	}
 
 	xml.writeEndElement();
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::attach(Piece* piece)
+{
+	Q_ASSERT(piece != this);
+
+	// Update position
+	QPoint delta = piece->m_pos - m_pos;
+	if (delta.x() < 0) {
+		m_pos.rx() += delta.x();
+	}
+	if (delta.y() < 0) {
+		m_pos.ry() += delta.y();
+	}
+
+	// Update position of attached tiles
+	QList<Tile*> tiles = piece->m_tiles;
+	int count = tiles.count();
+	for (int i = 0; i < count; ++i) {
+		tiles.at(i)->setPos(tiles.at(i)->pos() + delta);
+	}
+	m_tiles += tiles;
+	piece->m_tiles.clear();
+	updateTiles();
+
+	// Update shadow
+	m_shadow += piece->m_shadow;
+	updateShadow();
+
+	// Remove attached piece
+	m_board->removePiece(piece);
+
+	updateVerts();
+}
+
+//-----------------------------------------------------------------------------
+
+bool Piece::containsTile(int column, int row)
+{
+	bool result = false;
+	for (int i = 0; i < m_tiles.count(); ++i) {
+		const Tile* tile = m_tiles.at(i);
+		if (tile->column() == column && tile->row() == row) {
+			result = true;
+			break;
+		}
+	}
+	return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -330,8 +347,8 @@ void Piece::updateCollisionRegions()
 	m_changed = false;
 	m_collision_region = QRegion();
 	m_collision_region_expanded = QRegion();
-	for (int i = 0; i < m_children.count(); ++i) {
-		QRect rect = m_children.at(i)->boundingRect();
+	for (int i = 0; i < m_tiles.count(); ++i) {
+		QRect rect = m_tiles.at(i)->boundingRect();
 		m_collision_region += rect;
 		m_collision_region_expanded += m_board->marginRect(rect);
 	}
@@ -355,31 +372,16 @@ void Piece::updateShadow()
 
 //-----------------------------------------------------------------------------
 
-bool Piece::containsTile(int column, int row)
-{
-	bool result = false;
-	for (int i = 0; i < m_children.count(); ++i) {
-		const Tile* tile = m_children.at(i);
-		if (tile->column() == column && tile->row() == row) {
-			result = true;
-			break;
-		}
-	}
-	return result;
-}
-
-//-----------------------------------------------------------------------------
-
 void Piece::updateTiles()
 {
-	int count = m_children.count();
+	int count = m_tiles.count();
 
 	// Find bounding rectangle
-	QPoint top_left = m_children.first()->pos();
-	QPoint bottom_right = m_children.first()->pos() + QPoint(Tile::size(), Tile::size());
+	QPoint top_left = m_tiles.first()->pos();
+	QPoint bottom_right = m_tiles.first()->pos() + QPoint(Tile::size(), Tile::size());
 	QPoint pos;
 	for (int i = 0; i < count; ++i) {
-		pos = m_children.at(i)->pos();
+		pos = m_tiles.at(i)->pos();
 		top_left.setX( qMin(pos.x(), top_left.x()) );
 		top_left.setY( qMin(pos.y(), top_left.y()) );
 		bottom_right.setX( qMax(pos.x() + Tile::size(), bottom_right.x()) );
@@ -390,7 +392,7 @@ void Piece::updateTiles()
 	// Shift tiles to be inside rectangle
 	Tile* tile;
 	for (int i = 0; i < count; ++i) {
-		tile = m_children.at(i);
+		tile = m_tiles.at(i);
 		tile->setParent(this);
 		tile->setPos(tile->pos() - top_left);
 	}
@@ -407,8 +409,8 @@ void Piece::updateVerts()
 
 	// Update tile verts
 	m_verts.clear();
-	for (int i = 0; i < m_children.count(); ++i) {
-		Tile* tile = m_children.at(i);
+	for (int i = 0; i < m_tiles.count(); ++i) {
+		Tile* tile = m_tiles.at(i);
 
 		QPoint pos = tile->scenePos();
 		int x1 = pos.x();

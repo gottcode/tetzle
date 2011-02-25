@@ -1,3 +1,6 @@
+2011-02-25 Graeme Gott <graeme@gottcode.org>
+	* Clean up piece class.
+
 2011-02-24 Graeme Gott <graeme@gottcode.org>
 	* Track active pieces instead of tiles.
 	* Rotate around mouse cursor.
