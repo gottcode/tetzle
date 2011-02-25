@@ -96,8 +96,7 @@ private:
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
 	void updateSceneRectangle();
-	Tile* tileAt(const QPoint& pos, bool include_active = true) const;
-	Tile* tileUnderCursor(bool include_active = true);
+	Piece* pieceUnderCursor();
 	void finishGame();
 	void cleanup();
 
@@ -116,7 +115,7 @@ private:
 	int m_columns;
 	int m_rows;
 	QList<Piece*> m_pieces;
-	QHash<Piece*, Tile*> m_active_tiles;
+	QList<Piece*> m_active_pieces;
 	QRect m_scene;
 	int m_total_pieces;
 	int m_completed;

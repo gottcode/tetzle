@@ -37,6 +37,7 @@ public:
 	~Piece();
 
 	bool collidesWith(const Piece* other) const;
+	bool contains(const QPoint& pos) const;
 	QRect boundingRect() const;
 	QList<Tile*> children() const;
 	int rotation() const;
@@ -78,6 +79,11 @@ private:
 	QRegion m_collision_region_expanded;
 };
 
+
+inline bool Piece::contains(const QPoint& pos) const
+{
+	return m_collision_region.contains(pos);
+}
 
 inline QRect Piece::boundingRect() const
 {

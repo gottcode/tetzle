@@ -325,7 +325,7 @@ void Board::openGame(int id)
 
 void Board::saveGame()
 {
-	if ((m_pieces.count() + m_active_tiles.count()) <= 1) {
+	if ((m_pieces.count() + m_active_pieces.count()) <= 1) {
 		return;
 	}
 
@@ -372,9 +372,9 @@ void Board::retrievePieces()
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
 	// Make sure all pieces are free
-	QList<Piece*> pieces = m_pieces + m_active_tiles.keys();
+	QList<Piece*> pieces = m_pieces + m_active_pieces;
 	m_pieces.clear();
-	m_active_tiles.clear();
+	m_active_pieces.clear();
 
 	// Move all pieces to center of view
 	std::random_shuffle(pieces.begin(), pieces.end());
@@ -432,8 +432,9 @@ void Board::zoom(int level)
 
 	// Update mouse cursor position
 	QPoint new_pos = mapCursorPosition();
-	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-		i.key()->moveBy(new_pos - old_pos);
+	int count = m_active_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_active_pieces.at(i)->moveBy(new_pos - old_pos);
 	}
 	updateCursor();
 
@@ -529,14 +530,17 @@ void Board::paintGL()
 	glPopAttrib();
 
 	// Draw pieces
-	for (int i = 0; i < m_pieces.count(); ++i) {
+	int count = m_pieces.count();
+	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {
 			m_pieces.at(i)->draw();
 		}
 	}
-	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-		i.key()->draw();
+
+	count = m_active_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_active_pieces.at(i)->draw();
 	}
 	glPopMatrix();
 
@@ -711,19 +715,20 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		scroll(delta);
 	}
 
-	if (!m_active_tiles.isEmpty()) {
-		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->moveBy(delta);
+	if (!m_active_pieces.isEmpty()) {
+		int count = m_active_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			m_active_pieces.at(i)->moveBy(delta);
 		}
 
 		// Attach neighbors if only one piece is active
-		if (m_active_tiles.size() == 1) {
-			m_active_tiles.constBegin().key()->attachNeighbors();
+		if (m_active_pieces.count() == 1) {
+			m_active_pieces.first()->attachNeighbors();
 			updateCompleted();
 		}
 
 		// Handle finishing game
-		if (m_pieces.count() + m_active_tiles.count() == 1) {
+		if ((m_pieces.count() + m_active_pieces.count()) == 1) {
 			finishGame();
 		}
 	}
@@ -782,8 +787,9 @@ void Board::stopScrolling()
 void Board::scroll(const QPoint& delta)
 {
 	m_pos -= delta;
-	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-		i.key()->moveBy(-delta);
+	int count = m_active_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_active_pieces.at(i)->moveBy(-delta);
 	}
 }
 
@@ -793,7 +799,7 @@ void Board::togglePiecesUnderCursor() {
 	switch (m_action_key) {
 	case 0:
 		if (!m_selecting) {
-			if (tileUnderCursor(false)) {
+			if (pieceUnderCursor()) {
 				grabPiece();
 			} else {
 				releasePieces();
@@ -836,14 +842,11 @@ void Board::grabPiece()
 		return;
 	}
 
-	Tile* tile = tileUnderCursor(false);
-	if (tile == 0) {
+	Piece* piece = pieceUnderCursor();
+	if (piece == 0) {
 		return;
 	}
-	Q_ASSERT(!m_active_tiles.contains(tile->parent()));
-	m_active_tiles.insert(tile->parent(), tile);
-
-	Piece* piece = tile->parent();
+	m_active_pieces.append(piece);
 	m_pieces.removeAll(piece);
 	piece->setSelected(true);
 	updateCursor();
@@ -859,17 +862,20 @@ void Board::releasePieces()
 		return;
 	}
 
-	if (m_active_tiles.count() == 1) {
-		m_active_tiles.constBegin().key()->attachNeighbors();
+	int count = m_active_pieces.count();
+	if (count == 1) {
+		m_active_pieces.first()->attachNeighbors();
 		updateCompleted();
 	}
 
-	for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-		m_pieces.append(i.key());
-		i.key()->setSelected(false);
-		i.key()->pushNeighbors();
+	Piece* piece;
+	for (int i = 0; i < count; ++i) {
+		piece = m_active_pieces.at(i);
+		m_pieces.append(piece);
+		piece->setSelected(false);
+		piece->pushNeighbors();
 	}
-	m_active_tiles.clear();
+	m_active_pieces.clear();
 
 	updateCursor();
 	updateCompleted();
@@ -889,26 +895,23 @@ void Board::rotatePiece()
 		return;
 	}
 
-	if (m_active_tiles.isEmpty()) {
-		Tile* child = tileUnderCursor();
-		if (child == 0) {
+	if (m_active_pieces.isEmpty()) {
+		Piece* piece = pieceUnderCursor();
+		if (piece == 0) {
 			return;
 		}
-		Piece* piece = child->parent();
-
 		piece->rotate(mapCursorPosition());
 		piece->attachNeighbors();
-		if (m_active_tiles.isEmpty()) {
-			piece->pushNeighbors();
-		}
+		piece->pushNeighbors();
 	} else {
-		for (QHash<Piece*, Tile*>::const_iterator i = m_active_tiles.constBegin(); i != m_active_tiles.constEnd(); ++i) {
-			i.key()->rotate(mapCursorPosition());
+		int count = m_active_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			m_active_pieces.at(i)->rotate(mapCursorPosition());
 		}
 	}
 	updateCompleted();
 
-	if (m_pieces.count() + m_active_tiles.count() == 1) {
+	if ((m_pieces.count() + m_active_pieces.count()) == 1) {
 		finishGame();
 	}
 
@@ -928,7 +931,7 @@ void Board::selectPieces()
 		if (rect.intersects(piece->boundingRect())) {
 			Tile* tile = piece->children().at(rand() % piece->children().count());
 			piece->moveBy(cursor - tile->scenePos() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
-			m_active_tiles.insert(piece, tile);
+			m_active_pieces.append(piece);
 			m_pieces.removeAll(piece);
 			piece->setSelected(true);
 		} else {
@@ -1028,7 +1031,7 @@ void Board::updateCursor()
 {
 	int state = 0;
 	if (!m_finished) {
-		state = (tileUnderCursor(false) != 0 || m_selecting) | (!m_active_tiles.isEmpty() * 2);
+		state = (pieceUnderCursor() != 0 || m_selecting) | (!m_active_pieces.isEmpty() * 2);
 	}
 
 	switch (state) {
@@ -1068,7 +1071,7 @@ QPoint Board::mapPosition(const QPoint& position) const
 
 void Board::updateCompleted()
 {
-	int t = 100 * (m_pieces.count() + m_active_tiles.count() - 1);
+	int t = 100 * (m_pieces.count() + m_active_pieces.count() - 1);
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
 	emit completionChanged(m_completed);
@@ -1086,34 +1089,17 @@ void Board::updateSceneRectangle()
 
 //-----------------------------------------------------------------------------
 
-Tile* Board::tileAt(const QPoint& pos, bool include_active) const
+Piece* Board::pieceUnderCursor()
 {
+	QPoint pos = mapCursorPosition();
 	Piece* piece;
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		piece = m_pieces.at(i);
-		if (!include_active && m_active_tiles.contains(piece)) {
-			continue;
-		}
-		if (piece->boundingRect().contains(pos)) {
-			foreach (Tile* tile, piece->children()) {
-				if (tile->boundingRect().contains(pos)) {
-					return tile;
-				}
-			}
+		if (piece->contains(pos)) {
+			return piece;
 		}
 	}
 	return 0;
-}
-
-//-----------------------------------------------------------------------------
-
-Tile* Board::tileUnderCursor(bool include_active)
-{
-	if (include_active && !m_active_tiles.isEmpty()) {
-		return m_active_tiles.constBegin().value();
-	} else {
-		return tileAt(mapCursorPosition(), include_active);
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1123,10 +1109,10 @@ void Board::finishGame()
 	m_finished = true;
 
 	// Drop remaining piece
-	if (!m_active_tiles.isEmpty()) {
-		m_pieces.append(m_active_tiles.constBegin().key());
+	if (!m_active_pieces.isEmpty()) {
+		m_pieces.append(m_active_pieces.first());
 	}
-	m_active_tiles.clear();
+	m_active_pieces.clear();
 
 	// Rotate completed board to face up
 	Piece* piece = m_pieces.first();
@@ -1160,7 +1146,7 @@ void Board::cleanup()
 
 	m_overview->scene()->clear();
 	m_message->setVisible(false);
-	m_active_tiles.clear();
+	m_active_pieces.clear();
 	qDeleteAll(m_pieces);
 	m_pieces.clear();
 	m_completed = 0;
