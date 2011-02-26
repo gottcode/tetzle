@@ -154,7 +154,8 @@ void Board::setColors(const QPalette& palette)
 
 void Board::updateSceneRectangle(Piece* piece)
 {
-	m_scene = m_scene.united(marginRect(piece->boundingRect()));
+	int size = Tile::size() / 2;
+	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
 }
 
 //-----------------------------------------------------------------------------
@@ -376,17 +377,20 @@ void Board::retrievePieces()
 	m_pieces.clear();
 	m_active_pieces.clear();
 
+	// Clear view while retrieving pieces
+	m_pos = QPoint(0,0);
+	m_scene = QRect(0,0,0,0);
+	updateGL();
+	QApplication::processEvents();
+
 	// Move all pieces to center of view
 	std::random_shuffle(pieces.begin(), pieces.end());
 	foreach (Piece* piece, pieces) {
 		m_pieces.append(piece);
-		piece->moveBy(m_pos - piece->boundingRect().center());
+		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->setSelected(false);
 		piece->pushNeighbors();
 	}
-
-	// Reset scene rectangle
-	updateSceneRectangle();
 
 	// Clear message and cursor
 	m_message->setVisible(false);

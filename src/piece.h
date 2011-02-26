@@ -47,6 +47,7 @@ public:
 	void moveBy(const QPoint& delta);
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotate(const QPoint& origin = QPoint());
+	void setPosition(const QPoint& pos);
 	void setSelected(bool selected);
 
 	void draw() const;
@@ -107,6 +108,12 @@ inline QPoint Piece::scenePos() const
 inline void Piece::moveBy(const QPoint& delta)
 {
 	m_pos += delta;
+	updateVerts();
+}
+
+inline void Piece::setPosition(const QPoint& pos)
+{
+	m_pos = pos;
 	updateVerts();
 }
 
