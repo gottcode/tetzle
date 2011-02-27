@@ -190,32 +190,17 @@ void Board::newGame(const QString& image, int difficulty)
 	m_image_path = image;
 	loadImage();
 
-	// Create tiles
-	QVector< QVector<Tile*> > tiles = QVector< QVector<Tile*> >(m_columns, QVector<Tile*>(m_rows));
-	for (int c = 0; c < m_columns; ++c) {
-		for (int r = 0; r < m_rows; ++r) {
-			tiles[c][r] = new Tile(c, r);
-		}
-	}
-
 	// Generate puzzle
 	std::srand(std::time(0));
 	Generator generator(m_columns, m_rows);
-	QList< QList<QPoint> > pieces = generator.pieces();
+	QList< QList<Tile*> > pieces = generator.pieces();
 	std::random_shuffle(pieces.begin(), pieces.end());
 
 	int count = pieces.count();
 	int step = (count > 25) ? (count / 25) : 1;
 	for (int i = 0; i < count; ++i) {
-		// Find tiles for piece
-		const QList<QPoint>& group = pieces.at(i);
-		QList<Tile*> children;
-		foreach (const QPoint& tile, group) {
-			children.append( tiles[tile.x()][tile.y()] );
-		}
-
 		// Create piece
-		Piece* piece = new Piece(QPoint(0, 0), rand() % 4, children, this);
+		Piece* piece = new Piece(QPoint(0, 0), rand() % 4, pieces.at(i), this);
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->pushNeighbors();

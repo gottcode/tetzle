@@ -27,13 +27,14 @@ namespace DLX
 {
 	struct Node;
 }
+class Tile;
 
 class Generator
 {
 public:
 	Generator(int columns, int rows);
 
-	QList< QList<QPoint> > pieces() const;
+	QList< QList<Tile*> > pieces() const;
 
 private:
 	void solve();
@@ -42,10 +43,11 @@ private:
 private:
 	int m_columns;
 	int m_rows;
-	QList< QList<QPoint> > m_pieces;
+	QList< QList<Tile*> > m_pieces;
 };
 
-inline QList< QList<QPoint> > Generator::pieces() const {
+inline QList< QList<Tile*> > Generator::pieces() const
+{
 	return m_pieces;
 }
 

@@ -1,4 +1,5 @@
 2011-02-27 Graeme Gott <graeme@gottcode.org>
+	* Move tile creation into generator class.
 	* Show puzzle creation.
 
 2011-02-25 Graeme Gott <graeme@gottcode.org>

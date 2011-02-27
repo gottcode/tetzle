@@ -20,6 +20,7 @@
 #include "generator.h"
 
 #include "dancing_links.h"
+#include "tile.h"
 
 #include <algorithm>
 
@@ -27,30 +28,28 @@
 
 namespace
 {
+	struct Shape
+	{
+		Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
 
-struct Piece
-{
-	Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
+		QPoint cells[4];
+		int width;
+		int height;
+	};
 
-	QPoint cells[4];
-	int width;
-	int height;
-};
-
-Piece::Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
-	: width(0),
-	height(0)
-{
-	cells[0] = p1;
-	cells[1] = p2;
-	cells[2] = p3;
-	cells[3] = p4;
-	for (int i = 0; i < 4; ++i) {
-		width = qMax(width, cells[i].x());
-		height = qMax(height, cells[i].y());
+	Shape::Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
+		: width(0),
+		height(0)
+	{
+		cells[0] = p1;
+		cells[1] = p2;
+		cells[2] = p3;
+		cells[3] = p4;
+		for (int i = 0; i < 4; ++i) {
+			width = qMax(width, cells[i].x());
+			height = qMax(height, cells[i].y());
+		}
 	}
-}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -69,39 +68,39 @@ Generator::Generator(int columns, int rows)
 
 void Generator::solve()
 {
-	QList<Piece> p;
+	QList<Shape> shapes;
 
 	// Add S
-	p.append(Piece(QPoint(1,0), QPoint(2,0), QPoint(0,1), QPoint(1,1)));
-	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
+	shapes.append(Shape(QPoint(1,0), QPoint(2,0), QPoint(0,1), QPoint(1,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
 	// Add Z
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,1)));
-	p.append(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,1)));
+	shapes.append(Shape(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
 	// Add O
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(1,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(1,1)));
 	// Add T
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,0)));
-	p.append(Piece(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
-	p.append(Piece(QPoint(0,1), QPoint(1,1), QPoint(1,0), QPoint(2,1)));
-	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(2,0)));
+	shapes.append(Shape(QPoint(1,0), QPoint(0,1), QPoint(1,1), QPoint(1,2)));
+	shapes.append(Shape(QPoint(0,1), QPoint(1,1), QPoint(1,0), QPoint(2,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(0,2)));
 	// Add J
-	p.append(Piece(QPoint(1,0), QPoint(1,1), QPoint(0,2), QPoint(1,2)));
-	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(2,1)));
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(0,2)));
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(2,1)));
+	shapes.append(Shape(QPoint(1,0), QPoint(1,1), QPoint(0,2), QPoint(1,2)));
+	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(1,1), QPoint(2,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(0,1), QPoint(0,2)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(2,1)));
 	// Add L
-	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(1,2)));
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(0,1)));
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(1,2)));
-	p.append(Piece(QPoint(0,1), QPoint(1,1), QPoint(2,0), QPoint(2,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(1,2)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(0,1)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(1,1), QPoint(1,2)));
+	shapes.append(Shape(QPoint(0,1), QPoint(1,1), QPoint(2,0), QPoint(2,1)));
 	// Add I
-	p.append(Piece(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(3,0)));
-	p.append(Piece(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(0,3)));
+	shapes.append(Shape(QPoint(0,0), QPoint(1,0), QPoint(2,0), QPoint(3,0)));
+	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(0,3)));
 
 	// Create matrix
 	DLX::Matrix matrix(m_columns * m_rows);
 
-	int size = p.size();
+	int size = shapes.size();
 	QList<int> ids;
 	for (int i = 0; i < size; ++i) {
 		ids.append(i);
@@ -121,11 +120,11 @@ void Generator::solve()
 
 		std::random_shuffle(ids.begin(), ids.end());
 		for (int i = 0; i < size; ++i) {
-			const Piece& piece = p.at(ids.at(i));
-			if (piece.width + col < m_columns && piece.height + row < m_rows) {
+			const Shape& shape = shapes.at(ids.at(i));
+			if (shape.width + col < m_columns && shape.height + row < m_rows) {
 				matrix.addRow();
 				for (int i = 0; i < 4; ++i) {
-					matrix.addElement((piece.cells[i].y() + row) * m_columns + piece.cells[i].x() + col);
+					matrix.addElement((shape.cells[i].y() + row) * m_columns + shape.cells[i].x() + col);
 				}
 			}
 		}
@@ -139,14 +138,14 @@ void Generator::solve()
 
 void Generator::solution(const QVector<DLX::Node*>& rows, unsigned int count)
 {
-	QList<QPoint> piece;
+	QList<Tile*> piece;
 	for (unsigned int i = 0; i < count; ++i) {
 		piece.clear();
 		DLX::Node* j = rows[i];
 		do {
 			unsigned int r = j->column->id / m_columns;
 			unsigned int c = j->column->id - (r * m_columns);
-			piece.append(QPoint(c, r));
+			piece.append(new Tile(c, r));
 			j = j->right;
 		} while (j != rows[i]);
 		m_pieces.append(piece);
