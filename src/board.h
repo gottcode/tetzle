@@ -34,7 +34,6 @@ public:
 	Board(QWidget* parent = 0);
 	~Board();
 
-	QList<Piece*> findCollidingPieces(Piece* piece) const;
 	Piece* findCollidingPiece(Piece* piece) const;
 	void removePiece(Piece* piece);
 

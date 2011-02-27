@@ -74,12 +74,6 @@ bool Piece::collidesWith(const Piece* other) const
 
 void Piece::attachNeighbors()
 {
-	int margin = m_board->margin();
-
-	if (m_changed) {
-		updateCollisionRegions();
-	}
-
 	// Create offset vectors
 	int cos_size = 0;
 	int sin_size = 0;
@@ -109,7 +103,7 @@ void Piece::attachNeighbors()
 	QSet<Piece*> closest_pieces;
 	QPoint delta;
 	int row, column;
-	foreach (Piece* piece, m_board->findCollidingPieces(this)) {
+	foreach (Piece* piece, m_neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
@@ -142,7 +136,7 @@ void Piece::attachNeighbors()
 					continue;
 				}
 
-				if (delta.manhattanLength() <= margin) {
+				if (delta.manhattanLength() <= m_board->margin()) {
 					closest_pieces.insert(piece);
 					piece->moveBy(-delta);
 					break;
@@ -154,6 +148,34 @@ void Piece::attachNeighbors()
 	// Attach to closest pieces
 	foreach (Piece* piece, closest_pieces) {
 		attach(piece);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::findNeighbors(const QList<Piece*>& pieces)
+{
+	// Find neighbor tiles
+	static QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
+	QList<QPoint> tiles;
+	foreach (Tile* tile, m_shadow) {
+		QPoint pos(tile->column(), tile->row());
+		foreach (const QPoint& delta, deltas) {
+			QPoint neighbor = pos + delta;
+			if (!containsTile(neighbor.x(), neighbor.y()) && !tiles.contains(neighbor)) {
+				tiles.append(neighbor);
+			}
+		}
+	}
+
+	// Find neighbor pieces
+	foreach (Piece* piece, pieces) {
+		foreach (const QPoint& tile, tiles) {
+			if (piece->containsTile(tile.x(), tile.y())) {
+				m_neighbors.insert(piece);
+				break;
+			}
+		}
 	}
 }
 
@@ -318,6 +340,15 @@ void Piece::attach(Piece* piece)
 	// Update shadow
 	m_shadow += piece->m_shadow;
 	updateShadow();
+
+	// Update neighbors
+	m_neighbors += piece->m_neighbors;
+	m_neighbors.remove(piece);
+	m_neighbors.remove(this);
+	foreach (Piece* neighbor, m_neighbors) {
+		neighbor->m_neighbors.remove(piece);
+		neighbor->m_neighbors.insert(this);
+	}
 
 	// Remove attached piece
 	m_board->removePiece(piece);

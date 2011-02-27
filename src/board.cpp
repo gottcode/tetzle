@@ -105,26 +105,12 @@ Board::~Board()
 
 //-----------------------------------------------------------------------------
 
-QList<Piece*> Board::findCollidingPieces(Piece* piece) const
-{
-	QList<Piece*> list;
-	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece* parent = m_pieces.at(i);
-		if (parent != piece && piece->collidesWith(parent)) {
-			list.append(parent);
-		}
-	}
-	return list;
-}
-
-//-----------------------------------------------------------------------------
-
 Piece* Board::findCollidingPiece(Piece* piece) const
 {
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece* parent = m_pieces.at(i);
-		if (parent != piece && piece->collidesWith(parent)) {
-			return parent;
+		Piece* other = m_pieces.at(i);
+		if (other != piece && piece->collidesWith(other)) {
+			return other;
 		}
 	}
 	return 0;
@@ -211,6 +197,10 @@ void Board::newGame(const QString& image, int difficulty)
 			updateGL();
 			QApplication::processEvents();
 		}
+	}
+
+	for (int i = 0; i < count; ++i) {
+		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
 
 	// Draw tiles
@@ -310,6 +300,11 @@ void Board::openGame(int id)
 		QMessageBox::warning(this, tr("Error"), tr("Error parsing XML file.\n\n%1").arg(xml.errorString()));
 		cleanup();
 		return;
+	}
+
+	int count = m_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
 
 	// Load scene rectangle

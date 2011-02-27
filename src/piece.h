@@ -28,6 +28,7 @@ class Tile;
 #include <QList>
 #include <QPoint>
 #include <QRect>
+#include <QSet>
 #include <QXmlStreamWriter>
 
 class Piece
@@ -44,6 +45,7 @@ public:
 	QPoint scenePos() const;
 
 	void attachNeighbors();
+	void findNeighbors(const QList<Piece*>& pieces);
 	void moveBy(const QPoint& delta);
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotate(const QPoint& origin = QPoint());
@@ -67,6 +69,7 @@ private:
 	QRect m_rect;
 	QList<Tile*> m_tiles;
 	QList<Tile*> m_shadow;
+	QSet<Piece*> m_neighbors;
 	int m_rotation;
 	bool m_selected;
 
