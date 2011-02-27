@@ -164,6 +164,7 @@ void Board::newGame(const QString& image, int difficulty)
 {
 	// Remove any previous textures and tiles
 	cleanup();
+	zoom(0);
 
 	// Prevent starting a game with a missing image
 	if (!QFileInfo(Path::image(image)).exists()) {
@@ -197,13 +198,17 @@ void Board::newGame(const QString& image, int difficulty)
 		}
 	}
 
-	// Create pieces
+	// Generate puzzle
 	std::srand(std::time(0));
 	Solver solver(m_columns, m_rows);
 	QList< QList<QPoint> > pieces = solver.pieces();
 	std::random_shuffle(pieces.begin(), pieces.end());
-	foreach (const QList<QPoint>& group, pieces) {
+
+	int count = pieces.count();
+	int step = (count > 25) ? (count / 25) : 1;
+	for (int i = 0; i < count; ++i) {
 		// Find tiles for piece
+		const QList<QPoint>& group = pieces.at(i);
 		QList<Tile*> children;
 		foreach (const QPoint& tile, group) {
 			children.append( tiles[tile.x()][tile.y()] );
@@ -212,13 +217,27 @@ void Board::newGame(const QString& image, int difficulty)
 		// Create piece
 		Piece* piece = new Piece(QPoint(0, 0), rand() % 4, children, this);
 		m_pieces.append(piece);
+		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->pushNeighbors();
+
+		// Show pieces
+		if ((i % step) == 0) {
+			m_pos = m_scene.center();
+			updateGL();
+			QApplication::processEvents();
+		}
 	}
 
 	// Draw tiles
+	m_pos = m_scene.center();
+	int level = ZoomSlider::scaleLevel(m_scene.size(), size());
+	for (int i = 0; i <= level; ++i) {
+		zoom(i);
+	}
+
 	m_message->setVisible(false);
+	updateGL();
 	QApplication::restoreOverrideCursor();
-	zoomFit();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
 }
@@ -315,9 +334,11 @@ void Board::openGame(int id)
 	}
 
 	// Draw tiles
-	m_message->setVisible(false);
-	QApplication::restoreOverrideCursor();
 	zoom(board_zoom);
+
+	m_message->setVisible(false);
+	updateGL();
+	QApplication::restoreOverrideCursor();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
 }
@@ -392,12 +413,13 @@ void Board::retrievePieces()
 		piece->pushNeighbors();
 	}
 
-	// Clear message and cursor
-	m_message->setVisible(false);
-	QApplication::restoreOverrideCursor();
-
 	// Update view
 	zoomFit();
+
+	// Clear message and cursor
+	m_message->setVisible(false);
+	updateGL();
+	QApplication::restoreOverrideCursor();
 }
 
 //-----------------------------------------------------------------------------
@@ -419,9 +441,7 @@ void Board::zoomOut()
 void Board::zoomFit()
 {
 	m_pos = m_scene.center();
-	float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
-	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
-	zoom(ZoomSlider::scaleLevel(qMin(sx, sy)));
+	zoom(ZoomSlider::scaleLevel(m_scene.size(), size()));
 }
 
 //-----------------------------------------------------------------------------
@@ -1000,9 +1020,6 @@ void Board::loadImage()
 	}
 	m_image = bindTexture(texture, GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
 
-	// Create overview
-	m_overview->load(image.scaled(image.size() * 0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
 	m_corners[0][1] = QPointF(0,m_image_ts);
@@ -1024,8 +1041,10 @@ void Board::loadImage()
 	m_corners[3][2] = m_corners[0][1];
 	m_corners[3][3] = m_corners[0][2];
 
-	// Show overview
+	// Create overview
+	m_overview->load(image.scaled(image.size() * 0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
+	m_overview->repaint();
 }
 
 //-----------------------------------------------------------------------------

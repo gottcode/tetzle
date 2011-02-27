@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,9 +59,11 @@ float ZoomSlider::scaleFactor(int level)
 
 //-----------------------------------------------------------------------------
 
-int ZoomSlider::scaleLevel(float factor)
+int ZoomSlider::scaleLevel(const QSize& scene, const QSize& viewport)
 {
-	factor = qBound(0.0f, factor, 1.0f);
+	float sx = static_cast<float>(viewport.width()) / static_cast<float>(scene.width());
+	float sy = static_cast<float>(viewport.height()) / static_cast<float>(scene.height());
+	float factor = qBound(0.0f, qMin(sx, sy), 1.0f);
 	int level = 9;
 	for (int i = 0; i < 9; ++i) {
 		if ((factor - scale_levels[i]) < 0.0f) {

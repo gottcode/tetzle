@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,9 +63,7 @@ void Overview::load(const QImage& image)
 	scene()->clear();
 
 	// Find minimum scale
-	float scalex = 400.0f / image.width();
-	float scaley = 400.0f / image.width();
-	m_min_scale_level = ZoomSlider::scaleLevel(qMin(scalex, scaley));
+	m_min_scale_level = ZoomSlider::scaleLevel(image.size(), QSize(400,400));
 	zoom(m_min_scale_level);
 
 	// Resize window
