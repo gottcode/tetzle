@@ -479,7 +479,7 @@ void Board::initializeGL()
 	glFrontFace(GL_CCW);
 
 	// Load shadow image
-	m_shadow = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
+	m_shadow = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
 
 	// Load colors
 	AppearanceDialog dialog;
@@ -998,7 +998,7 @@ void Board::loadImage()
 		QPainter painter(&texture);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	m_image = bindTexture(texture, GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption);
+	m_image = bindTexture(texture, GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
