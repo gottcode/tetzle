@@ -22,13 +22,13 @@ HEADERS = src/add_image.h \
 	src/board.h \
 	src/color_button.h \
 	src/dancing_links.h \
+	src/generator.h \
 	src/message.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
 	src/overview.h \
 	src/path.h \
 	src/piece.h \
-	src/solver.h \
 	src/tile.h \
 	src/tag_image_dialog.h \
 	src/tag_manager.h \
@@ -42,6 +42,7 @@ SOURCES = src/add_image.cpp \
 	src/board.cpp \
 	src/color_button.cpp \
 	src/dancing_links.cpp \
+	src/generator.cpp \
 	src/main.cpp \
 	src/message.cpp \
 	src/new_game_dialog.cpp \
@@ -49,7 +50,6 @@ SOURCES = src/add_image.cpp \
 	src/overview.cpp \
 	src/path.cpp \
 	src/piece.cpp \
-	src/solver.cpp \
 	src/tile.cpp \
 	src/tag_image_dialog.cpp \
 	src/tag_manager.cpp \

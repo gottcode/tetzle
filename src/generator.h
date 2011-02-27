@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  *
  ***********************************************************************/
 
-#ifndef SOLVER_H
-#define SOLVER_H
+#ifndef GENERATOR_H
+#define GENERATOR_H
 
 #include <QList>
 #include <QPoint>
@@ -28,10 +28,10 @@ namespace DLX
 	struct Node;
 }
 
-class Solver
+class Generator
 {
 public:
-	Solver(int columns, int rows);
+	Generator(int columns, int rows);
 
 	QList< QList<QPoint> > pieces() const;
 
@@ -45,7 +45,7 @@ private:
 	QList< QList<QPoint> > m_pieces;
 };
 
-inline QList< QList<QPoint> > Solver::pieces() const {
+inline QList< QList<QPoint> > Generator::pieces() const {
 	return m_pieces;
 }
 

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *
  ***********************************************************************/
 
-#include "solver.h"
+#include "generator.h"
 
 #include "dancing_links.h"
 
@@ -55,7 +55,7 @@ Piece::Piece(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint&
 
 //-----------------------------------------------------------------------------
 
-Solver::Solver(int columns, int rows)
+Generator::Generator(int columns, int rows)
 	: m_columns(columns),
 	m_rows(rows)
 {
@@ -67,7 +67,7 @@ Solver::Solver(int columns, int rows)
 
 //-----------------------------------------------------------------------------
 
-void Solver::solve()
+void Generator::solve()
 {
 	QList<Piece> p;
 
@@ -132,12 +132,12 @@ void Solver::solve()
 	}
 
 	// Generate solution
-	matrix.search(this, &Solver::solution, 1, m_columns * m_rows);
+	matrix.search(this, &Generator::solution, 1, m_columns * m_rows);
 }
 
 //-----------------------------------------------------------------------------
 
-void Solver::solution(const QVector<DLX::Node*>& rows, unsigned int count)
+void Generator::solution(const QVector<DLX::Node*>& rows, unsigned int count)
 {
 	QList<QPoint> piece;
 	for (unsigned int i = 0; i < count; ++i) {

@@ -20,11 +20,11 @@
 #include "board.h"
 
 #include "appearance_dialog.h"
+#include "generator.h"
 #include "message.h"
 #include "overview.h"
 #include "path.h"
 #include "piece.h"
-#include "solver.h"
 #include "tile.h"
 #include "zoom_slider.h"
 
@@ -200,8 +200,8 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate puzzle
 	std::srand(std::time(0));
-	Solver solver(m_columns, m_rows);
-	QList< QList<QPoint> > pieces = solver.pieces();
+	Generator generator(m_columns, m_rows);
+	QList< QList<QPoint> > pieces = generator.pieces();
 	std::random_shuffle(pieces.begin(), pieces.end());
 
 	int count = pieces.count();
