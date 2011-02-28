@@ -1,3 +1,6 @@
+2011-02-28 Graeme Gott <graeme@gottcode.org>
+	* Add statusbar messages.
+
 2011-02-27 Graeme Gott <graeme@gottcode.org>
 	* Only check actual neighbors in attachNeighbors.
 	* Move tile creation into generator class.

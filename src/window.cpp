@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,6 +70,8 @@ Window::Window(const QStringList& files)
 	connect(m_board, SIGNAL(completionChanged(int)), m_completed, SLOT(setValue(int)));
 	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
+	connect(m_board, SIGNAL(clearMessage()), statusBar(), SLOT(clearMessage()));
+	connect(m_board, SIGNAL(showMessage(const QString&)), statusBar(), SLOT(showMessage(const QString&)));
 	connect(m_board, SIGNAL(zoomChanged(int, float)), m_slider, SLOT(setValue(int, float)));
 	connect(m_slider, SIGNAL(valueChanged(int)), m_board, SLOT(zoom(int)));
 	setCentralWidget(m_board);

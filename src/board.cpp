@@ -172,16 +172,19 @@ void Board::newGame(const QString& image, int difficulty)
 	m_id++;
 
 	// Create textures
+	updateStatusMessage(tr("Loading image..."));
 	m_difficulty = difficulty;
 	m_image_path = image;
 	loadImage();
 
 	// Generate puzzle
+	updateStatusMessage(tr("Generating puzzle..."));
 	std::srand(std::time(0));
 	Generator generator(m_columns, m_rows);
 	QList< QList<Tile*> > pieces = generator.pieces();
 	std::random_shuffle(pieces.begin(), pieces.end());
 
+	updateStatusMessage(tr("Creating pieces..."));
 	int count = pieces.count();
 	int step = (count > 25) ? (count / 25) : 1;
 	for (int i = 0; i < count; ++i) {
@@ -195,13 +198,14 @@ void Board::newGame(const QString& image, int difficulty)
 		if ((i % step) == 0) {
 			m_pos = m_scene.center();
 			updateGL();
-			QApplication::processEvents();
+			updateStatusMessage(tr("Creating pieces..."));
 		}
 	}
 
 	for (int i = 0; i < count; ++i) {
 		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
+	emit clearMessage();
 
 	// Draw tiles
 	m_pos = m_scene.center();
@@ -263,12 +267,14 @@ void Board::openGame(int id)
 			values.value(1). toInt(),
 			values.value(2).toInt(),
 			values.value(3).toInt());
+		updateStatusMessage(tr("Loading image..."));
 		loadImage();
 	} else {
 		xml.raiseError(tr("Unknown data format"));
 	}
 
 	// Load pieces
+	updateStatusMessage(tr("Loading pieces..."));
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
@@ -306,6 +312,7 @@ void Board::openGame(int id)
 	for (int i = 0; i < count; ++i) {
 		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
+	emit clearMessage();
 
 	// Load scene rectangle
 	updateSceneRectangle();
@@ -369,8 +376,7 @@ void Board::saveGame()
 void Board::retrievePieces()
 {
 	// Inform user this will take awhile
-	m_message->setText(tr("Please Wait"));
-	m_message->setVisible(true);
+	updateStatusMessage(tr("Retrieving pieces..."));
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
 	// Make sure all pieces are free
@@ -381,8 +387,6 @@ void Board::retrievePieces()
 	// Clear view while retrieving pieces
 	m_pos = QPoint(0,0);
 	m_scene = QRect(0,0,0,0);
-	updateGL();
-	QApplication::processEvents();
 
 	// Move all pieces to center of view
 	std::random_shuffle(pieces.begin(), pieces.end());
@@ -397,8 +401,7 @@ void Board::retrievePieces()
 	zoomFit();
 
 	// Clear message and cursor
-	m_message->setVisible(false);
-	updateGL();
+	emit clearMessage();
 	QApplication::restoreOverrideCursor();
 }
 
@@ -866,12 +869,18 @@ void Board::releasePieces()
 		return;
 	}
 
+	// Inform user this may take awhile
+	updateStatusMessage(tr("Placing pieces..."));
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+
+	// Attach to closest piece
 	int count = m_active_pieces.count();
 	if (count == 1) {
 		m_active_pieces.first()->attachNeighbors();
 		updateCompleted();
 	}
 
+	// Place pieces
 	Piece* piece;
 	for (int i = 0; i < count; ++i) {
 		piece = m_active_pieces.at(i);
@@ -884,11 +893,16 @@ void Board::releasePieces()
 	updateCursor();
 	updateCompleted();
 
+	// Clear message and cursor
+	emit clearMessage();
+	QApplication::restoreOverrideCursor();
+
+	// Check if game is over
 	if (m_pieces.count() == 1) {
 		finishGame();
+	} else {
+		updateGL();
 	}
-
-	updateGL();
 }
 
 //-----------------------------------------------------------------------------
@@ -1091,6 +1105,14 @@ void Board::updateSceneRectangle()
 
 //-----------------------------------------------------------------------------
 
+void Board::updateStatusMessage(const QString& message)
+{
+	emit showMessage(message);
+	QApplication::processEvents();
+}
+
+//-----------------------------------------------------------------------------
+
 Piece* Board::pieceUnderCursor()
 {
 	QPoint pos = mapCursorPosition();
@@ -1146,6 +1168,7 @@ void Board::cleanup()
 {
 	deleteTexture(m_image);
 
+	emit clearMessage();
 	m_overview->scene()->clear();
 	m_message->setVisible(false);
 	m_active_pieces.clear();

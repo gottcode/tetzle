@@ -62,6 +62,8 @@ signals:
 	void completionChanged(int value);
 	void overviewToggled(bool visible);
 	void retrievePiecesAvailable(bool available);
+	void showMessage(const QString& message);
+	void clearMessage();
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);
 	void zoomChanged(int level, float factor);
@@ -95,6 +97,7 @@ private:
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
 	void updateSceneRectangle();
+	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
 	void finishGame();
 	void cleanup();
