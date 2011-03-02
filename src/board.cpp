@@ -208,14 +208,8 @@ void Board::newGame(const QString& image, int difficulty)
 	emit clearMessage();
 
 	// Draw tiles
-	m_pos = m_scene.center();
-	int level = ZoomSlider::scaleLevel(m_scene.size(), size());
-	for (int i = 0; i <= level; ++i) {
-		zoom(i);
-	}
-
 	m_message->setVisible(false);
-	updateGL();
+	zoomFit();
 	QApplication::restoreOverrideCursor();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
@@ -321,10 +315,8 @@ void Board::openGame(int id)
 	}
 
 	// Draw tiles
-	zoom(board_zoom);
-
 	m_message->setVisible(false);
-	updateGL();
+	zoom(board_zoom);
 	QApplication::restoreOverrideCursor();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
@@ -423,8 +415,20 @@ void Board::zoomOut()
 
 void Board::zoomFit()
 {
+	// Find new scale level
 	m_pos = m_scene.center();
-	zoom(ZoomSlider::scaleLevel(m_scene.size(), size()));
+	int level = ZoomSlider::scaleLevel(m_scene.size(), size());
+	if (m_scale_level == level) {
+		updateGL();
+		return;
+	}
+
+	// Animate zoom
+	int delta = (level > m_scale_level) ? 1 : -1;
+	int count = abs(level - m_scale_level);
+	for (int i = 0; i < count; ++i) {
+		zoom(m_scale_level + delta);
+	}
 }
 
 //-----------------------------------------------------------------------------
