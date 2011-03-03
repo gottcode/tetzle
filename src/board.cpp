@@ -523,7 +523,6 @@ void Board::paintGL()
 	glMultMatrixd(matrix.constData());
 
 	// Draw scene rectangle
-	glPushAttrib(GL_CURRENT_BIT);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 
@@ -536,9 +535,9 @@ void Board::paintGL()
 	glVertexPointer(2, GL_INT, 0, &verts);
 	glDrawArrays(GL_QUADS, 0, 4);
 
+	glColor4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glPopAttrib();
 
 	// Draw pieces
 	int count = m_pieces.count();
@@ -557,7 +556,6 @@ void Board::paintGL()
 
 	// Draw selection rectangle
 	if (m_selecting) {
-		glPushAttrib(GL_CURRENT_BIT);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
 
@@ -579,9 +577,9 @@ void Board::paintGL()
 		qglColor(highlight.darker());
 		glDrawArrays(GL_LINE_LOOP, 0, 4);
 
+		glColor4f(1,1,1,1);
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glPopAttrib();
 	}
 
 	// Draw message
