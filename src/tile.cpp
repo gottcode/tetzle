@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ Tile::Tile(int column, int row)
 	: m_parent(0),
 	m_column(column),
 	m_row(row),
-	m_pos(column * size(), row * size())
+	m_pos(column * size, row * size)
 {
 }
 
@@ -36,7 +36,7 @@ Tile::Tile(int column, int row)
 
 QPoint Tile::scenePos() const
 {
-	return m_pos + parent()->scenePos();
+	return m_pos + m_parent->scenePos();
 }
 
 //-----------------------------------------------------------------------------

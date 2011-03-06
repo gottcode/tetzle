@@ -1,3 +1,6 @@
+2011-03-06 Graeme Gott <graeme@gottcode.org>
+	* Make tiles be 64x64 pixels.
+
 2011-03-02 Graeme Gott <graeme@gottcode.org>
 	* Animate zooming to best fit.
 

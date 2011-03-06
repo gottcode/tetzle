@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ class Tile
 public:
 	Tile(int column, int row);
 
-	QRect boundingRect() const;
 	int column() const;
 	int row() const;
 	Piece* parent() const;
@@ -40,15 +39,7 @@ public:
 	void setPos(const QPoint& pos);
 	void setParent(Piece* parent);
 
-	static QRect rect()
-	{
-		return QRect(0, 0, 32, 32);
-	}
-
-	static int size()
-	{
-		return 32;
-	}
+	static const int size = 64;
 
 	void save(QXmlStreamWriter& xml) const;
 
@@ -59,11 +50,6 @@ private:
 	QPoint m_pos;
 };
 
-
-inline QRect Tile::boundingRect() const
-{
-	return rect().translated(scenePos());
-}
 
 inline int Tile::column() const
 {

@@ -143,7 +143,7 @@ inline int Board::id() const
 
 inline int Board::margin() const
 {
-	return 10;
+	return 16;
 }
 
 inline QRect Board::marginRect(const QRect& rect) const

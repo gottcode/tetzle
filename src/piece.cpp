@@ -79,19 +79,19 @@ void Piece::attachNeighbors()
 	int sin_size = 0;
 	switch (m_rotation) {
 	case 0:
-		cos_size = Tile::size();
+		cos_size = Tile::size;
 		break;
 
 	case 1:
-		sin_size = -Tile::size();
+		sin_size = -Tile::size;
 		break;
 
 	case 2:
-		cos_size = -Tile::size();
+		cos_size = -Tile::size;
 		break;
 
 	case 3:
-		sin_size = Tile::size();
+		sin_size = Tile::size;
 		break;
 	}
 	QPoint left(-cos_size, sin_size);
@@ -198,8 +198,8 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
 		while (vector.manhattanLength() < 1.0) {
-			vector.setX( (rand() % Tile::size()) - (Tile::size() / 2) );
-			vector.setY( (rand() % Tile::size()) - (Tile::size() / 2) );
+			vector.setX( (rand() % Tile::size) - (Tile::size / 2) );
+			vector.setY( (rand() % Tile::size) - (Tile::size / 2) );
 		}
 
 		// Scale movement vector so that the largest dimension is 1
@@ -252,7 +252,7 @@ void Piece::rotate(const QPoint& origin)
 	for (int i = 0; i < count; ++i) {
 		pos = m_tiles.at(i)->pos();
 		qSwap(pos.rx(), pos.ry());
-		pos.setX(-pos.x() + m_rect.width() - Tile::size());
+		pos.setX(-pos.x() + m_rect.width() - Tile::size);
 		m_tiles.at(i)->setPos(pos);
 	}
 
@@ -378,8 +378,9 @@ void Piece::updateCollisionRegions()
 	m_changed = false;
 	m_collision_region = QRegion();
 	m_collision_region_expanded = QRegion();
+	QRect rect(0,0, Tile::size, Tile::size);
 	for (int i = 0; i < m_tiles.count(); ++i) {
-		QRect rect = m_tiles.at(i)->boundingRect();
+		rect.moveTo(m_tiles.at(i)->scenePos());
 		m_collision_region += rect;
 		m_collision_region_expanded += m_board->marginRect(rect);
 	}
@@ -409,14 +410,14 @@ void Piece::updateTiles()
 
 	// Find bounding rectangle
 	QPoint top_left = m_tiles.first()->pos();
-	QPoint bottom_right = m_tiles.first()->pos() + QPoint(Tile::size(), Tile::size());
+	QPoint bottom_right = m_tiles.first()->pos() + QPoint(Tile::size, Tile::size);
 	QPoint pos;
 	for (int i = 0; i < count; ++i) {
 		pos = m_tiles.at(i)->pos();
 		top_left.setX( qMin(pos.x(), top_left.x()) );
 		top_left.setY( qMin(pos.y(), top_left.y()) );
-		bottom_right.setX( qMax(pos.x() + Tile::size(), bottom_right.x()) );
-		bottom_right.setY( qMax(pos.y() + Tile::size(), bottom_right.y()) );
+		bottom_right.setX( qMax(pos.x() + Tile::size, bottom_right.x()) );
+		bottom_right.setY( qMax(pos.y() + Tile::size, bottom_right.y()) );
 	}
 	m_rect.setRect(0, 0, bottom_right.x() - top_left.x(), bottom_right.y() - top_left.y());
 
@@ -446,8 +447,8 @@ void Piece::updateVerts()
 		QPoint pos = tile->scenePos();
 		int x1 = pos.x();
 		int y1 = pos.y();
-		int x2 = x1 + Tile::size();
-		int y2 = y1 + Tile::size();
+		int x2 = x1 + Tile::size;
+		int y2 = y1 + Tile::size;
 
 		const QPointF* corners = m_board->corners(rotation());
 		float tx = tile->column() * m_board->tileTextureSize();
@@ -460,13 +461,15 @@ void Piece::updateVerts()
 	}
 
 	// Update shadow verts
+	static const int offset = Tile::size / 2;
+	static const int size = Tile::size * 2;
 	m_shadow_verts.clear();
 	for (int i = 0; i < m_shadow.count(); ++i) {
 		QPoint pos = m_shadow.at(i)->scenePos();
-		int x1 = pos.x() - 16;
-		int y1 = pos.y() - 16;
-		int x2 = x1 + 64;
-		int y2 = y1 + 64;
+		int x1 = pos.x() - offset;
+		int y1 = pos.y() - offset;
+		int x2 = x1 + size;
+		int y2 = y1 + size;
 
 		m_shadow_verts.append(x1,y1, 0,0);
 		m_shadow_verts.append(x1,y2, 0,1);

@@ -140,7 +140,7 @@ void Board::setColors(const QPalette& palette)
 
 void Board::updateSceneRectangle(Piece* piece)
 {
-	int size = Tile::size() / 2;
+	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
 }
 
@@ -278,6 +278,7 @@ void Board::openGame(int id)
 
 		if (xml.isEndElement() && xml.name() == QLatin1String("piece")) {
 			m_pieces.append( new Piece(pos, rotation, tiles, this) );
+			m_pieces.last()->pushNeighbors();
 		}
 		if (!xml.isStartElement()) {
 			continue;
@@ -949,7 +950,7 @@ void Board::selectPieces()
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* piece = m_pieces.at(i);
 		if (rect.intersects(piece->boundingRect())) {
-			piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size(), rand() % Tile::size()));
+			piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size, rand() % Tile::size));
 			m_active_pieces.append(piece);
 			m_pieces.removeAll(piece);
 			piece->setSelected(true);
@@ -984,7 +985,7 @@ void Board::loadImage()
 	// Find puzzle dimensions
 	m_columns = size.width();
 	m_rows = size.height();
-	int tile_size = Tile::size();
+	int tile_size = Tile::size;
 	if (m_columns > m_rows) {
 		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
 		m_columns = 4 * m_difficulty;

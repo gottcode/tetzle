@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_preview = new QLabel(this);
 	m_preview->setAlignment(Qt::AlignCenter);
 	m_preview->setAutoFillBackground(true);
-	m_preview->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+	m_preview->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
 	m_background = new ColorButton(this);
 	connect(m_background, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
@@ -138,7 +138,7 @@ void AppearanceDialog::updatePreview()
 	gray += (gray > 127) ? -64 : 64;
 	QColor tile(gray, gray, gray);
 
-	QPixmap pixmap(176, 128);
+	QPixmap pixmap(352, 256);
 	pixmap.fill(m_background->color());
 	{
 		QPainter painter(&pixmap);
@@ -146,22 +146,22 @@ void AppearanceDialog::updatePreview()
 		// Draw example piece
 		QPixmap shadow = coloredShadow(m_shadow->color());
 		for (int i = 0; i < 3; ++i) {
-			painter.drawPixmap(0, i * 32, shadow);
+			painter.drawPixmap(0, i * 64, shadow);
 		}
-		painter.drawPixmap(32, 32, shadow);
-		painter.fillRect(16, 16, 32, 96, tile);
-		painter.fillRect(48, 48, 32, 32, tile);
+		painter.drawPixmap(64, 64, shadow);
+		painter.fillRect(32, 32, 64, 192, tile);
+		painter.fillRect(96, 96, 64, 64, tile);
 
 		// Draw example highlighted piece
-		painter.translate(80, 0);
+		painter.translate(160, 0);
 
 		QPixmap highlight = coloredShadow(m_highlight->color());
 		for (int i = 0; i < 3; ++i) {
-			painter.drawPixmap(0, i * 32, highlight);
+			painter.drawPixmap(0, i * 64, highlight);
 		}
-		painter.drawPixmap(32, 32, highlight);
-		painter.fillRect(16, 16, 32, 96, tile);
-		painter.fillRect(48, 48, 32, 32, tile);
+		painter.drawPixmap(64, 64, highlight);
+		painter.fillRect(32, 32, 64, 192, tile);
+		painter.fillRect(96, 96, 64, 64, tile);
 	}
 
 	QPalette palette = m_preview->palette();
