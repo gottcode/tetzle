@@ -542,16 +542,33 @@ void Board::paintGL()
 
 	// Draw pieces
 	int count = m_pieces.count();
+
+	glBindTexture(GL_TEXTURE_2D, m_shadow);
 	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {
-			m_pieces.at(i)->draw();
+			m_pieces.at(i)->drawShadow();
 		}
 	}
 
+	glBindTexture(GL_TEXTURE_2D, m_image);
+	glDisable(GL_BLEND);
+	for (int i = 0; i < count; ++i) {
+		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+		if (viewport.intersects(r)) {
+			m_pieces.at(i)->drawTiles();
+		}
+	}
+	glEnable(GL_BLEND);
+
+	// Draw held pieces
 	count = m_active_pieces.count();
 	for (int i = 0; i < count; ++i) {
-		m_active_pieces.at(i)->draw();
+		glBindTexture(GL_TEXTURE_2D, m_shadow);
+		m_active_pieces.at(i)->drawShadow();
+
+		glBindTexture(GL_TEXTURE_2D, m_image);
+		m_active_pieces.at(i)->drawTiles();
 	}
 	glPopMatrix();
 

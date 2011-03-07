@@ -51,7 +51,8 @@ public:
 	void setPosition(const QPoint& pos);
 	void setSelected(bool selected);
 
-	void draw() const;
+	void drawTiles() const;
+	void drawShadow() const;
 	void save(QXmlStreamWriter& xml) const;
 
 private:

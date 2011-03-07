@@ -40,8 +40,6 @@ public:
 	int id() const;
 	int margin() const;
 	QRect marginRect(const QRect& rect) const;
-	GLuint imageTexture() const;
-	GLuint shadowTexture() const;
 	float tileTextureSize() const;
 	const QPointF* corners(int rotation) const;
 	void setColors(const QPalette& palette);
@@ -149,16 +147,6 @@ inline int Board::margin() const
 inline QRect Board::marginRect(const QRect& rect) const
 {
 	return rect.adjusted(-margin(), -margin(), margin(), margin());
-}
-
-inline GLuint Board::imageTexture() const
-{
-	return m_image;
-}
-
-inline GLuint Board::shadowTexture() const
-{
-	return m_shadow;
 }
 
 inline float Board::tileTextureSize() const

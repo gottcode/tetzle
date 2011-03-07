@@ -279,23 +279,22 @@ void Piece::setSelected(bool selected)
 
 //-----------------------------------------------------------------------------
 
-void Piece::draw() const
+void Piece::drawTiles() const
 {
-	// Draw shadow
-	m_board->qglColor(m_shadow_color);
-	glBindTexture(GL_TEXTURE_2D, m_board->shadowTexture());
-	glVertexPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().x);
-	glTexCoordPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().s);
-	glDrawArrays(GL_QUADS, 0, m_shadow_verts.count());
-
-	// Draw tiles
 	glColor4f(1,1,1,1);
-	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
-	glDisable(GL_BLEND);
 	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s);
 	glDrawArrays(GL_QUADS, 0, m_verts.count());
-	glEnable(GL_BLEND);
+}
+
+//-----------------------------------------------------------------------------
+
+void Piece::drawShadow() const
+{
+	m_board->qglColor(m_shadow_color);
+	glVertexPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().x);
+	glTexCoordPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().s);
+	glDrawArrays(GL_QUADS, 0, m_shadow_verts.count());
 }
 
 //-----------------------------------------------------------------------------
