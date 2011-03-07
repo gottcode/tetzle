@@ -284,15 +284,17 @@ void Piece::draw() const
 	// Draw shadow
 	m_board->qglColor(m_shadow_color);
 	glBindTexture(GL_TEXTURE_2D, m_board->shadowTexture());
-
-	m_shadow_verts.draw();
+	glVertexPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().x);
+	glTexCoordPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().s);
+	glDrawArrays(GL_QUADS, 0, m_shadow_verts.count());
 
 	// Draw tiles
-	glColor4f(1, 1, 1, 1);
+	glColor4f(1,1,1,1);
 	glBindTexture(GL_TEXTURE_2D, m_board->imageTexture());
-
 	glDisable(GL_BLEND);
-	m_verts.draw();
+	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s);
+	glDrawArrays(GL_QUADS, 0, m_verts.count());
 	glEnable(GL_BLEND);
 }
 
@@ -441,6 +443,7 @@ void Piece::updateVerts()
 
 	// Update tile verts
 	m_verts.clear();
+	m_verts.reserve(m_tiles.count() * 4);
 	for (int i = 0; i < m_tiles.count(); ++i) {
 		Tile* tile = m_tiles.at(i);
 
@@ -454,16 +457,17 @@ void Piece::updateVerts()
 		float tx = tile->column() * m_board->tileTextureSize();
 		float ty = tile->row() * m_board->tileTextureSize();
 
-		m_verts.append(x1,y1, tx + corners[0].x(),ty + corners[0].y());
-		m_verts.append(x1,y2, tx + corners[1].x(),ty + corners[1].y());
-		m_verts.append(x2,y2, tx + corners[2].x(),ty + corners[2].y());
-		m_verts.append(x2,y1, tx + corners[3].x(),ty + corners[3].y());
+		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y()) );
+		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y()) );
+		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y()) );
+		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y()) );
 	}
 
 	// Update shadow verts
 	static const int offset = Tile::size / 2;
 	static const int size = Tile::size * 2;
 	m_shadow_verts.clear();
+	m_shadow_verts.reserve(m_shadow.count() * 4);
 	for (int i = 0; i < m_shadow.count(); ++i) {
 		QPoint pos = m_shadow.at(i)->scenePos();
 		int x1 = pos.x() - offset;
@@ -471,10 +475,10 @@ void Piece::updateVerts()
 		int x2 = x1 + size;
 		int y2 = y1 + size;
 
-		m_shadow_verts.append(x1,y1, 0,0);
-		m_shadow_verts.append(x1,y2, 0,1);
-		m_shadow_verts.append(x2,y2, 1,1);
-		m_shadow_verts.append(x2,y1, 1,0);
+		m_shadow_verts.append( ShadowVertex(x1,y1, 0,0) );
+		m_shadow_verts.append( ShadowVertex(x1,y2, 0,1) );
+		m_shadow_verts.append( ShadowVertex(x2,y2, 1,1) );
+		m_shadow_verts.append( ShadowVertex(x2,y1, 1,0) );
 	}
 
 	// Update scene rectangle

@@ -1,3 +1,6 @@
+2011-03-07 Graeme Gott <graeme@gottcode.org>
+	* Switch back to using drawArrays.
+
 2011-03-06 Graeme Gott <graeme@gottcode.org>
 	* Make tiles be 64x64 pixels.
 

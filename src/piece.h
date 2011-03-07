@@ -20,8 +20,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include "vertex_array.h"
-class Board;
+#include "board.h"
 class Tile;
 
 #include <QColor>
@@ -74,8 +73,34 @@ private:
 	bool m_selected;
 
 	QColor m_shadow_color;
-	VertexArray m_verts;
-	VertexArray m_shadow_verts;
+
+	struct TileVertex
+	{
+		GLint x;
+		GLint y;
+		GLfloat s;
+		GLfloat t;
+
+		TileVertex(GLint x_ = 0, GLint y_ = 0, GLfloat s_ = 0, GLfloat t_ = 0)
+			: x(x_), y(y_), s(s_), t(t_)
+		{
+		}
+	};
+	QVector<TileVertex> m_verts;
+
+	struct ShadowVertex
+	{
+		GLint x;
+		GLint y;
+		GLint s;
+		GLint t;
+
+		ShadowVertex(GLint x_ = 0, GLint y_ = 0, GLint s_ = 0, GLint t_ = 0)
+			: x(x_), y(y_), s(s_), t(t_)
+		{
+		}
+	};
+	QVector<ShadowVertex> m_shadow_verts;
 
 	bool m_changed;
 	QRegion m_collision_region;
