@@ -99,7 +99,8 @@ Board::Board(QWidget* parent)
 Board::~Board()
 {
 	cleanup();
-	deleteTexture(m_shadow);
+	deleteTexture(m_bumpmap_image);
+	deleteTexture(m_shadow_image);
 	delete m_message;
 }
 
@@ -477,17 +478,28 @@ void Board::initializeGL()
 	// Enable OpenGL features
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glActiveTexture(GL_TEXTURE1);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+	glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
+	glDisable(GL_TEXTURE_2D);
+	glClientActiveTexture(GL_TEXTURE1);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_TEXTURE_2D);
+	glClientActiveTexture(GL_TEXTURE0);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// Set OpenGL parameters
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(1, 1, 1, 1);
 	glFrontFace(GL_CCW);
 
-	// Load shadow image
-	m_shadow = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
+	// Load static images
+	m_bumpmap_image = bindTexture(QImage(":/bumpmap.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
+	m_shadow_image = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
 
 	// Load colors
 	AppearanceDialog dialog;
@@ -526,6 +538,7 @@ void Board::paintGL()
 	// Draw scene rectangle
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 
 	qglColor(palette().color(QPalette::Base));
 	int x1 = m_scene.x();
@@ -537,13 +550,13 @@ void Board::paintGL()
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	glColor4f(1,1,1,1);
+	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	// Draw pieces
+	// Draw shadows
 	int count = m_pieces.count();
-
-	glBindTexture(GL_TEXTURE_2D, m_shadow);
+	glBindTexture(GL_TEXTURE_2D, m_shadow_image);
 	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {
@@ -551,7 +564,16 @@ void Board::paintGL()
 		}
 	}
 
+	// Draw pieces
 	glBindTexture(GL_TEXTURE_2D, m_image);
+
+	glActiveTexture(GL_TEXTURE1);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
+	glClientActiveTexture(GL_TEXTURE1);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glClientActiveTexture(GL_TEXTURE0);
+
 	glDisable(GL_BLEND);
 	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
@@ -561,14 +583,36 @@ void Board::paintGL()
 	}
 	glEnable(GL_BLEND);
 
+	glClientActiveTexture(GL_TEXTURE1);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glClientActiveTexture(GL_TEXTURE0);
+	glDisable(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
+
 	// Draw held pieces
 	count = m_active_pieces.count();
 	for (int i = 0; i < count; ++i) {
-		glBindTexture(GL_TEXTURE_2D, m_shadow);
+		// Draw shadow
+		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
 		m_active_pieces.at(i)->drawShadow();
 
+		// Draw piece
 		glBindTexture(GL_TEXTURE_2D, m_image);
+
+		glActiveTexture(GL_TEXTURE1);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
+		glClientActiveTexture(GL_TEXTURE1);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+
 		m_active_pieces.at(i)->drawTiles();
+
+		glClientActiveTexture(GL_TEXTURE1);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDisable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
 	}
 	glPopMatrix();
 

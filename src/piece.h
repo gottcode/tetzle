@@ -79,11 +79,13 @@ private:
 	{
 		GLint x;
 		GLint y;
-		GLfloat s;
-		GLfloat t;
+		GLfloat s1;
+		GLfloat t1;
+		GLfloat s2;
+		GLfloat t2;
 
-		TileVertex(GLint x_ = 0, GLint y_ = 0, GLfloat s_ = 0, GLfloat t_ = 0)
-			: x(x_), y(y_), s(s_), t(t_)
+		TileVertex(GLint x_ = 0, GLint y_ = 0, GLfloat s1_ = 0, GLfloat t1_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
+			: x(x_), y(y_), s1(s1_), t1(t1_), s2(s2_), t2(t2_)
 		{
 		}
 	};

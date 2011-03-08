@@ -108,7 +108,8 @@ private:
 	Message* m_message;
 
 	GLuint m_image;
-	GLuint m_shadow;
+	GLuint m_bumpmap_image;
+	GLuint m_shadow_image;
 	float m_image_ts;
 	QPointF m_corners[4][4];
 

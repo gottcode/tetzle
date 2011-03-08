@@ -283,7 +283,10 @@ void Piece::drawTiles() const
 {
 	glColor4f(1,1,1,1);
 	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s1);
+	glClientActiveTexture(GL_TEXTURE1);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s2);
+	glClientActiveTexture(GL_TEXTURE0);
 	glDrawArrays(GL_QUADS, 0, m_verts.count());
 }
 
@@ -456,10 +459,10 @@ void Piece::updateVerts()
 		float tx = tile->column() * m_board->tileTextureSize();
 		float ty = tile->row() * m_board->tileTextureSize();
 
-		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y()) );
-		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y()) );
-		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y()) );
-		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y()) );
+		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), 0,0) );
+		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), 0,0.25) );
+		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), 0.25,0.25) );
+		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), 0.25,0) );
 	}
 
 	// Update shadow verts
