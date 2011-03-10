@@ -1,3 +1,6 @@
+2011-03-10 Graeme Gott <graeme@gottcode.org>
+	* Add bevel to pieces.
+
 2011-03-07 Graeme Gott <graeme@gottcode.org>
 	* Separate out drawing shadows.
 	* Switch back to using drawArrays.

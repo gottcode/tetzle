@@ -134,9 +134,7 @@ void AppearanceDialog::restoreDefaults()
 
 void AppearanceDialog::updatePreview()
 {
-	int gray = qGray(m_background->color().rgb());
-	gray += (gray > 127) ? -64 : 64;
-	QColor tile(gray, gray, gray);
+	QPixmap bumpmap(":/bumpmap.png");
 
 	QPixmap pixmap(352, 256);
 	pixmap.fill(m_background->color());
@@ -149,8 +147,10 @@ void AppearanceDialog::updatePreview()
 			painter.drawPixmap(0, i * 64, shadow);
 		}
 		painter.drawPixmap(64, 64, shadow);
-		painter.fillRect(32, 32, 64, 192, tile);
-		painter.fillRect(96, 96, 64, 64, tile);
+		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
+		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
+		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);
+		painter.drawPixmap(32, 160, bumpmap, 32, 416, 64, 64);
 
 		// Draw example highlighted piece
 		painter.translate(160, 0);
@@ -160,8 +160,10 @@ void AppearanceDialog::updatePreview()
 			painter.drawPixmap(0, i * 64, highlight);
 		}
 		painter.drawPixmap(64, 64, highlight);
-		painter.fillRect(32, 32, 64, 192, tile);
-		painter.fillRect(96, 96, 64, 64, tile);
+		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
+		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
+		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);
+		painter.drawPixmap(32, 160, bumpmap, 32, 416, 64, 64);
 	}
 
 	QPalette palette = m_preview->palette();

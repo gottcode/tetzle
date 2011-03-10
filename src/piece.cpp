@@ -40,6 +40,21 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	updateTiles();
 	updateShadow();
 
+	// Add bevels to tiles
+	if (m_tiles.first()->bevel().y() == -1) {
+		int count = m_tiles.count();
+		for (int i = 0; i < count; ++i) {
+			Tile* tile = m_tiles.at(i);
+			int sides = 0;
+			sides |= containsTile(tile->column() - 1, tile->row());
+			sides |= containsTile(tile->column() + 1, tile->row()) << 1;
+			sides |= containsTile(tile->column(), tile->row() - 1) << 2;
+			sides |= containsTile(tile->column(), tile->row() + 1) << 3;
+			static const int bevels[14] = {13, 15, 11, 12, 5, 4, 1, 14, 6, 7, 3, 8, 2, 0};
+			tile->setBevel(bevels[sides - 1]);
+		}
+	}
+
 	// Rotate
 	if (rotation) {
 		for (int i = 0; i < rotation; ++i) {
@@ -247,13 +262,9 @@ void Piece::rotate(const QPoint& origin)
 	m_rect.setRect(0, 0, m_rect.height(), m_rect.width());
 
 	// Rotate tiles 90 degrees counter-clockwise
-	QPoint pos;
 	int count = m_tiles.count();
 	for (int i = 0; i < count; ++i) {
-		pos = m_tiles.at(i)->pos();
-		qSwap(pos.rx(), pos.ry());
-		pos.setX(-pos.x() + m_rect.width() - Tile::size);
-		m_tiles.at(i)->setPos(pos);
+		m_tiles.at(i)->rotate();
 	}
 
 	// Track how many rotations have occured
@@ -459,10 +470,15 @@ void Piece::updateVerts()
 		float tx = tile->column() * m_board->tileTextureSize();
 		float ty = tile->row() * m_board->tileTextureSize();
 
-		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), 0,0) );
-		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), 0,0.25) );
-		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), 0.25,0.25) );
-		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), 0.25,0) );
+		float bx1 = tile->bevel().x();
+		float by1 = tile->bevel().y();
+		float bx2 = bx1 + 0.125;
+		float by2 = by1 + 0.125;
+
+		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
+		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
+		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
+		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
 	}
 
 	// Update shadow verts

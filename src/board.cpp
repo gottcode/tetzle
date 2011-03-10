@@ -245,7 +245,7 @@ void Board::openGame(int id)
 	int board_zoom = 0;
 	QRect rect;
 	unsigned int version = attributes.value("version").toString().toUInt();
-	if (xml.name() == QLatin1String("tetzle") && version == 4) {
+	if (xml.name() == QLatin1String("tetzle") && version == 5) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo(Path::image(m_image_path)).exists()) {
 			QApplication::restoreOverrideCursor();
@@ -287,7 +287,9 @@ void Board::openGame(int id)
 
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
-			tiles.append( new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt()) );
+			Tile* tile = new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt());
+			tile->setBevel(attributes.value("bevel").toString().toInt());
+			tiles.append(tile);
 		} else if (xml.name() == QLatin1String("piece")) {
 			attributes = xml.attributes();
 			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
@@ -342,7 +344,7 @@ void Board::saveGame()
 	xml.writeStartDocument();
 
 	xml.writeStartElement("tetzle");
-	xml.writeAttribute("version", "4");
+	xml.writeAttribute("version", "5");
 	xml.writeAttribute("image", m_image_path);
 	xml.writeAttribute("difficulty", QString::number(m_difficulty));
 	xml.writeAttribute("pieces", QString::number(m_total_pieces));

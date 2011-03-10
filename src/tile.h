@@ -30,12 +30,15 @@ class Tile
 public:
 	Tile(int column, int row);
 
+	QPointF bevel() const;
 	int column() const;
 	int row() const;
 	Piece* parent() const;
 	QPoint pos() const;
 	QPoint scenePos() const;
 
+	void rotate();
+	void setBevel(int bevel);
 	void setPos(const QPoint& pos);
 	void setParent(Piece* parent);
 
@@ -48,8 +51,15 @@ private:
 	int m_column;
 	int m_row;
 	QPoint m_pos;
+	int m_bevel;
+	QPointF m_bevel_coords;
 };
 
+
+inline QPointF Tile::bevel() const
+{
+	return m_bevel_coords;
+}
 
 inline int Tile::column() const
 {

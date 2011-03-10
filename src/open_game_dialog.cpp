@@ -64,7 +64,7 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 			xml.readNext();
 		}
 		attributes = xml.attributes();
-		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 5) {
 			QString image = attributes.value("image").toString();
 			if (!QFileInfo(Path::image(image)).exists()) {
 				continue;
@@ -137,7 +137,7 @@ QStringList OpenGameDialog::games()
 			xml.readNext();
 		}
 		attributes = xml.attributes();
-		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 4) {
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 5) {
 			if (QFileInfo(Path::image(attributes.value("image").toString())).exists()) {
 				result.append(game);
 			}
