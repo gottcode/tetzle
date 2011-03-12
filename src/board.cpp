@@ -638,7 +638,7 @@ void Board::paintGL()
 		qglColor(fill);
 		glDrawArrays(GL_QUADS, 0, 4);
 
-		qglColor(highlight.darker());
+		qglColor(highlight);
 		glDrawArrays(GL_LINE_LOOP, 0, 4);
 
 		glColor4f(1,1,1,1);

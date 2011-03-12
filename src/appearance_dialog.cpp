@@ -89,11 +89,10 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	layout->addWidget(m_preview, 0, 3, 5, 1);
 	layout->addWidget(buttons, 6, 0, 1, 4);
 
-	QPalette palette;
 	QSettings settings;
-	m_background->setColor(settings.value("Colors/Background", palette.color(QPalette::Base)).value<QColor>());
-	m_shadow->setColor(settings.value("Colors/Shadow", palette.color(QPalette::Text)).value<QColor>());
-	m_highlight->setColor(settings.value("Colors/Highlight", palette.color(QPalette::Highlight)).value<QColor>());
+	m_background->setColor(settings.value("Colors/Background", "#9d8975").value<QColor>());
+	m_shadow->setColor(settings.value("Colors/Shadow", Qt::black).value<QColor>());
+	m_highlight->setColor(settings.value("Colors/Highlight", Qt::white).value<QColor>());
 	updatePreview();
 }
 
@@ -123,10 +122,9 @@ void AppearanceDialog::accept()
 
 void AppearanceDialog::restoreDefaults()
 {
-	QPalette palette;
-	m_background->setColor(palette.color(QPalette::Base));
-	m_shadow->setColor(palette.color(QPalette::Text));
-	m_highlight->setColor(palette.color(QPalette::Highlight));
+	m_background->setColor("#9d8975");
+	m_shadow->setColor(Qt::black);
+	m_highlight->setColor(Qt::white);
 	updatePreview();
 }
 
