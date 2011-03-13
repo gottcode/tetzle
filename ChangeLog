@@ -1,4 +1,5 @@
 2011-03-13 Graeme Gott <graeme@gottcode.org>
+	* Add border to scene rectangle.
 	* Add option to disable drop shadows.
 
 2011-03-12 Graeme Gott <graeme@gottcode.org>

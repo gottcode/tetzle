@@ -90,6 +90,7 @@ private:
 	void rotatePiece();
 	void selectPieces();
 
+	void drawRect(const QRect& rect, const QColor& fill, const QColor& border);
 	void loadImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;

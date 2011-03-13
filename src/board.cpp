@@ -544,23 +544,11 @@ void Board::paintGL()
 	glMultMatrixd(matrix.constData());
 
 	// Draw scene rectangle
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+	QColor fill = palette().color(QPalette::Base);
+	QColor border = fill.lighter(125);
 	glDisable(GL_BLEND);
-
-	qglColor(palette().color(QPalette::Base));
-	int x1 = m_scene.x();
-	int y1 = m_scene.y();
-	int x2 = x1 + m_scene.width();
-	int y2 = y1 + m_scene.height();
-	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
-	glVertexPointer(2, GL_INT, 0, &verts);
-	glDrawArrays(GL_QUADS, 0, 4);
-
-	glColor4f(1,1,1,1);
+	drawRect(m_scene, fill, border);
 	glEnable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// Draw shadows
 	int count = m_pieces.count();
@@ -644,30 +632,9 @@ void Board::paintGL()
 
 	// Draw selection rectangle
 	if (m_selecting) {
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisable(GL_TEXTURE_2D);
-
-		QRect box = QRect(m_cursor_pos, m_select_pos).normalized();
-		int x1 = box.x();
-		int y1 = box.y();
-		int x2 = x1 + box.width();
-		int y2 = y1 + box.height();
-		GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
-		glVertexPointer(2, GL_INT, 0, &verts);
-
-		QColor highlight = palette().color(QPalette::Highlight);
-		QColor fill = highlight;
+		fill = border = palette().color(QPalette::Highlight);
 		fill.setAlpha(48);
-
-		qglColor(fill);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-		qglColor(highlight);
-		glDrawArrays(GL_LINE_LOOP, 0, 4);
-
-		glColor4f(1,1,1,1);
-		glEnable(GL_TEXTURE_2D);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		drawRect(QRect(m_cursor_pos, m_select_pos).normalized(), fill, border);
 	}
 
 	// Draw message
@@ -1048,6 +1015,31 @@ void Board::selectPieces()
 
 	updateGL();
 	updateCursor();
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::drawRect(const QRect& rect, const QColor& fill, const QColor& border)
+{
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+
+	int x1 = rect.x();
+	int y1 = rect.y();
+	int x2 = x1 + rect.width();
+	int y2 = y1 + rect.height();
+	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
+	glVertexPointer(2, GL_INT, 0, &verts);
+
+	qglColor(fill);
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	qglColor(border);
+	glDrawArrays(GL_LINE_LOOP, 0, 4);
+
+	glColor4f(1,1,1,1);
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 //-----------------------------------------------------------------------------
