@@ -22,6 +22,7 @@
 
 #include <QDialog>
 class QAbstractButton;
+class QCheckBox;
 class QLabel;
 class ColorButton;
 
@@ -31,6 +32,7 @@ class AppearanceDialog : public QDialog
 public:
 	AppearanceDialog(QWidget* parent = 0);
 
+	bool hasBevels() const;
 	QPalette colors() const;
 
 public slots:
@@ -41,6 +43,7 @@ private slots:
 	void updatePreview();
 
 private:
+	QCheckBox* m_has_bevels;
 	ColorButton* m_background;
 	ColorButton* m_shadow;
 	ColorButton* m_highlight;

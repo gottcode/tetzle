@@ -22,6 +22,7 @@
 
 #include <QGLWidget>
 #include <QHash>
+class AppearanceDialog;
 class Message;
 class Overview;
 class Piece;
@@ -42,7 +43,7 @@ public:
 	QRect marginRect(const QRect& rect) const;
 	float tileTextureSize() const;
 	const QPointF* corners(int rotation) const;
-	void setColors(const QPalette& palette);
+	void setAppearance(const AppearanceDialog& dialog);
 	void updateSceneRectangle(Piece* piece);
 
 public slots:
@@ -106,6 +107,7 @@ private:
 	QString m_image_path;
 	Overview* m_overview;
 	Message* m_message;
+	bool m_has_bevels;
 
 	GLuint m_image;
 	GLuint m_bumpmap_image;

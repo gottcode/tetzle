@@ -259,7 +259,7 @@ void Window::showAppearance()
 {
 	AppearanceDialog dialog(this);
 	if (dialog.exec() == QDialog::Accepted) {
-		m_board->setColors(dialog.colors());
+		m_board->setAppearance(dialog);
 	}
 }
 

@@ -21,8 +21,11 @@
 
 #include "color_button.h"
 
+#include <QCheckBox>
 #include <QDialogButtonBox>
+#include <QFormLayout>
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
@@ -53,47 +56,69 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 {
 	setWindowTitle(tr("Appearance"));
 
+	// Create preview widget
 	m_preview = new QLabel(this);
 	m_preview->setAlignment(Qt::AlignCenter);
 	m_preview->setAutoFillBackground(true);
 	m_preview->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-	m_background = new ColorButton(this);
+	// Create options widgets
+	QGroupBox* options_group = new QGroupBox(tr("Options"), this);
+
+	m_has_bevels = new QCheckBox(tr("Beveled borders"), options_group);
+	connect(m_has_bevels, SIGNAL(stateChanged(int)), this, SLOT(updatePreview()));
+
+	// Create colors widgets
+	QGroupBox* colors_group = new QGroupBox(tr("Colors"), this);
+
+	m_background = new ColorButton(colors_group);
 	connect(m_background, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
 
-	m_shadow = new ColorButton(this);
+	m_shadow = new ColorButton(colors_group);
 	connect(m_shadow, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
 
-	m_highlight = new ColorButton(this);
+	m_highlight = new ColorButton(colors_group);
 	connect(m_highlight, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
 
+	// Create buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults, Qt::Horizontal, this);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 	connect(buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(restoreDefaults()));
 
+	// Lay out dialog
+	QFormLayout* colors_layout = new QFormLayout(colors_group);
+	colors_layout->addRow(tr("Background:"), m_background);
+	colors_layout->addRow(tr("Shadow:"), m_shadow);
+	colors_layout->addRow(tr("Highlight:"), m_highlight);
+
+	QVBoxLayout* options_layout = new QVBoxLayout(options_group);
+	options_layout->addWidget(m_has_bevels);
+
 	QGridLayout* layout = new QGridLayout(this);
-	layout->setColumnStretch(3, 1);
-	layout->setColumnMinimumWidth(2, 12);
-	layout->setRowStretch(0, 1);
-	layout->setRowStretch(4, 1);
-	layout->setRowMinimumHeight(5, 12);
+	layout->setSpacing(12);
+	layout->setColumnStretch(1, 1);
+	layout->setRowStretch(2, 1);
 
-	layout->addWidget(new QLabel(tr("Background:"), this), 1, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(m_background, 1, 1);
-	layout->addWidget(new QLabel(tr("Shadow:"), this), 2, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(m_shadow, 2, 1);
-	layout->addWidget(new QLabel(tr("Highlight:"), this), 3, 0, Qt::AlignRight | Qt::AlignVCenter);
-	layout->addWidget(m_highlight, 3, 1);
+	layout->addWidget(options_group, 0, 0);
+	layout->addWidget(colors_group, 1, 0);
+	layout->addWidget(m_preview, 0, 1, 3, 1);
+	layout->addWidget(buttons, 4, 0, 1, 2);
 
-	layout->addWidget(m_preview, 0, 3, 5, 1);
-	layout->addWidget(buttons, 6, 0, 1, 4);
-
+	// Load settings
 	QSettings settings;
 	m_background->setColor(settings.value("Colors/Background", "#9d8975").value<QColor>());
 	m_shadow->setColor(settings.value("Colors/Shadow", Qt::black).value<QColor>());
 	m_highlight->setColor(settings.value("Colors/Highlight", Qt::white).value<QColor>());
+	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
 	updatePreview();
+}
+
+//-----------------------------------------------------------------------------
+
+bool AppearanceDialog::hasBevels() const
+{
+	return m_has_bevels->isChecked();
 }
 
 //-----------------------------------------------------------------------------
@@ -115,6 +140,7 @@ void AppearanceDialog::accept()
 	settings.setValue("Colors/Background", m_background->color());
 	settings.setValue("Colors/Shadow", m_shadow->color());
 	settings.setValue("Colors/Highlight", m_highlight->color());
+	settings.setValue("Appearance/Bevels", m_has_bevels->isChecked());
 	QDialog::accept();
 }
 
@@ -125,6 +151,7 @@ void AppearanceDialog::restoreDefaults()
 	m_background->setColor("#9d8975");
 	m_shadow->setColor(Qt::black);
 	m_highlight->setColor(Qt::white);
+	m_has_bevels->setChecked(true);
 	updatePreview();
 }
 
@@ -132,7 +159,13 @@ void AppearanceDialog::restoreDefaults()
 
 void AppearanceDialog::updatePreview()
 {
-	QPixmap bumpmap(":/bumpmap.png");
+	QPixmap bumpmap;
+	if (m_has_bevels->isChecked()) {
+		bumpmap.load(":/bumpmap.png");
+	} else {
+		bumpmap = QPixmap(512, 512);
+		bumpmap.fill(QColor(128, 128, 128));
+	}
 
 	QPixmap pixmap(352, 256);
 	pixmap.fill(m_background->color());

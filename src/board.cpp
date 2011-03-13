@@ -68,6 +68,7 @@ Board::Board(QWidget* parent)
 	: QGLWidget(parent),
 	m_id(0),
 	m_difficulty(0),
+	m_has_bevels(true),
 	m_image(0),
 	m_image_ts(0),
 	m_columns(0),
@@ -128,8 +129,11 @@ void Board::removePiece(Piece* piece)
 
 //-----------------------------------------------------------------------------
 
-void Board::setColors(const QPalette& palette)
+void Board::setAppearance(const AppearanceDialog& dialog)
 {
+	m_has_bevels = dialog.hasBevels();
+
+	QPalette palette = dialog.colors();
 	qglClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
 	foreach (Piece* piece, m_pieces) {
@@ -506,7 +510,7 @@ void Board::initializeGL()
 	// Load colors
 	AppearanceDialog dialog;
 	dialog.accept();
-	setColors(dialog.colors());
+	setAppearance(dialog);
 }
 
 //-----------------------------------------------------------------------------
@@ -568,28 +572,35 @@ void Board::paintGL()
 
 	// Draw pieces
 	glBindTexture(GL_TEXTURE_2D, m_image);
-
-	glActiveTexture(GL_TEXTURE1);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
-	glClientActiveTexture(GL_TEXTURE1);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glClientActiveTexture(GL_TEXTURE0);
-
 	glDisable(GL_BLEND);
+	if (m_has_bevels) {
+		glActiveTexture(GL_TEXTURE1);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
+		glActiveTexture(GL_TEXTURE0);
+
+		glClientActiveTexture(GL_TEXTURE1);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+	}
+
 	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {
 			m_pieces.at(i)->drawTiles();
 		}
 	}
-	glEnable(GL_BLEND);
 
-	glClientActiveTexture(GL_TEXTURE1);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glClientActiveTexture(GL_TEXTURE0);
-	glDisable(GL_TEXTURE_2D);
-	glActiveTexture(GL_TEXTURE0);
+	if (m_has_bevels) {
+		glClientActiveTexture(GL_TEXTURE1);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glDisable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
+	}
+	glEnable(GL_BLEND);
 
 	// Draw held pieces
 	count = m_active_pieces.count();
@@ -600,21 +611,28 @@ void Board::paintGL()
 
 		// Draw piece
 		glBindTexture(GL_TEXTURE_2D, m_image);
+		if (m_has_bevels) {
+			glActiveTexture(GL_TEXTURE1);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
+			glActiveTexture(GL_TEXTURE0);
 
-		glActiveTexture(GL_TEXTURE1);
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
-		glClientActiveTexture(GL_TEXTURE1);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glClientActiveTexture(GL_TEXTURE0);
+			glClientActiveTexture(GL_TEXTURE1);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glClientActiveTexture(GL_TEXTURE0);
+		}
 
 		m_active_pieces.at(i)->drawTiles();
 
-		glClientActiveTexture(GL_TEXTURE1);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glClientActiveTexture(GL_TEXTURE0);
-		glDisable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
+		if (m_has_bevels) {
+			glClientActiveTexture(GL_TEXTURE1);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glClientActiveTexture(GL_TEXTURE0);
+
+			glActiveTexture(GL_TEXTURE1);
+			glDisable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
+		}
 	}
 	glPopMatrix();
 
