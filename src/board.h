@@ -108,6 +108,7 @@ private:
 	Overview* m_overview;
 	Message* m_message;
 	bool m_has_bevels;
+	bool m_has_shadows;
 
 	GLuint m_image;
 	GLuint m_bumpmap_image;

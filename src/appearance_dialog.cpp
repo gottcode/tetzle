@@ -68,6 +68,9 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_has_bevels = new QCheckBox(tr("Beveled borders"), options_group);
 	connect(m_has_bevels, SIGNAL(stateChanged(int)), this, SLOT(updatePreview()));
 
+	m_has_shadows = new QCheckBox(tr("Drop shadows"), options_group);
+	connect(m_has_shadows, SIGNAL(stateChanged(int)), this, SLOT(updatePreview()));
+
 	// Create colors widgets
 	QGroupBox* colors_group = new QGroupBox(tr("Colors"), this);
 
@@ -94,6 +97,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 
 	QVBoxLayout* options_layout = new QVBoxLayout(options_group);
 	options_layout->addWidget(m_has_bevels);
+	options_layout->addWidget(m_has_shadows);
 
 	QGridLayout* layout = new QGridLayout(this);
 	layout->setSpacing(12);
@@ -111,6 +115,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_shadow->setColor(settings.value("Colors/Shadow", Qt::black).value<QColor>());
 	m_highlight->setColor(settings.value("Colors/Highlight", Qt::white).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
+	m_has_shadows->setChecked(settings.value("Appearance/Shadows", true).toBool());
 	updatePreview();
 }
 
@@ -119,6 +124,13 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 bool AppearanceDialog::hasBevels() const
 {
 	return m_has_bevels->isChecked();
+}
+
+//-----------------------------------------------------------------------------
+
+bool AppearanceDialog::hasShadows() const
+{
+	return m_has_shadows->isChecked();
 }
 
 //-----------------------------------------------------------------------------
@@ -141,6 +153,7 @@ void AppearanceDialog::accept()
 	settings.setValue("Colors/Shadow", m_shadow->color());
 	settings.setValue("Colors/Highlight", m_highlight->color());
 	settings.setValue("Appearance/Bevels", m_has_bevels->isChecked());
+	settings.setValue("Appearance/Shadows", m_has_shadows->isChecked());
 	QDialog::accept();
 }
 
@@ -152,6 +165,7 @@ void AppearanceDialog::restoreDefaults()
 	m_shadow->setColor(Qt::black);
 	m_highlight->setColor(Qt::white);
 	m_has_bevels->setChecked(true);
+	m_has_shadows->setChecked(true);
 	updatePreview();
 }
 
@@ -173,11 +187,13 @@ void AppearanceDialog::updatePreview()
 		QPainter painter(&pixmap);
 
 		// Draw example piece
-		QPixmap shadow = coloredShadow(m_shadow->color());
-		for (int i = 0; i < 3; ++i) {
-			painter.drawPixmap(0, i * 64, shadow);
+		if (m_has_shadows->isChecked()) {
+			QPixmap shadow = coloredShadow(m_shadow->color());
+			for (int i = 0; i < 3; ++i) {
+				painter.drawPixmap(0, i * 64, shadow);
+			}
+			painter.drawPixmap(64, 64, shadow);
 		}
-		painter.drawPixmap(64, 64, shadow);
 		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
 		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
 		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);
@@ -186,11 +202,13 @@ void AppearanceDialog::updatePreview()
 		// Draw example highlighted piece
 		painter.translate(160, 0);
 
-		QPixmap highlight = coloredShadow(m_highlight->color());
-		for (int i = 0; i < 3; ++i) {
-			painter.drawPixmap(0, i * 64, highlight);
+		if (m_has_shadows->isChecked()) {
+			QPixmap highlight = coloredShadow(m_highlight->color());
+			for (int i = 0; i < 3; ++i) {
+				painter.drawPixmap(0, i * 64, highlight);
+			}
+			painter.drawPixmap(64, 64, highlight);
 		}
-		painter.drawPixmap(64, 64, highlight);
 		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
 		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
 		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);

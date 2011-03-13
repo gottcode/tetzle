@@ -69,6 +69,7 @@ Board::Board(QWidget* parent)
 	m_id(0),
 	m_difficulty(0),
 	m_has_bevels(true),
+	m_has_shadows(true),
 	m_image(0),
 	m_image_ts(0),
 	m_columns(0),
@@ -132,6 +133,7 @@ void Board::removePiece(Piece* piece)
 void Board::setAppearance(const AppearanceDialog& dialog)
 {
 	m_has_bevels = dialog.hasBevels();
+	m_has_shadows = dialog.hasShadows();
 
 	QPalette palette = dialog.colors();
 	qglClearColor(palette.color(QPalette::Base).darker(150));
@@ -562,11 +564,13 @@ void Board::paintGL()
 
 	// Draw shadows
 	int count = m_pieces.count();
-	glBindTexture(GL_TEXTURE_2D, m_shadow_image);
-	for (int i = 0; i < count; ++i) {
-		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
-		if (viewport.intersects(r)) {
-			m_pieces.at(i)->drawShadow();
+	if (m_has_shadows) {
+		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
+		for (int i = 0; i < count; ++i) {
+			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+			if (viewport.intersects(r)) {
+				m_pieces.at(i)->drawShadow();
+			}
 		}
 	}
 
@@ -606,8 +610,10 @@ void Board::paintGL()
 	count = m_active_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		// Draw shadow
-		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
-		m_active_pieces.at(i)->drawShadow();
+		if (m_has_shadows) {
+			glBindTexture(GL_TEXTURE_2D, m_shadow_image);
+			m_active_pieces.at(i)->drawShadow();
+		}
 
 		// Draw piece
 		glBindTexture(GL_TEXTURE_2D, m_image);
