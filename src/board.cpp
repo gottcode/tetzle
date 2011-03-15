@@ -480,12 +480,12 @@ void Board::toggleOverview()
 void Board::initializeGL()
 {
 	// Disable unused OpenGL features
-	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 
 	// Enable OpenGL features
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glActiveTexture(GL_TEXTURE1);
@@ -503,6 +503,7 @@ void Board::initializeGL()
 	// Set OpenGL parameters
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(1, 1, 1, 1);
+	glDepthFunc(GL_LEQUAL);
 	glFrontFace(GL_CCW);
 
 	// Load static images
@@ -522,7 +523,7 @@ void Board::resizeGL(int w, int h)
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, w, h, 0, -2, 3);
+	glOrtho(0, w, h, 0, -4000, 3);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -531,7 +532,7 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	// Transform viewport
@@ -548,23 +549,13 @@ void Board::paintGL()
 	QColor border = fill.lighter(125);
 	glDisable(GL_BLEND);
 	drawRect(m_scene, fill, border);
+	glTranslatef(0.0, 0.0, 1.0);
 	glEnable(GL_BLEND);
-
-	// Draw shadows
-	int count = m_pieces.count();
-	if (m_has_shadows) {
-		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
-		for (int i = 0; i < count; ++i) {
-			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
-			if (viewport.intersects(r)) {
-				m_pieces.at(i)->drawShadow();
-			}
-		}
-	}
 
 	// Draw pieces
 	glBindTexture(GL_TEXTURE_2D, m_image);
 	glDisable(GL_BLEND);
+	glPushMatrix();
 	if (m_has_bevels) {
 		glActiveTexture(GL_TEXTURE1);
 		glEnable(GL_TEXTURE_2D);
@@ -576,11 +567,19 @@ void Board::paintGL()
 		glClientActiveTexture(GL_TEXTURE0);
 	}
 
+	int count = m_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 		if (viewport.intersects(r)) {
 			m_pieces.at(i)->drawTiles();
 		}
+	}
+
+	glTranslatef(0.0, 0.0, 2.0);
+	count = m_active_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_active_pieces.at(i)->drawTiles();
+		glTranslatef(0.0, 0.0, 2.0);
 	}
 
 	if (m_has_bevels) {
@@ -592,43 +591,36 @@ void Board::paintGL()
 		glDisable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE0);
 	}
+	glPopMatrix();
 	glEnable(GL_BLEND);
 
-	// Draw held pieces
-	count = m_active_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		// Draw shadow
-		if (m_has_shadows) {
-			glBindTexture(GL_TEXTURE_2D, m_shadow_image);
+	// Draw shadows
+	if (m_has_shadows) {
+		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
+		glPushMatrix();
+		glTranslatef(0.0, 0.0, -1.0);
+
+		count = m_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+			if (viewport.intersects(r)) {
+				m_pieces.at(i)->drawShadow();
+			}
+		}
+
+		glTranslatef(0.0, 0.0, 1.0);
+		count = m_active_pieces.count();
+		for (int i = 0; i < count; ++i) {
 			m_active_pieces.at(i)->drawShadow();
+			glTranslatef(0.0, 0.0, 2.0);
 		}
 
-		// Draw piece
-		glBindTexture(GL_TEXTURE_2D, m_image);
-		if (m_has_bevels) {
-			glActiveTexture(GL_TEXTURE1);
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
-			glActiveTexture(GL_TEXTURE0);
-
-			glClientActiveTexture(GL_TEXTURE1);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glClientActiveTexture(GL_TEXTURE0);
-		}
-
-		m_active_pieces.at(i)->drawTiles();
-
-		if (m_has_bevels) {
-			glClientActiveTexture(GL_TEXTURE1);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glClientActiveTexture(GL_TEXTURE0);
-
-			glActiveTexture(GL_TEXTURE1);
-			glDisable(GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-		}
+		glPopMatrix();
 	}
+
+	// Untransform viewport
 	glPopMatrix();
+	glTranslatef(0.0, 0.0, 3000.0);
 
 	// Draw selection rectangle
 	if (m_selecting) {
