@@ -73,8 +73,6 @@ private:
 	int m_rotation;
 	bool m_selected;
 
-	QColor m_shadow_color;
-
 	struct TileVertex
 	{
 		GLint x;

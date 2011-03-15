@@ -39,6 +39,7 @@
 #include <QPainter>
 #include <QSettings>
 #include <QWheelEvent>
+#include <QVector2D>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
@@ -336,7 +337,7 @@ void Board::openGame(int id)
 
 void Board::saveGame()
 {
-	if ((m_pieces.count() + m_active_pieces.count()) <= 1) {
+	if (pieceCount() <= 1) {
 		return;
 	}
 
@@ -575,6 +576,11 @@ void Board::paintGL()
 		}
 	}
 
+	count = m_selected_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		m_selected_pieces.at(i)->drawTiles();
+	}
+
 	glTranslatef(0.0, 0.0, 2.0);
 	count = m_active_pieces.count();
 	for (int i = 0; i < count; ++i) {
@@ -600,6 +606,7 @@ void Board::paintGL()
 		glPushMatrix();
 		glTranslatef(0.0, 0.0, -1.0);
 
+		qglColor(palette().color(QPalette::Text));
 		count = m_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
@@ -608,12 +615,19 @@ void Board::paintGL()
 			}
 		}
 
+		qglColor(palette().color(QPalette::Highlight));
+		count = m_selected_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			m_selected_pieces.at(i)->drawShadow();
+		}
+
 		glTranslatef(0.0, 0.0, 1.0);
 		count = m_active_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			m_active_pieces.at(i)->drawShadow();
 			glTranslatef(0.0, 0.0, 2.0);
 		}
+		glColor4f(1.0, 1.0, 1.0, 1.0);
 
 		glPopMatrix();
 	}
@@ -784,19 +798,35 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		}
 
 		// Handle finishing game
-		if ((m_pieces.count() + m_active_pieces.count()) == 1) {
+		if (pieceCount() == 1) {
 			finishGame();
 		}
 	}
 
 	if (!m_selecting && m_action_button == Qt::LeftButton && m_action_key == 0) {
-		m_selecting = (event->pos() - m_select_pos).manhattanLength() >= QApplication::startDragDistance();
+		m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
 	}
 	if (m_selecting) {
 		QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
+
+		// Check for pieces that are now selected
 		for (int i = 0; i < m_pieces.count(); ++i) {
 			Piece* piece = m_pieces.at(i);
-			piece->setSelected(rect.intersects(piece->boundingRect()));
+			if (rect.intersects(piece->boundingRect())) {
+				piece->setSelected(true);
+				m_selected_pieces += m_pieces.takeAt(i);
+				i--;
+			}
+		}
+
+		// Check for pieces that are no longer selected
+		for (int i = 0; i < m_selected_pieces.count(); ++i) {
+			Piece* piece = m_selected_pieces.at(i);
+			if (!rect.intersects(piece->boundingRect())) {
+				piece->setSelected(false);
+				m_pieces += m_selected_pieces.takeAt(i);
+				i--;
+			}
 		}
 	}
 
@@ -947,7 +977,7 @@ void Board::releasePieces()
 	QApplication::restoreOverrideCursor();
 
 	// Check if game is over
-	if (m_pieces.count() == 1) {
+	if (pieceCount() == 1) {
 		finishGame();
 	} else {
 		updateGL();
@@ -978,7 +1008,7 @@ void Board::rotatePiece()
 	}
 	updateCompleted();
 
-	if ((m_pieces.count() + m_active_pieces.count()) == 1) {
+	if (pieceCount() == 1) {
 		finishGame();
 	}
 
@@ -992,18 +1022,13 @@ void Board::selectPieces()
 	m_selecting = false;
 
 	QPoint cursor = mapPosition(m_cursor_pos);
-	QRect rect = QRect(cursor, mapPosition(m_select_pos)).normalized();
-	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		Piece* piece = m_pieces.at(i);
-		if (rect.intersects(piece->boundingRect())) {
-			piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size, rand() % Tile::size));
-			m_active_pieces.append(piece);
-			m_pieces.removeAll(piece);
-			piece->setSelected(true);
-		} else {
-			piece->setSelected(false);
-		}
+	int count = m_selected_pieces.count();
+	for (int i = 0; i < count; ++i) {
+		Piece* piece = m_selected_pieces.at(i);
+		piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size, rand() % Tile::size));
 	}
+	m_active_pieces += m_selected_pieces;
+	m_selected_pieces.clear();
 
 	updateGL();
 	updateCursor();
@@ -1161,7 +1186,7 @@ QPoint Board::mapPosition(const QPoint& position) const
 
 void Board::updateCompleted()
 {
-	int t = 100 * (m_pieces.count() + m_active_pieces.count() - 1);
+	int t = 100 * (pieceCount() - 1);
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
 	emit completionChanged(m_completed);
@@ -1198,6 +1223,13 @@ Piece* Board::pieceUnderCursor()
 		}
 	}
 	return 0;
+}
+
+//-----------------------------------------------------------------------------
+
+int Board::pieceCount()
+{
+	return m_pieces.count() + m_active_pieces.count() + m_selected_pieces.count();
 }
 
 //-----------------------------------------------------------------------------

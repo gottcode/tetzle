@@ -99,6 +99,7 @@ private:
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
+	int pieceCount();
 	void finishGame();
 	void cleanup();
 
@@ -121,6 +122,7 @@ private:
 	int m_rows;
 	QList<Piece*> m_pieces;
 	QList<Piece*> m_active_pieces;
+	QList<Piece*> m_selected_pieces;
 	QRect m_scene;
 	int m_total_pieces;
 	int m_completed;

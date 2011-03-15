@@ -281,8 +281,6 @@ void Piece::rotate(const QPoint& origin)
 void Piece::setSelected(bool selected)
 {
 	m_selected = selected;
-	m_shadow_color = m_board->palette().color(!m_selected ? QPalette::Text : QPalette::Highlight);
-
 	if (!m_selected && m_changed) {
 		updateCollisionRegions();
 	}
@@ -292,7 +290,6 @@ void Piece::setSelected(bool selected)
 
 void Piece::drawTiles() const
 {
-	glColor4f(1,1,1,1);
 	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s1);
 	glClientActiveTexture(GL_TEXTURE1);
@@ -305,7 +302,6 @@ void Piece::drawTiles() const
 
 void Piece::drawShadow() const
 {
-	m_board->qglColor(m_shadow_color);
 	glVertexPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().x);
 	glTexCoordPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().s);
 	glDrawArrays(GL_QUADS, 0, m_shadow_verts.count());
