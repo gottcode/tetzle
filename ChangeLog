@@ -1,3 +1,6 @@
+2011-03-18 Graeme Gott <graeme@gottcode.org>
+	* Use a single vertex buffer object.
+
 2011-03-15 Graeme Gott <graeme@gottcode.org>
 	* Draw selected pieces separately.
 	* Use depth sorted drawing.

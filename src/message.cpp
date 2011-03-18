@@ -40,28 +40,17 @@ Message::Message(QGLWidget* parent)
 Message::~Message()
 {
 	cleanup();
+	vertex_array->release(m_region);
 }
 
 //-----------------------------------------------------------------------------
 
 void Message::draw() const
 {
-	if (!m_visible) {
-		return;
+	if (m_visible) {
+		glBindTexture(GL_TEXTURE_2D, m_image);
+		vertex_array->draw(m_region);
 	}
-
-	glBindTexture(GL_TEXTURE_2D, m_image);
-
-	int x1 = (m_parent->width() - m_size.width()) / 2;
-	int y1 = (m_parent->height() - m_size.height()) / 2;
-	int x2 = x1 + m_size.width();
-	int y2 = y1 + m_size.height();
-	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
-	GLshort tex_coords[] = { 0,0, 0,1, 1,1, 1,0 };
-
-	glVertexPointer(2, GL_INT, 0, &verts);
-	glTexCoordPointer(2, GL_SHORT, 0, &tex_coords);
-	glDrawArrays(GL_QUADS, 0, 4);
 }
 
 //-----------------------------------------------------------------------------
@@ -101,6 +90,16 @@ void Message::setText(const QString& text)
 		painter.drawText(height / 2, height / 2 + metrics.ascent(), m_text);
 	}
 	m_image = m_parent->bindTexture(image.mirrored(false, true));
+
+	updateVerts();
+}
+
+//-----------------------------------------------------------------------------
+
+void Message::setViewport(const QSize& size)
+{
+	m_viewport = size;
+	updateVerts();
 }
 
 //-----------------------------------------------------------------------------
@@ -121,6 +120,23 @@ void Message::cleanup()
 	if (m_image) {
 		m_parent->deleteTexture(m_image);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Message::updateVerts()
+{
+	int x1 = (m_viewport.width() - m_size.width()) / 2;
+	int y1 = (m_viewport.height() - m_size.height()) / 2;
+	int x2 = x1 + m_size.width();
+	int y2 = y1 + m_size.height();
+
+	QVector<Vertex> verts;
+	verts.append( Vertex(x1,y1, 0,0) );
+	verts.append( Vertex(x1,y2, 0,1) );
+	verts.append( Vertex(x2,y2, 1,1) );
+	verts.append( Vertex(x2,y1, 1,0) );
+	vertex_array->insert(m_region, verts);
 }
 
 //-----------------------------------------------------------------------------

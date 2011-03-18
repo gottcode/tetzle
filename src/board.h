@@ -20,13 +20,15 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <QGLWidget>
-#include <QHash>
+#include "vertex_array.h"
 class AppearanceDialog;
 class Message;
 class Overview;
 class Piece;
 class Tile;
+
+#include <QGLWidget>
+#include <QHash>
 
 class Board : public QGLWidget
 {
@@ -90,12 +92,13 @@ private:
 	void rotatePiece();
 	void selectPieces();
 
-	void drawRect(const QRect& rect, const QColor& fill, const QColor& border);
+	void drawRegion(const VertexArray::Region& region, const QColor& fill, const QColor& border);
 	void loadImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
+	void updateRegion(VertexArray::Region& region, const QRect& rect);
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
@@ -117,6 +120,8 @@ private:
 	GLuint m_shadow_image;
 	float m_image_ts;
 	QPointF m_corners[4][4];
+	VertexArray::Region m_scene_region;
+	VertexArray::Region m_selection_region;
 
 	int m_columns;
 	int m_rows;

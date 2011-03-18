@@ -20,7 +20,6 @@
 #include "piece.h"
 
 #include "board.h"
-#include "opengl.h"
 #include "tile.h"
 
 #include <QSet>
@@ -289,27 +288,6 @@ void Piece::setSelected(bool selected)
 
 //-----------------------------------------------------------------------------
 
-void Piece::drawTiles() const
-{
-	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s1);
-	GL::clientActiveTexture(GL_TEXTURE1);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s2);
-	GL::clientActiveTexture(GL_TEXTURE0);
-	glDrawArrays(GL_QUADS, 0, m_verts.count());
-}
-
-//-----------------------------------------------------------------------------
-
-void Piece::drawShadow() const
-{
-	glVertexPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().x);
-	glTexCoordPointer(2, GL_INT, sizeof(ShadowVertex), &m_shadow_verts.first().s);
-	glDrawArrays(GL_QUADS, 0, m_shadow_verts.count());
-}
-
-//-----------------------------------------------------------------------------
-
 void Piece::save(QXmlStreamWriter& xml) const
 {
 	xml.writeStartElement("piece");
@@ -451,9 +429,10 @@ void Piece::updateVerts()
 		updateCollisionRegions();
 	}
 
+	QVector<Vertex> verts;
+
 	// Update tile verts
-	m_verts.clear();
-	m_verts.reserve(m_tiles.count() * 4);
+	verts.reserve(m_tiles.count() * 4);
 	for (int i = 0; i < m_tiles.count(); ++i) {
 		Tile* tile = m_tiles.at(i);
 
@@ -472,17 +451,18 @@ void Piece::updateVerts()
 		float bx2 = bx1 + 0.125;
 		float by2 = by1 + 0.125;
 
-		m_verts.append( TileVertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
-		m_verts.append( TileVertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
-		m_verts.append( TileVertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
-		m_verts.append( TileVertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
+		verts.append( Vertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
+		verts.append( Vertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
+		verts.append( Vertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
+		verts.append( Vertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
 	}
+	vertex_array->insert(m_tile_region, verts);
 
 	// Update shadow verts
 	static const int offset = Tile::size / 2;
 	static const int size = Tile::size * 2;
-	m_shadow_verts.clear();
-	m_shadow_verts.reserve(m_shadow.count() * 4);
+	verts.clear();
+	verts.reserve(m_shadow.count() * 4);
 	for (int i = 0; i < m_shadow.count(); ++i) {
 		QPoint pos = m_shadow.at(i)->scenePos();
 		int x1 = pos.x() - offset;
@@ -490,11 +470,12 @@ void Piece::updateVerts()
 		int x2 = x1 + size;
 		int y2 = y1 + size;
 
-		m_shadow_verts.append( ShadowVertex(x1,y1, 0,0) );
-		m_shadow_verts.append( ShadowVertex(x1,y2, 0,1) );
-		m_shadow_verts.append( ShadowVertex(x2,y2, 1,1) );
-		m_shadow_verts.append( ShadowVertex(x2,y1, 1,0) );
+		verts.append( Vertex(x1,y1, 0,0) );
+		verts.append( Vertex(x1,y2, 0,1) );
+		verts.append( Vertex(x2,y2, 1,1) );
+		verts.append( Vertex(x2,y1, 1,0) );
 	}
+	vertex_array->insert(m_shadow_region, verts);
 
 	// Update scene rectangle
 	m_board->updateSceneRectangle(this);

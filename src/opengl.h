@@ -30,6 +30,13 @@ namespace GL
 	// Multi-texture extension
 	extern PFNGLACTIVETEXTUREPROC activeTexture;
 	extern PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture;
+
+	// Vertex buffer object extension
+	extern PFNGLBINDBUFFERPROC bindBuffer;
+	extern PFNGLBUFFERDATAPROC bufferData;
+	extern PFNGLBUFFERSUBDATAPROC bufferSubData;
+	extern PFNGLDELETEBUFFERSPROC deleteBuffers;
+	extern PFNGLGENBUFFERSPROC genBuffers;
 }
 
 #endif

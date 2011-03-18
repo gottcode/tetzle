@@ -19,11 +19,13 @@
 
 #include "opengl.h"
 
+#include "vertex_array.h"
+
 static void* getProcAddress(const QString& name)
 {
 	void* result;
 	QString names[] = { name, name + "ARB", name + "EXT" };
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		result = QGLContext::currentContext()->getProcAddress(names[i]);
 		if (result) {
 			break;
@@ -32,23 +34,50 @@ static void* getProcAddress(const QString& name)
 	return result;
 }
 
-static void fallbackClientActiveTexture(GLenum)
-{
-}
-
 namespace GL
 {
 	PFNGLACTIVETEXTUREPROC activeTexture = 0;
-	PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture = &fallbackClientActiveTexture;
+	PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture = 0;
+
+	PFNGLBINDBUFFERPROC bindBuffer = 0;
+	PFNGLBUFFERDATAPROC bufferData = 0;
+	PFNGLBUFFERSUBDATAPROC bufferSubData = 0;
+	PFNGLDELETEBUFFERSPROC deleteBuffers = 0;
+	PFNGLGENBUFFERSPROC genBuffers = 0;
 
 	void init()
 	{
 		QStringList extensions = QString(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS))).split(' ');
+		unsigned int state = 0;
 
 		// Load multi-texture extension
 		if (extensions.contains("GL_ARB_multitexture")) {
+			state |= 0x01;
 			activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
 			clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
+		}
+
+		// Load vertex buffer object extension
+		if (extensions.contains("GL_ARB_vertex_buffer_object")) {
+			state |= 0x02;
+			bindBuffer = (PFNGLBINDBUFFERPROC) getProcAddress("glBindBuffer");
+			bufferData = (PFNGLBUFFERDATAPROC) getProcAddress("glBufferData");
+			bufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
+			deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
+			genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
+		}
+
+		// Create shared vertex array
+		switch (state) {
+		case 0x03:
+			vertex_array = new VertexArray15;
+			break;
+		case 0x01:
+			vertex_array = new VertexArray13;
+			break;
+		default:
+			vertex_array = new VertexArray11;
+			break;
 		}
 	}
 }

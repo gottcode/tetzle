@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #define MESSAGE_H
 
 #include <QGLWidget>
+#include "vertex_array.h"
 
 class Message
 {
@@ -30,16 +31,21 @@ public:
 
 	void draw() const;
 	void setText(const QString& text);
+	void setViewport(const QSize& size);
 	void setVisible(bool visible);
 
 private:
 	void cleanup();
+	void updateVerts();
 
 private:
 	QGLWidget* m_parent;
-	QString m_text;
 	GLuint m_image;
+	VertexArray::Region m_region;
+
+	QString m_text;
 	QSize m_size;
+	QSize m_viewport;
 	bool m_visible;
 };
 

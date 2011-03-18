@@ -27,6 +27,7 @@
 #include "path.h"
 #include "piece.h"
 #include "tile.h"
+#include "vertex_array.h"
 #include "zoom_slider.h"
 
 #include <QApplication>
@@ -106,6 +107,8 @@ Board::~Board()
 	deleteTexture(m_bumpmap_image);
 	deleteTexture(m_shadow_image);
 	delete m_message;
+	delete vertex_array;
+	vertex_array = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -151,6 +154,7 @@ void Board::updateSceneRectangle(Piece* piece)
 {
 	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
+	updateRegion(m_scene_region, m_scene);
 }
 
 //-----------------------------------------------------------------------------
@@ -531,12 +535,17 @@ void Board::resizeGL(int w, int h)
 	glOrtho(0, w, h, 0, -4000, 3);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	m_message->setViewport(size());
 }
 
 //-----------------------------------------------------------------------------
 
 void Board::paintGL()
 {
+	vertex_array->uploadData();
+	vertex_array->setMultiTextured(false);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -553,7 +562,7 @@ void Board::paintGL()
 	QColor fill = palette().color(QPalette::Base);
 	QColor border = fill.lighter(125);
 	glDisable(GL_BLEND);
-	drawRect(m_scene, fill, border);
+	drawRegion(m_scene_region, fill, border);
 	glTranslatef(0.0, 0.0, 1.0);
 	glEnable(GL_BLEND);
 
@@ -567,9 +576,7 @@ void Board::paintGL()
 		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
 		GL::activeTexture(GL_TEXTURE0);
 
-		GL::clientActiveTexture(GL_TEXTURE1);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		GL::clientActiveTexture(GL_TEXTURE0);
+		vertex_array->setMultiTextured(true);
 	}
 
 	int count = m_pieces.count();
@@ -593,13 +600,11 @@ void Board::paintGL()
 	}
 
 	if (m_has_bevels) {
-		GL::clientActiveTexture(GL_TEXTURE1);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		GL::clientActiveTexture(GL_TEXTURE0);
-
 		GL::activeTexture(GL_TEXTURE1);
 		glDisable(GL_TEXTURE_2D);
 		GL::activeTexture(GL_TEXTURE0);
+
+		vertex_array->setMultiTextured(false);
 	}
 	glPopMatrix();
 	glEnable(GL_BLEND);
@@ -644,7 +649,7 @@ void Board::paintGL()
 	if (m_selecting) {
 		fill = border = palette().color(QPalette::Highlight);
 		fill.setAlpha(48);
-		drawRect(QRect(m_cursor_pos, m_select_pos).normalized(), fill, border);
+		drawRegion(m_selection_region, fill, border);
 	}
 
 	// Draw message
@@ -832,6 +837,8 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 				i--;
 			}
 		}
+
+		updateRegion(m_selection_region, QRect(event->pos(), m_select_pos).normalized());
 	}
 
 	updateGL();
@@ -1040,25 +1047,19 @@ void Board::selectPieces()
 
 //-----------------------------------------------------------------------------
 
-void Board::drawRect(const QRect& rect, const QColor& fill, const QColor& border)
+void Board::drawRegion(const VertexArray::Region& region, const QColor& fill, const QColor& border)
 {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 
-	int x1 = rect.x();
-	int y1 = rect.y();
-	int x2 = x1 + rect.width();
-	int y2 = y1 + rect.height();
-	GLint verts[] = { x1,y1, x1,y2, x2,y2, x2,y1 };
-	glVertexPointer(2, GL_INT, 0, &verts);
-
 	qglColor(fill);
-	glDrawArrays(GL_QUADS, 0, 4);
+	vertex_array->draw(region);
 
 	qglColor(border);
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
+	vertex_array->draw(region, GL_LINE_LOOP);
 
 	glColor4f(1,1,1,1);
+
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
@@ -1194,6 +1195,23 @@ void Board::updateCompleted()
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
 	emit completionChanged(m_completed);
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::updateRegion(VertexArray::Region& region, const QRect& rect)
+{
+	int x1 = rect.x();
+	int y1 = rect.y();
+	int x2 = x1 + rect.width();
+	int y2 = y1 + rect.height();
+
+	QVector<Vertex> verts;
+	verts.append( Vertex(x1,y1) );
+	verts.append( Vertex(x1,y2) );
+	verts.append( Vertex(x2,y2) );
+	verts.append( Vertex(x2,y1) );
+	vertex_array->insert(region, verts);
 }
 
 //-----------------------------------------------------------------------------

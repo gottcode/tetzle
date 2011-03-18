@@ -20,7 +20,8 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include "board.h"
+#include "vertex_array.h"
+class Board;
 class Tile;
 
 #include <QColor>
@@ -73,35 +74,8 @@ private:
 	int m_rotation;
 	bool m_selected;
 
-	struct TileVertex
-	{
-		GLint x;
-		GLint y;
-		GLfloat s1;
-		GLfloat t1;
-		GLfloat s2;
-		GLfloat t2;
-
-		TileVertex(GLint x_ = 0, GLint y_ = 0, GLfloat s1_ = 0, GLfloat t1_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
-			: x(x_), y(y_), s1(s1_), t1(t1_), s2(s2_), t2(t2_)
-		{
-		}
-	};
-	QVector<TileVertex> m_verts;
-
-	struct ShadowVertex
-	{
-		GLint x;
-		GLint y;
-		GLint s;
-		GLint t;
-
-		ShadowVertex(GLint x_ = 0, GLint y_ = 0, GLint s_ = 0, GLint t_ = 0)
-			: x(x_), y(y_), s(s_), t(t_)
-		{
-		}
-	};
-	QVector<ShadowVertex> m_shadow_verts;
+	VertexArray::Region m_tile_region;
+	VertexArray::Region m_shadow_region;
 
 	bool m_changed;
 	QRegion m_collision_region;
@@ -144,6 +118,16 @@ inline void Piece::setPosition(const QPoint& pos)
 {
 	m_pos = pos;
 	updateVerts();
+}
+
+inline void Piece::drawTiles() const
+{
+	vertex_array->draw(m_tile_region);
+}
+
+inline void Piece::drawShadow() const
+{
+	vertex_array->draw(m_shadow_region);
 }
 
 #endif
