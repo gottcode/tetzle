@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,43 +17,19 @@
  *
  ***********************************************************************/
 
-#ifndef APPEARANCE_DIALOG_H
-#define APPEARANCE_DIALOG_H
+#ifndef OPENGL_H
+#define OPENGL_H
 
-#include <QDialog>
-class QAbstractButton;
-class QCheckBox;
-class QLabel;
-class ColorButton;
+#include <qgl.h>
+#include <GL/glext.h>
 
-class AppearanceDialog : public QDialog
+namespace GL
 {
-	Q_OBJECT
-public:
-	AppearanceDialog(QWidget* parent = 0);
+	void init();
 
-	bool hasBevels() const;
-	bool hasShadows() const;
-	QPalette colors() const;
-
-	static void setBevelsEnabled(bool enabled);
-
-public slots:
-	void accept();
-
-private slots:
-	void restoreDefaults();
-	void updatePreview();
-
-private:
-	QCheckBox* m_has_bevels;
-	QCheckBox* m_has_shadows;
-	ColorButton* m_background;
-	ColorButton* m_shadow;
-	ColorButton* m_highlight;
-	QLabel* m_preview;
-	static bool m_bevels_enabled;
-};
+	// Multi-texture extension
+	extern PFNGLACTIVETEXTUREPROC activeTexture;
+	extern PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture;
+}
 
 #endif
-

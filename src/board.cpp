@@ -22,6 +22,7 @@
 #include "appearance_dialog.h"
 #include "generator.h"
 #include "message.h"
+#include "opengl.h"
 #include "overview.h"
 #include "path.h"
 #include "piece.h"
@@ -480,6 +481,9 @@ void Board::toggleOverview()
 
 void Board::initializeGL()
 {
+	// Load OpenGL extensions
+	GL::init();
+
 	// Disable unused OpenGL features
 	glDisable(GL_LIGHTING);
 
@@ -487,19 +491,19 @@ void Board::initializeGL()
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glActiveTexture(GL_TEXTURE1);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-	glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
-	glDisable(GL_TEXTURE_2D);
-	glClientActiveTexture(GL_TEXTURE1);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glActiveTexture(GL_TEXTURE0);
-	glEnable(GL_TEXTURE_2D);
-	glClientActiveTexture(GL_TEXTURE0);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	if (GL::activeTexture != 0) {
+		GL::activeTexture(GL_TEXTURE1);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
+		GL::activeTexture(GL_TEXTURE0);
+	} else {
+		m_has_bevels = false;
+		AppearanceDialog::setBevelsEnabled(m_has_bevels);
+	}
 
 	// Set OpenGL parameters
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -558,14 +562,14 @@ void Board::paintGL()
 	glDisable(GL_BLEND);
 	glPushMatrix();
 	if (m_has_bevels) {
-		glActiveTexture(GL_TEXTURE1);
+		GL::activeTexture(GL_TEXTURE1);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
-		glActiveTexture(GL_TEXTURE0);
+		GL::activeTexture(GL_TEXTURE0);
 
-		glClientActiveTexture(GL_TEXTURE1);
+		GL::clientActiveTexture(GL_TEXTURE1);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glClientActiveTexture(GL_TEXTURE0);
+		GL::clientActiveTexture(GL_TEXTURE0);
 	}
 
 	int count = m_pieces.count();
@@ -589,13 +593,13 @@ void Board::paintGL()
 	}
 
 	if (m_has_bevels) {
-		glClientActiveTexture(GL_TEXTURE1);
+		GL::clientActiveTexture(GL_TEXTURE1);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glClientActiveTexture(GL_TEXTURE0);
+		GL::clientActiveTexture(GL_TEXTURE0);
 
-		glActiveTexture(GL_TEXTURE1);
+		GL::activeTexture(GL_TEXTURE1);
 		glDisable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
+		GL::activeTexture(GL_TEXTURE0);
 	}
 	glPopMatrix();
 	glEnable(GL_BLEND);

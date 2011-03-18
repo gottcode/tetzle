@@ -35,19 +35,17 @@
 
 namespace
 {
-
-QPixmap coloredShadow(const QColor& color)
-{
-	QPixmap shadow = QPixmap(":/shadow.png").alphaChannel();
-
-	QPixmap copy(shadow.size());
-	copy.fill(color);
-	copy.setAlphaChannel(shadow);
-
-	return copy;
+	QPixmap coloredShadow(const QColor& color)
+	{
+		QPixmap source = QPixmap(":/shadow.png").alphaChannel();
+		QPixmap shadow(source.size());
+		shadow.fill(color);
+		shadow.setAlphaChannel(source);
+		return shadow;
+	}
 }
 
-}
+bool AppearanceDialog::m_bevels_enabled = true;
 
 //-----------------------------------------------------------------------------
 
@@ -116,6 +114,10 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_highlight->setColor(settings.value("Colors/Highlight", Qt::white).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
 	m_has_shadows->setChecked(settings.value("Appearance/Shadows", true).toBool());
+	if (!m_bevels_enabled) {
+		m_has_bevels->setChecked(false);
+		m_has_bevels->setEnabled(false);
+	}
 	updatePreview();
 }
 
@@ -142,6 +144,13 @@ QPalette AppearanceDialog::colors() const
 	palette.setColor(QPalette::Text, m_shadow->color());
 	palette.setColor(QPalette::Highlight, m_highlight->color());
 	return palette;
+}
+
+//-----------------------------------------------------------------------------
+
+void AppearanceDialog::setBevelsEnabled(bool enabled)
+{
+	m_bevels_enabled = enabled;
 }
 
 //-----------------------------------------------------------------------------

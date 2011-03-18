@@ -20,6 +20,7 @@
 #include "piece.h"
 
 #include "board.h"
+#include "opengl.h"
 #include "tile.h"
 
 #include <QSet>
@@ -292,9 +293,9 @@ void Piece::drawTiles() const
 {
 	glVertexPointer(2, GL_INT, sizeof(TileVertex), &m_verts.first().x);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s1);
-	glClientActiveTexture(GL_TEXTURE1);
+	GL::clientActiveTexture(GL_TEXTURE1);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(TileVertex), &m_verts.first().s2);
-	glClientActiveTexture(GL_TEXTURE0);
+	GL::clientActiveTexture(GL_TEXTURE0);
 	glDrawArrays(GL_QUADS, 0, m_verts.count());
 }
 
