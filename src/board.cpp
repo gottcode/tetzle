@@ -154,7 +154,7 @@ void Board::updateSceneRectangle(Piece* piece)
 {
 	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
-	updateRegion(m_scene_region, m_scene);
+	updateRegion(m_scene_region, m_scene, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -547,7 +547,6 @@ void Board::paintGL()
 	vertex_array->setMultiTextured(false);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
 
 	// Transform viewport
 	QRect viewport = rect();
@@ -555,6 +554,7 @@ void Board::paintGL()
 	matrix.scale(m_scale, m_scale);
 	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
 
+	glLoadIdentity();
 	glPushMatrix();
 	glMultMatrixd(matrix.constData());
 
@@ -563,13 +563,11 @@ void Board::paintGL()
 	QColor border = fill.lighter(125);
 	glDisable(GL_BLEND);
 	drawRegion(m_scene_region, fill, border);
-	glTranslatef(0.0, 0.0, 1.0);
 	glEnable(GL_BLEND);
 
 	// Draw pieces
 	glBindTexture(GL_TEXTURE_2D, m_image);
 	glDisable(GL_BLEND);
-	glPushMatrix();
 	if (m_has_bevels) {
 		GL::activeTexture(GL_TEXTURE1);
 		glEnable(GL_TEXTURE_2D);
@@ -592,11 +590,9 @@ void Board::paintGL()
 		m_selected_pieces.at(i)->drawTiles();
 	}
 
-	glTranslatef(0.0, 0.0, 2.0);
 	count = m_active_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		m_active_pieces.at(i)->drawTiles();
-		glTranslatef(0.0, 0.0, 2.0);
 	}
 
 	if (m_has_bevels) {
@@ -606,14 +602,11 @@ void Board::paintGL()
 
 		vertex_array->setMultiTextured(false);
 	}
-	glPopMatrix();
 	glEnable(GL_BLEND);
 
 	// Draw shadows
 	if (m_has_shadows) {
 		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
-		glPushMatrix();
-		glTranslatef(0.0, 0.0, -1.0);
 
 		qglColor(palette().color(QPalette::Text));
 		count = m_pieces.count();
@@ -630,20 +623,14 @@ void Board::paintGL()
 			m_selected_pieces.at(i)->drawShadow();
 		}
 
-		glTranslatef(0.0, 0.0, 1.0);
 		count = m_active_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			m_active_pieces.at(i)->drawShadow();
-			glTranslatef(0.0, 0.0, 2.0);
 		}
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-
-		glPopMatrix();
 	}
 
 	// Untransform viewport
 	glPopMatrix();
-	glTranslatef(0.0, 0.0, 3000.0);
 
 	// Draw selection rectangle
 	if (m_selecting) {
@@ -838,7 +825,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			}
 		}
 
-		updateRegion(m_selection_region, QRect(event->pos(), m_select_pos).normalized());
+		updateRegion(m_selection_region, QRect(event->pos(), m_select_pos).normalized(), 3000);
 	}
 
 	updateGL();
@@ -945,6 +932,7 @@ void Board::grabPiece()
 	}
 	m_active_pieces.append(piece);
 	m_pieces.removeAll(piece);
+	piece->setDepth(m_active_pieces.count() + 1);
 	piece->setSelected(true);
 	updateCursor();
 
@@ -975,6 +963,7 @@ void Board::releasePieces()
 	for (int i = 0; i < count; ++i) {
 		piece = m_active_pieces.at(i);
 		m_pieces.append(piece);
+		piece->setDepth(0);
 		piece->setSelected(false);
 		piece->pushNeighbors();
 	}
@@ -1033,9 +1022,11 @@ void Board::selectPieces()
 	m_selecting = false;
 
 	QPoint cursor = mapPosition(m_cursor_pos);
+	int depth = m_active_pieces.count() + 1;
 	int count = m_selected_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		Piece* piece = m_selected_pieces.at(i);
+		piece->setDepth(depth + i);
 		piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size, rand() % Tile::size));
 	}
 	m_active_pieces += m_selected_pieces;
@@ -1199,7 +1190,7 @@ void Board::updateCompleted()
 
 //-----------------------------------------------------------------------------
 
-void Board::updateRegion(VertexArray::Region& region, const QRect& rect)
+void Board::updateRegion(VertexArray::Region& region, const QRect& rect, int z)
 {
 	int x1 = rect.x();
 	int y1 = rect.y();
@@ -1207,10 +1198,10 @@ void Board::updateRegion(VertexArray::Region& region, const QRect& rect)
 	int y2 = y1 + rect.height();
 
 	QVector<Vertex> verts;
-	verts.append( Vertex(x1,y1) );
-	verts.append( Vertex(x1,y2) );
-	verts.append( Vertex(x2,y2) );
-	verts.append( Vertex(x2,y1) );
+	verts.append( Vertex(x1,y1,z) );
+	verts.append( Vertex(x1,y2,z) );
+	verts.append( Vertex(x2,y2,z) );
+	verts.append( Vertex(x2,y1,z) );
 	vertex_array->insert(region, verts);
 }
 

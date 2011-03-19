@@ -98,7 +98,7 @@ private:
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
-	void updateRegion(VertexArray::Region& region, const QRect& rect);
+	void updateRegion(VertexArray::Region& region, const QRect& rect, int z);
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();

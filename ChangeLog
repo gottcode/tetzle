@@ -1,3 +1,6 @@
+2011-03-19 Graeme Gott <graeme@gottcode.org>
+	* Move depth sorting into vertex.
+
 2011-03-18 Graeme Gott <graeme@gottcode.org>
 	* Use a single vertex buffer object.
 

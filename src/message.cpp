@@ -130,12 +130,13 @@ void Message::updateVerts()
 	int y1 = (m_viewport.height() - m_size.height()) / 2;
 	int x2 = x1 + m_size.width();
 	int y2 = y1 + m_size.height();
+	int z = 3990;
 
 	QVector<Vertex> verts;
-	verts.append( Vertex(x1,y1, 0,0) );
-	verts.append( Vertex(x1,y2, 0,1) );
-	verts.append( Vertex(x2,y2, 1,1) );
-	verts.append( Vertex(x2,y1, 1,0) );
+	verts.append( Vertex(x1,y1,z, 0,0) );
+	verts.append( Vertex(x1,y2,z, 0,1) );
+	verts.append( Vertex(x2,y2,z, 1,1) );
+	verts.append( Vertex(x2,y1,z, 1,0) );
 	vertex_array->insert(m_region, verts);
 }
 

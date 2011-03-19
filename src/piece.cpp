@@ -34,6 +34,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	m_tiles(tiles),
 	m_shadow(tiles),
 	m_rotation(0),
+	m_depth(2),
 	m_selected(true),
 	m_changed(false)
 {
@@ -278,6 +279,14 @@ void Piece::rotate(const QPoint& origin)
 
 //-----------------------------------------------------------------------------
 
+void Piece::setDepth(int depth)
+{
+	m_depth = (depth + 1) * 2;
+	updateVerts();
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::setSelected(bool selected)
 {
 	m_selected = selected;
@@ -430,6 +439,7 @@ void Piece::updateVerts()
 	}
 
 	QVector<Vertex> verts;
+	int z = m_depth;
 
 	// Update tile verts
 	verts.reserve(m_tiles.count() * 4);
@@ -451,14 +461,15 @@ void Piece::updateVerts()
 		float bx2 = bx1 + 0.125;
 		float by2 = by1 + 0.125;
 
-		verts.append( Vertex(x1,y1, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
-		verts.append( Vertex(x1,y2, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
-		verts.append( Vertex(x2,y2, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
-		verts.append( Vertex(x2,y1, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
+		verts.append( Vertex(x1,y1,z, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
+		verts.append( Vertex(x1,y2,z, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
+		verts.append( Vertex(x2,y2,z, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
+		verts.append( Vertex(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
 	}
 	vertex_array->insert(m_tile_region, verts);
 
 	// Update shadow verts
+	z--;
 	static const int offset = Tile::size / 2;
 	static const int size = Tile::size * 2;
 	verts.clear();
@@ -470,10 +481,10 @@ void Piece::updateVerts()
 		int x2 = x1 + size;
 		int y2 = y1 + size;
 
-		verts.append( Vertex(x1,y1, 0,0) );
-		verts.append( Vertex(x1,y2, 0,1) );
-		verts.append( Vertex(x2,y2, 1,1) );
-		verts.append( Vertex(x2,y1, 1,0) );
+		verts.append( Vertex(x1,y1,z, 0,0) );
+		verts.append( Vertex(x1,y2,z, 0,1) );
+		verts.append( Vertex(x2,y2,z, 1,1) );
+		verts.append( Vertex(x2,y1,z, 1,0) );
 	}
 	vertex_array->insert(m_shadow_region, verts);
 

@@ -26,16 +26,17 @@ struct Vertex
 {
 	GLfloat x;
 	GLfloat y;
+	GLfloat z;
 
 	GLfloat s;
 	GLfloat t;
 
 	GLfloat s2;
 	GLfloat t2;
-	unsigned char pad[8];
+	unsigned char pad[4];
 
-	Vertex(GLfloat x_ = 0, GLfloat y_ = 0, GLfloat s_ = 0, GLfloat t_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
-		: x(x_), y(y_), s(s_), t(t_), s2(s2_), t2(t2_)
+	Vertex(GLfloat x_ = 0, GLfloat y_ = 0, GLfloat z_ = 0, GLfloat s_ = 0, GLfloat t_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
+		: x(x_), y(y_), z(z_), s(s_), t(t_), s2(s2_), t2(t2_)
 	{
 	}
 };

@@ -124,7 +124,7 @@ void VertexArray::uploadChanged()
 void VertexArray11::draw(const Region& region, GLenum mode)
 {
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).s);
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).x);
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &at(region.start).x);
 	glDrawArrays(mode, 0, region.length());
 }
 
@@ -150,7 +150,7 @@ void VertexArray13::draw(const Region& region, GLenum mode)
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).s2);
 	GL::clientActiveTexture(GL_TEXTURE0);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).s);
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).x);
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &at(region.start).x);
 	glDrawArrays(mode, 0, region.length());
 }
 
@@ -198,14 +198,14 @@ void VertexArray15::setMultiTextured(bool enabled)
 	GL::clientActiveTexture(GL_TEXTURE1);
 	if (enabled) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 4));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 5));
 	} else {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 	GL::clientActiveTexture(GL_TEXTURE0);
 
-	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 2));
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), 0);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 3));
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), 0);
 }
 
 //-----------------------------------------------------------------------------

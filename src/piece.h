@@ -49,6 +49,7 @@ public:
 	void moveBy(const QPoint& delta);
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotate(const QPoint& origin = QPoint());
+	void setDepth(int depth);
 	void setPosition(const QPoint& pos);
 	void setSelected(bool selected);
 
@@ -72,6 +73,7 @@ private:
 	QList<Tile*> m_shadow;
 	QSet<Piece*> m_neighbors;
 	int m_rotation;
+	int m_depth;
 	bool m_selected;
 
 	VertexArray::Region m_tile_region;
