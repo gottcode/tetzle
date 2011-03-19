@@ -40,7 +40,7 @@ Message::Message(QGLWidget* parent)
 Message::~Message()
 {
 	cleanup();
-	vertex_array->release(m_region);
+	graphics_layer->removeArray(m_array);
 }
 
 //-----------------------------------------------------------------------------
@@ -48,8 +48,8 @@ Message::~Message()
 void Message::draw() const
 {
 	if (m_visible) {
-		glBindTexture(GL_TEXTURE_2D, m_image);
-		vertex_array->draw(m_region);
+		graphics_layer->bindTexture(GL_TEXTURE0, m_image);
+		graphics_layer->draw(m_array);
 	}
 }
 
@@ -137,7 +137,7 @@ void Message::updateVerts()
 	verts.append( Vertex(x1,y2,z, 0,1) );
 	verts.append( Vertex(x2,y2,z, 1,1) );
 	verts.append( Vertex(x2,y1,z, 1,0) );
-	vertex_array->insert(m_region, verts);
+	graphics_layer->updateArray(m_array, verts);
 }
 
 //-----------------------------------------------------------------------------

@@ -20,7 +20,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include "vertex_array.h"
+#include "graphics_layer.h"
 class Board;
 class Tile;
 
@@ -76,8 +76,8 @@ private:
 	int m_depth;
 	bool m_selected;
 
-	VertexArray::Region m_tile_region;
-	VertexArray::Region m_shadow_region;
+	VertexArray m_tile_array;
+	VertexArray m_shadow_array;
 
 	bool m_changed;
 	QRegion m_collision_region;
@@ -124,12 +124,12 @@ inline void Piece::setPosition(const QPoint& pos)
 
 inline void Piece::drawTiles() const
 {
-	vertex_array->draw(m_tile_region);
+	graphics_layer->draw(m_tile_array);
 }
 
 inline void Piece::drawShadow() const
 {
-	vertex_array->draw(m_shadow_region);
+	graphics_layer->draw(m_shadow_array);
 }
 
 #endif

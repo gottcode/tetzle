@@ -20,8 +20,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <QGLWidget>
-#include "vertex_array.h"
+#include "graphics_layer.h"
 
 class Message
 {
@@ -41,7 +40,7 @@ private:
 private:
 	QGLWidget* m_parent;
 	GLuint m_image;
-	VertexArray::Region m_region;
+	VertexArray m_array;
 
 	QString m_text;
 	QSize m_size;

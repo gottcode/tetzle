@@ -17,10 +17,11 @@
  *
  ***********************************************************************/
 
-#ifndef VERTEX_ARRAY_H
-#define VERTEX_ARRAY_H
+#ifndef GRAPHICS_LAYER_H
+#define GRAPHICS_LAYER_H
 
 #include <qgl.h>
+#include <GL/glext.h>
 
 struct Vertex
 {
@@ -43,51 +44,59 @@ struct Vertex
 };
 
 
-class VertexArray
+struct VertexArray
+{
+	int start;
+	int end;
+
+	VertexArray()
+	:	start(0),
+		end(0)
+	{
+	}
+
+	int length() const
+	{
+		return end - start;
+	}
+
+	bool merge(const VertexArray& other)
+	{
+		if (start == other.end) {
+			start = other.start;
+			return true;
+		} else if (end == other.start) {
+			end = other.end;
+			return true;
+		} else {
+			return false;
+		}
+	}
+};
+
+
+class GraphicsLayer
 {
 public:
-	VertexArray();
-	virtual ~VertexArray();
+	virtual ~GraphicsLayer();
 
-	struct Region
-	{
-		int start;
-		int end;
+	void updateArray(VertexArray& array, const QVector<Vertex>& data);
+	void removeArray(VertexArray& array);
 
-		Region()
-		:	start(0),
-			end(0)
-		{
-		}
-
-		int length() const
-		{
-			return end - start;
-		}
-
-		bool merge(const Region& other)
-		{
-			if (start == other.end) {
-				start = other.start;
-				return true;
-			} else if (end == other.start) {
-				end = other.end;
-				return true;
-			} else {
-				return false;
-			}
-		}
-	};
-	void insert(Region& region, const QVector<Vertex>& data);
-	void release(Region& region);
-
-	virtual void draw(const Region& region, GLenum mode = GL_QUADS)=0;
+	virtual void bindTexture(GLenum unit, GLuint texture)=0;
+	virtual void draw(const VertexArray& region, GLenum mode = GL_QUADS)=0;
+	virtual void setBlended(bool enabled)=0;
 	virtual void setColor(const QColor& color)=0;
 	virtual void setTextured(bool enabled)=0;
 	virtual void setMultiTextured(bool enabled)=0;
 	virtual void setModelview(const QMatrix4x4& matrix)=0;
 	virtual void setProjection(const QMatrix4x4& matrix)=0;
 	virtual void uploadData()=0;
+
+	static void init();
+
+protected:
+	GraphicsLayer();
 
 protected:
 	void clearChanged();
@@ -100,19 +109,21 @@ protected:
 
 private:
 	QVector<Vertex> m_data;
-	QList<Region> m_free_regions;
-	QList<Region> m_changed_regions;
+	QList<VertexArray> m_free_regions;
+	QList<VertexArray> m_changed_regions;
 	bool m_changed;
 };
-extern VertexArray* vertex_array;
+extern GraphicsLayer* graphics_layer;
 
 
-class VertexArray11 : public VertexArray
+class GraphicsLayer11 : public GraphicsLayer
 {
 public:
-	VertexArray11();
+	GraphicsLayer11();
 
-	virtual void draw(const Region& region, GLenum mode = GL_QUADS);
+	virtual void bindTexture(GLenum unit, GLuint texture);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void setBlended(bool enabled);
 	virtual void setColor(const QColor& color);
 	virtual void setTextured(bool enabled);
 	virtual void setMultiTextured(bool enabled);
@@ -122,23 +133,25 @@ public:
 };
 
 
-class VertexArray13 : public VertexArray11
+class GraphicsLayer13 : public GraphicsLayer11
 {
 public:
-	VertexArray13();
+	GraphicsLayer13();
 
-	virtual void draw(const Region& region, GLenum mode = GL_QUADS);
+	virtual void bindTexture(GLenum unit, GLuint texture);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
 	virtual void setMultiTextured(bool enabled);
 };
 
 
-class VertexArray15 : public VertexArray13
+class GraphicsLayer15 : public GraphicsLayer13
 {
 public:
-	VertexArray15();
-	virtual ~VertexArray15();
+	GraphicsLayer15();
+	virtual ~GraphicsLayer15();
 
-	virtual void draw(const Region& region, GLenum mode = GL_QUADS);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void setTextured(bool enabled);
 	virtual void setMultiTextured(bool enabled);
 	virtual void uploadData();
 

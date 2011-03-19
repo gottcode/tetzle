@@ -20,7 +20,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "vertex_array.h"
+#include "graphics_layer.h"
 class AppearanceDialog;
 class Message;
 class Overview;
@@ -92,13 +92,13 @@ private:
 	void rotatePiece();
 	void selectPieces();
 
-	void drawRegion(const VertexArray::Region& region, const QColor& fill, const QColor& border);
+	void drawArray(const VertexArray& region, const QColor& fill, const QColor& border);
 	void loadImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
-	void updateRegion(VertexArray::Region& region, const QRect& rect, int z);
+	void updateArray(VertexArray& array, const QRect& rect, int z);
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
@@ -120,8 +120,8 @@ private:
 	GLuint m_shadow_image;
 	float m_image_ts;
 	QPointF m_corners[4][4];
-	VertexArray::Region m_scene_region;
-	VertexArray::Region m_selection_region;
+	VertexArray m_scene_array;
+	VertexArray m_selection_array;
 
 	int m_columns;
 	int m_rows;

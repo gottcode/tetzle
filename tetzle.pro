@@ -23,10 +23,10 @@ HEADERS = src/add_image.h \
 	src/color_button.h \
 	src/dancing_links.h \
 	src/generator.h \
+	src/graphics_layer.h \
 	src/message.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
-	src/opengl.h \
 	src/overview.h \
 	src/path.h \
 	src/piece.h \
@@ -34,7 +34,6 @@ HEADERS = src/add_image.h \
 	src/tag_image_dialog.h \
 	src/tag_manager.h \
 	src/thumbnail_list.h \
-	src/vertex_array.h \
 	src/window.h \
 	src/zoom_slider.h
 
@@ -44,11 +43,11 @@ SOURCES = src/add_image.cpp \
 	src/color_button.cpp \
 	src/dancing_links.cpp \
 	src/generator.cpp \
+	src/graphics_layer.cpp \
 	src/main.cpp \
 	src/message.cpp \
 	src/new_game_dialog.cpp \
 	src/open_game_dialog.cpp \
-	src/opengl.cpp \
 	src/overview.cpp \
 	src/path.cpp \
 	src/piece.cpp \
@@ -56,7 +55,6 @@ SOURCES = src/add_image.cpp \
 	src/tag_image_dialog.cpp \
 	src/tag_manager.cpp \
 	src/thumbnail_list.cpp \
-	src/vertex_array.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 

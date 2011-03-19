@@ -72,6 +72,9 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 
 Piece::~Piece()
 {
+	graphics_layer->removeArray(m_tile_array);
+	graphics_layer->removeArray(m_shadow_array);
+
 	qDeleteAll(m_tiles);
 }
 
@@ -466,7 +469,7 @@ void Piece::updateVerts()
 		verts.append( Vertex(x2,y2,z, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
 		verts.append( Vertex(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
 	}
-	vertex_array->insert(m_tile_region, verts);
+	graphics_layer->updateArray(m_tile_array, verts);
 
 	// Update shadow verts
 	z--;
@@ -486,7 +489,7 @@ void Piece::updateVerts()
 		verts.append( Vertex(x2,y2,z, 1,1) );
 		verts.append( Vertex(x2,y1,z, 1,0) );
 	}
-	vertex_array->insert(m_shadow_region, verts);
+	graphics_layer->updateArray(m_shadow_array, verts);
 
 	// Update scene rectangle
 	m_board->updateSceneRectangle(this);

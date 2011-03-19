@@ -22,12 +22,10 @@
 #include "appearance_dialog.h"
 #include "generator.h"
 #include "message.h"
-#include "opengl.h"
 #include "overview.h"
 #include "path.h"
 #include "piece.h"
 #include "tile.h"
-#include "vertex_array.h"
 #include "zoom_slider.h"
 
 #include <QApplication>
@@ -107,8 +105,8 @@ Board::~Board()
 	deleteTexture(m_bumpmap_image);
 	deleteTexture(m_shadow_image);
 	delete m_message;
-	delete vertex_array;
-	vertex_array = 0;
+	delete graphics_layer;
+	graphics_layer = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -154,7 +152,7 @@ void Board::updateSceneRectangle(Piece* piece)
 {
 	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
-	updateRegion(m_scene_region, m_scene, 0);
+	updateArray(m_scene_array, m_scene, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -486,7 +484,7 @@ void Board::toggleOverview()
 void Board::initializeGL()
 {
 	// Configure OpenGL
-	GL::init();
+	GraphicsLayer::init();
 
 	// Load static images
 	m_bumpmap_image = bindTexture(QImage(":/bumpmap.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
@@ -506,7 +504,7 @@ void Board::resizeGL(int w, int h)
 
 	QMatrix4x4 matrix;
 	matrix.ortho(0, w, h, 0, -4000, 3);
-	vertex_array->setProjection(matrix);
+	graphics_layer->setProjection(matrix);
 
 	m_message->setViewport(size());
 }
@@ -517,32 +515,25 @@ void Board::paintGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	vertex_array->uploadData();
-	vertex_array->setMultiTextured(false);
+	graphics_layer->uploadData();
 
 	// Transform viewport
 	QRect viewport = rect();
 	QMatrix4x4 matrix;
 	matrix.scale(m_scale, m_scale);
 	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
-	vertex_array->setModelview(matrix);
+	graphics_layer->setModelview(matrix);
 
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
 	QColor border = fill.lighter(125);
-	glDisable(GL_BLEND);
-	drawRegion(m_scene_region, fill, border);
-	glEnable(GL_BLEND);
+	drawArray(m_scene_array, fill, border);
 
 	// Draw pieces
-	glBindTexture(GL_TEXTURE_2D, m_image);
-	glDisable(GL_BLEND);
+	graphics_layer->bindTexture(GL_TEXTURE0, m_image);
 	if (m_has_bevels) {
-		vertex_array->setMultiTextured(true);
-
-		GL::activeTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
-		GL::activeTexture(GL_TEXTURE0);
+		graphics_layer->setMultiTextured(true);
+		graphics_layer->bindTexture(GL_TEXTURE1, m_bumpmap_image);
 	}
 
 	int count = m_pieces.count();
@@ -564,15 +555,15 @@ void Board::paintGL()
 	}
 
 	if (m_has_bevels) {
-		vertex_array->setMultiTextured(false);
+		graphics_layer->setMultiTextured(false);
 	}
-	glEnable(GL_BLEND);
 
 	// Draw shadows
+	graphics_layer->setBlended(true);
 	if (m_has_shadows) {
-		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
+		graphics_layer->bindTexture(GL_TEXTURE0, m_shadow_image);
 
-		vertex_array->setColor(palette().color(QPalette::Text));
+		graphics_layer->setColor(palette().color(QPalette::Text));
 		count = m_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
@@ -581,7 +572,7 @@ void Board::paintGL()
 			}
 		}
 
-		vertex_array->setColor(palette().color(QPalette::Highlight));
+		graphics_layer->setColor(palette().color(QPalette::Highlight));
 		count = m_selected_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			m_selected_pieces.at(i)->drawShadow();
@@ -594,17 +585,18 @@ void Board::paintGL()
 	}
 
 	// Untransform viewport
-	vertex_array->setModelview(QMatrix4x4());
+	graphics_layer->setModelview(QMatrix4x4());
 
 	// Draw selection rectangle
 	if (m_selecting) {
 		fill = border = palette().color(QPalette::Highlight);
 		fill.setAlpha(48);
-		drawRegion(m_selection_region, fill, border);
+		drawArray(m_selection_array, fill, border);
 	}
 
 	// Draw message
 	m_message->draw();
+	graphics_layer->setBlended(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -789,7 +781,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			}
 		}
 
-		updateRegion(m_selection_region, QRect(event->pos(), m_select_pos).normalized(), 3000);
+		updateArray(m_selection_array, QRect(event->pos(), m_select_pos).normalized(), 3000);
 	}
 
 	updateGL();
@@ -1002,19 +994,19 @@ void Board::selectPieces()
 
 //-----------------------------------------------------------------------------
 
-void Board::drawRegion(const VertexArray::Region& region, const QColor& fill, const QColor& border)
+void Board::drawArray(const VertexArray& array, const QColor& fill, const QColor& border)
 {
-	vertex_array->setTextured(false);
+	graphics_layer->setTextured(false);
 
-	vertex_array->setColor(fill);
-	vertex_array->draw(region);
+	graphics_layer->setColor(fill);
+	graphics_layer->draw(array);
 
-	vertex_array->setColor(border);
-	vertex_array->draw(region, GL_LINE_LOOP);
+	graphics_layer->setColor(border);
+	graphics_layer->draw(array, GL_LINE_LOOP);
 
-	vertex_array->setColor(Qt::white);
+	graphics_layer->setColor(Qt::white);
 
-	vertex_array->setTextured(true);
+	graphics_layer->setTextured(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -1152,7 +1144,7 @@ void Board::updateCompleted()
 
 //-----------------------------------------------------------------------------
 
-void Board::updateRegion(VertexArray::Region& region, const QRect& rect, int z)
+void Board::updateArray(VertexArray& array, const QRect& rect, int z)
 {
 	int x1 = rect.x();
 	int y1 = rect.y();
@@ -1164,7 +1156,7 @@ void Board::updateRegion(VertexArray::Region& region, const QRect& rect, int z)
 	verts.append( Vertex(x1,y2,z) );
 	verts.append( Vertex(x2,y2,z) );
 	verts.append( Vertex(x2,y1,z) );
-	vertex_array->insert(region, verts);
+	graphics_layer->updateArray(array, verts);
 }
 
 //-----------------------------------------------------------------------------
