@@ -19,7 +19,10 @@
 
 #include "vertex_array.h"
 
+#include "appearance_dialog.h"
 #include "opengl.h"
+
+#include <QMatrix4x4>
 
 //-----------------------------------------------------------------------------
 
@@ -30,6 +33,15 @@ VertexArray* vertex_array = 0;
 VertexArray::VertexArray()
 :	m_changed(false)
 {
+	// Enable OpenGL features
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+
+	// Set OpenGL parameters
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LEQUAL);
+	glFrontFace(GL_CCW);
 }
 
 //-----------------------------------------------------------------------------
@@ -121,11 +133,48 @@ void VertexArray::uploadChanged()
 
 //-----------------------------------------------------------------------------
 
+VertexArray11::VertexArray11()
+{
+	AppearanceDialog::setBevelsEnabled(false);
+
+	// Disable unused OpenGL features
+	glDisable(GL_LIGHTING);
+
+	// Enable OpenGL features
+	glEnableClientState(GL_VERTEX_ARRAY);
+	setTextured(true);
+
+	// Set OpenGL parameters
+	setColor(Qt::white);
+}
+
+//-----------------------------------------------------------------------------
+
 void VertexArray11::draw(const Region& region, GLenum mode)
 {
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(region.start).s);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &at(region.start).x);
 	glDrawArrays(mode, 0, region.length());
+}
+
+//-----------------------------------------------------------------------------
+
+void VertexArray11::setColor(const QColor& color)
+{
+	glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+}
+
+//-----------------------------------------------------------------------------
+
+void VertexArray11::setTextured(bool enabled)
+{
+	if (enabled) {
+		glEnable(GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	} else {
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -137,9 +186,40 @@ void VertexArray11::setMultiTextured(bool enabled)
 
 //-----------------------------------------------------------------------------
 
+void VertexArray11::setModelview(const QMatrix4x4& matrix)
+{
+	glLoadIdentity();
+	glMultMatrixd(matrix.constData());
+}
+
+//-----------------------------------------------------------------------------
+
+void VertexArray11::setProjection(const QMatrix4x4& matrix)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMultMatrixd(matrix.constData());
+	glMatrixMode(GL_MODELVIEW);
+}
+
+//-----------------------------------------------------------------------------
+
 void VertexArray11::uploadData()
 {
 	clearChanged();
+}
+
+//-----------------------------------------------------------------------------
+
+VertexArray13::VertexArray13()
+{
+	AppearanceDialog::setBevelsEnabled(true);
+
+	// Set OpenGL parameters
+	GL::activeTexture(GL_TEXTURE1);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+	glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
+	GL::activeTexture(GL_TEXTURE0);
 }
 
 //-----------------------------------------------------------------------------
@@ -158,13 +238,17 @@ void VertexArray13::draw(const Region& region, GLenum mode)
 
 void VertexArray13::setMultiTextured(bool enabled)
 {
+	GL::activeTexture(GL_TEXTURE1);
 	GL::clientActiveTexture(GL_TEXTURE1);
 	if (enabled) {
+		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	} else {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
 	}
 	GL::clientActiveTexture(GL_TEXTURE0);
+	GL::activeTexture(GL_TEXTURE0);
 }
 
 //-----------------------------------------------------------------------------
@@ -195,14 +279,18 @@ void VertexArray15::draw(const Region& region, GLenum mode)
 
 void VertexArray15::setMultiTextured(bool enabled)
 {
+	GL::activeTexture(GL_TEXTURE1);
 	GL::clientActiveTexture(GL_TEXTURE1);
 	if (enabled) {
+		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 5));
 	} else {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
 	}
 	GL::clientActiveTexture(GL_TEXTURE0);
+	GL::activeTexture(GL_TEXTURE0);
 
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 3));
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), 0);

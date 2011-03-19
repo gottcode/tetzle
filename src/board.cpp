@@ -485,35 +485,8 @@ void Board::toggleOverview()
 
 void Board::initializeGL()
 {
-	// Load OpenGL extensions
+	// Configure OpenGL
 	GL::init();
-
-	// Disable unused OpenGL features
-	glDisable(GL_LIGHTING);
-
-	// Enable OpenGL features
-	glEnable(GL_BLEND);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	if (GL::activeTexture != 0) {
-		GL::activeTexture(GL_TEXTURE1);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
-		GL::activeTexture(GL_TEXTURE0);
-	} else {
-		m_has_bevels = false;
-		AppearanceDialog::setBevelsEnabled(m_has_bevels);
-	}
-
-	// Set OpenGL parameters
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(1, 1, 1, 1);
-	glDepthFunc(GL_LEQUAL);
-	glFrontFace(GL_CCW);
 
 	// Load static images
 	m_bumpmap_image = bindTexture(QImage(":/bumpmap.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
@@ -530,11 +503,10 @@ void Board::initializeGL()
 void Board::resizeGL(int w, int h)
 {
 	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, w, h, 0, -4000, 3);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+
+	QMatrix4x4 matrix;
+	matrix.ortho(0, w, h, 0, -4000, 3);
+	vertex_array->setProjection(matrix);
 
 	m_message->setViewport(size());
 }
@@ -543,20 +515,17 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	vertex_array->uploadData();
 	vertex_array->setMultiTextured(false);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Transform viewport
 	QRect viewport = rect();
 	QMatrix4x4 matrix;
 	matrix.scale(m_scale, m_scale);
 	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
-
-	glLoadIdentity();
-	glPushMatrix();
-	glMultMatrixd(matrix.constData());
+	vertex_array->setModelview(matrix);
 
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
@@ -569,12 +538,11 @@ void Board::paintGL()
 	glBindTexture(GL_TEXTURE_2D, m_image);
 	glDisable(GL_BLEND);
 	if (m_has_bevels) {
+		vertex_array->setMultiTextured(true);
+
 		GL::activeTexture(GL_TEXTURE1);
-		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, m_bumpmap_image);
 		GL::activeTexture(GL_TEXTURE0);
-
-		vertex_array->setMultiTextured(true);
 	}
 
 	int count = m_pieces.count();
@@ -596,10 +564,6 @@ void Board::paintGL()
 	}
 
 	if (m_has_bevels) {
-		GL::activeTexture(GL_TEXTURE1);
-		glDisable(GL_TEXTURE_2D);
-		GL::activeTexture(GL_TEXTURE0);
-
 		vertex_array->setMultiTextured(false);
 	}
 	glEnable(GL_BLEND);
@@ -608,7 +572,7 @@ void Board::paintGL()
 	if (m_has_shadows) {
 		glBindTexture(GL_TEXTURE_2D, m_shadow_image);
 
-		qglColor(palette().color(QPalette::Text));
+		vertex_array->setColor(palette().color(QPalette::Text));
 		count = m_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
@@ -617,7 +581,7 @@ void Board::paintGL()
 			}
 		}
 
-		qglColor(palette().color(QPalette::Highlight));
+		vertex_array->setColor(palette().color(QPalette::Highlight));
 		count = m_selected_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			m_selected_pieces.at(i)->drawShadow();
@@ -630,7 +594,7 @@ void Board::paintGL()
 	}
 
 	// Untransform viewport
-	glPopMatrix();
+	vertex_array->setModelview(QMatrix4x4());
 
 	// Draw selection rectangle
 	if (m_selecting) {
@@ -1040,19 +1004,17 @@ void Board::selectPieces()
 
 void Board::drawRegion(const VertexArray::Region& region, const QColor& fill, const QColor& border)
 {
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+	vertex_array->setTextured(false);
 
-	qglColor(fill);
+	vertex_array->setColor(fill);
 	vertex_array->draw(region);
 
-	qglColor(border);
+	vertex_array->setColor(border);
 	vertex_array->draw(region, GL_LINE_LOOP);
 
-	glColor4f(1,1,1,1);
+	vertex_array->setColor(Qt::white);
 
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	vertex_array->setTextured(true);
 }
 
 //-----------------------------------------------------------------------------

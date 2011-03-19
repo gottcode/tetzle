@@ -33,6 +33,7 @@ struct Vertex
 
 	GLfloat s2;
 	GLfloat t2;
+
 	unsigned char pad[4];
 
 	Vertex(GLfloat x_ = 0, GLfloat y_ = 0, GLfloat z_ = 0, GLfloat s_ = 0, GLfloat t_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
@@ -81,7 +82,11 @@ public:
 	void release(Region& region);
 
 	virtual void draw(const Region& region, GLenum mode = GL_QUADS)=0;
+	virtual void setColor(const QColor& color)=0;
+	virtual void setTextured(bool enabled)=0;
 	virtual void setMultiTextured(bool enabled)=0;
+	virtual void setModelview(const QMatrix4x4& matrix)=0;
+	virtual void setProjection(const QMatrix4x4& matrix)=0;
 	virtual void uploadData()=0;
 
 protected:
@@ -105,8 +110,14 @@ extern VertexArray* vertex_array;
 class VertexArray11 : public VertexArray
 {
 public:
+	VertexArray11();
+
 	virtual void draw(const Region& region, GLenum mode = GL_QUADS);
+	virtual void setColor(const QColor& color);
+	virtual void setTextured(bool enabled);
 	virtual void setMultiTextured(bool enabled);
+	virtual void setModelview(const QMatrix4x4& matrix);
+	virtual void setProjection(const QMatrix4x4& matrix);
 	virtual void uploadData();
 };
 
@@ -114,6 +125,8 @@ public:
 class VertexArray13 : public VertexArray11
 {
 public:
+	VertexArray13();
+
 	virtual void draw(const Region& region, GLenum mode = GL_QUADS);
 	virtual void setMultiTextured(bool enabled);
 };
