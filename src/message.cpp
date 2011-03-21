@@ -48,7 +48,7 @@ Message::~Message()
 void Message::draw() const
 {
 	if (m_visible) {
-		graphics_layer->bindTexture(GL_TEXTURE0, m_image);
+		graphics_layer->bindTexture(0, m_image);
 		graphics_layer->draw(m_array);
 	}
 }

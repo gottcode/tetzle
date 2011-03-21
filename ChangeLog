@@ -1,3 +1,6 @@
+2011-03-21 Graeme Gott <graeme@gottcode.org>
+	* Add programmable pipeline code to GraphicsLayer.
+
 2011-03-19 Graeme Gott <graeme@gottcode.org>
 	* Move fixed function code into GraphicsLayer.
 	* Move depth sorting into vertex.

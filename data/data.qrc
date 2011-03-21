@@ -3,5 +3,12 @@
 	<file>bumpmap.png</file>
 	<file>loading.png</file>
 	<file>shadow.png</file>
+
+	<file>shaders/textures0.frag</file>
+	<file>shaders/textures0.vert</file>
+	<file>shaders/textures1.frag</file>
+	<file>shaders/textures1.vert</file>
+	<file>shaders/textures2.frag</file>
+	<file>shaders/textures2.vert</file>
 </qresource>
 </RCC>

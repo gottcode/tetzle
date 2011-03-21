@@ -21,7 +21,8 @@
 #define GRAPHICS_LAYER_H
 
 #include <qgl.h>
-#include <GL/glext.h>
+#include <QMatrix4x4>
+class QGLShaderProgram;
 
 struct Vertex
 {
@@ -80,20 +81,19 @@ class GraphicsLayer
 public:
 	virtual ~GraphicsLayer();
 
+	static void init();
+
 	void updateArray(VertexArray& array, const QVector<Vertex>& data);
 	void removeArray(VertexArray& array);
 
-	virtual void bindTexture(GLenum unit, GLuint texture)=0;
+	virtual void bindTexture(unsigned int unit, GLuint texture)=0;
 	virtual void draw(const VertexArray& region, GLenum mode = GL_QUADS)=0;
 	virtual void setBlended(bool enabled)=0;
 	virtual void setColor(const QColor& color)=0;
-	virtual void setTextured(bool enabled)=0;
-	virtual void setMultiTextured(bool enabled)=0;
 	virtual void setModelview(const QMatrix4x4& matrix)=0;
 	virtual void setProjection(const QMatrix4x4& matrix)=0;
+	virtual void setTextureUnits(unsigned int units)=0;
 	virtual void uploadData()=0;
-
-	static void init();
 
 protected:
 	GraphicsLayer();
@@ -116,19 +116,56 @@ private:
 extern GraphicsLayer* graphics_layer;
 
 
+// Programmable pipeline
+class GraphicsLayer21 : public GraphicsLayer
+{
+public:
+	GraphicsLayer21();
+	~GraphicsLayer21();
+
+	virtual void bindTexture(unsigned int unit, GLuint texture);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void setBlended(bool enabled);
+	virtual void setColor(const QColor& color);
+	virtual void setModelview(const QMatrix4x4& matrix);
+	virtual void setProjection(const QMatrix4x4& matrix);
+	virtual void setTextureUnits(unsigned int units);
+	virtual void uploadData();
+
+private:
+	QGLShaderProgram* loadProgram(unsigned int index);
+
+private:
+	enum Attribute
+	{
+		Position = 0,
+		TexCoord0,
+		TexCoord1
+	};
+
+	QMatrix4x4 m_modelview;
+	QMatrix4x4 m_projection;
+
+	QGLShaderProgram* m_program;
+	QGLShaderProgram* m_programs[3];
+	int m_color;
+	int m_matrix;
+};
+
+
+// Fixed function pipeline
 class GraphicsLayer11 : public GraphicsLayer
 {
 public:
 	GraphicsLayer11();
 
-	virtual void bindTexture(GLenum unit, GLuint texture);
+	virtual void bindTexture(unsigned int unit, GLuint texture);
 	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
 	virtual void setBlended(bool enabled);
 	virtual void setColor(const QColor& color);
-	virtual void setTextured(bool enabled);
-	virtual void setMultiTextured(bool enabled);
 	virtual void setModelview(const QMatrix4x4& matrix);
 	virtual void setProjection(const QMatrix4x4& matrix);
+	virtual void setTextureUnits(unsigned int units);
 	virtual void uploadData();
 };
 
@@ -138,9 +175,9 @@ class GraphicsLayer13 : public GraphicsLayer11
 public:
 	GraphicsLayer13();
 
-	virtual void bindTexture(GLenum unit, GLuint texture);
+	virtual void bindTexture(unsigned int unit, GLuint texture);
 	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
-	virtual void setMultiTextured(bool enabled);
+	virtual void setTextureUnits(unsigned int units);
 };
 
 
@@ -148,15 +185,10 @@ class GraphicsLayer15 : public GraphicsLayer13
 {
 public:
 	GraphicsLayer15();
-	virtual ~GraphicsLayer15();
 
 	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
-	virtual void setTextured(bool enabled);
-	virtual void setMultiTextured(bool enabled);
+	virtual void setTextureUnits(unsigned int units);
 	virtual void uploadData();
-
-private:
-	GLuint m_id;
 };
 
 #endif

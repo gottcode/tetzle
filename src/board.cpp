@@ -530,10 +530,10 @@ void Board::paintGL()
 	drawArray(m_scene_array, fill, border);
 
 	// Draw pieces
-	graphics_layer->bindTexture(GL_TEXTURE0, m_image);
+	graphics_layer->bindTexture(0, m_image);
 	if (m_has_bevels) {
-		graphics_layer->setMultiTextured(true);
-		graphics_layer->bindTexture(GL_TEXTURE1, m_bumpmap_image);
+		graphics_layer->setTextureUnits(2);
+		graphics_layer->bindTexture(1, m_bumpmap_image);
 	}
 
 	int count = m_pieces.count();
@@ -555,13 +555,13 @@ void Board::paintGL()
 	}
 
 	if (m_has_bevels) {
-		graphics_layer->setMultiTextured(false);
+		graphics_layer->setTextureUnits(1);
 	}
 
 	// Draw shadows
 	graphics_layer->setBlended(true);
 	if (m_has_shadows) {
-		graphics_layer->bindTexture(GL_TEXTURE0, m_shadow_image);
+		graphics_layer->bindTexture(0, m_shadow_image);
 
 		graphics_layer->setColor(palette().color(QPalette::Text));
 		count = m_pieces.count();
@@ -582,6 +582,8 @@ void Board::paintGL()
 		for (int i = 0; i < count; ++i) {
 			m_active_pieces.at(i)->drawShadow();
 		}
+
+		graphics_layer->setColor(Qt::white);
 	}
 
 	// Untransform viewport
@@ -996,7 +998,7 @@ void Board::selectPieces()
 
 void Board::drawArray(const VertexArray& array, const QColor& fill, const QColor& border)
 {
-	graphics_layer->setTextured(false);
+	graphics_layer->setTextureUnits(0);
 
 	graphics_layer->setColor(fill);
 	graphics_layer->draw(array);
@@ -1006,7 +1008,7 @@ void Board::drawArray(const VertexArray& array, const QColor& fill, const QColor
 
 	graphics_layer->setColor(Qt::white);
 
-	graphics_layer->setTextured(true);
+	graphics_layer->setTextureUnits(1);
 }
 
 //-----------------------------------------------------------------------------
