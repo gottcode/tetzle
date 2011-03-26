@@ -1,4 +1,5 @@
 2011-03-26 Graeme Gott <graeme@gottcode.org>
+	* Change location where data is stored.
 	* Add support for older puzzle files.
 
 2011-03-21 Graeme Gott <graeme@gottcode.org>

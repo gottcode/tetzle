@@ -57,9 +57,28 @@ int main(int argc, char** argv)
 	tetzle_translator.load("tetzle_" + QLocale::system().name());
 	app.installTranslator(&tetzle_translator);
 
+	// Update data location
 	QString path = Path::datapath();
-	dir = QDir::home();
-	dir.mkpath(path);
+	if (!QFile::exists(path)) {
+#if defined(Q_OS_MAC)
+		QString oldpath = QDir::homePath() + "/Library/Application Support/GottCode/Tetzle/";
+#elif defined(Q_OS_UNIX)
+		QString oldpath = getenv("$XDG_DATA_HOME");
+		if (oldpath.isEmpty()) {
+			oldpath = QDir::homePath() + "/.local/share/";
+		}
+		oldpath += "/games/tetzle/";
+#elif defined(Q_OS_WIN32)
+		QString oldpath = QDir::homePath() + "/Application Data/GottCode/Tetzle/";
+#endif
+		if (!QFile::exists(oldpath)) {
+			dir = QDir::home();
+			dir.mkpath(path);
+		} else {
+			QFile::rename(oldpath, path);
+		}
+	}
+	dir.setPath(path);
 	dir.mkpath(path + "/images/");
 	dir.mkpath(path + "/images/thumbnails/");
 	dir.mkpath(path + "/saves/");
