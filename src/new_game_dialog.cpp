@@ -265,7 +265,7 @@ void NewGameDialog::removeImage()
 			xml.readNext();
 		}
 		attributes = xml.attributes();
-		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() == 5) {
+		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 5) {
 			if (attributes.value("image").toString() == current_image) {
 				games.append(game);
 			}

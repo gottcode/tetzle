@@ -1,3 +1,6 @@
+2011-03-26 Graeme Gott <graeme@gottcode.org>
+	* Add support for older puzzle files.
+
 2011-03-21 Graeme Gott <graeme@gottcode.org>
 	* Add programmable pipeline code to GraphicsLayer.
 

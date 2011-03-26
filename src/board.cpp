@@ -63,12 +63,27 @@ int powerOfTwo(int value)
 	return value;
 }
 
+namespace
+{
+	struct PieceDetails
+	{
+		QPoint pos;
+		int rotation;
+		QList<Tile*> tiles;
+
+		PieceDetails(const QPoint& pos_, int rotation_, const QList<Tile*>& tiles_)
+			: pos(pos_), rotation(rotation_), tiles(tiles_)
+		{
+		}
+	};
+}
+
 //-----------------------------------------------------------------------------
 
 Board::Board(QWidget* parent)
 	: QGLWidget(parent),
 	m_id(0),
-	m_difficulty(0),
+	m_load_bevels(true),
 	m_has_bevels(true),
 	m_has_shadows(true),
 	m_image(0),
@@ -182,10 +197,25 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 	m_id++;
 
+	// Find puzzle dimensions
+	QSize size = QImageReader(Path::image(m_image_path)).size();
+	m_columns = size.width();
+	m_rows = size.height();
+	if (m_columns > m_rows) {
+		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
+		m_columns = 4 * difficulty;
+		m_rows = qMax(qRound(m_columns * ratio), 1);
+	} else {
+		float ratio = static_cast<float>(m_columns) / static_cast<float>(m_rows);
+		m_rows = 4 * difficulty;
+		m_columns = qMax(qRound(m_rows * ratio), 1);
+	}
+	m_total_pieces = (m_columns * m_rows) / 4;
+
 	// Create textures
 	updateStatusMessage(tr("Loading image..."));
-	m_difficulty = difficulty;
 	m_image_path = image;
+	m_load_bevels = true;
 	loadImage();
 
 	// Generate puzzle
@@ -247,7 +277,8 @@ void Board::openGame(int id)
 	}
 	QXmlStreamReader xml(&file);
 
-	// Load textures
+	// Load puzzle details
+	updateStatusMessage(tr("Loading puzzle..."));
 	while (!xml.isStartElement()) {
 		xml.readNext();
 	}
@@ -255,7 +286,7 @@ void Board::openGame(int id)
 	int board_zoom = 0;
 	QRect rect;
 	unsigned int version = attributes.value("version").toString().toUInt();
-	if (xml.name() == QLatin1String("tetzle") && version == 5) {
+	if (xml.name() == QLatin1String("tetzle") && version <= 5) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo(Path::image(m_image_path)).exists()) {
 			QApplication::restoreOverrideCursor();
@@ -263,7 +294,6 @@ void Board::openGame(int id)
 			cleanup();
 			return;
 		}
-		m_difficulty = attributes.value("difficulty").toString().toInt();
 		board_zoom = attributes.value("zoom").toString().toInt();
 		m_pos.setX(attributes.value("x").toString().toInt());
 		m_pos.setY(attributes.value("y").toString().toInt());
@@ -272,24 +302,23 @@ void Board::openGame(int id)
 			values.value(1). toInt(),
 			values.value(2).toInt(),
 			values.value(3).toInt());
-		updateStatusMessage(tr("Loading image..."));
-		loadImage();
 	} else {
 		xml.raiseError(tr("Unknown data format"));
 	}
 
-	// Load pieces
-	updateStatusMessage(tr("Loading pieces..."));
+	// Load piece details
+	QList<PieceDetails> pieces;
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
+	bool piece = (version > 3);
+	m_load_bevels = false;
 
 	while (!xml.atEnd()) {
 		xml.readNext();
 
-		if (xml.isEndElement() && xml.name() == QLatin1String("piece")) {
-			m_pieces.append( new Piece(pos, rotation, tiles, this) );
-			m_pieces.last()->pushNeighbors();
+		if (xml.isEndElement() && (xml.name() == QLatin1String("piece") || xml.name() == QLatin1String("group"))) {
+			pieces.append(PieceDetails(pos, rotation, tiles));
 		}
 		if (!xml.isStartElement()) {
 			continue;
@@ -297,13 +326,31 @@ void Board::openGame(int id)
 
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
-			Tile* tile = new Tile(attributes.value("column").toString().toInt(), attributes.value("row").toString().toInt());
-			tile->setBevel(attributes.value("bevel").toString().toInt());
+			if (!piece) {
+				piece = true;
+				pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
+				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toString().toInt();
+			}
+			int column = attributes.value("column").toString().toInt();
+			m_columns = qMax(m_columns, column);
+			int row = attributes.value("row").toString().toInt();
+			m_rows = qMax(m_rows, row);
+			int bevel = attributes.value("bevel").toString().toInt();
+			if (bevel) {
+				m_load_bevels = true;
+			}
+			Tile* tile = new Tile(column, row);
+			tile->setBevel(bevel);
 			tiles.append(tile);
 		} else if (xml.name() == QLatin1String("piece")) {
 			attributes = xml.attributes();
 			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
 			rotation = attributes.value("rotation").toString().toInt();
+			tiles.clear();
+		} else if (xml.name() == QLatin1String("group")) {
+			piece = false;
+			QStringRef r = xml.attributes().value("rotation");
+			rotation = !r.isEmpty() ? r.toString().toInt() : -1;
 			tiles.clear();
 		} else if (xml.name() != QLatin1String("overview")) {
 			xml.raiseError(tr("Unknown element '%1'").arg(xml.name().toString()));
@@ -315,8 +362,19 @@ void Board::openGame(int id)
 		cleanup();
 		return;
 	}
+	m_total_pieces = (++m_columns * ++m_rows) / 4;
 
-	int count = m_pieces.count();
+	// Load image
+	updateStatusMessage(tr("Loading image..."));
+	loadImage();
+
+	// Load pieces
+	updateStatusMessage(tr("Loading pieces..."));
+	int count = pieces.count();
+	for (int i = 0; i < count; ++i) {
+		const PieceDetails& details = pieces.at(i);
+		m_pieces.append( new Piece(details.pos, details.rotation, details.tiles, this) );
+	}
 	for (int i = 0; i < count; ++i) {
 		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
@@ -330,7 +388,12 @@ void Board::openGame(int id)
 
 	// Draw tiles
 	m_message->setVisible(false);
-	zoom(board_zoom);
+	if (version > 3) {
+		zoom(board_zoom);
+	} else {
+		zoom(0);
+		retrievePieces();
+	}
 	QApplication::restoreOverrideCursor();
 	updateCompleted();
 	emit retrievePiecesAvailable(true);
@@ -356,7 +419,6 @@ void Board::saveGame()
 	xml.writeStartElement("tetzle");
 	xml.writeAttribute("version", "5");
 	xml.writeAttribute("image", m_image_path);
-	xml.writeAttribute("difficulty", QString::number(m_difficulty));
 	xml.writeAttribute("pieces", QString::number(m_total_pieces));
 	xml.writeAttribute("complete", QString::number(m_completed));
 	xml.writeAttribute("zoom", QString::number(m_scale_level));
@@ -531,7 +593,7 @@ void Board::paintGL()
 
 	// Draw pieces
 	graphics_layer->bindTexture(0, m_image);
-	if (m_has_bevels) {
+	if (m_has_bevels && m_load_bevels) {
 		graphics_layer->setTextureUnits(2);
 		graphics_layer->bindTexture(1, m_bumpmap_image);
 	}
@@ -1030,24 +1092,13 @@ void Board::loadImage()
 		size.scale(max_size, max_size, Qt::KeepAspectRatio);
 	}
 
-	// Find puzzle dimensions
-	m_columns = size.width();
-	m_rows = size.height();
+	// Create puzzle texture
 	int tile_size = Tile::size;
 	if (m_columns > m_rows) {
-		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
-		m_columns = 4 * m_difficulty;
-		m_rows = qMax(qRound(m_columns * ratio), 1);
 		tile_size = qMin(tile_size, size.width() / m_columns);
 	} else {
-		float ratio = static_cast<float>(m_columns) / static_cast<float>(m_rows);
-		m_rows = 4 * m_difficulty;
-		m_columns = qMax(qRound(m_rows * ratio), 1);
 		tile_size = qMin(tile_size, size.height() / m_rows);
 	}
-	m_total_pieces = (m_columns * m_rows) / 4;
-
-	// Create puzzle texture
 	QSize scaled_size = size;
 	size = QSize(m_columns * tile_size, m_rows * tile_size);
 	scaled_size.scale(size, Qt::KeepAspectRatioByExpanding);
@@ -1251,6 +1302,8 @@ void Board::cleanup()
 	m_pieces.clear();
 	m_completed = 0;
 	m_id = 0;
+	m_columns = 0;
+	m_rows = 0;
 
 	m_scene = QRect(0,0,0,0);
 	m_scrolling = false;

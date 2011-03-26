@@ -67,7 +67,9 @@ void Tile::save(QXmlStreamWriter& xml) const
 	QXmlStreamAttributes attributes;
 	attributes.append("column", QString::number(m_column));
 	attributes.append("row", QString::number(m_row));
-	attributes.append("bevel", QString::number(m_bevel));
+	if (m_bevel) {
+		attributes.append("bevel", QString::number(m_bevel));
+	}
 	xml.writeEmptyElement("tile");
 	xml.writeAttributes(attributes);
 }

@@ -108,7 +108,7 @@ private:
 
 private:
 	int m_id;
-	int m_difficulty;
+	bool m_load_bevels;
 	QString m_image_path;
 	Overview* m_overview;
 	Message* m_message;
