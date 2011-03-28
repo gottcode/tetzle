@@ -147,7 +147,7 @@ void GraphicsLayer::init()
 //-----------------------------------------------------------------------------
 
 GraphicsLayer::GraphicsLayer()
-:	m_changed(false)
+:	m_changed(true)
 {
 	glDisable(GL_BLEND);
 
@@ -194,10 +194,12 @@ void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
 			VertexArray& free_region = m_free_regions[i];
 			if (free_region.length() == length) {
 				array.start = free_region.start;
+				array.end = array.start + length;
 				m_free_regions.removeAt(i);
 				break;
 			} else if (free_region.length() > length) {
 				array.start = free_region.start;
+				array.end = array.start + length;
 				free_region.start += length;
 				break;
 			}
@@ -205,17 +207,17 @@ void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
 	}
 
 	if (array.start != -1) {
-		qCopy(data.begin(), data.end(), &m_data[array.start]);
+		qCopy(data.begin(), data.end(), m_data.begin() + array.start);
 		if (!m_changed) {
 			m_changed_regions.append(array);
 		}
 	} else {
 		array.start = m_data.count();
+		array.end = array.start + length;
 		m_data += data;
 		m_changed = true;
 		m_changed_regions.clear();
 	}
-	array.end = array.start + length;
 }
 
 //-----------------------------------------------------------------------------
@@ -224,14 +226,32 @@ void GraphicsLayer::removeArray(VertexArray& array)
 {
 	bool merged = false;
 	int count = m_free_regions.count();
+	int pos = count;
 	for (int i = 0; i < count; ++i) {
-		if (m_free_regions[i].merge(array)) {
+		VertexArray& free_region = m_free_regions[i];
+		if (free_region.end == array.start) {
 			merged = true;
+			free_region.end = array.end;
+			if ((i+1) < count && free_region.end == m_free_regions[i+1].start) {
+				free_region.end = m_free_regions[i+1].end;
+				m_free_regions.removeAt(i+1);
+			}
+			break;
+		} else if (free_region.start == array.end) {
+			merged = true;
+			free_region.start = array.start;
+			if (i > 0 && free_region.start == m_free_regions[i-1].end) {
+				free_region.start = m_free_regions[i-1].start;
+				m_free_regions.removeAt(i-1);
+			}
+			break;
+		} else if (free_region.start > array.start) {
+			pos = i;
 			break;
 		}
 	}
 	if (!merged) {
-		m_free_regions.append(array);
+		m_free_regions.insert(pos, array);
 	}
 	array.start = array.end = 0;
 }

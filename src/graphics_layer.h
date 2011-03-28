@@ -60,19 +60,6 @@ struct VertexArray
 	{
 		return end - start;
 	}
-
-	bool merge(const VertexArray& other)
-	{
-		if (start == other.end) {
-			start = other.start;
-			return true;
-		} else if (end == other.start) {
-			end = other.end;
-			return true;
-		} else {
-			return false;
-		}
-	}
 };
 
 

@@ -1,3 +1,6 @@
+2011-03-28 Graeme Gott <graeme@gottcode.org>
+	* Improve GraphicsLayer memory management.
+
 2011-03-26 Graeme Gott <graeme@gottcode.org>
 	* Change location where data is stored.
 	* Add support for older puzzle files.
