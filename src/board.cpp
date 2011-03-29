@@ -198,17 +198,13 @@ void Board::newGame(const QString& image, int difficulty)
 	m_id++;
 
 	// Find puzzle dimensions
-	QSize size = QImageReader(Path::image(m_image_path)).size();
-	m_columns = size.width();
-	m_rows = size.height();
-	if (m_columns > m_rows) {
-		float ratio = static_cast<float>(m_rows) / static_cast<float>(m_columns);
+	QSizeF size = QImageReader(Path::image(image)).size();
+	if (size.width() > size.height()) {
 		m_columns = 4 * difficulty;
-		m_rows = qMax(qRound(m_columns * ratio), 1);
+		m_rows = qMax(qRound(m_columns * size.height() / size.width()), 1);
 	} else {
-		float ratio = static_cast<float>(m_columns) / static_cast<float>(m_rows);
 		m_rows = 4 * difficulty;
-		m_columns = qMax(qRound(m_rows * ratio), 1);
+		m_columns = qMax(qRound(m_rows * size.width() / size.height()), 1);
 	}
 	m_total_pieces = (m_columns * m_rows) / 4;
 
