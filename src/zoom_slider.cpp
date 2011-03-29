@@ -62,10 +62,10 @@ int ZoomSlider::scaleLevel(const QSize& scene, const QSize& viewport)
 	float sx = static_cast<float>(viewport.width()) / static_cast<float>(scene.width());
 	float sy = static_cast<float>(viewport.height()) / static_cast<float>(scene.height());
 	float factor = qBound(0.0f, qMin(sx, sy), 1.0f);
-	int level = 9;
-	for (int i = 0; i < 9; ++i) {
-		if ((factor - scale_levels[i]) < 0.0f) {
-			level = (i - 1);
+	int level = 0;
+	for (int i = 9; i >= 0; --i) {
+		if (scale_levels[i] <= factor) {
+			level = i;
 			break;
 		}
 	}
