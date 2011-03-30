@@ -1302,6 +1302,7 @@ void Board::cleanup()
 	m_rows = 0;
 
 	m_scene = QRect(0,0,0,0);
+	updateArray(m_scene_array, m_scene, 0);
 	m_scrolling = false;
 	m_pos = QPoint(0, 0);
 	m_finished = false;
