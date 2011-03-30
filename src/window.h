@@ -44,6 +44,7 @@ private slots:
 	void gameFinished();
 	void overviewToggled(bool visible);
 	void setFullScreen(bool enable);
+	void setLocale();
 	void showAppearance();
 	void showControls();
 	void showAbout();

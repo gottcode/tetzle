@@ -22,6 +22,7 @@
 #include "add_image.h"
 #include "appearance_dialog.h"
 #include "board.h"
+#include "locale_dialog.h"
 #include "new_game_dialog.h"
 #include "open_game_dialog.h"
 #include "zoom_slider.h"
@@ -111,8 +112,10 @@ Window::Window(const QStringList& files)
 #else
 	fullscreen_action->setShortcut(tr("Ctrl+F"));
 #endif
-	menu->addSeparator();
-	menu->addAction(tr("Appearance"), this, SLOT(showAppearance()));
+
+	menu = menuBar()->addMenu(tr("&Settings"));
+	menu->addAction(tr("&Appearance..."), this, SLOT(showAppearance()));
+	menu->addAction(tr("&Language..."), this, SLOT(setLocale()));
 
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&Controls"), this, SLOT(showControls()));
@@ -251,6 +254,14 @@ void Window::setFullScreen(bool enable)
 	} else {
 		showNormal();
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Window::setLocale()
+{
+	LocaleDialog dialog(this);
+	dialog.exec();
 }
 
 //-----------------------------------------------------------------------------

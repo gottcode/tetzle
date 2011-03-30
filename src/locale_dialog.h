@@ -17,25 +17,32 @@
  *
  ***********************************************************************/
 
-#ifndef ADD_IMAGE_H
-#define ADD_IMAGE_H
+#ifndef LOCALE_DIALOG_H
+#define LOCALE_DIALOG_H
 
-#include <QCoreApplication>
-class QDragEnterEvent;
-class QDropEvent;
-class QString;
-class QStringList;
-class QWidget;
+#include <QDialog>
+class QComboBox;
 
-class AddImage
+class LocaleDialog : public QDialog
 {
-	Q_DECLARE_TR_FUNCTIONS(AddImage)
+	Q_OBJECT
 
 public:
-	static void dragEnterEvent(QDragEnterEvent* event);
-	static QStringList dropEvent(QDropEvent* event);
-	static QStringList getOpenFileNames(QWidget* parent = 0);
-	static QString supportedFormats();
+	LocaleDialog(QWidget* parent = 0);
+
+	static void loadTranslator();
+
+public slots:
+	virtual void accept();
+
+private:
+	static QStringList findTranslations();
+
+private:
+	QComboBox* m_translations;
+
+	static QString m_current;
+	static QString m_path;
 };
 
 #endif

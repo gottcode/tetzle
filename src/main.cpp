@@ -19,10 +19,9 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QLocale>
 #include <QSettings>
-#include <QTranslator>
 
+#include "locale_dialog.h"
 #include "path.h"
 #include "window.h"
 
@@ -49,13 +48,8 @@ int main(int argc, char** argv)
 
 	QStringList files = app.arguments().mid(1);
 
-	QTranslator qt_translator;
-	qt_translator.load("qt_" + QLocale::system().name());
-	app.installTranslator(&qt_translator);
-
-	QTranslator tetzle_translator;
-	tetzle_translator.load("tetzle_" + QLocale::system().name());
-	app.installTranslator(&tetzle_translator);
+	// Load application language
+	LocaleDialog::loadTranslator();
 
 	// Update data location
 	QString path = Path::datapath();

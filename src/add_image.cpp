@@ -74,7 +74,7 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 QStringList AddImage::getOpenFileNames(QWidget* parent)
 {
 	QString dir = QSettings().value("AddImage/Path", QDesktopServices::storageLocation(QDesktopServices::PicturesLocation)).toString();
-	QStringList images = QFileDialog::getOpenFileNames(parent, parent->tr("Open Image"), dir, supportedFormats());
+	QStringList images = QFileDialog::getOpenFileNames(parent, tr("Open Image"), dir, supportedFormats());
 	if (!images.isEmpty()) {
 		QSettings().setValue("AddImage/Path", QFileInfo(images.last()).absolutePath());
 	}

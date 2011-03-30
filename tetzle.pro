@@ -24,6 +24,7 @@ HEADERS = src/add_image.h \
 	src/dancing_links.h \
 	src/generator.h \
 	src/graphics_layer.h \
+	src/locale_dialog.h \
 	src/message.h \
 	src/new_game_dialog.h \
 	src/open_game_dialog.h \
@@ -44,6 +45,7 @@ SOURCES = src/add_image.cpp \
 	src/dancing_links.cpp \
 	src/generator.cpp \
 	src/graphics_layer.cpp \
+	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/message.cpp \
 	src/new_game_dialog.cpp \
@@ -57,6 +59,8 @@ SOURCES = src/add_image.cpp \
 	src/thumbnail_list.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
+
+TRANSLATIONS = translations/en_US.ts
 
 RESOURCES = data/data.qrc icons/icon.qrc
 macx:ICON = icons/tetzle.icns

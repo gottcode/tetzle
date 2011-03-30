@@ -1,3 +1,6 @@
+2011-03-30 Graeme Gott <graeme@gottcode.org>
+	* Add support for translations.
+
 2011-03-28 Graeme Gott <graeme@gottcode.org>
 	* Improve GraphicsLayer memory management.
 
