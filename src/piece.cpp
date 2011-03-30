@@ -91,6 +91,14 @@ bool Piece::collidesWith(const Piece* other) const
 
 //-----------------------------------------------------------------------------
 
+QPoint Piece::randomPoint() const
+{
+	Tile* tile = m_tiles.at(rand() % m_tiles.count());
+	return tile->scenePos() + QPoint(rand() % Tile::size, rand() % Tile::size);
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::attachNeighbors()
 {
 	// Create offset vectors

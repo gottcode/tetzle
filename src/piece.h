@@ -41,6 +41,7 @@ public:
 	bool contains(const QPoint& pos) const;
 	QRect boundingRect() const;
 	bool isSelected() const;
+	QPoint randomPoint() const;
 	int rotation() const;
 	QPoint scenePos() const;
 

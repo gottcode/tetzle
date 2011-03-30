@@ -1043,7 +1043,7 @@ void Board::selectPieces()
 	for (int i = 0; i < count; ++i) {
 		Piece* piece = m_selected_pieces.at(i);
 		piece->setDepth(depth + i);
-		piece->moveBy(cursor - piece->boundingRect().center() - QPoint(rand() % Tile::size, rand() % Tile::size));
+		piece->moveBy(cursor - piece->randomPoint());
 	}
 	m_active_pieces += m_selected_pieces;
 	m_selected_pieces.clear();
