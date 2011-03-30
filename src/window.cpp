@@ -69,7 +69,6 @@ Window::Window(const QStringList& files)
 	// Add contents
 	m_board = new Board(this);
 	connect(m_board, SIGNAL(completionChanged(int)), m_completed, SLOT(setValue(int)));
-	connect(m_board, SIGNAL(overviewToggled(bool)), this, SLOT(overviewToggled(bool)));
 	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
 	connect(m_board, SIGNAL(clearMessage()), statusBar(), SLOT(clearMessage()));
 	connect(m_board, SIGNAL(showMessage(const QString&)), statusBar(), SLOT(showMessage(const QString&)));
@@ -101,10 +100,12 @@ Window::Window(const QStringList& files)
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
 	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
+	m_toggle_overview_action->setCheckable(true);
 	m_toggle_overview_action->setEnabled(false);
+	connect(m_board, SIGNAL(overviewToggled(bool)), m_toggle_overview_action, SLOT(setChecked(bool)));
 	menu->addSeparator();
 
-	QAction* fullscreen_action = menu->addAction(tr("Fullscreen"));
+	QAction* fullscreen_action = menu->addAction(tr("F&ullscreen"));
 	connect(fullscreen_action, SIGNAL(toggled(bool)), this, SLOT(setFullScreen(bool)));
 	fullscreen_action->setCheckable(true);
 #if !defined(Q_OS_MAC)
@@ -232,17 +233,6 @@ void Window::gameFinished()
 {
 	m_toggle_overview_action->setEnabled(false);
 	m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
-}
-
-//-----------------------------------------------------------------------------
-
-void Window::overviewToggled(bool visible)
-{
-	if (visible) {
-		m_toggle_overview_action->setText(tr("Hide O&verview"));
-	} else {
-		m_toggle_overview_action->setText(tr("Show O&verview"));
-	}
 }
 
 //-----------------------------------------------------------------------------

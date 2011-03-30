@@ -42,7 +42,6 @@ private slots:
 	void newGame(const QStringList& files = QStringList());
 	void openGame();
 	void gameFinished();
-	void overviewToggled(bool visible);
 	void setFullScreen(bool enable);
 	void setLocale();
 	void showAppearance();
