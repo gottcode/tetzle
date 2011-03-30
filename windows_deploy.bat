@@ -1,23 +1,41 @@
-@echo off
+@ECHO OFF
 
-echo Copying executable
-mkdir Tetzle
-copy release\Tetzle.exe Tetzle
-copy tools\windows\jpegtran.exe Tetzle
-copy tools\windows\jhead.exe Tetzle
-strip release\Tetzle.exe
+SET APP=Tetzle
+SET VERSION=1.2.1
 
-echo Copying libraries
-copy %QTDIR%\bin\libgcc_s_dw2-1.dll Tetzle
-copy %QTDIR%\bin\mingwm10.dll Tetzle
-copy %QTDIR%\bin\QtCore4.dll Tetzle
-copy %QTDIR%\bin\QtGui4.dll Tetzle
-copy %QTDIR%\bin\QtXml4.dll Tetzle
-copy %QTDIR%\bin\QtOpenGL4.dll Tetzle
-mkdir Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qgif4.dll Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qico4.dll Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qjpeg4.dll Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qmng4.dll Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qsvg4.dll Tetzle\imageformats
-copy %QTDIR%\plugins\imageformats\qtiff4.dll Tetzle\imageformats
+ECHO Copying executable
+MKDIR %APP%
+TYPE COPYING | FIND "" /V > %APP%\COPYING.txt
+COPY release\%APP%.exe %APP% >nul
+COPY tools\windows\jpegtran.exe %APP% >nul
+COPY tools\windows\jhead.exe %APP% >nul
+strip %APP%\%APP%.exe
+
+ECHO Copying translations
+SET TRANSLATIONS=%APP%\translations
+MKDIR %TRANSLATIONS%
+COPY translations\*.qm %TRANSLATIONS% >nul
+
+ECHO Copying Qt libraries
+COPY %QTDIR%\bin\libgcc_s_dw2-1.dll %APP% >nul
+COPY %QTDIR%\bin\mingwm10.dll %APP% >nul
+COPY %QTDIR%\bin\QtCore4.dll %APP% >nul
+COPY %QTDIR%\bin\QtGui4.dll %APP% >nul
+COPY %QTDIR%\bin\QtOpenGL4.dll %APP% >nul
+
+ECHO Copying Qt image plugins
+MKDIR %APP%\imageformats
+COPY %QTDIR%\plugins\imageformats\qgif4.dll %APP%\imageformats >nul
+COPY %QTDIR%\plugins\imageformats\qico4.dll %APP%\imageformats >nul
+COPY %QTDIR%\plugins\imageformats\qjpeg4.dll %APP%\imageformats >nul
+COPY %QTDIR%\plugins\imageformats\qmng4.dll %APP%\imageformats >nul
+COPY %QTDIR%\plugins\imageformats\qtiff4.dll %APP%\imageformats >nul
+
+ECHO Creating compressed file
+CD %APP%
+7z a %APP%_%VERSION%.zip * >nul
+CD ..
+MOVE %APP%\%APP%_%VERSION%.zip . >nul
+
+ECHO Cleaning up
+RMDIR /S /Q %APP%
