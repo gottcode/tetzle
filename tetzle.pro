@@ -76,11 +76,11 @@ unix: !macx {
 
 	target.path = $$PREFIX/$$BINDIR/
 
-	icon.path = $$PREFIX/share/icons/hicolor/48x48/apps
-	icon.files = icons/tetzle.png
+	icon.files = icons/hicolor/*
+	icon.path = $$PREFIX/share/icons/hicolor/
 
-	desktop.path = $$PREFIX/share/applications/
 	desktop.files = icons/tetzle.desktop
+	desktop.path = $$PREFIX/share/applications/
 
 	INSTALLS += target icon desktop
 }

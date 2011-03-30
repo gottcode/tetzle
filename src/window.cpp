@@ -49,7 +49,15 @@ Window::Window(const QStringList& files)
 	: m_board(0)
 {
 	setWindowTitle(tr("Tetzle"));
-	setWindowIcon(QIcon(":/tetzle.png"));
+	{
+		QIcon fallback(":/hicolor/128x128/apps/tetzle.png");
+		fallback.addFile(":/hicolor/64x64/apps/tetzle.png");
+		fallback.addFile(":/hicolor/48x48/apps/tetzle.png");
+		fallback.addFile(":/hicolor/32x32/apps/tetzle.png");
+		fallback.addFile(":/hicolor/22x22/apps/tetzle.png");
+		fallback.addFile(":/hicolor/16x16/apps/tetzle.png");
+		setWindowIcon(QIcon::fromTheme("tetzle", fallback));
+	}
 	setAcceptDrops(true);
 	resize(640, 480);
 
