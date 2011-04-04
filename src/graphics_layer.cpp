@@ -169,6 +169,12 @@ GraphicsLayer::GraphicsLayer()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDepthFunc(GL_LEQUAL);
 	glFrontFace(GL_CCW);
+
+	// Start with a 1MB vertex buffer
+	m_data.resize(0x100000 / sizeof(Vertex));
+	VertexArray free_region;
+	free_region.end = m_data.count();
+	m_free_regions.append(free_region);
 }
 
 //-----------------------------------------------------------------------------
