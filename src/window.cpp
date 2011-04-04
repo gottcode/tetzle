@@ -311,10 +311,10 @@ void Window::showControls()
 void Window::showAbout()
 {
 	QMessageBox::about(this, tr("About"), tr(
-		"<center><big><b>Tetzle 1.2.1</b></big><br/>"
+		"<center><big><b>Tetzle %1</b></big><br/>"
 		"A jigsaw puzzle with tetrominoes for pieces<br/>"
-		"<small>Copyright &copy; 2008-2010 Graeme Gott</small></center>"
-	));
+		"<small>Copyright &copy; 2008-2011 Graeme Gott</small></center>"
+	).arg(QCoreApplication::applicationVersion()));
 }
 
 //-----------------------------------------------------------------------------

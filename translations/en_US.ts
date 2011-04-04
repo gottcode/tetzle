@@ -123,12 +123,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="967"/>
+        <location filename="../src/board.cpp" line="977"/>
         <source>Placing pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="1283"/>
+        <location filename="../src/board.cpp" line="1293"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
@@ -263,7 +263,7 @@ There are saved games using this image that will also be removed.</source>
 <context>
     <name>Overview</name>
     <message>
-        <location filename="../src/overview.cpp" line="36"/>
+        <location filename="../src/overview.cpp" line="38"/>
         <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
@@ -326,219 +326,219 @@ There are saved games using this image that will also be removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="82"/>
+        <location filename="../src/window.cpp" line="90"/>
         <source>&amp;Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="83"/>
+        <location filename="../src/window.cpp" line="91"/>
         <source>&amp;New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="83"/>
+        <location filename="../src/window.cpp" line="91"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="84"/>
+        <location filename="../src/window.cpp" line="92"/>
         <source>&amp;Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="84"/>
+        <location filename="../src/window.cpp" line="92"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="86"/>
+        <location filename="../src/window.cpp" line="94"/>
         <source>&amp;Retrieve Pieces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="86"/>
+        <location filename="../src/window.cpp" line="94"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="90"/>
+        <location filename="../src/window.cpp" line="98"/>
         <source>&amp;Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="90"/>
+        <location filename="../src/window.cpp" line="98"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="92"/>
+        <location filename="../src/window.cpp" line="100"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="93"/>
+        <location filename="../src/window.cpp" line="101"/>
         <source>Zoom &amp;In</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="93"/>
+        <location filename="../src/window.cpp" line="101"/>
         <source>+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="96"/>
+        <location filename="../src/window.cpp" line="104"/>
         <source>Zoom &amp;Out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="96"/>
+        <location filename="../src/window.cpp" line="104"/>
         <source>-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="99"/>
+        <location filename="../src/window.cpp" line="107"/>
         <source>Best &amp;Fit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="102"/>
+        <location filename="../src/window.cpp" line="110"/>
         <source>Show O&amp;verview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="102"/>
+        <location filename="../src/window.cpp" line="110"/>
         <source>Tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="108"/>
+        <location filename="../src/window.cpp" line="116"/>
         <source>F&amp;ullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="112"/>
+        <location filename="../src/window.cpp" line="120"/>
         <source>F11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="114"/>
+        <location filename="../src/window.cpp" line="122"/>
         <source>Ctrl+F</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="117"/>
+        <location filename="../src/window.cpp" line="125"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="118"/>
+        <location filename="../src/window.cpp" line="126"/>
         <source>&amp;Appearance...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="119"/>
+        <location filename="../src/window.cpp" line="127"/>
         <source>&amp;Language...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="121"/>
+        <location filename="../src/window.cpp" line="129"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="122"/>
+        <location filename="../src/window.cpp" line="130"/>
         <source>&amp;Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="124"/>
+        <location filename="../src/window.cpp" line="132"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="125"/>
+        <location filename="../src/window.cpp" line="133"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="272"/>
+        <location filename="../src/window.cpp" line="280"/>
         <source>Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="279"/>
+        <location filename="../src/window.cpp" line="287"/>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="280"/>
-        <location filename="../src/window.cpp" line="282"/>
+        <location filename="../src/window.cpp" line="288"/>
+        <location filename="../src/window.cpp" line="290"/>
         <source>Left Click or Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="281"/>
+        <location filename="../src/window.cpp" line="289"/>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="283"/>
+        <location filename="../src/window.cpp" line="291"/>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="284"/>
+        <location filename="../src/window.cpp" line="292"/>
         <source>Left Drag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="285"/>
+        <location filename="../src/window.cpp" line="293"/>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="286"/>
+        <location filename="../src/window.cpp" line="294"/>
         <source>Right Click, Control + Left Click, or R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="287"/>
+        <location filename="../src/window.cpp" line="295"/>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="288"/>
+        <location filename="../src/window.cpp" line="296"/>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="289"/>
+        <location filename="../src/window.cpp" line="297"/>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="290"/>
+        <location filename="../src/window.cpp" line="298"/>
         <source>Scrollwheel or +/-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="291"/>
+        <location filename="../src/window.cpp" line="299"/>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="292"/>
+        <location filename="../src/window.cpp" line="300"/>
         <source>Move mouse or W,A,D,S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="305"/>
+        <location filename="../src/window.cpp" line="313"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="305"/>
-        <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle 1.2.1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2010 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
+        <location filename="../src/window.cpp" line="313"/>
+        <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -550,7 +550,7 @@ There are saved games using this image that will also be removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/zoom_slider.cpp" line="80"/>
+        <location filename="../src/zoom_slider.cpp" line="63"/>
         <source>%1%</source>
         <translation type="unfinished"></translation>
     </message>
