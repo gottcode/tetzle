@@ -87,43 +87,53 @@ static void* getProcAddress(const QString& name)
 	return result;
 }
 
+static inline void convertMatrix(const qreal* in, GLfloat* out)
+{
+	for (int i = 0; i < 16; ++i) {
+		out[i] = static_cast<GLfloat>(in[i]);
+	}
+}
+
 //-----------------------------------------------------------------------------
 
 void GraphicsLayer::init()
 {
-	QStringList extensions = QString(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS))).split(' ');
 	unsigned int state = 0;
 
-	// Load multi-texture extension
-	if (extensions.contains("GL_ARB_multitexture")) {
+	// Try to load multi-texture functions
+	activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
+	clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
+	if ((activeTexture != 0) && (clientActiveTexture != 0)) {
 		state |= 0x01;
-		activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
-		clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
 	}
 
-	// Load vertex buffer object extension
-	if (extensions.contains("GL_ARB_vertex_buffer_object")) {
+	// Try to load vertex buffer object functions
+	bindBuffer = (PFNGLBINDBUFFERPROC) getProcAddress("glBindBuffer");
+	bufferData = (PFNGLBUFFERDATAPROC) getProcAddress("glBufferData");
+	bufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
+	deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
+	genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
+	if ((bindBuffer != 0) && (bufferData != 0) && (bufferSubData != 0) && (deleteBuffers != 0) && (genBuffers != 0)) {
 		state |= 0x02;
-		bindBuffer = (PFNGLBINDBUFFERPROC) getProcAddress("glBindBuffer");
-		bufferData = (PFNGLBUFFERDATAPROC) getProcAddress("glBufferData");
-		bufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
-		deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
-		genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
 	}
 
 	// Check for minimum supported programmable pipeline
 	if (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_2_1) {
 		state |= 0x04;
+		if (activeTexture != 0) {
+			state |= 0x01;
+		}
 	}
 
-	// Load vertex array object extension
-	if (extensions.contains("GL_ARB_vertex_array_object")) {
+	// Try to load vertex array object functions
+	if (state >= 0x07) {
 		bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
 		deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
 		genVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getProcAddress("glGenVertexArrays");
-
-		genVertexArrays(1, &vao_id);
-		bindVertexArray(vao_id);
+		if ((bindVertexArray != 0) && (deleteVertexArrays != 0) && (genVertexArrays != 0)) {
+			genVertexArrays(1, &vao_id);
+			bindVertexArray(vao_id);
+		}
 	}
 
 	// Create graphics layer instance
@@ -270,7 +280,7 @@ void GraphicsLayer::uploadChanged()
 {
 	if (!m_changed_regions.isEmpty()) {
 		foreach (const VertexArray& region, m_changed_regions) {
-			bufferSubData(GL_ARRAY_BUFFER, region.start * sizeof(Vertex), region.length() * sizeof(Vertex), &m_data.at(region.start));
+			bufferSubData(GL_ARRAY_BUFFER, region.start * sizeof(Vertex), region.length() * sizeof(Vertex), m_data.constBegin() + region.start);
 		}
 		m_changed_regions.clear();
 	} else if (m_changed) {
@@ -294,15 +304,20 @@ GraphicsLayer21::GraphicsLayer21()
 
 	// Load shaders
 	QGLShaderProgram* program = loadProgram(0);
-	program->setAttributeBuffer(TexCoord1, GL_FLOAT, sizeof(GLfloat) * 5, 2, sizeof(Vertex));
-	program->setAttributeBuffer(TexCoord0, GL_FLOAT, sizeof(GLfloat) * 3, 2, sizeof(Vertex));
 	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 
 	program = loadProgram(1);
+	program->setAttributeBuffer(TexCoord0, GL_FLOAT, sizeof(GLfloat) * 3, 2, sizeof(Vertex));
+	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
+	program->enableAttributeArray(Position);
 	program->setUniformValue("texture0", GLuint(0));
 
 	program = loadProgram(2);
+	program->setAttributeBuffer(TexCoord1, GL_FLOAT, sizeof(GLfloat) * 5, 2, sizeof(Vertex));
+	program->setAttributeBuffer(TexCoord0, GL_FLOAT, sizeof(GLfloat) * 3, 2, sizeof(Vertex));
+	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
+	program->enableAttributeArray(Position);
 	program->setUniformValue("texture0", GLuint(0));
 	program->setUniformValue("texture1", GLuint(1));
 }
@@ -350,7 +365,7 @@ void GraphicsLayer21::setBlended(bool enabled)
 
 void GraphicsLayer21::setColor(const QColor& color)
 {
-	m_program->setUniformValue(m_color, color);
+	m_program->setUniformValue(m_color_location, color);
 }
 
 //-----------------------------------------------------------------------------
@@ -358,7 +373,8 @@ void GraphicsLayer21::setColor(const QColor& color)
 void GraphicsLayer21::setModelview(const QMatrix4x4& matrix)
 {
 	m_modelview = matrix;
-	m_program->setUniformValue(m_matrix, m_projection * m_modelview);
+	convertMatrix((m_projection * m_modelview).constData(), m_matrix[0]);
+	m_program->setUniformValue(m_matrix_location, m_matrix);
 }
 
 //-----------------------------------------------------------------------------
@@ -366,7 +382,8 @@ void GraphicsLayer21::setModelview(const QMatrix4x4& matrix)
 void GraphicsLayer21::setProjection(const QMatrix4x4& matrix)
 {
 	m_projection = matrix;
-	m_program->setUniformValue(m_matrix, m_projection * m_modelview);
+	convertMatrix((m_projection * m_modelview).constData(), m_matrix[0]);
+	m_program->setUniformValue(m_matrix_location, m_matrix);
 }
 
 //-----------------------------------------------------------------------------
@@ -382,9 +399,9 @@ void GraphicsLayer21::setTextureUnits(unsigned int units)
 	m_program = program;
 	m_program->bind();
 
-	m_color = m_program->uniformLocation("color");
-	m_matrix = m_program->uniformLocation("matrix");
-	m_program->setUniformValue(m_matrix, m_projection * m_modelview);
+	m_color_location = m_program->uniformLocation("color");
+	m_matrix_location = m_program->uniformLocation("matrix");
+	m_program->setUniformValue(m_matrix_location, m_matrix);
 
 	if (units > 1) {
 		m_program->enableAttributeArray(TexCoord1);
@@ -519,15 +536,19 @@ void GraphicsLayer11::setColor(const QColor& color)
 
 void GraphicsLayer11::setModelview(const QMatrix4x4& matrix)
 {
-	glLoadMatrixd(matrix.constData());
+	GLfloat modelview[16];
+	convertMatrix(matrix.constData(), modelview);
+	glLoadMatrixf(modelview);
 }
 
 //-----------------------------------------------------------------------------
 
 void GraphicsLayer11::setProjection(const QMatrix4x4& matrix)
 {
+	GLfloat projection[16];
+	convertMatrix(matrix.constData(), projection);
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixd(matrix.constData());
+	glLoadMatrixf(projection);
 	glMatrixMode(GL_MODELVIEW);
 }
 

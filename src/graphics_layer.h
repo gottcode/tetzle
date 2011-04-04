@@ -132,11 +132,12 @@ private:
 
 	QMatrix4x4 m_modelview;
 	QMatrix4x4 m_projection;
+	GLfloat m_matrix[4][4];
 
 	QGLShaderProgram* m_program;
 	QGLShaderProgram* m_programs[3];
-	int m_color;
-	int m_matrix;
+	int m_color_location;
+	int m_matrix_location;
 };
 
 
