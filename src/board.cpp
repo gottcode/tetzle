@@ -444,9 +444,10 @@ void Board::retrievePieces()
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
 	// Make sure all pieces are free
-	QList<Piece*> pieces = m_pieces + m_active_pieces;
+	QList<Piece*> pieces = m_pieces + m_active_pieces + m_selected_pieces;
 	m_pieces.clear();
 	m_active_pieces.clear();
+	m_selected_pieces.clear();
 
 	// Clear view while retrieving pieces
 	m_pos = QPoint(0,0);
@@ -1304,6 +1305,7 @@ void Board::cleanup()
 	m_overview->scene()->clear();
 	m_message->setVisible(false);
 	m_active_pieces.clear();
+	m_selected_pieces.clear();
 	qDeleteAll(m_pieces);
 	m_pieces.clear();
 	m_completed = 0;
