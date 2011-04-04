@@ -488,8 +488,18 @@ void Board::zoomOut()
 void Board::zoomFit()
 {
 	// Find new scale level
+	float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
+	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
+	float factor = qBound(0.0f, qMin(sx, sy), 1.0f);
+	int level = 0;
+	for (int i = 9; i >= 0; --i) {
+		if (ZoomSlider::scaleFactor(i) <= factor) {
+			level = i;
+			break;
+		}
+	}
+
 	m_pos = m_scene.center();
-	int level = ZoomSlider::scaleLevel(m_scene.size(), size());
 	if (m_scale_level == level) {
 		updateGL();
 		return;
@@ -1134,7 +1144,7 @@ void Board::loadImage()
 	m_corners[3][3] = m_corners[0][2];
 
 	// Create overview
-	m_overview->load(image.scaled(image.size() * 0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	m_overview->load(image);
 	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
 	m_overview->repaint();
 }

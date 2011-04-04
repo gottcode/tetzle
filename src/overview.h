@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class Overview : public QGraphicsView
 public:
 	Overview(QWidget* parent = 0);
 
-	void load(const QImage& image);
+	void load(QImage image);
 
 signals:
 	void toggled(bool visible);

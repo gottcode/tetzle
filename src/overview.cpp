@@ -26,6 +26,8 @@
 #include <QSettings>
 #include <QWheelEvent>
 
+#include <cmath>
+
 //-----------------------------------------------------------------------------
 
 Overview::Overview(QWidget* parent)
@@ -41,7 +43,7 @@ Overview::Overview(QWidget* parent)
 	setDragMode(ScrollHandDrag);
 	setFrameStyle(NoFrame);
 
-	QGraphicsScene* scene = new QGraphicsScene;
+	QGraphicsScene* scene = new QGraphicsScene(this);
 	setScene(scene);
 
 	// Restore geometry
@@ -57,13 +59,28 @@ Overview::Overview(QWidget* parent)
 
 //-----------------------------------------------------------------------------
 
-void Overview::load(const QImage& image)
+void Overview::load(QImage image)
 {
 	// Remove previous overview
 	scene()->clear();
 
 	// Find minimum scale
-	m_min_scale_level = ZoomSlider::scaleLevel(image.size(), QSize(400,400));
+	m_min_scale_level = 9;
+	int side_max = qMax(image.width(), image.height()) * 0.9;
+	int side = 400;
+	if (side_max > side) {
+		for (int i = 9; i >= 0; --i) {
+			int side_test = std::floor(400.0 / ZoomSlider::scaleFactor(i));
+			if (side_test > side_max) {
+				break;
+			}
+			m_min_scale_level = i;
+			side = side_test;
+		}
+	} else {
+		side = side_max;
+	}
+	image = image.scaled(side, side, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 	zoom(m_min_scale_level);
 
 	// Resize window

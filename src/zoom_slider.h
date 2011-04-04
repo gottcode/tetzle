@@ -31,7 +31,6 @@ public:
 	ZoomSlider(QWidget* parent = 0);
 
 	static float scaleFactor(int level);
-	static int scaleLevel(const QSize& scene, const QSize& viewport);
 
 signals:
 	void valueChanged(int);
