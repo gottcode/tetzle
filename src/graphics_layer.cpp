@@ -196,9 +196,7 @@ void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
 {
 	int length = data.count();
 	if (array.length() != length) {
-		if (array.end > 0) {
-			removeArray(array);
-		}
+		removeArray(array);
 		array.start = -1;
 		for (int i = 0; i < m_free_regions.count(); ++i) {
 			VertexArray& free_region = m_free_regions[i];
@@ -234,6 +232,10 @@ void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
 
 void GraphicsLayer::removeArray(VertexArray& array)
 {
+	if (array.end == 0) {
+		return;
+	}
+
 	bool merged = false;
 	int count = m_free_regions.count();
 	int pos = count;
@@ -263,6 +265,7 @@ void GraphicsLayer::removeArray(VertexArray& array)
 	if (!merged) {
 		m_free_regions.insert(pos, array);
 	}
+
 	array.start = array.end = 0;
 }
 
