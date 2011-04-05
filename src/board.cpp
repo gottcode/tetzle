@@ -1096,6 +1096,14 @@ void Board::loadImage()
 	QSettings().setValue("OpenGame/Image", m_image_path);
 
 	// Load puzzle image
+	if (!m_overview->isVisible()) {
+		m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
+#if defined(Q_WS_X11)
+		extern void qt_x11_wait_for_window_manager(QWidget* widget);
+		qt_x11_wait_for_window_manager(m_overview);
+#endif
+		m_overview->repaint();
+	}
 	QImageReader source(Path::image(m_image_path));
 
 	// Find image size
@@ -1154,8 +1162,6 @@ void Board::loadImage()
 
 	// Create overview
 	m_overview->load(image);
-	m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
-	m_overview->repaint();
 }
 
 //-----------------------------------------------------------------------------
@@ -1311,7 +1317,7 @@ void Board::cleanup()
 	deleteTexture(m_image);
 
 	emit clearMessage();
-	m_overview->scene()->clear();
+	m_overview->reset();
 	m_message->setVisible(false);
 	m_active_pieces.clear();
 	m_selected_pieces.clear();

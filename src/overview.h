@@ -28,7 +28,8 @@ class Overview : public QGraphicsView
 public:
 	Overview(QWidget* parent = 0);
 
-	void load(QImage image);
+	void load(const QImage& image);
+	void reset();
 
 signals:
 	void toggled(bool visible);
@@ -41,11 +42,13 @@ protected:
 	virtual void wheelEvent(QWheelEvent* event);
 
 private:
+	void setPixmap(const QPixmap& pixmap);
 	void zoomIn();
 	void zoomOut();
 	void zoom(int level);
 
 private:
+	QGraphicsPixmapItem* m_pixmap;
 	int m_min_scale_level;
 	int m_scale_level;
 	bool m_default;

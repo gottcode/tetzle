@@ -38,18 +38,24 @@ Overview::Overview(QWidget* parent)
 	setWindowTitle(tr("Overview"));
 	setWindowFlags(Qt::Tool);
 
+	setBackgroundBrush(Qt::darkGray);
 	setBackgroundRole(QPalette::Window);
 	setRenderHint(QPainter::SmoothPixmapTransform, true);
 	setDragMode(ScrollHandDrag);
 	setFrameStyle(NoFrame);
 
+	// Create scene
 	QGraphicsScene* scene = new QGraphicsScene(this);
 	setScene(scene);
+	m_pixmap = new QGraphicsPixmapItem(0, scene);
+	m_pixmap->setTransformationMode(Qt::SmoothTransformation);
+	reset();
 
 	// Restore geometry
 	QSettings settings;
 	if (settings.contains("Overview/Geometry")) {
 		restoreGeometry(settings.value("Overview/Geometry").toByteArray());
+		setMinimumSize(size());
 	} else {
 		resize(400, 400);
 		setMinimumSize(size());
@@ -59,11 +65,8 @@ Overview::Overview(QWidget* parent)
 
 //-----------------------------------------------------------------------------
 
-void Overview::load(QImage image)
+void Overview::load(const QImage& image)
 {
-	// Remove previous overview
-	scene()->clear();
-
 	// Find minimum scale
 	m_min_scale_level = 9;
 	int side_max = qMax(image.width(), image.height()) * 0.9;
@@ -80,22 +83,31 @@ void Overview::load(QImage image)
 	} else {
 		side = side_max;
 	}
-	image = image.scaled(side, side, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	QPixmap pixmap = QPixmap::fromImage(image.scaled(side, side, Qt::KeepAspectRatio, Qt::SmoothTransformation), Qt::AutoColor | Qt::AvoidDither);
 	zoom(m_min_scale_level);
 
 	// Resize window
 	bool default_size = m_default;
-	QSize size = transform().mapRect(image.rect()).size();
+	QSize size = transform().mapRect(pixmap.rect()).size();
 	setMinimumSize(size);
 	if (default_size) {
 		resize(minimumSize());
 	}
 
 	// Show overview
-	QGraphicsPixmapItem* pixmap = scene()->addPixmap(QPixmap::fromImage(image, Qt::AutoColor | Qt::AvoidDither));
-	pixmap->setTransformationMode(Qt::SmoothTransformation);
-	scene()->setSceneRect(pixmap->boundingRect());
-	centerOn(pixmap);
+	setPixmap(pixmap);
+}
+
+//-----------------------------------------------------------------------------
+
+void Overview::reset()
+{
+	// Prevent zooming
+	m_min_scale_level = 9;
+	zoom(m_min_scale_level);
+
+	// Show loading icon
+	setPixmap(QPixmap(":/loading.png"));
 }
 
 //-----------------------------------------------------------------------------
@@ -143,6 +155,15 @@ void Overview::wheelEvent(QWheelEvent* event)
 		zoomOut();
 	}
 	event->accept();
+}
+
+//-----------------------------------------------------------------------------
+
+void Overview::setPixmap(const QPixmap& pixmap)
+{
+	m_pixmap->setPixmap(pixmap);
+	scene()->setSceneRect(m_pixmap->boundingRect());
+	centerOn(m_pixmap);
 }
 
 //-----------------------------------------------------------------------------
