@@ -1290,6 +1290,7 @@ void Board::finishGame()
 
 	QFile::remove(Path::save(m_id));
 	QSettings().remove("OpenGame/Image");
+	m_id = 0;
 
 	emit finished();
 

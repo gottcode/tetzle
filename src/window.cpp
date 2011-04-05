@@ -225,14 +225,12 @@ void Window::openGame()
 	connect(&dialog, SIGNAL(newGame(const QStringList&)), this, SLOT(newGame(const QStringList&)));
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
-		m_open_action->setEnabled(OpenGameDialog::games().count() > 1);
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);
 		m_slider->show();
 		m_completed->show();
-	} else {
-		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 	}
+	m_open_action->setEnabled(OpenGameDialog::games().count() > (m_board->id() != 0));
 }
 
 //-----------------------------------------------------------------------------
