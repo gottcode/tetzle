@@ -1048,13 +1048,15 @@ void Board::selectPieces()
 {
 	m_selecting = false;
 
-	QPoint cursor = mapPosition(m_cursor_pos);
+	QPoint cursor = mapCursorPosition();
 	int depth = m_active_pieces.count() + 1;
 	int count = m_selected_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		Piece* piece = m_selected_pieces.at(i);
 		piece->setDepth(depth + i);
-		piece->moveBy(cursor - piece->randomPoint());
+		if (!piece->contains(cursor)) {
+			piece->moveBy(cursor - piece->randomPoint());
+		}
 	}
 	m_active_pieces += m_selected_pieces;
 	m_selected_pieces.clear();
