@@ -429,6 +429,12 @@ void Board::saveGame()
 	foreach (Piece* piece, m_pieces) {
 		piece->save(xml);
 	}
+	foreach (Piece* piece, m_selected_pieces) {
+		piece->save(xml);
+	}
+	foreach (Piece* piece, m_active_pieces) {
+		piece->save(xml);
+	}
 
 	xml.writeEndElement();
 
