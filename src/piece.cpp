@@ -22,8 +22,6 @@
 #include "board.h"
 #include "tile.h"
 
-#include <QSet>
-
 #include <cmath>
 
 //-----------------------------------------------------------------------------
@@ -101,80 +99,19 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachNeighbors()
 {
-	// Create offset vectors
-	int cos_size = 0;
-	int sin_size = 0;
-	switch (m_rotation) {
-	case 0:
-		cos_size = Tile::size;
-		break;
-
-	case 1:
-		sin_size = -Tile::size;
-		break;
-
-	case 2:
-		cos_size = -Tile::size;
-		break;
-
-	case 3:
-		sin_size = Tile::size;
-		break;
-	}
-	QPoint left(-cos_size, sin_size);
-	QPoint right(cos_size, -sin_size);
-	QPoint above(-sin_size, -cos_size);
-	QPoint below(sin_size, cos_size);
-
-	// Find closest tiles
-	QSet<Piece*> closest_pieces;
-	QPoint delta;
-	int row, column;
 	foreach (Piece* piece, m_neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
 
-		foreach (Tile* child, m_shadow) {
-			foreach (Tile* tile, piece->m_shadow) {
-				delta = tile->scenePos() - child->scenePos();
+		Tile* tile = m_tiles.first();
+		Tile* piece_tile = piece->m_tiles.first();
+		QPoint delta = (tile->gridPos() - piece_tile->gridPos()) - (tile->scenePos() - piece_tile->scenePos());
 
-				// Determine which neighbor the child is of the tile
-				column = tile->column() - child->column() + 2;
-				row = tile->row() - child->row() + 2;
-				switch ((column * 1000) + row) {
-				case 1002:
-					delta -= left;
-					break;
-
-				case 3002:
-					delta -= right;
-					break;
-
-				case 2001:
-					delta -= above;
-					break;
-
-				case 2003:
-					delta -= below;
-					break;
-
-				default:
-					continue;
-				}
-
-				if (delta.manhattanLength() <= m_board->margin()) {
-					closest_pieces.insert(piece);
-					piece->moveBy(-delta);
-					break;
-				}
-			}
+		if (delta.manhattanLength() <= m_board->margin()) {
+			piece->moveBy(-delta);
+			attach(piece);
 		}
-	}
-
-	// Attach to closest pieces
-	foreach (Piece* piece, closest_pieces) {
-		attach(piece);
 	}
 }
 

@@ -35,6 +35,7 @@ public:
 	int row() const;
 	Piece* parent() const;
 	QPoint pos() const;
+	QPoint gridPos() const;
 	QPoint scenePos() const;
 
 	void rotate();
@@ -79,6 +80,11 @@ inline Piece* Tile::parent() const
 inline QPoint Tile::pos() const
 {
 	return m_pos;
+}
+
+inline QPoint Tile::gridPos() const
+{
+	return QPoint(m_column * size, m_row * size);
 }
 
 inline void Tile::setPos(const QPoint& pos)
