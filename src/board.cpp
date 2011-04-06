@@ -1093,16 +1093,18 @@ void Board::drawArray(const VertexArray& array, const QColor& fill, const QColor
 void Board::loadImage()
 {
 	// Record currently open image
-	QSettings().setValue("OpenGame/Image", m_image_path);
+	QSettings settings;
+	settings.setValue("OpenGame/Image", m_image_path);
 
 	// Load puzzle image
-	if (!m_overview->isVisible()) {
-		m_overview->setVisible(QSettings().value("Overview/Visible", true).toBool());
+	if (!m_overview->isVisible() && settings.value("Overview/Visible", true).toBool()) {
+		m_overview->show();
 #if defined(Q_WS_X11)
 		extern void qt_x11_wait_for_window_manager(QWidget* widget);
 		qt_x11_wait_for_window_manager(m_overview);
 #endif
 		m_overview->repaint();
+		activateWindow();
 	}
 	QImageReader source(Path::image(m_image_path));
 
