@@ -551,6 +551,9 @@ void Board::toggleOverview()
 {
 	bool visible = !m_overview->isVisible();
 	m_overview->setVisible(visible);
+	if (visible) {
+		activateWindow();
+	}
 	QSettings().setValue("Overview/Visible", visible);
 }
 
