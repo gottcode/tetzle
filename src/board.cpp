@@ -266,11 +266,11 @@ void Board::openGame(int id)
 	m_message->setVisible(true);
 
 	// Open saved game file
-	m_id = id;
-	QFile file(Path::save(m_id));
+	QFile file(Path::save(id));
 	if (!file.open(QIODevice::ReadOnly)) {
 		return;
 	}
+	m_id = id;
 	QXmlStreamReader xml(&file);
 
 	// Load puzzle details
