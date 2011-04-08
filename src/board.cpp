@@ -1297,8 +1297,11 @@ void Board::finishGame()
 			piece->rotate();
 		}
 	}
-	updateSceneRectangle();
 	piece->setSelected(false);
+
+	// Hide scene rectangle
+	m_scene = piece->boundingRect().adjusted(1,1,-2,-2);
+	updateArray(m_scene_array, m_scene, 0);
 
 	m_overview->hide();
 	unsetCursor();
