@@ -56,14 +56,14 @@
     <name>Board</name>
     <message>
         <location filename="../src/board.cpp" line="183"/>
-        <location filename="../src/board.cpp" line="289"/>
-        <location filename="../src/board.cpp" line="357"/>
+        <location filename="../src/board.cpp" line="288"/>
+        <location filename="../src/board.cpp" line="356"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="183"/>
-        <location filename="../src/board.cpp" line="289"/>
+        <location filename="../src/board.cpp" line="288"/>
         <source>Missing image.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -91,22 +91,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="277"/>
+        <location filename="../src/board.cpp" line="276"/>
         <source>Loading puzzle...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="302"/>
+        <location filename="../src/board.cpp" line="301"/>
         <source>Unknown data format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="352"/>
+        <location filename="../src/board.cpp" line="351"/>
         <source>Unknown element &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="357"/>
+        <location filename="../src/board.cpp" line="356"/>
         <source>Error parsing XML file.
 
 %1</source>
@@ -118,17 +118,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="443"/>
+        <location filename="../src/board.cpp" line="449"/>
         <source>Retrieving pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="977"/>
+        <location filename="../src/board.cpp" line="987"/>
         <source>Placing pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="1293"/>
+        <location filename="../src/board.cpp" line="1314"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
@@ -461,83 +461,83 @@ There are saved games using this image that will also be removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="280"/>
+        <location filename="../src/window.cpp" line="278"/>
         <source>Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="287"/>
+        <location filename="../src/window.cpp" line="285"/>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/window.cpp" line="286"/>
         <location filename="../src/window.cpp" line="288"/>
-        <location filename="../src/window.cpp" line="290"/>
         <source>Left Click or Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="289"/>
+        <location filename="../src/window.cpp" line="287"/>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="291"/>
+        <location filename="../src/window.cpp" line="289"/>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="292"/>
+        <location filename="../src/window.cpp" line="290"/>
         <source>Left Drag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="293"/>
+        <location filename="../src/window.cpp" line="291"/>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="294"/>
+        <location filename="../src/window.cpp" line="292"/>
         <source>Right Click, Control + Left Click, or R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="295"/>
+        <location filename="../src/window.cpp" line="293"/>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="296"/>
+        <location filename="../src/window.cpp" line="294"/>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="297"/>
+        <location filename="../src/window.cpp" line="295"/>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="298"/>
+        <location filename="../src/window.cpp" line="296"/>
         <source>Scrollwheel or +/-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="299"/>
+        <location filename="../src/window.cpp" line="297"/>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="300"/>
+        <location filename="../src/window.cpp" line="298"/>
         <source>Move mouse or W,A,D,S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="313"/>
+        <location filename="../src/window.cpp" line="311"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="313"/>
+        <location filename="../src/window.cpp" line="311"/>
         <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
