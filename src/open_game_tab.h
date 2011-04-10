@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,37 +17,29 @@
  *
  ***********************************************************************/
 
-#ifndef OPEN_GAME_DIALOG_H
-#define OPEN_GAME_DIALOG_H
+#ifndef OPEN_GAME_TAB_H
+#define OPEN_GAME_TAB_H
 
-#include <QDialog>
+#include <QWidget>
 class QListWidget;
 class QPushButton;
 
-class OpenGameDialog : public QDialog
+class OpenGameTab : public QWidget
 {
 	Q_OBJECT
+
 public:
-	OpenGameDialog(int current_id, QWidget* parent = 0);
-
-	static QStringList games();
-
-public slots:
-	virtual void accept();
+	OpenGameTab(int current_id, QDialog* parent = 0);
 
 signals:
-	void newGame(const QStringList& files = QStringList());
 	void openGame(int id);
 
-protected:
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
-	virtual void hideEvent(QHideEvent* event);
-
 private slots:
+	void accept();
 	void deleteGame();
 
 private:
+	QDialog* m_parent;
 	QListWidget* m_games;
 	QPushButton* m_accept_button;
 };

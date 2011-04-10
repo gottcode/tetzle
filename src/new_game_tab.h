@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,36 +17,33 @@
  *
  ***********************************************************************/
 
-#ifndef NEW_GAME_DIALOG_H
-#define NEW_GAME_DIALOG_H
+#ifndef NEW_GAME_TAB_H
+#define NEW_GAME_TAB_H
 
-#include <QDialog>
+class TagManager;
+
+#include <QWidget>
 class QComboBox;
 class QLabel;
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QSlider;
-class TagManager;
 
-class NewGameDialog : public QDialog
+class NewGameTab : public QWidget
 {
 	Q_OBJECT
-public:
-	NewGameDialog(const QStringList& files, QWidget* parent = 0);
 
-public slots:
-	virtual void accept();
+public:
+	NewGameTab(const QStringList& files, QDialog* parent = 0);
+
+	void addImages(const QStringList& images);
 
 signals:
 	void newGame(const QString& image, int difficulty);
 
-protected:
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
-	virtual void hideEvent(QHideEvent* event);
-
 private slots:
+	void accept();
 	void addImage();
 	void removeImage();
 	void changeTags();
@@ -56,7 +53,6 @@ private slots:
 
 private:
 	void addImage(const QString& image);
-	void addImages(const QStringList& images);
 
 private:
 	TagManager* m_image_tags;

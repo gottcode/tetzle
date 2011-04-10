@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *
  ***********************************************************************/
 
-#include "new_game_dialog.h"
+#include "new_game_tab.h"
 
 #include "add_image.h"
 #include "path.h"
@@ -29,6 +29,7 @@
 #include <QComboBox>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
+#include <QDialog>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -67,12 +68,9 @@ QString hash(const QString& path)
 
 //-----------------------------------------------------------------------------
 
-NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
-	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
+NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
+	: QWidget(parent)
 {
-	setWindowTitle(tr("New Game"));
-	setAcceptDrops(true);
-
 	// Create image widgets
 	QGroupBox* image_box = new QGroupBox(tr("Image"), this);
 
@@ -121,10 +119,10 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	m_count->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	m_count->setMinimumWidth(m_count->fontMetrics().width("9,999"));
 
-	// Add dialog buttons
+	// Add buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(this);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(buttons, SIGNAL(rejected()), parent, SLOT(reject()));
 
 	m_accept_button = buttons->addButton(QDialogButtonBox::Ok);
 	m_accept_button->setDefault(true);
@@ -133,7 +131,7 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	QPushButton* cancel_button = buttons->addButton(QDialogButtonBox::Cancel);
 	cancel_button->setAutoDefault(false);
 
-	// Arrange dialog
+	// Arrange widgets
 	QHBoxLayout* image_actions = new QHBoxLayout;
 	image_actions->setMargin(0);
 	image_actions->addWidget(m_images_filter);
@@ -185,17 +183,46 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 
 	// Add new images
 	addImages(files);
-
-	// Resize dialog
-	resize(QSettings().value("NewGame/Size", sizeHint()).toSize());
 }
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::accept()
+void NewGameTab::addImages(const QStringList& images)
 {
-	QDialog::accept();
+	int count = images.count();
+	if (count == 0) {
+		return;
+	}
 
+	QProgressDialog progress(tr("Copying images..."), tr("Cancel"), 0, count, this);
+	progress.setMinimumDuration(500);
+	progress.setWindowModality(Qt::WindowModal);
+
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+
+	m_images_filter->setCurrentIndex(0);
+	for (int i = 0; i < count; i++) {
+		progress.setValue(i);
+		if (progress.wasCanceled()) {
+			break;
+		}
+
+		QString image = images.at(i);
+		if (QDir::match(AddImage::supportedFormats(), image)) {
+			addImage(image);
+		}
+
+		QApplication::processEvents();
+	}
+	progress.setValue(count);
+
+	QApplication::restoreOverrideCursor();
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::accept()
+{
 	QListWidgetItem* item = m_images->currentItem();
 	if (!item) {
 		return;
@@ -212,36 +239,14 @@ void NewGameDialog::accept()
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::dragEnterEvent(QDragEnterEvent* event)
-{
-	AddImage::dragEnterEvent(event);
-}
-
-//-----------------------------------------------------------------------------
-
-void NewGameDialog::dropEvent(QDropEvent* event)
-{
-	addImages(AddImage::dropEvent(event));
-}
-
-//-----------------------------------------------------------------------------
-
-void NewGameDialog::hideEvent(QHideEvent* event)
-{
-	QSettings().setValue("NewGame/Size", size());
-	QDialog::hideEvent(event);
-}
-
-//-----------------------------------------------------------------------------
-
-void NewGameDialog::addImage()
+void NewGameTab::addImage()
 {
 	addImages(AddImage::getOpenFileNames(this));
 }
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::removeImage()
+void NewGameTab::removeImage()
 {
 	QListWidgetItem* item = m_images->currentItem();
 	if (!item) {
@@ -300,7 +305,7 @@ void NewGameDialog::removeImage()
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::changeTags()
+void NewGameTab::changeTags()
 {
 	QListWidgetItem* item = m_images->currentItem();
 	if (!item) {
@@ -322,7 +327,7 @@ void NewGameDialog::changeTags()
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::imageSelected(QListWidgetItem* item)
+void NewGameTab::imageSelected(QListWidgetItem* item)
 {
 	bool enabled = item != 0;
 	m_accept_button->setEnabled(enabled);
@@ -355,7 +360,7 @@ void NewGameDialog::imageSelected(QListWidgetItem* item)
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::pieceCountChanged(int value)
+void NewGameTab::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
 		int side1 = 4 * value;
@@ -366,7 +371,7 @@ void NewGameDialog::pieceCountChanged(int value)
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::filterImages(const QString& filter)
+void NewGameTab::filterImages(const QString& filter)
 {
 	QSettings().setValue("NewGame/Filter", filter);
 
@@ -395,7 +400,7 @@ void NewGameDialog::filterImages(const QString& filter)
 
 //-----------------------------------------------------------------------------
 
-void NewGameDialog::addImage(const QString& image)
+void NewGameTab::addImage(const QString& image)
 {
 	QString filename = hash(image) + "." + QFileInfo(image).suffix().toLower();
 
@@ -423,40 +428,6 @@ void NewGameDialog::addImage(const QString& image)
 	// Select in list of images
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
-}
-
-//-----------------------------------------------------------------------------
-
-void NewGameDialog::addImages(const QStringList& images)
-{
-	int count = images.count();
-	if (count == 0) {
-		return;
-	}
-
-	QProgressDialog progress(tr("Copying images..."), tr("Cancel"), 0, count, this);
-	progress.setMinimumDuration(500);
-	progress.setWindowModality(Qt::WindowModal);
-
-	QApplication::setOverrideCursor(Qt::WaitCursor);
-
-	m_images_filter->setCurrentIndex(0);
-	for (int i = 0; i < count; i++) {
-		progress.setValue(i);
-		if (progress.wasCanceled()) {
-			break;
-		}
-
-		QString image = images.at(i);
-		if (QDir::match(AddImage::supportedFormats(), image)) {
-			addImage(image);
-		}
-
-		QApplication::processEvents();
-	}
-	progress.setValue(count);
-
-	QApplication::restoreOverrideCursor();
 }
 
 //-----------------------------------------------------------------------------

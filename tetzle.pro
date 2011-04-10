@@ -20,14 +20,15 @@ unix: !macx {
 HEADERS = src/add_image.h \
 	src/appearance_dialog.h \
 	src/board.h \
+	src/choose_game_dialog.h \
 	src/color_button.h \
 	src/dancing_links.h \
 	src/generator.h \
 	src/graphics_layer.h \
 	src/locale_dialog.h \
 	src/message.h \
-	src/new_game_dialog.h \
-	src/open_game_dialog.h \
+	src/new_game_tab.h \
+	src/open_game_tab.h \
 	src/overview.h \
 	src/path.h \
 	src/piece.h \
@@ -41,6 +42,7 @@ HEADERS = src/add_image.h \
 SOURCES = src/add_image.cpp \
 	src/appearance_dialog.cpp \
 	src/board.cpp \
+	src/choose_game_dialog.cpp \
 	src/color_button.cpp \
 	src/dancing_links.cpp \
 	src/generator.cpp \
@@ -48,8 +50,8 @@ SOURCES = src/add_image.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/message.cpp \
-	src/new_game_dialog.cpp \
-	src/open_game_dialog.cpp \
+	src/new_game_tab.cpp \
+	src/open_game_tab.cpp \
 	src/overview.cpp \
 	src/path.cpp \
 	src/piece.cpp \

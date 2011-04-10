@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,42 +17,35 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef CHOOSE_GAME_DIALOG_H
+#define CHOOSE_GAME_DIALOG_H
 
-#include <QMainWindow>
-class QAction;
-class QProgressBar;
-class Board;
-class ZoomSlider;
+class NewGameTab;
 
-class Window : public QMainWindow
+#include <QDialog>
+class QTabWidget;
+
+class ChooseGameDialog : public QDialog
 {
 	Q_OBJECT
+
 public:
-	Window(const QStringList& files = QStringList());
+	ChooseGameDialog(const QStringList& files, int current_id, QWidget* parent = 0);
+
+	static QStringList currentGames();
+
+signals:
+	void newGame(const QString& image, int difficulty);
+	void openGame(int id);
 
 protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
 	virtual void dragEnterEvent(QDragEnterEvent* event);
 	virtual void dropEvent(QDropEvent* event);
-
-private slots:
-	void chooseGame(const QStringList& files = QStringList());
-	void gameFinished();
-	void setFullScreen(bool enable);
-	void setLocale();
-	void showAppearance();
-	void showControls();
-	void showAbout();
+	virtual void hideEvent(QHideEvent* event);
 
 private:
-	QAction* m_zoom_fit_action;
-	QAction* m_toggle_overview_action;
-	ZoomSlider* m_slider;
-	QProgressBar* m_completed;
-	Board* m_board;
+	QTabWidget* m_tabs;
+	NewGameTab* m_new_game_tab;
 };
 
 #endif

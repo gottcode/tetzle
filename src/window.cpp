@@ -22,9 +22,8 @@
 #include "add_image.h"
 #include "appearance_dialog.h"
 #include "board.h"
+#include "choose_game_dialog.h"
 #include "locale_dialog.h"
-#include "new_game_dialog.h"
-#include "open_game_dialog.h"
 #include "zoom_slider.h"
 
 #include <QAction>
@@ -79,8 +78,7 @@ Window::Window(const QStringList& files)
 	QMenu* menu;
 
 	menu = menuBar()->addMenu(tr("&Game"));
-	menu->addAction(tr("&New"), this, SLOT(newGame()), tr("Ctrl+N"));
-	m_open_action = menu->addAction(tr("&Open"), this, SLOT(openGame()), tr("Ctrl+O"));
+	menu->addAction(tr("&Choose..."), this, SLOT(chooseGame()), tr("Ctrl+N"));
 	menu->addSeparator();
 	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, SLOT(retrievePieces()), tr("Ctrl+R"));
 	retrieve_pieces_action->setEnabled(false);
@@ -134,12 +132,7 @@ Window::Window(const QStringList& files)
 
 	// Start or load a game
 	show();
-	m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
-	if (files.isEmpty() && m_open_action->isEnabled()) {
-		openGame();
-	} else {
-		newGame(files);
-	}
+	chooseGame(files);
 
 	// Create auto-save timer
 	QTimer* timer = new QTimer(this);
@@ -181,39 +174,20 @@ void Window::dropEvent(QDropEvent* event)
 {
 	QStringList files = AddImage::dropEvent(event);
 	if (!files.isEmpty()) {
-		newGame(files);
+		chooseGame(files);
 	}
 }
 
 //-----------------------------------------------------------------------------
 
-void Window::newGame(const QStringList& files)
+void Window::chooseGame(const QStringList& files)
 {
 	m_board->saveGame();
 
-	NewGameDialog dialog(files, this);
+	ChooseGameDialog dialog(files, m_board->id(), this);
 	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
 	connect(&dialog, SIGNAL(accepted()), m_completed, SLOT(hide()));
 	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
-	if (dialog.exec() == QDialog::Accepted) {
-		m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
-		m_toggle_overview_action->setEnabled(true);
-		m_zoom_fit_action->setEnabled(true);
-		m_slider->show();
-		m_completed->show();
-	}
-}
-
-//-----------------------------------------------------------------------------
-
-void Window::openGame()
-{
-	m_board->saveGame();
-
-	OpenGameDialog dialog(m_board->id(), this);
-	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
-	connect(&dialog, SIGNAL(accepted()), m_completed, SLOT(hide()));
-	connect(&dialog, SIGNAL(newGame(const QStringList&)), this, SLOT(newGame(const QStringList&)));
 	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
 	if (dialog.exec() == QDialog::Accepted) {
 		m_toggle_overview_action->setEnabled(true);
@@ -221,7 +195,6 @@ void Window::openGame()
 		m_slider->show();
 		m_completed->show();
 	}
-	m_open_action->setEnabled(OpenGameDialog::games().count() > (m_board->id() != 0));
 }
 
 //-----------------------------------------------------------------------------
@@ -229,7 +202,6 @@ void Window::openGame()
 void Window::gameFinished()
 {
 	m_toggle_overview_action->setEnabled(false);
-	m_open_action->setEnabled(!OpenGameDialog::games().isEmpty());
 }
 
 //-----------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 2011-04-10 Graeme Gott <graeme@gottcode.org>
+	* Merge new and open game dialogs.
 	* Use single thumbnail loading thread.
 
 2011-04-08 Graeme Gott <graeme@gottcode.org>
