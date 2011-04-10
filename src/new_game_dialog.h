@@ -23,11 +23,11 @@
 #include <QDialog>
 class QComboBox;
 class QLabel;
+class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QSlider;
 class TagManager;
-class ThumbnailList;
 
 class NewGameDialog : public QDialog
 {
@@ -60,7 +60,7 @@ private:
 
 private:
 	TagManager* m_image_tags;
-	ThumbnailList* m_images;
+	QListWidget* m_images;
 	QComboBox* m_images_filter;
 	QPushButton* m_remove_button;
 	QPushButton* m_tag_button;

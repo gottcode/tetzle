@@ -21,8 +21,8 @@
 #define OPEN_GAME_DIALOG_H
 
 #include <QDialog>
+class QListWidget;
 class QPushButton;
-class ThumbnailList;
 
 class OpenGameDialog : public QDialog
 {
@@ -48,7 +48,7 @@ private slots:
 	void deleteGame();
 
 private:
-	ThumbnailList* m_games;
+	QListWidget* m_games;
 	QPushButton* m_accept_button;
 };
 

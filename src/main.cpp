@@ -19,8 +19,10 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QLabel>
 #include <QSettings>
 
+#include "board.h"
 #include "locale_dialog.h"
 #include "path.h"
 #include "window.h"
@@ -32,6 +34,15 @@ int main(int argc, char** argv)
 	app.setApplicationVersion("1.2.1");
 	app.setOrganizationDomain("gottcode.org");
 	app.setOrganizationName("GottCode");
+	{
+		QIcon fallback(":/hicolor/128x128/apps/tetzle.png");
+		fallback.addFile(":/hicolor/64x64/apps/tetzle.png");
+		fallback.addFile(":/hicolor/48x48/apps/tetzle.png");
+		fallback.addFile(":/hicolor/32x32/apps/tetzle.png");
+		fallback.addFile(":/hicolor/22x22/apps/tetzle.png");
+		fallback.addFile(":/hicolor/16x16/apps/tetzle.png");
+		app.setWindowIcon(QIcon::fromTheme("tetzle", fallback));
+	}
 
 	QDir dir(app.applicationDirPath());
 	if (dir.exists("jhead") || dir.exists("jhead.exe")) {
@@ -74,9 +85,42 @@ int main(int argc, char** argv)
 		}
 	}
 	dir.setPath(path);
+	dir.mkpath(path + "/saves/");
+
+	// Update thumbnails
+	if (dir.exists("previews")) {
+		QLabel label(Board::tr("Please Wait"), 0, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+		label.setWindowTitle(Window::tr("Tetzle"));
+		label.setAlignment(Qt::AlignCenter);
+		label.setContentsMargins(10, 10, 10, 10);
+		label.setFixedSize(label.sizeHint());
+		label.show();
+		app.processEvents();
+#if defined(Q_WS_X11)
+		extern void qt_x11_wait_for_window_manager(QWidget* widget);
+		qt_x11_wait_for_window_manager(&label);
+#endif
+
+		QStringList old_dirs;
+		old_dirs += (path + "/previews/");
+		old_dirs += (path + "/images/thumbnails/");
+		old_dirs += (path + "/images/thumbnails/large/");
+		old_dirs += (path + "/images/thumbnails/small/");
+		for (int i = 0; i < old_dirs.count(); ++i) {
+			dir.setPath(old_dirs.at(i));
+			QStringList entries = dir.entryList(QDir::Files);
+			foreach (QString info, entries) {
+				dir.remove(info);
+			}
+		}
+
+		dir.setPath(path);
+		while (!old_dirs.isEmpty()) {
+			dir.rmpath(old_dirs.takeLast());
+		}
+	}
 	dir.mkpath(path + "/images/");
 	dir.mkpath(path + "/images/thumbnails/");
-	dir.mkpath(path + "/saves/");
 
 	// Update settings layout
 	QSettings settings;

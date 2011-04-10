@@ -21,7 +21,7 @@
 
 #include "add_image.h"
 #include "path.h"
-#include "thumbnail_list.h"
+#include "thumbnail_loader.h"
 
 #include <QDialogButtonBox>
 #include <QDir>
@@ -42,8 +42,12 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 	setAcceptDrops(true);
 
 	// List saved games
-	m_games = new ThumbnailList(this);
-	m_games->setSpacing(2);
+	m_games = new QListWidget(this);
+	m_games->setIconSize(QSize(74, 74));
+	m_games->setMovement(QListView::Static);
+	m_games->setResizeMode(QListView::Adjust);
+	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
 	QStringList files = games();
@@ -71,8 +75,7 @@ OpenGameDialog::OpenGameDialog(int current_id, QWidget* parent)
 			}
 			int pieces = attributes.value("pieces").toString().toInt();
 			int complete = attributes.value("complete").toString().toInt();
-			QListWidgetItem* item = m_games->addImage(Path::image(image));
-			item->setText(tr("%L1 pieces\n%2% complete").arg(pieces).arg(complete));
+			QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), tr("%L1 pieces\n%2% complete").arg(pieces).arg(complete), m_games);
 			item->setData(Qt::UserRole, id);
 		}
 	}

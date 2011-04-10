@@ -23,7 +23,7 @@
 #include "path.h"
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
-#include "thumbnail_list.h"
+#include "thumbnail_loader.h"
 
 #include <QApplication>
 #include <QComboBox>
@@ -80,9 +80,9 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	m_image_tags = new TagManager(this);
 
 	// Add image selector
-	m_images = new ThumbnailList(image_box);
+	m_images = new QListWidget(image_box);
 	m_images->setViewMode(QListView::IconMode);
-	m_images->setGridSize(QSize(112, 112));
+	m_images->setIconSize(QSize(74, 74));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setMovement(QListView::Static);
 	m_images->setResizeMode(QListView::Adjust);
@@ -158,7 +158,7 @@ NewGameDialog::NewGameDialog(const QStringList& files, QWidget* parent)
 	// Load images
 	QListWidgetItem* item;
 	foreach (QString image, QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
-		item = m_images->addImage(Path::image(image));
+		item = ThumbnailLoader::createItem(Path::image(image), QString(), m_images);
 		item->setData(Qt::UserRole, image);
 	}
 
@@ -408,7 +408,7 @@ void NewGameDialog::addImage(const QString& image)
 		rotate.waitForFinished(-1);
 
 		// Add to list of images
-		item = m_images->addImage(Path::image(filename));
+		item = ThumbnailLoader::createItem(Path::image(filename), QString(), m_images);
 		item->setData(Qt::UserRole, filename);
 	} else {
 		// Find in list of images

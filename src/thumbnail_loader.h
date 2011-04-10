@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,40 @@
  *
  ***********************************************************************/
 
-#ifndef THUMBNAIL_LIST
-#define THUMBNAIL_LIST
+#ifndef THUMBNAIL_LOADER_H
+#define THUMBNAIL_LOADER_H
 
-#include <QFutureSynchronizer>
-#include <QHash>
-#include <QListWidget>
-#include <QPixmap>
+struct Thumbnail;
+
+#include <QAtomicInt>
+#include <QMutex>
+#include <QThread>
+class QListWidget;
 class QListWidgetItem;
-class QSignalMapper;
 
-class ThumbnailList : public QListWidget
+class ThumbnailLoader : public QThread
 {
 	Q_OBJECT
-public:
-	ThumbnailList(QWidget* parent = 0);
 
-	QListWidgetItem* addImage(const QString& image);
+	ThumbnailLoader(QObject* parent = 0);
+public:
+	~ThumbnailLoader();
+
+	static QListWidgetItem* createItem(const QString& image, const QString& text, QListWidget* list);
+
+signals:
+	void loaded(const Thumbnail& details);
+
+protected:
+	virtual void run();
 
 private slots:
-	void generated(const QString& path);
+	void imageLoaded(const Thumbnail& details);
 
 private:
-	QHash<QString, QListWidgetItem*> m_items;
-	QSignalMapper* m_mapper;
-	QFutureSynchronizer<void> m_futures;
+	QAtomicInt m_done;
+	QList<Thumbnail> m_details;
+	QMutex m_details_mutex;
 };
 
 #endif
