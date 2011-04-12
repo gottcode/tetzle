@@ -266,21 +266,11 @@ void Piece::attach(Piece* piece)
 	Q_ASSERT(piece != this);
 
 	// Update position
-	QPoint delta = piece->m_pos - m_pos;
-	if (delta.x() < 0) {
-		m_pos.rx() += delta.x();
-	}
-	if (delta.y() < 0) {
-		m_pos.ry() += delta.y();
-	}
+	m_pos.setX(qMin(m_pos.x(), piece->m_pos.x()));
+	m_pos.setY(qMin(m_pos.y(), piece->m_pos.y()));
 
 	// Update position of attached tiles
-	QList<Tile*> tiles = piece->m_tiles;
-	int count = tiles.count();
-	for (int i = 0; i < count; ++i) {
-		tiles.at(i)->setPos(tiles.at(i)->pos() + delta);
-	}
-	m_tiles += tiles;
+	m_tiles += piece->m_tiles;
 	piece->m_tiles.clear();
 	updateTiles();
 
@@ -356,11 +346,11 @@ void Piece::updateTiles()
 	int count = m_tiles.count();
 
 	// Find bounding rectangle
-	QPoint top_left = m_tiles.first()->pos();
-	QPoint bottom_right = m_tiles.first()->pos() + QPoint(Tile::size, Tile::size);
+	QPoint top_left = m_tiles.first()->gridPos();
+	QPoint bottom_right = top_left + QPoint(Tile::size, Tile::size);
 	QPoint pos;
 	for (int i = 0; i < count; ++i) {
-		pos = m_tiles.at(i)->pos();
+		pos = m_tiles.at(i)->gridPos();
 		top_left.setX( qMin(pos.x(), top_left.x()) );
 		top_left.setY( qMin(pos.y(), top_left.y()) );
 		bottom_right.setX( qMax(pos.x() + Tile::size, bottom_right.x()) );
@@ -373,7 +363,7 @@ void Piece::updateTiles()
 	for (int i = 0; i < count; ++i) {
 		tile = m_tiles.at(i);
 		tile->setParent(this);
-		tile->setPos(tile->pos() - top_left);
+		tile->setPos(tile->gridPos() - top_left);
 	}
 }
 
