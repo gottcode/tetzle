@@ -40,6 +40,9 @@
 	* Don't hide empty tags.
 	* Remove tag management from tag image dialog.
 
+2011-04-12 Sergiy Gavrylov
+	* Add Ukrainian translation.
+
 2011-04-10 Graeme Gott <graeme@gottcode.org>
 	* Merge new and open game dialogs.
 	* Use single thumbnail loading thread.
