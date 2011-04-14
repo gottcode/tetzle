@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,8 @@ public:
 	bool addTag(const QString& tag);
 	bool renameTag(const QString& tag, const QString& old_tag);
 	bool removeTag(const QString& tag);
-	void addImage(const QString& image, const QString& tag);
-	void removeImage(const QString& image, const QString& tag);
-	void removeImage(const QString& image);
+
+	void setImageTags(const QString& image, const QStringList& tags);
 
 private:
 	void storeTags();

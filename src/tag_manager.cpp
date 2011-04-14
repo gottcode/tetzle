@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,36 +129,29 @@ bool TagManager::removeTag(const QString& tag)
 
 //-----------------------------------------------------------------------------
 
-void TagManager::addImage(const QString& image, const QString& tag)
+void TagManager::setImageTags(const QString& image, const QStringList& tags)
 {
-	QMap<QString, QStringList>::iterator i = m_tags.find(tag);
-	if (i != m_tags.end() && !i.value().contains(tag)) {
-		i.value().append(image);
-		storeTags();
-	}
-}
-
-//-----------------------------------------------------------------------------
-
-void TagManager::removeImage(const QString& image, const QString& tag)
-{
-	QMap<QString, QStringList>::iterator i = m_tags.find(tag);
-	if (i != m_tags.end()) {
-		i.value().removeAll(image);
-		storeTags();
-	}
-}
-
-//-----------------------------------------------------------------------------
-
-void TagManager::removeImage(const QString& image)
-{
+	bool changed = false;
 	QMutableMapIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
-		i.value().removeAll(image);
+		bool tagged = tags.contains(i.key());
+		QStringList& tag = i.value();
+		if (tag.contains(image)) {
+			if (!tagged) {
+				changed = true;
+				tag.removeAll(image);
+			}
+		} else {
+			if (tagged) {
+				changed = true;
+				tag.append(image);
+			}
+		}
 	}
-	storeTags();
+	if (changed) {
+		storeTags();
+	}
 }
 
 //-----------------------------------------------------------------------------

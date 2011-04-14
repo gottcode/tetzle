@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,64 +23,41 @@
 
 #include <QDialogButtonBox>
 #include <QListWidget>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
 
 //-----------------------------------------------------------------------------
 
-TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QString& filter, QWidget* parent)
+TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QWidget* parent)
 	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	m_image(image),
-	m_manager(manager),
-	m_filter(filter)
+	m_manager(manager)
 {
 	setWindowTitle(tr("Tag Image"));
 
-	// Setup tags
+	// Add tags
 	m_tags = new QListWidget(this);
 	m_tags->setSortingEnabled(true);
-	connect(m_tags, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(tagChanged(QListWidgetItem*)));
-	QListWidgetItem* item;
-	foreach (QString tag, m_manager->tags(true)) {
+	QStringList tags = m_manager->tags(true);
+	foreach (const QString& tag, tags) {
 		if (tag == tr("All Tags")) {
 			continue;
 		}
-
-		item = new QListWidgetItem(m_tags);
-		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
-
-		if (m_manager->images(tag).contains(image)) {
-			item->setCheckState(Qt::Checked);
-		} else {
-			item->setCheckState(Qt::Unchecked);
-		}
-
-		item->setText(tag);
-		item->setData(Qt::UserRole, tag);
+		QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
+		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+		item->setCheckState(m_manager->images(tag).contains(image) ? Qt::Checked : Qt::Unchecked);
 	}
-	item = m_tags->item(0);
-	if (item) {
+	if (m_tags->count() > 0) {
+		QListWidgetItem* item = m_tags->item(0);
 		item->setSelected(true);
 		m_tags->setCurrentItem(item);
 	}
 
 	// Add dialog buttons
-	QDialogButtonBox* buttons = new QDialogButtonBox(Qt::Horizontal, this);
+	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
+	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
-
-	QPushButton* button = buttons->addButton(tr("New"), QDialogButtonBox::ActionRole);
-	button->setAutoDefault(false);
-	connect(button, SIGNAL(clicked()), this, SLOT(addTag()));
-
-	m_remove_button = buttons->addButton(tr("Delete"), QDialogButtonBox::ActionRole);
-	m_remove_button->setAutoDefault(false);
-	m_remove_button->setEnabled(item != 0);
-	connect(m_remove_button, SIGNAL(clicked()), this, SLOT(removeTag()));
-
-	button = buttons->addButton(QDialogButtonBox::Close);
-	button->setDefault(true);
 
 	// Layout dialog
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -93,83 +70,25 @@ TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QStrin
 
 //-----------------------------------------------------------------------------
 
+void TagImageDialog::accept()
+{
+	QStringList tags;
+	int count = m_tags->count();
+	for (int i = 0; i < count; ++i) {
+		if (m_tags->item(i)->checkState() == Qt::Checked) {
+			tags.append(m_tags->item(i)->text());
+		}
+	}
+	m_manager->setImageTags(m_image, tags);
+	QDialog::accept();
+}
+
+//-----------------------------------------------------------------------------
+
 void TagImageDialog::hideEvent(QHideEvent* event)
 {
 	QSettings().setValue("TagImage/Size", size());
 	QDialog::hideEvent(event);
-}
-
-//-----------------------------------------------------------------------------
-
-void TagImageDialog::addTag()
-{
-	m_remove_button->setEnabled(true);
-
-	// Find first value larger than current untitled tags
-	int max_untitled_tag = 0;
-	QRegExp untitled_tag(tr("Untitled Tag %1").arg("(\\d+)"));
-	QStringList tags = m_manager->tags(true);
-	foreach (QString tag, tags) {
-		if (untitled_tag.exactMatch(tag)) {
-			max_untitled_tag = qMax(max_untitled_tag, untitled_tag.cap(1).toInt());
-		}
-	}
-	max_untitled_tag++;
-
-	// Add new tag
-	QListWidgetItem* item = new QListWidgetItem;
-	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
-	item->setCheckState(Qt::Checked);
-	item->setText(tr("Untitled Tag %1").arg(max_untitled_tag));
-	item->setData(Qt::UserRole, item->text());
-	item->setSelected(true);
-	m_tags->addItem(item);
-	m_tags->setCurrentItem(item);
-	m_tags->editItem(item);
-	m_manager->addTag(item->text());
-}
-
-//-----------------------------------------------------------------------------
-
-void TagImageDialog::removeTag()
-{
-	QListWidgetItem* item = m_tags->currentItem();
-	if (!item) {
-		return;
-	}
-
-	if (QMessageBox::question(this, tr("Question"), tr("Remove selected tag?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No) {
-		return;
-	}
-
-	QString tag = item->text();
-	if (m_filter == tag) {
-		m_filter = tr("All Tags");
-	}
-	m_manager->removeTag(tag);
-	delete item;
-
-	m_remove_button->setEnabled(m_tags->count() > 0);
-}
-
-//-----------------------------------------------------------------------------
-
-void TagImageDialog::tagChanged(QListWidgetItem* tag)
-{
-	QString name = tag->text();
-	QString old_name = tag->data(Qt::UserRole).toString();
-	if (m_manager->renameTag(name, old_name)) {
-		if (m_filter == old_name) {
-			m_filter = name;
-		}
-		tag->setData(Qt::UserRole, name);
-	}
-
-	if (tag->checkState() == Qt::Checked) {
-		m_manager->addImage(m_image, name);
-	} else {
-		m_manager->removeImage(m_image, name);
-	}
 }
 
 //-----------------------------------------------------------------------------

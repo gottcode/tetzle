@@ -1,3 +1,6 @@
+2011-04-14 Graeme Gott <graeme@gottcode.org>
+	* Remove tag management from tag image dialog.
+
 2011-04-10 Graeme Gott <graeme@gottcode.org>
 	* Merge new and open game dialogs.
 	* Use single thumbnail loading thread.

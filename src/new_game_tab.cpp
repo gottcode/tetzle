@@ -291,7 +291,7 @@ void NewGameTab::removeImage()
 			QFile::remove(Path::save(game));
 		}
 		delete item;
-		m_image_tags->removeImage(current_image);
+		m_image_tags->setImageTags(current_image, QStringList());
 		m_accept_button->setEnabled(m_images->count() > 0);
 		if (!m_accept_button->isEnabled()) {
 			m_slider->setMaximum(-1);
@@ -313,7 +313,7 @@ void NewGameTab::changeTags()
 	}
 
 	QString filter = m_images_filter->currentText();
-	TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, filter, this);
+	TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, this);
 	dialog.exec();
 
 	m_images_filter->clear();

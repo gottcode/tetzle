@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,33 +20,29 @@
 #ifndef TAG_IMAGE_DIALOG_H
 #define TAG_IMAGE_DIALOG_H
 
+class TagManager;
+
 #include <QDialog>
 class QListWidget;
-class QListWidgetItem;
 class QPushButton;
-class TagManager;
 
 class TagImageDialog : public QDialog
 {
 	Q_OBJECT
+
 public:
-	TagImageDialog(const QString& image, TagManager* manager, QString& filter, QWidget* parent = 0);
+	TagImageDialog(const QString& image, TagManager* manager, QWidget* parent = 0);
+
+public slots:
+	virtual void accept();
 
 protected:
 	virtual void hideEvent(QHideEvent* event);
 
-private slots:
-	void addTag();
-	void removeTag();
-	void tagChanged(QListWidgetItem* tag);
-
 private:
 	QString m_image;
 	TagManager* m_manager;
-	QString& m_filter;
-
 	QListWidget* m_tags;
-	QPushButton* m_remove_button;
 };
 
 #endif
