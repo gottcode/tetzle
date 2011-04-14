@@ -39,7 +39,7 @@ TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QWidge
 	// Add tags
 	m_tags = new QListWidget(this);
 	m_tags->setSortingEnabled(true);
-	QStringList tags = m_manager->tags(true);
+	QStringList tags = m_manager->tags();
 	foreach (const QString& tag, tags) {
 		if (tag == tr("All Tags")) {
 			continue;

@@ -308,21 +308,12 @@ void NewGameTab::removeImage()
 void NewGameTab::changeTags()
 {
 	QListWidgetItem* item = m_images->currentItem();
-	if (!item) {
-		return;
+	if (item && !item->isHidden()) {
+		TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, this);
+		if (dialog.exec() == QDialog::Accepted) {
+			filterImages(m_images_filter->currentText());
+		}
 	}
-
-	QString filter = m_images_filter->currentText();
-	TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, this);
-	dialog.exec();
-
-	m_images_filter->clear();
-	m_images_filter->addItems(m_image_tags->tags());
-	int index = m_images_filter->findText(filter);
-	if (index == -1) {
-		index = 0;
-	}
-	m_images_filter->setCurrentIndex(index);
 }
 
 //-----------------------------------------------------------------------------
@@ -375,15 +366,16 @@ void NewGameTab::filterImages(const QString& filter)
 {
 	QSettings().setValue("NewGame/Filter", filter);
 
-	QStringList images = m_image_tags->images(filter);
-
+	// Filter items
 	QListWidgetItem* item;
+	QStringList images = m_image_tags->images(filter);
 	int count = m_images->count();
 	for (int i = 0; i < count; ++i) {
 		item = m_images->item(i);
 		item->setHidden(!images.contains(item->data(Qt::UserRole).toString()));
 	}
 
+	// Select next item if current item was hidden
 	item = m_images->currentItem();
 	if (!item || item->isHidden()) {
 		int count = m_images->count();
@@ -396,6 +388,10 @@ void NewGameTab::filterImages(const QString& filter)
 			}
 		}
 	}
+
+	// Disable tag button if no images are visible
+	item = m_images->currentItem();
+	m_tag_button->setEnabled(item && !item->isHidden());
 }
 
 //-----------------------------------------------------------------------------

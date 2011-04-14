@@ -1,4 +1,5 @@
 2011-04-14 Graeme Gott <graeme@gottcode.org>
+	* Don't hide empty tags.
 	* Remove tag management from tag image dialog.
 
 2011-04-10 Graeme Gott <graeme@gottcode.org>

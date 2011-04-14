@@ -20,7 +20,7 @@
 #ifndef TAG_MANAGER_H
 #define TAG_MANAGER_H
 
-#include <QMap>
+#include <QHash>
 #include <QSet>
 #include <QStringList>
 
@@ -29,9 +29,8 @@ class TagManager : public QObject
 public:
 	TagManager(QObject* parent = 0);
 
-	QStringList tags(bool list_empty = false) const;
 	QStringList images(const QString& tag) const;
-	bool isTagEmpty(const QString& tag) const;
+	QStringList tags() const;
 
 	bool addTag(const QString& tag);
 	bool renameTag(const QString& tag, const QString& old_tag);
@@ -43,7 +42,7 @@ private:
 	void storeTags();
 
 private:
-	QMap<QString, QStringList> m_tags;
+	QHash<QString, QStringList> m_tags;
 };
 
 #endif

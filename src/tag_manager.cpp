@@ -49,26 +49,6 @@ TagManager::TagManager(QObject* parent)
 
 //-----------------------------------------------------------------------------
 
-QStringList TagManager::tags(bool list_empty) const
-{
-	QStringList tags;
-	if (!list_empty) {
-		QMap<QString, QStringList>::const_iterator i;
-		for (i = m_tags.constBegin(); i != m_tags.constEnd(); ++i) {
-			if (!i.value().isEmpty()) {
-				tags.append(i.key());
-			}
-		}
-	} else {
-		tags = m_tags.keys();
-	}
-	tags.sort();
-	tags.prepend(tr("All Tags"));
-	return tags;
-}
-
-//-----------------------------------------------------------------------------
-
 QStringList TagManager::images(const QString& tag) const
 {
 	if (tag != tr("All Tags")) {
@@ -80,9 +60,12 @@ QStringList TagManager::images(const QString& tag) const
 
 //-----------------------------------------------------------------------------
 
-bool TagManager::isTagEmpty(const QString& tag) const
+QStringList TagManager::tags() const
 {
-	return images(tag).isEmpty();
+	QStringList tags = m_tags.keys();
+	tags.sort();
+	tags.prepend(tr("All Tags"));
+	return tags;
 }
 
 //-----------------------------------------------------------------------------
@@ -132,7 +115,7 @@ bool TagManager::removeTag(const QString& tag)
 void TagManager::setImageTags(const QString& image, const QStringList& tags)
 {
 	bool changed = false;
-	QMutableMapIterator<QString, QStringList> i(m_tags);
+	QMutableHashIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
 		bool tagged = tags.contains(i.key());
@@ -161,7 +144,7 @@ void TagManager::storeTags()
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.clear();
 	file.beginGroup("Tags");
-	QMapIterator<QString, QStringList> i(m_tags);
+	QHashIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
 		file.setValue(i.key(), i.value());
