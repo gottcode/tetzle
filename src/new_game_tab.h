@@ -23,7 +23,6 @@
 class TagManager;
 
 #include <QWidget>
-class QComboBox;
 class QLabel;
 class QListWidget;
 class QListWidgetItem;
@@ -49,7 +48,7 @@ private slots:
 	void changeTags();
 	void imageSelected(QListWidgetItem* item);
 	void pieceCountChanged(int value);
-	void filterImages(const QString& filter);
+	void filterImages(const QStringList& filter);
 
 private:
 	void addImage(const QString& image);
@@ -57,7 +56,6 @@ private:
 private:
 	TagManager* m_image_tags;
 	QListWidget* m_images;
-	QComboBox* m_images_filter;
 	QPushButton* m_remove_button;
 	QPushButton* m_tag_button;
 

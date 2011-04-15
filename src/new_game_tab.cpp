@@ -26,7 +26,6 @@
 #include "thumbnail_loader.h"
 
 #include <QApplication>
-#include <QComboBox>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
 #include <QDialog>
@@ -74,8 +73,9 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Create image widgets
 	QGroupBox* image_box = new QGroupBox(tr("Image"), this);
 
-	// Set up thumbnail list
+	// Add image filter
 	m_image_tags = new TagManager(this);
+	connect(m_image_tags, SIGNAL(filterChanged(const QStringList&)), this, SLOT(filterImages(const QStringList&)));
 
 	// Add image selector
 	m_images = new QListWidget(image_box);
@@ -86,11 +86,6 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setResizeMode(QListView::Adjust);
 	m_images->setUniformItemSizes(true);
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
-
-	// Add image filter
-	m_images_filter = new QComboBox(image_box);
-	m_images_filter->addItems(m_image_tags->tags());
-	connect(m_images_filter, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(filterImages(const QString&)));
 
 	// Add image buttons
 	QPushButton* add_button = new QPushButton(tr("Add"), image_box);
@@ -134,7 +129,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Arrange widgets
 	QHBoxLayout* image_actions = new QHBoxLayout;
 	image_actions->setMargin(0);
-	image_actions->addWidget(m_images_filter);
+	image_actions->addWidget(m_image_tags);
 	image_actions->addStretch();
 	image_actions->addWidget(add_button);
 	image_actions->addWidget(m_remove_button);
@@ -175,11 +170,6 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setCurrentItem(item);
 	m_slider->setValue(settings.value("NewGame/Pieces", 2).toInt());
 	pieceCountChanged(m_slider->value());
-	int index = m_images_filter->findText(settings.value("NewGame/Filter", tr("All Tags")).toString());
-	if (index == -1) {
-		index = 0;
-	}
-	m_images_filter->setCurrentIndex(index);
 
 	// Add new images
 	addImages(files);
@@ -200,7 +190,7 @@ void NewGameTab::addImages(const QStringList& images)
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
-	m_images_filter->setCurrentIndex(0);
+	m_image_tags->clearFilter();
 	for (int i = 0; i < count; i++) {
 		progress.setValue(i);
 		if (progress.wasCanceled()) {
@@ -310,9 +300,7 @@ void NewGameTab::changeTags()
 	QListWidgetItem* item = m_images->currentItem();
 	if (item && !item->isHidden()) {
 		TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, this);
-		if (dialog.exec() == QDialog::Accepted) {
-			filterImages(m_images_filter->currentText());
-		}
+		dialog.exec();
 	}
 }
 
@@ -362,17 +350,14 @@ void NewGameTab::pieceCountChanged(int value)
 
 //-----------------------------------------------------------------------------
 
-void NewGameTab::filterImages(const QString& filter)
+void NewGameTab::filterImages(const QStringList& filter)
 {
-	QSettings().setValue("NewGame/Filter", filter);
-
 	// Filter items
 	QListWidgetItem* item;
-	QStringList images = m_image_tags->images(filter);
 	int count = m_images->count();
 	for (int i = 0; i < count; ++i) {
 		item = m_images->item(i);
-		item->setHidden(!images.contains(item->data(Qt::UserRole).toString()));
+		item->setHidden(!filter.contains(item->data(Qt::UserRole).toString()));
 	}
 
 	// Select next item if current item was hidden

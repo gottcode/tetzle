@@ -21,28 +21,38 @@
 #define TAG_MANAGER_H
 
 #include <QHash>
-#include <QSet>
 #include <QStringList>
+#include <QWidget>
+class QComboBox;
 
-class TagManager : public QObject
+class TagManager : public QWidget
 {
+	Q_OBJECT
+
 public:
-	TagManager(QObject* parent = 0);
+	TagManager(QWidget* parent = 0);
 
 	QStringList images(const QString& tag) const;
 	QStringList tags() const;
 
+	void clearFilter();
+	void setImageTags(const QString& image, const QStringList& tags);
+
+signals:
+	void filterChanged(const QStringList& images);
+
+private slots:
 	bool addTag(const QString& tag);
 	bool renameTag(const QString& tag, const QString& old_tag);
 	bool removeTag(const QString& tag);
-
-	void setImageTags(const QString& image, const QStringList& tags);
+	void updateFilter();
 
 private:
 	void storeTags();
 
 private:
 	QHash<QString, QStringList> m_tags;
+	QComboBox* m_filter;
 };
 
 #endif

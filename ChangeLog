@@ -1,3 +1,6 @@
+2011-04-15 Graeme Gott <graeme@gottcode.org>
+	* Move image filter into tag manager.
+
 2011-04-14 Graeme Gott <graeme@gottcode.org>
 	* Don't hide empty tags.
 	* Remove tag management from tag image dialog.

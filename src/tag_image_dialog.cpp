@@ -41,9 +41,6 @@ TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QWidge
 	m_tags->setSortingEnabled(true);
 	QStringList tags = m_manager->tags();
 	foreach (const QString& tag, tags) {
-		if (tag == tr("All Tags")) {
-			continue;
-		}
 		QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 		item->setCheckState(m_manager->images(tag).contains(image) ? Qt::Checked : Qt::Unchecked);

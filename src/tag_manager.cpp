@@ -21,14 +21,21 @@
 
 #include "path.h"
 
+#include <QComboBox>
 #include <QDir>
 #include <QSettings>
+#include <QVBoxLayout>
 
 //-----------------------------------------------------------------------------
 
-TagManager::TagManager(QObject* parent)
-	: QObject(parent)
+TagManager::TagManager(QWidget* parent)
+	: QWidget(parent)
 {
+	m_filter = new QComboBox(this);
+	QVBoxLayout* layout = new QVBoxLayout(this);
+	layout->setMargin(0);
+	layout->addWidget(m_filter);
+
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
 	QStringList tags = file.childKeys();
@@ -44,14 +51,19 @@ TagManager::TagManager(QObject* parent)
 			}
 		}
 		m_tags[tag] = images;
+		m_filter->addItem(tag);
 	}
+
+	m_filter->insertItem(0, tr("All Images"));
+	m_filter->setCurrentIndex(0);
+	connect(m_filter, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilter()));
 }
 
 //-----------------------------------------------------------------------------
 
 QStringList TagManager::images(const QString& tag) const
 {
-	if (tag != tr("All Tags")) {
+	if (tag != tr("All Images")) {
 		return m_tags.value(tag);
 	} else {
 		return QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
@@ -64,15 +76,49 @@ QStringList TagManager::tags() const
 {
 	QStringList tags = m_tags.keys();
 	tags.sort();
-	tags.prepend(tr("All Tags"));
 	return tags;
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::clearFilter()
+{
+	updateFilter();
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::setImageTags(const QString& image, const QStringList& tags)
+{
+	bool changed = false;
+	QMutableHashIterator<QString, QStringList> i(m_tags);
+	while (i.hasNext()) {
+		i.next();
+		bool tagged = tags.contains(i.key());
+		QStringList& tag = i.value();
+		if (tag.contains(image)) {
+			if (!tagged) {
+				changed = true;
+				tag.removeAll(image);
+			}
+		} else {
+			if (tagged) {
+				changed = true;
+				tag.append(image);
+			}
+		}
+	}
+	if (changed) {
+		storeTags();
+		updateFilter();
+	}
 }
 
 //-----------------------------------------------------------------------------
 
 bool TagManager::addTag(const QString& tag)
 {
-	if (tag == tr("All Tags") || tag.isEmpty() || m_tags.constFind(tag) != m_tags.constEnd()) {
+	if (tag == tr("All Images") || tag.isEmpty() || m_tags.constFind(tag) != m_tags.constEnd()) {
 		return false;
 	}
 
@@ -106,35 +152,16 @@ bool TagManager::removeTag(const QString& tag)
 
 	m_tags.remove(tag);
 	storeTags();
+	updateFilter();
 
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 
-void TagManager::setImageTags(const QString& image, const QStringList& tags)
+void TagManager::updateFilter()
 {
-	bool changed = false;
-	QMutableHashIterator<QString, QStringList> i(m_tags);
-	while (i.hasNext()) {
-		i.next();
-		bool tagged = tags.contains(i.key());
-		QStringList& tag = i.value();
-		if (tag.contains(image)) {
-			if (!tagged) {
-				changed = true;
-				tag.removeAll(image);
-			}
-		} else {
-			if (tagged) {
-				changed = true;
-				tag.append(image);
-			}
-		}
-	}
-	if (changed) {
-		storeTags();
-	}
+	emit filterChanged(images(m_filter->currentText()));
 }
 
 //-----------------------------------------------------------------------------
