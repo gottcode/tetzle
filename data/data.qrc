@@ -10,5 +10,9 @@
 	<file>shaders/textures1.vert</file>
 	<file>shaders/textures2.frag</file>
 	<file>shaders/textures2.vert</file>
+
+	<file>tango/image-x-generic.png</file>
+	<file>tango/list-add.png</file>
+	<file>tango/list-remove.png</file>
 </qresource>
 </RCC>

@@ -36,6 +36,7 @@ HEADERS = src/add_image.h \
 	src/tag_image_dialog.h \
 	src/tag_manager.h \
 	src/thumbnail_loader.h \
+	src/toolbar_list.h \
 	src/window.h \
 	src/zoom_slider.h
 
@@ -59,6 +60,7 @@ SOURCES = src/add_image.cpp \
 	src/tag_image_dialog.cpp \
 	src/tag_manager.cpp \
 	src/thumbnail_loader.cpp \
+	src/toolbar_list.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 
