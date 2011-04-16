@@ -24,7 +24,9 @@
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
 #include "thumbnail_loader.h"
+#include "toolbar_list.h"
 
+#include <QAction>
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDialogButtonBox>
@@ -33,11 +35,9 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QGroupBox>
-#include <QHBoxLayout>
+#include <QGridLayout>
 #include <QImageReader>
 #include <QLabel>
-#include <QListWidget>
 #include <QMessageBox>
 #include <QProcess>
 #include <QProgressDialog>
@@ -45,7 +45,7 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QSlider>
-#include <QVBoxLayout>
+#include <QSplitter>
 #include <QXmlStreamReader>
 
 #include <cmath>
@@ -70,49 +70,47 @@ QString hash(const QString& path)
 NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	: QWidget(parent)
 {
-	// Create image widgets
-	QGroupBox* image_box = new QGroupBox(tr("Image"), this);
-
 	// Add image filter
 	m_image_tags = new TagManager(this);
 	connect(m_image_tags, SIGNAL(filterChanged(const QStringList&)), this, SLOT(filterImages(const QStringList&)));
 
 	// Add image selector
-	m_images = new QListWidget(image_box);
+	m_images = new ToolBarList(this);
 	m_images->setViewMode(QListView::IconMode);
 	m_images->setIconSize(QSize(74, 74));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
-	m_images->setMovement(QListView::Static);
-	m_images->setResizeMode(QListView::Adjust);
 	m_images->setUniformItemSizes(true);
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 
-	// Add image buttons
-	QPushButton* add_button = new QPushButton(tr("Add"), image_box);
-	add_button->setAutoDefault(false);
-	connect(add_button, SIGNAL(clicked()), this, SLOT(addImage()));
+	// Add image actions
+	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Image"), this);
+	m_images->addToolBarAction(add_action);
+	connect(add_action, SIGNAL(triggered()), this, SLOT(addImage()));
 
-	m_remove_button = new QPushButton(tr("Remove"), image_box);
-	m_remove_button->setAutoDefault(false);
-	m_remove_button->setEnabled(false);
-	connect(m_remove_button, SIGNAL(clicked()), this, SLOT(removeImage()));
+	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Image"), this);
+	m_images->addToolBarAction(m_remove_action);
+	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeImage()));
 
-	m_tag_button = new QPushButton(tr("Tag"), image_box);
-	m_tag_button->setAutoDefault(false);
-	m_tag_button->setEnabled(false);
-	connect(m_tag_button, SIGNAL(clicked()), this, SLOT(changeTags()));
+	m_tag_action = new QAction(QIcon::fromTheme("image-x-generic", QPixmap(":/tango/image-x-generic.png")), tr("Tag Image"), this);
+	m_images->addToolBarAction(m_tag_action);
+	connect(m_tag_action, SIGNAL(triggered()), this, SLOT(changeTags()));
 
-	// Create pieces widgets
-	QGroupBox* pieces_box = new QGroupBox(tr("Pieces"), this);
+	// Add image splitter
+	m_image_contents = new QSplitter(this);
+	m_image_contents->addWidget(m_image_tags);
+	m_image_contents->addWidget(m_images);
+	m_image_contents->setStretchFactor(0, 0);
+	m_image_contents->setStretchFactor(1, 1);
+	m_image_contents->setSizes(QList<int>() << 130 << m_images->minimumWidth());
 
 	// Add pieces slider
-	m_slider = new QSlider(Qt::Horizontal, pieces_box);
+	m_slider = new QSlider(Qt::Horizontal, this);
 	m_slider->setRange(1, 1);
 	connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(pieceCountChanged(int)));
 
-	m_count = new QLabel(pieces_box);
+	m_count = new QLabel(this);
 	m_count->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-	m_count->setMinimumWidth(m_count->fontMetrics().width("9,999"));
+	m_count->setMinimumWidth(m_count->fontMetrics().width(tr("%L1 pieces").arg(9999)));
 
 	// Add buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(this);
@@ -127,26 +125,15 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	cancel_button->setAutoDefault(false);
 
 	// Arrange widgets
-	QHBoxLayout* image_actions = new QHBoxLayout;
-	image_actions->setMargin(0);
-	image_actions->addWidget(m_image_tags);
-	image_actions->addStretch();
-	image_actions->addWidget(add_button);
-	image_actions->addWidget(m_remove_button);
-	image_actions->addWidget(m_tag_button);
-
-	QVBoxLayout* image_layout = new QVBoxLayout(image_box);
-	image_layout->addWidget(m_images);
-	image_layout->addLayout(image_actions);
-
-	QHBoxLayout* pieces_layout = new QHBoxLayout(pieces_box);
-	pieces_layout->addWidget(m_count);
-	pieces_layout->addWidget(m_slider);
-
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->addWidget(image_box, 1);
-	layout->addWidget(pieces_box);
-	layout->addWidget(buttons);
+	QGridLayout* layout = new QGridLayout(this);
+	layout->setColumnStretch(1, 1);
+	layout->setRowStretch(0, 1);
+	layout->addWidget(m_image_contents, 0, 0, 1, 2);
+	layout->setRowMinimumHeight(1, 12);
+	layout->addWidget(m_count, 2, 0);
+	layout->addWidget(m_slider, 2, 1);
+	layout->setRowMinimumHeight(3, 12);
+	layout->addWidget(buttons, 4, 0, 1, 2);
 
 	// Load images
 	QListWidgetItem* item;
@@ -173,6 +160,9 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	// Add new images
 	addImages(files);
+
+	// Resize contents
+	m_image_contents->restoreState(settings.value("NewGame/SplitterSizes").toByteArray());
 }
 
 //-----------------------------------------------------------------------------
@@ -207,6 +197,14 @@ void NewGameTab::addImages(const QStringList& images)
 	progress.setValue(count);
 
 	QApplication::restoreOverrideCursor();
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::hideEvent(QHideEvent* event)
+{
+	QSettings().setValue("NewGame/SplitterSizes", m_image_contents->saveState());
+	QWidget::hideEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -310,14 +308,14 @@ void NewGameTab::imageSelected(QListWidgetItem* item)
 {
 	bool enabled = item != 0;
 	m_accept_button->setEnabled(enabled);
-	m_tag_button->setEnabled(enabled);
-	m_remove_button->setEnabled(enabled);
+	m_tag_action->setEnabled(enabled);
+	m_remove_action->setEnabled(enabled);
 	if (!enabled) {
 		return;
 	}
 
 	QString image = item->data(Qt::UserRole).toString();
-	m_remove_button->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
+	m_remove_action->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader(Path::image(image)).size();
 	if (m_image_size.width() > m_image_size.height()) {
@@ -344,7 +342,7 @@ void NewGameTab::pieceCountChanged(int value)
 	if (m_image_size.isValid()) {
 		int side1 = 4 * value;
 		int side2 = qMax(qRound(side1 * m_ratio), 1);
-		m_count->setText(QString("%L1").arg(side1 * side2 / 4));
+		m_count->setText(tr("%L1 pieces").arg(side1 * side2 / 4));
 	}
 }
 
@@ -376,7 +374,7 @@ void NewGameTab::filterImages(const QStringList& filter)
 
 	// Disable tag button if no images are visible
 	item = m_images->currentItem();
-	m_tag_button->setEnabled(item && !item->isHidden());
+	m_tag_action->setEnabled(item && !item->isHidden());
 }
 
 //-----------------------------------------------------------------------------

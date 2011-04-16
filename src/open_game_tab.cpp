@@ -94,6 +94,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	// Arrange widgets
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->addWidget(m_games);
+	layout->addSpacing(12);
 	layout->addWidget(buttons);
 }
 

@@ -21,13 +21,15 @@
 #define NEW_GAME_TAB_H
 
 class TagManager;
+class ToolBarList;
 
 #include <QWidget>
+class QAction;
 class QLabel;
-class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QSlider;
+class QSplitter;
 
 class NewGameTab : public QWidget
 {
@@ -40,6 +42,9 @@ public:
 
 signals:
 	void newGame(const QString& image, int difficulty);
+
+protected:
+	virtual void hideEvent(QHideEvent* event);
 
 private slots:
 	void accept();
@@ -54,10 +59,11 @@ private:
 	void addImage(const QString& image);
 
 private:
+	QSplitter* m_image_contents;
 	TagManager* m_image_tags;
-	QListWidget* m_images;
-	QPushButton* m_remove_button;
-	QPushButton* m_tag_button;
+	ToolBarList* m_images;
+	QAction* m_remove_action;
+	QAction* m_tag_action;
 
 	QSlider* m_slider;
 	QLabel* m_count;
