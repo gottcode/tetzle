@@ -20,10 +20,13 @@
 #ifndef TAG_MANAGER_H
 #define TAG_MANAGER_H
 
+class ToolBarList;
+
 #include <QHash>
 #include <QStringList>
 #include <QWidget>
-class QComboBox;
+class QAction;
+class QListWidgetItem;
 
 class TagManager : public QWidget
 {
@@ -42,9 +45,10 @@ signals:
 	void filterChanged(const QStringList& images);
 
 private slots:
-	bool addTag(const QString& tag);
-	bool renameTag(const QString& tag, const QString& old_tag);
-	bool removeTag(const QString& tag);
+	void addTag();
+	void removeTag();
+	void currentTagChanged(int current);
+	void tagChanged(QListWidgetItem* item);
 	void updateFilter();
 
 private:
@@ -52,7 +56,8 @@ private:
 
 private:
 	QHash<QString, QStringList> m_tags;
-	QComboBox* m_filter;
+	ToolBarList* m_filter;
+	QAction* m_remove_action;
 };
 
 #endif

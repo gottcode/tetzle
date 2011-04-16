@@ -1,3 +1,6 @@
+2011-04-16 Graeme Gott <graeme@gottcode.org>
+	* Redesign tag manager to be a list widget.
+
 2011-04-15 Graeme Gott <graeme@gottcode.org>
 	* Redesign new game tab.
 	* Add ToolBarList class.

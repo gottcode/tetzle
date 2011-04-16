@@ -20,9 +20,11 @@
 #include "tag_manager.h"
 
 #include "path.h"
+#include "toolbar_list.h"
 
-#include <QComboBox>
+#include <QAction>
 #include <QDir>
+#include <QMessageBox>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -31,11 +33,27 @@
 TagManager::TagManager(QWidget* parent)
 	: QWidget(parent)
 {
-	m_filter = new QComboBox(this);
+	// Add filter
+	m_filter = new ToolBarList(this);
+	m_filter->setSelectionBehavior(QAbstractItemView::SelectItems);
+	m_filter->setSelectionMode(QAbstractItemView::SingleSelection);
+	connect(m_filter, SIGNAL(currentRowChanged(int)), this, SLOT(currentTagChanged(int)));
+	connect(m_filter, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(tagChanged(QListWidgetItem*)));
+
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setMargin(0);
 	layout->addWidget(m_filter);
 
+	// Add filter actions
+	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Tag"), this);
+	m_filter->addToolBarAction(add_action);
+	connect(add_action, SIGNAL(triggered()), this, SLOT(addTag()));
+
+	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Tag"), this);
+	m_filter->addToolBarAction(m_remove_action);
+	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeTag()));
+
+	// Add tags
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
 	QStringList tags = file.childKeys();
@@ -51,23 +69,24 @@ TagManager::TagManager(QWidget* parent)
 			}
 		}
 		m_tags[tag] = images;
-		m_filter->addItem(tag);
-	}
 
-	m_filter->insertItem(0, tr("All Images"));
-	m_filter->setCurrentIndex(0);
-	connect(m_filter, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilter()));
+		QListWidgetItem* item = new QListWidgetItem(tag, m_filter);
+		item->setData(Qt::UserRole, item->text());
+		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+	}
+	m_filter->sortItems();
+
+	QListWidgetItem* item = new QListWidgetItem(tr("All Images"));
+	item->setData(Qt::UserRole, item->text());
+	m_filter->insertItem(0, item);
+	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
 }
 
 //-----------------------------------------------------------------------------
 
 QStringList TagManager::images(const QString& tag) const
 {
-	if (tag != tr("All Images")) {
-		return m_tags.value(tag);
-	} else {
-		return QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
-	}
+	return m_tags.value(tag);
 }
 
 //-----------------------------------------------------------------------------
@@ -83,7 +102,7 @@ QStringList TagManager::tags() const
 
 void TagManager::clearFilter()
 {
-	updateFilter();
+	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
 }
 
 //-----------------------------------------------------------------------------
@@ -116,52 +135,106 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 
 //-----------------------------------------------------------------------------
 
-bool TagManager::addTag(const QString& tag)
+void TagManager::addTag()
 {
-	if (tag == tr("All Images") || tag.isEmpty() || m_tags.constFind(tag) != m_tags.constEnd()) {
-		return false;
-	}
+	m_remove_action->setEnabled(true);
 
+	// Add tag
+	static int new_tags = 0;
+	new_tags++;
+	QString tag = tr("Untitled %1").arg(new_tags);
 	m_tags.insert(tag, QStringList());
 	storeTags();
 
-	return true;
+	// Add tag item
+	QListWidgetItem* item = new QListWidgetItem(tag, m_filter);
+	item->setData(Qt::UserRole, item->text());
+	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+	m_filter->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
+	m_filter->editItem(item);
 }
 
 //-----------------------------------------------------------------------------
 
-bool TagManager::renameTag(const QString& tag, const QString& old_tag)
+void TagManager::removeTag()
 {
-	if (m_tags.constFind(tag) != m_tags.constEnd() || m_tags.constFind(old_tag) == m_tags.constEnd() || tag.isEmpty()) {
-		return false;
+	// Find current item
+	QListWidgetItem* item = m_filter->currentItem();
+	if (!item || m_filter->row(item) == 0) {
+		return;
 	}
 
-	m_tags.insert(tag, m_tags.take(old_tag));
-	storeTags();
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-
-bool TagManager::removeTag(const QString& tag)
-{
-	if (m_tags.constFind(tag) == m_tags.constEnd()) {
-		return false;
+	// Ask before removing
+	if (QMessageBox::question(window(), tr("Question"), tr("Remove selected tag?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No) {
+		return;
 	}
 
+	// Remove item
+	QString tag = item->text();
+	delete item;
+	item = 0;
+	m_remove_action->setEnabled(m_filter->count() > 1);
+
+	// Remove tag
 	m_tags.remove(tag);
 	storeTags();
 	updateFilter();
+}
 
-	return true;
+//-----------------------------------------------------------------------------
+
+void TagManager::currentTagChanged(int current)
+{
+	m_remove_action->setEnabled(current > 0);
+	updateFilter();
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::tagChanged(QListWidgetItem* item)
+{
+	if (item == 0) {
+		return;
+	}
+
+	// Rename tag
+	m_filter->blockSignals(true);
+	QString tag = item->text();
+	QString old_tag = item->data(Qt::UserRole).toString();
+	if (tag != old_tag) {
+		if (tag.isEmpty()) {
+			item->setText(old_tag);
+		} else if (m_tags.contains(tag)) {
+			item->setText(old_tag);
+			QMessageBox::warning(window(), tr("Sorry"), tr("A tag with that name already exists."));
+		} else {
+			item->setData(Qt::UserRole, tag);
+
+			m_tags.insert(tag, m_tags.take(old_tag));
+			storeTags();
+
+			QListWidgetItem* all_images = m_filter->takeItem(0);
+			m_filter->sortItems();
+			m_filter->insertItem(0, all_images);
+		}
+	}
+	m_filter->blockSignals(false);
+
+	// Update list of images
+	updateFilter();
 }
 
 //-----------------------------------------------------------------------------
 
 void TagManager::updateFilter()
 {
-	emit filterChanged(images(m_filter->currentText()));
+	QStringList filter;
+	if (m_filter->currentRow() > 0) {
+		filter = images(m_filter->currentItem()->text());
+	} else {
+		filter = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
+	}
+	emit filterChanged(filter);
 }
 
 //-----------------------------------------------------------------------------
