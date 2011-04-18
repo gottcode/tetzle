@@ -38,9 +38,14 @@ ChooseGameDialog::ChooseGameDialog(const QStringList& files, int current_id, QWi
 	setWindowTitle(tr("Choose Game"));
 	setAcceptDrops(true);
 
-	// Create widgets
 	m_tabs = new QTabWidget(this);
 
+	// Layout dialog
+	QVBoxLayout* layout = new QVBoxLayout(this);
+	layout->addWidget(m_tabs);
+	resize(QSettings().value("ChooseGame/Size", QSize(800, 600)).toSize());
+
+	// Create tabs
 	OpenGameTab* open_game_tab = new OpenGameTab(current_id, this);
 	connect(open_game_tab, SIGNAL(openGame(int)), this, SLOT(accept()));
 	connect(open_game_tab, SIGNAL(openGame(int)), this, SIGNAL(openGame(int)));
@@ -54,12 +59,6 @@ ChooseGameDialog::ChooseGameDialog(const QStringList& files, int current_id, QWi
 	if (!files.isEmpty() || currentGames().count() <= (current_id != 0)) {
 		m_tabs->setCurrentIndex(1);
 	}
-
-	// Layout dialog
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->addWidget(m_tabs);
-
-	resize(QSettings().value("ChooseGame/Size", sizeHint()).toSize());
 }
 
 //-----------------------------------------------------------------------------

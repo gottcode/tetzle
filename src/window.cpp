@@ -126,7 +126,7 @@ Window::Window(const QStringList& files)
 	if (settings.contains("Geometry")) {
 		restoreGeometry(settings.value("Geometry").toByteArray());
 	} else {
-		resize(settings.value("Size", QSize(640, 480)).toSize());
+		resize(settings.value("Size", QSize(1024, 768)).toSize());
 		settings.remove("Size");
 	}
 
