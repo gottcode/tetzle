@@ -52,17 +52,22 @@
 
 //-----------------------------------------------------------------------------
 
-namespace {
-
-QString hash(const QString& path)
+namespace
 {
-	QFile file(path);
-	if (!file.open(QIODevice::ReadOnly)) {
-		return QString();
+	QString hash(const QString& path)
+	{
+		QFile file(path);
+		if (!file.open(QIODevice::ReadOnly)) {
+			return QString();
+		}
+		return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
 	}
-	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex();
-}
 
+	enum ItemRoles
+	{
+		ImageRole = Qt::UserRole,
+		NameRole
+	};
 }
 
 //-----------------------------------------------------------------------------
@@ -78,8 +83,8 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images = new ToolBarList(this);
 	m_images->setViewMode(QListView::IconMode);
 	m_images->setIconSize(QSize(74, 74));
+	m_images->setGridSize(QSize(150, 80 + fontMetrics().height()));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
-	m_images->setUniformItemSizes(true);
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 
 	// Add image actions
@@ -136,11 +141,17 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	layout->addWidget(buttons, 4, 0, 1, 2);
 
 	// Load images
-	QListWidgetItem* item;
+	QSettings details(Path::image("details"), QSettings::IniFormat);
+	QListWidgetItem* item = 0;
 	foreach (QString image, QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
-		item = ThumbnailLoader::createItem(Path::image(image), QString(), m_images);
-		item->setData(Qt::UserRole, image);
+		item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images);
+		item->setData(ImageRole, image);
+		item->setData(NameRole, item->text());
+		item->setFlags(item->flags() | Qt::ItemIsEditable);
+		item->setToolTip(item->text());
 	}
+	m_images->sortItems();
+	connect(m_images, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(imageChanged(QListWidgetItem*)));
 
 	// Load values
 	QSettings settings;
@@ -149,7 +160,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	if (!image.isEmpty()) {
 		for (int i = m_images->count() - 1; i >= 0; --i) {
 			item = m_images->item(i);
-			if (item->data(Qt::UserRole) == image) {
+			if (item->data(ImageRole) == image) {
 				break;
 			}
 		}
@@ -216,7 +227,7 @@ void NewGameTab::accept()
 		return;
 	}
 
-	QString image = item->data(Qt::UserRole).toString();
+	QString image = item->data(ImageRole).toString();
 
 	QSettings settings;
 	settings.setValue("NewGame/Pieces", m_slider->value());
@@ -240,7 +251,7 @@ void NewGameTab::removeImage()
 	if (!item) {
 		return;
 	}
-	QString current_image = item->data(Qt::UserRole).toString();
+	QString current_image = item->data(ImageRole).toString();
 
 	QList<QString> games;
 
@@ -297,8 +308,25 @@ void NewGameTab::changeTags()
 {
 	QListWidgetItem* item = m_images->currentItem();
 	if (item && !item->isHidden()) {
-		TagImageDialog dialog(item->data(Qt::UserRole).toString(), m_image_tags, this);
+		TagImageDialog dialog(item->data(ImageRole).toString(), m_image_tags, this);
 		dialog.exec();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::imageChanged(QListWidgetItem* item)
+{
+	if (item && item->text() != item->data(NameRole).toString()) {
+		// Update name
+		QString filename = item->data(ImageRole).toString();
+		QSettings details(Path::image("details"), QSettings::IniFormat);
+		details.setValue(filename + "/Name", item->text());
+		emit imageRenamed(filename, item->text());
+
+		// Show item
+		m_images->sortItems();
+		m_images->scrollToItem(item);
 	}
 }
 
@@ -314,7 +342,7 @@ void NewGameTab::imageSelected(QListWidgetItem* item)
 		return;
 	}
 
-	QString image = item->data(Qt::UserRole).toString();
+	QString image = item->data(ImageRole).toString();
 	m_remove_action->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader(Path::image(image)).size();
@@ -355,7 +383,7 @@ void NewGameTab::filterImages(const QStringList& filter)
 	int count = m_images->count();
 	for (int i = 0; i < count; ++i) {
 		item = m_images->item(i);
-		item->setHidden(!filter.contains(item->data(Qt::UserRole).toString()));
+		item->setHidden(!filter.contains(item->data(ImageRole).toString()));
 	}
 
 	// Select next item if current item was hidden
@@ -381,30 +409,61 @@ void NewGameTab::filterImages(const QStringList& filter)
 
 void NewGameTab::addImage(const QString& image)
 {
-	QString filename = hash(image) + "." + QFileInfo(image).suffix().toLower();
+	// Find image ID
+	QString filename;
+	int image_id = 0;
+	QString image_hash = hash(image);
+
+	QSettings details(Path::image("details"), QSettings::IniFormat);
+	QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files);
+	foreach (QString file, images) {
+		image_id = qMax(image_id, file.section(".", 0, 0).toInt());
+
+		QString key = file + "/SHA1";
+		if (!details.contains(key)) {
+			details.setValue(key, hash(Path::image(file)));
+		}
+		if (details.value(key) == image_hash) {
+			filename = file;
+			break;
+		}
+	}
+	image_id++;
 
 	QListWidgetItem* item = 0;
-	if (!QDir(Path::images()).exists(filename)) {
+	if (filename.isEmpty()) {
+		// Find filename
+		QFileInfo info(image);
+		filename = QString("%1.%2").arg(image_id).arg(info.suffix().toLower());
+		details.setValue(filename + "/SHA1", image_hash);
+		details.setValue(filename + "/Name", info.completeBaseName());
+
 		// Copy and rotate image
 		QFile::copy(image, Path::image(filename));
 		QProcess rotate;
 		rotate.start(QString("jhead -autorot \"%1\"").arg(Path::image(filename)));
 		rotate.waitForFinished(-1);
-
-		// Add to list of images
-		item = ThumbnailLoader::createItem(Path::image(filename), QString(), m_images);
-		item->setData(Qt::UserRole, filename);
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {
-			if (m_images->item(i)->data(Qt::UserRole).toString() == filename) {
+			if (m_images->item(i)->data(ImageRole).toString() == filename) {
 				item = m_images->item(i);
 				break;
 			}
 		}
 	}
 
-	// Select in list of images
+	// Select item
+	if (!item) {
+		m_images->blockSignals(true);
+		item = ThumbnailLoader::createItem(Path::image(filename), details.value(filename + "/Name", tr("Untitled")).toString(), m_images);
+		item->setData(ImageRole, filename);
+		item->setData(NameRole, item->text());
+		item->setFlags(item->flags() | Qt::ItemIsEditable);
+		item->setToolTip(item->text());
+		m_images->blockSignals(false);
+		m_images->editItem(item);
+	}
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
 }

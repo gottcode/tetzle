@@ -31,6 +31,9 @@ class OpenGameTab : public QWidget
 public:
 	OpenGameTab(int current_id, QDialog* parent = 0);
 
+public slots:
+	void imageRenamed(const QString& image, const QString& name);
+
 signals:
 	void openGame(int id);
 

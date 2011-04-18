@@ -41,6 +41,7 @@ public:
 	void addImages(const QStringList& images);
 
 signals:
+	void imageRenamed(const QString& image, const QString& name);
 	void newGame(const QString& image, int difficulty);
 
 protected:
@@ -51,6 +52,7 @@ private slots:
 	void addImage();
 	void removeImage();
 	void changeTags();
+	void imageChanged(QListWidgetItem* item);
 	void imageSelected(QListWidgetItem* item);
 	void pieceCountChanged(int value);
 	void filterImages(const QStringList& filter);

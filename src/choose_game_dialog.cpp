@@ -56,6 +56,8 @@ ChooseGameDialog::ChooseGameDialog(const QStringList& files, int current_id, QWi
 	connect(m_new_game_tab, SIGNAL(newGame(const QString&, int)), this, SIGNAL(newGame(const QString&, int)));
 	m_tabs->addTab(m_new_game_tab, tr("New Game"));
 
+	connect(m_new_game_tab, SIGNAL(imageRenamed(const QString&, const QString&)), open_game_tab, SLOT(imageRenamed(const QString&, const QString&)));
+
 	if (!files.isEmpty() || currentGames().count() <= (current_id != 0)) {
 		m_tabs->setCurrentIndex(1);
 	}

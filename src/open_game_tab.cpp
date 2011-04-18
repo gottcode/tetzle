@@ -34,6 +34,18 @@
 
 //-----------------------------------------------------------------------------
 
+namespace
+{
+	enum ItemRoles
+	{
+		GameRole = Qt::UserRole,
+		ImageRole,
+		DetailsRole
+	};
+}
+
+//-----------------------------------------------------------------------------
+
 OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	: QWidget(parent)
 {
@@ -44,6 +56,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setResizeMode(QListView::Adjust);
 	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
+	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
 	QStringList files = ChooseGameDialog::currentGames();
@@ -68,10 +81,14 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		if (!QFile::exists(Path::image(image))) {
 			continue;
 		}
+		QString image_name = details.value(image + "/Name", tr("Untitled")).toString();
 		QString pieces = attributes.value("pieces").toString();
 		QString complete = attributes.value("complete").toString();
-		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete), m_games);
-		item->setData(Qt::UserRole, id);
+		QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
+		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name + "\n" + details, m_games);
+		item->setData(GameRole, id);
+		item->setData(ImageRole, image);
+		item->setData(DetailsRole, details);
 	}
 	m_games->setCurrentRow(0);
 
@@ -100,11 +117,24 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 
 //-----------------------------------------------------------------------------
 
+void OpenGameTab::imageRenamed(const QString& image, const QString& name)
+{
+	int count = m_games->count();
+	for (int i = 0; i < count; ++i) {
+		QListWidgetItem* item = m_games->item(i);
+		if (item->data(ImageRole).toString() == image) {
+			item->setText(name + "\n" + item->data(DetailsRole).toString());
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 void OpenGameTab::accept()
 {
 	QListWidgetItem* item = m_games->currentItem();
 	if (item) {
-		emit openGame(item->data(Qt::UserRole).toInt());
+		emit openGame(item->data(GameRole).toInt());
 	}
 }
 
@@ -118,7 +148,7 @@ void OpenGameTab::deleteGame()
 	}
 
 	if (QMessageBox::question(this, tr("Delete Game"), tr("Delete selected game?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
-		QFile::remove(Path::save(item->data(Qt::UserRole).toInt()));
+		QFile::remove(Path::save(item->data(GameRole).toInt()));
 		delete item;
 		m_accept_button->setEnabled(m_games->count() > 0);
 	};
