@@ -36,9 +36,12 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
+#include <QIcon>
 #include <QImageReader>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMessageBox>
+#include <QPainter>
 #include <QProcess>
 #include <QProgressDialog>
 #include <QPushButton>
@@ -46,6 +49,7 @@
 #include <QSettings>
 #include <QSlider>
 #include <QSplitter>
+#include <QStyledItemDelegate>
 #include <QXmlStreamReader>
 
 #include <cmath>
@@ -66,8 +70,95 @@ namespace
 	enum ItemRoles
 	{
 		ImageRole = Qt::UserRole,
-		NameRole
+		NameRole,
+		TagsRole
 	};
+
+	void updateToolTip(QListWidgetItem* item)
+	{
+		QString tip = item->text();
+		QString tags = item->data(TagsRole).toString();
+		if (!tags.isEmpty()) {
+			tip += "<br><small><i>" + item->data(TagsRole).toString() + "</i></small>";
+		}
+		item->setToolTip(tip);
+	}
+
+	class ImageDelegate : public QStyledItemDelegate
+	{
+	public:
+		ImageDelegate(QObject* parent = 0)
+			: QStyledItemDelegate(parent)
+		{
+		}
+
+		void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+		QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+		void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+	};
+
+	void ImageDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt, const QModelIndex& index) const
+	{
+		QStyleOptionViewItemV4 option = opt;
+		initStyleOption(&option, index);
+
+		painter->save();
+
+		QIcon::Mode mode = QIcon::Normal;
+		QColor color = option.palette.color(QPalette::Normal, QPalette::Text);
+		if (option.state & QStyle::State_Selected) {
+			mode = QIcon::Selected;
+			color = option.palette.color(QPalette::Normal, QPalette::HighlightedText);
+		}
+		int x = option.rect.left();
+		int y = option.rect.top() + 2;
+
+		// Draw background
+		QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
+
+		// Draw thumbnail
+		const QPixmap thumbnail = index.data(Qt::DecorationRole).value<QIcon>().pixmap(74, 74, mode);
+		painter->drawPixmap(x + 75 - thumbnail.width() / 2, y, thumbnail);
+		y += 74;
+
+		// Draw name
+		painter->setFont(option.font);
+		QString text = painter->fontMetrics().elidedText(index.data(Qt::DisplayRole).toString(), option.textElideMode, 146, option.displayAlignment);
+		painter->setPen(color);
+		painter->drawText(x + 2, y, 146, option.fontMetrics.lineSpacing(), option.displayAlignment, text);
+		y += option.fontMetrics.lineSpacing();
+
+		// Draw tags
+		QFontInfo info(option.font);
+		QFont font(info.family(), info.pointSize() - 2);
+		font.setItalic(true);
+		painter->setFont(font);
+		text = painter->fontMetrics().elidedText(index.data(TagsRole).toString(), option.textElideMode, 146, option.displayAlignment);
+		color.setAlphaF(0.6);
+		painter->setPen(color);
+		painter->drawText(x + 2, y, 146, QFontMetrics(font).lineSpacing(), option.displayAlignment, text);
+
+		painter->restore();
+	}
+
+	QSize ImageDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+	{
+		Q_UNUSED(index);
+
+		QFontInfo info(option.font);
+		QFont font(info.family(), info.pointSize() - 2);
+		font.setItalic(true);
+		return QSize(150, 78 + option.fontMetrics.lineSpacing() + QFontMetrics(font).lineSpacing());
+	}
+
+	void ImageDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+	{
+		QStyledItemDelegate::updateEditorGeometry(editor, option, index);
+		if (qobject_cast<QLineEdit*>(editor)) {
+			editor->move(editor->pos().x(), option.rect.top() + 76);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -83,8 +174,8 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images = new ToolBarList(this);
 	m_images->setViewMode(QListView::IconMode);
 	m_images->setIconSize(QSize(74, 74));
-	m_images->setGridSize(QSize(150, 80 + fontMetrics().height()));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
+	m_images->setItemDelegate(new ImageDelegate(this));
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 
 	// Add image actions
@@ -144,11 +235,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QListWidgetItem* item = 0;
 	foreach (QString image, QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
-		item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images);
-		item->setData(ImageRole, image);
-		item->setData(NameRole, item->text());
-		item->setFlags(item->flags() | Qt::ItemIsEditable);
-		item->setToolTip(item->text());
+		item = createItem(image, details);
 	}
 	m_images->sortItems();
 	connect(m_images, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(imageChanged(QListWidgetItem*)));
@@ -309,7 +396,10 @@ void NewGameTab::changeTags()
 	QListWidgetItem* item = m_images->currentItem();
 	if (item && !item->isHidden()) {
 		TagImageDialog dialog(item->data(ImageRole).toString(), m_image_tags, this);
-		dialog.exec();
+		if (dialog.exec() == QDialog::Accepted) {
+			item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
+			updateToolTip(item);
+		}
 	}
 }
 
@@ -318,6 +408,8 @@ void NewGameTab::changeTags()
 void NewGameTab::imageChanged(QListWidgetItem* item)
 {
 	if (item && item->text() != item->data(NameRole).toString()) {
+		updateToolTip(item);
+
 		// Update name
 		QString filename = item->data(ImageRole).toString();
 		QSettings details(Path::image("details"), QSettings::IniFormat);
@@ -456,16 +548,25 @@ void NewGameTab::addImage(const QString& image)
 	// Select item
 	if (!item) {
 		m_images->blockSignals(true);
-		item = ThumbnailLoader::createItem(Path::image(filename), details.value(filename + "/Name", tr("Untitled")).toString(), m_images);
-		item->setData(ImageRole, filename);
-		item->setData(NameRole, item->text());
-		item->setFlags(item->flags() | Qt::ItemIsEditable);
-		item->setToolTip(item->text());
+		item = createItem(filename, details);
 		m_images->blockSignals(false);
 		m_images->editItem(item);
 	}
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
+}
+
+//-----------------------------------------------------------------------------
+
+QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& details)
+{
+	QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images);
+	item->setData(ImageRole, image);
+	item->setData(NameRole, item->text());
+	item->setData(TagsRole, m_image_tags->tags(image));
+	item->setFlags(item->flags() | Qt::ItemIsEditable);
+	updateToolTip(item);
+	return item;
 }
 
 //-----------------------------------------------------------------------------

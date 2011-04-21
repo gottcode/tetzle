@@ -37,6 +37,7 @@ public:
 
 	QStringList images(const QString& tag) const;
 	QStringList tags() const;
+	QString tags(const QString& image) const;
 
 	void clearFilter();
 	void setImageTags(const QString& image, const QStringList& tags);

@@ -28,6 +28,7 @@ class QAction;
 class QLabel;
 class QListWidgetItem;
 class QPushButton;
+class QSettings;
 class QSlider;
 class QSplitter;
 
@@ -59,6 +60,7 @@ private slots:
 
 private:
 	void addImage(const QString& image);
+	QListWidgetItem* createItem(const QString& image, const QSettings& details);
 
 private:
 	QSplitter* m_image_contents;

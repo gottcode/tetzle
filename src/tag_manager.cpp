@@ -100,6 +100,22 @@ QStringList TagManager::tags() const
 
 //-----------------------------------------------------------------------------
 
+QString TagManager::tags(const QString& image) const
+{
+	QStringList tags;
+	QHashIterator<QString, QStringList> i(m_tags);
+	while (i.hasNext()) {
+		i.next();
+		if (i.value().contains(image)) {
+			tags.append(i.key());
+		}
+	}
+	tags.sort();
+	return tags.join(", ");
+}
+
+//-----------------------------------------------------------------------------
+
 void TagManager::clearFilter()
 {
 	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
