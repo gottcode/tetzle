@@ -21,6 +21,7 @@
 
 #include "choose_game_dialog.h"
 #include "path.h"
+#include "thumbnail_delegate.h"
 #include "thumbnail_loader.h"
 
 #include <QDialogButtonBox>
@@ -38,9 +39,9 @@ namespace
 {
 	enum ItemRoles
 	{
-		GameRole = Qt::UserRole,
-		ImageRole,
-		DetailsRole
+		DetailsRole = Qt::UserRole,
+		GameRole,
+		ImageRole
 	};
 }
 
@@ -55,6 +56,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setMovement(QListView::Static);
 	m_games->setResizeMode(QListView::Adjust);
 	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	m_games->setItemDelegate(new ThumbnailDelegate(m_games));
 
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QXmlStreamReader xml;
@@ -85,7 +87,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		QString pieces = attributes.value("pieces").toString();
 		QString complete = attributes.value("complete").toString();
 		QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
-		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name + "\n" + details, m_games);
+		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name, m_games);
 		item->setData(GameRole, id);
 		item->setData(ImageRole, image);
 		item->setData(DetailsRole, details);
@@ -123,7 +125,7 @@ void OpenGameTab::imageRenamed(const QString& image, const QString& name)
 	for (int i = 0; i < count; ++i) {
 		QListWidgetItem* item = m_games->item(i);
 		if (item->data(ImageRole).toString() == image) {
-			item->setText(name + "\n" + item->data(DetailsRole).toString());
+			item->setText(name);
 		}
 	}
 }

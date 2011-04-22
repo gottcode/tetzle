@@ -1,3 +1,6 @@
+2011-04-22 Graeme Gott <graeme@gottcode.org>
+	* Reuse list delegate for current games and new games.
+
 2011-04-21 Graeme Gott <graeme@gottcode.org>
 	* Show tags under image name.
 

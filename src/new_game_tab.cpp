@@ -23,6 +23,7 @@
 #include "path.h"
 #include "tag_image_dialog.h"
 #include "tag_manager.h"
+#include "thumbnail_delegate.h"
 #include "thumbnail_loader.h"
 #include "toolbar_list.h"
 
@@ -36,12 +37,9 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
-#include <QIcon>
 #include <QImageReader>
 #include <QLabel>
-#include <QLineEdit>
 #include <QMessageBox>
-#include <QPainter>
 #include <QProcess>
 #include <QProgressDialog>
 #include <QPushButton>
@@ -49,7 +47,6 @@
 #include <QSettings>
 #include <QSlider>
 #include <QSplitter>
-#include <QStyledItemDelegate>
 #include <QXmlStreamReader>
 
 #include <cmath>
@@ -69,9 +66,9 @@ namespace
 
 	enum ItemRoles
 	{
-		ImageRole = Qt::UserRole,
-		NameRole,
-		TagsRole
+		TagsRole = Qt::UserRole,
+		ImageRole,
+		NameRole
 	};
 
 	void updateToolTip(QListWidgetItem* item)
@@ -82,82 +79,6 @@ namespace
 			tip += "<br><small><i>" + item->data(TagsRole).toString() + "</i></small>";
 		}
 		item->setToolTip(tip);
-	}
-
-	class ImageDelegate : public QStyledItemDelegate
-	{
-	public:
-		ImageDelegate(QObject* parent = 0)
-			: QStyledItemDelegate(parent)
-		{
-		}
-
-		void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-		QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
-		void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-	};
-
-	void ImageDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt, const QModelIndex& index) const
-	{
-		QStyleOptionViewItemV4 option = opt;
-		initStyleOption(&option, index);
-
-		painter->save();
-
-		QIcon::Mode mode = QIcon::Normal;
-		QColor color = option.palette.color(QPalette::Normal, QPalette::Text);
-		if (option.state & QStyle::State_Selected) {
-			mode = QIcon::Selected;
-			color = option.palette.color(QPalette::Normal, QPalette::HighlightedText);
-		}
-		int x = option.rect.left();
-		int y = option.rect.top() + 2;
-
-		// Draw background
-		QStyle* style = option.widget ? option.widget->style() : QApplication::style();
-		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
-
-		// Draw thumbnail
-		const QPixmap thumbnail = index.data(Qt::DecorationRole).value<QIcon>().pixmap(74, 74, mode);
-		painter->drawPixmap(x + 75 - thumbnail.width() / 2, y, thumbnail);
-		y += 74;
-
-		// Draw name
-		painter->setFont(option.font);
-		QString text = painter->fontMetrics().elidedText(index.data(Qt::DisplayRole).toString(), option.textElideMode, 146, option.displayAlignment);
-		painter->setPen(color);
-		painter->drawText(x + 2, y, 146, option.fontMetrics.lineSpacing(), option.displayAlignment, text);
-		y += option.fontMetrics.lineSpacing();
-
-		// Draw tags
-		QFontInfo info(option.font);
-		QFont font(info.family(), info.pointSize() - 2);
-		font.setItalic(true);
-		painter->setFont(font);
-		text = painter->fontMetrics().elidedText(index.data(TagsRole).toString(), option.textElideMode, 146, option.displayAlignment);
-		color.setAlphaF(0.6);
-		painter->setPen(color);
-		painter->drawText(x + 2, y, 146, QFontMetrics(font).lineSpacing(), option.displayAlignment, text);
-
-		painter->restore();
-	}
-
-	QSize ImageDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
-	{
-		Q_UNUSED(index);
-
-		QFontInfo info(option.font);
-		QFont font(info.family(), info.pointSize() - 2);
-		font.setItalic(true);
-		return QSize(150, 78 + option.fontMetrics.lineSpacing() + QFontMetrics(font).lineSpacing());
-	}
-
-	void ImageDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-	{
-		QStyledItemDelegate::updateEditorGeometry(editor, option, index);
-		if (qobject_cast<QLineEdit*>(editor)) {
-			editor->move(editor->pos().x(), option.rect.top() + 76);
-		}
 	}
 }
 
@@ -175,7 +96,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setViewMode(QListView::IconMode);
 	m_images->setIconSize(QSize(74, 74));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
-	m_images->setItemDelegate(new ImageDelegate(this));
+	m_images->setItemDelegate(new ThumbnailDelegate(m_images));
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
 
 	// Add image actions
