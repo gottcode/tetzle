@@ -1,4 +1,5 @@
 2011-04-25 Graeme Gott <graeme@gottcode.org>
+	* Bold text of 'All Images' filter.
 	* Stably sort images with localeAwareCompare.
 	* Move editing image name into tag edit dialog.
 

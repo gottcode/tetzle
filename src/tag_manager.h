@@ -45,6 +45,9 @@ public:
 signals:
 	void filterChanged(const QStringList& images);
 
+protected:
+	virtual void changeEvent(QEvent* event);
+
 private slots:
 	void addTag();
 	void removeTag();

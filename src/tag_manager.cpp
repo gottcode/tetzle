@@ -24,6 +24,7 @@
 
 #include <QAction>
 #include <QDir>
+#include <QEvent>
 #include <QMessageBox>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -78,6 +79,9 @@ TagManager::TagManager(QWidget* parent)
 
 	QListWidgetItem* item = new QListWidgetItem(tr("All Images"));
 	item->setData(Qt::UserRole, item->text());
+	QFont font = item->font();
+	font.setBold(true);
+	item->setFont(font);
 	m_filter->insertItem(0, item);
 	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
 }
@@ -146,6 +150,19 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 	if (changed) {
 		storeTags();
 		updateFilter();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::changeEvent(QEvent* event)
+{
+	QWidget::changeEvent(event);
+	if (event->type() == QEvent::FontChange) {
+		QListWidgetItem* all_images = m_filter->item(0);
+		QFont font = m_filter->font();
+		font.setBold(true);
+		all_images->setFont(font);
 	}
 }
 
