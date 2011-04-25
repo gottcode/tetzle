@@ -45,6 +45,39 @@ Q_DECLARE_METATYPE(Thumbnail)
 
 //-----------------------------------------------------------------------------
 
+namespace
+{
+	class ThumbnailItem : public QListWidgetItem
+	{
+	public:
+		ThumbnailItem(const QString& text = QString());
+
+		virtual bool operator<(const QListWidgetItem& other) const;
+
+	private:
+		enum ItemRoles
+		{
+			ImageRole = Qt::UserRole + 1
+		};
+	};
+
+	ThumbnailItem::ThumbnailItem(const QString& text)
+		: QListWidgetItem(QPixmap(":/loading.png"), text)
+	{
+	}
+
+	bool ThumbnailItem::operator<(const QListWidgetItem& other) const
+	{
+		int compare = text().localeAwareCompare(other.text());
+		if (compare == 0) {
+			compare = data(ImageRole).toString().localeAwareCompare(other.data(ImageRole).toString());
+		}
+		return compare < 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 ThumbnailLoader::ThumbnailLoader(QObject* parent)
 	: QThread(parent)
 {
@@ -69,7 +102,7 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 		loader = new ThumbnailLoader(QCoreApplication::instance());
 	}
 
-	QListWidgetItem* item = new QListWidgetItem(QPixmap(":/loading.png"), text);
+	QListWidgetItem* item = new ThumbnailItem(text);
 	list->addItem(item);
 
 	QFileInfo image_info(image);

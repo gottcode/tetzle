@@ -40,8 +40,8 @@ namespace
 	enum ItemRoles
 	{
 		DetailsRole = Qt::UserRole,
-		GameRole,
-		ImageRole
+		ImageRole,
+		GameRole
 	};
 }
 
