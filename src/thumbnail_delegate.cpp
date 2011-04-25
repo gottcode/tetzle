@@ -132,16 +132,6 @@ QSize ThumbnailDelegate::sizeHint(const QStyleOptionViewItem& option, const QMod
 
 //-----------------------------------------------------------------------------
 
-void ThumbnailDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-	QStyledItemDelegate::updateEditorGeometry(editor, option, index);
-	if (qobject_cast<QLineEdit*>(editor)) {
-		editor->move(editor->pos().x(), option.rect.top() + 76);
-	}
-}
-
-//-----------------------------------------------------------------------------
-
 bool ThumbnailDelegate::eventFilter(QObject* object, QEvent* event)
 {
 	if (object == m_list) {

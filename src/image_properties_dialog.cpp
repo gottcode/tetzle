@@ -17,24 +17,34 @@
  *
  ***********************************************************************/
 
-#include "tag_image_dialog.h"
+#include "image_properties_dialog.h"
 
 #include "tag_manager.h"
 
 #include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QLabel>
+#include <QLineEdit>
 #include <QListWidget>
 #include <QPushButton>
 #include <QSettings>
-#include <QVBoxLayout>
 
 //-----------------------------------------------------------------------------
 
-TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QWidget* parent)
+ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& name, TagManager* manager, const QString& image, QWidget* parent)
 	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	m_image(image),
 	m_manager(manager)
 {
-	setWindowTitle(tr("Tag Image"));
+	setWindowTitle(tr("Image Properties"));
+
+	QLabel* preview = new QLabel(this);
+	preview->setAlignment(Qt::AlignCenter);
+	preview->setPixmap(icon.pixmap(74,74));
+	preview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+	// Add name
+	m_name = new QLineEdit(name, this);
 
 	// Add tags
 	m_tags = new QListWidget(this);
@@ -57,17 +67,26 @@ TagImageDialog::TagImageDialog(const QString& image, TagManager* manager, QWidge
 	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 
 	// Layout dialog
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->addWidget(m_tags);
-	layout->addWidget(buttons);
+	QFormLayout* layout = new QFormLayout(this);
+	layout->addRow(preview);
+	layout->addRow(tr("Name:"), m_name);
+	layout->addRow(tr("Tags:"), m_tags);
+	layout->addRow(buttons);
 
 	// Resize dialog
-	resize(QSettings().value("TagImage/Size", sizeHint()).toSize());
+	resize(QSettings().value("ImageProperties/Size", sizeHint()).toSize());
 }
 
 //-----------------------------------------------------------------------------
 
-void TagImageDialog::accept()
+QString ImagePropertiesDialog::name() const
+{
+	return m_name->text();
+}
+
+//-----------------------------------------------------------------------------
+
+void ImagePropertiesDialog::accept()
 {
 	QStringList tags;
 	int count = m_tags->count();
@@ -82,9 +101,9 @@ void TagImageDialog::accept()
 
 //-----------------------------------------------------------------------------
 
-void TagImageDialog::hideEvent(QHideEvent* event)
+void ImagePropertiesDialog::hideEvent(QHideEvent* event)
 {
-	QSettings().setValue("TagImage/Size", size());
+	QSettings().setValue("ImageProperties/Size", size());
 	QDialog::hideEvent(event);
 }
 

@@ -52,8 +52,7 @@ private slots:
 	void accept();
 	void addImage();
 	void removeImage();
-	void changeTags();
-	void imageChanged(QListWidgetItem* item);
+	void editImageProperties();
 	void imageSelected(QListWidgetItem* item);
 	void pieceCountChanged(int value);
 	void filterImages(const QStringList& filter);

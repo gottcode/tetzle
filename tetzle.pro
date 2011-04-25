@@ -25,6 +25,7 @@ HEADERS = src/add_image.h \
 	src/dancing_links.h \
 	src/generator.h \
 	src/graphics_layer.h \
+	src/image_properties_dialog.h \
 	src/locale_dialog.h \
 	src/message.h \
 	src/new_game_tab.h \
@@ -33,7 +34,6 @@ HEADERS = src/add_image.h \
 	src/path.h \
 	src/piece.h \
 	src/tile.h \
-	src/tag_image_dialog.h \
 	src/tag_manager.h \
 	src/thumbnail_delegate.h \
 	src/thumbnail_loader.h \
@@ -49,6 +49,7 @@ SOURCES = src/add_image.cpp \
 	src/dancing_links.cpp \
 	src/generator.cpp \
 	src/graphics_layer.cpp \
+	src/image_properties_dialog.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/message.cpp \
@@ -58,7 +59,6 @@ SOURCES = src/add_image.cpp \
 	src/path.cpp \
 	src/piece.cpp \
 	src/tile.cpp \
-	src/tag_image_dialog.cpp \
 	src/tag_manager.cpp \
 	src/thumbnail_delegate.cpp \
 	src/thumbnail_loader.cpp \

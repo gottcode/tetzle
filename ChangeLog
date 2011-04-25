@@ -1,3 +1,6 @@
+2011-04-25 Graeme Gott <graeme@gottcode.org>
+	* Move editing image name into tag edit dialog.
+
 2011-04-22 Graeme Gott <graeme@gottcode.org>
 	* Reuse list delegate for current games and new games.
 

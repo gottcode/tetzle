@@ -17,21 +17,24 @@
  *
  ***********************************************************************/
 
-#ifndef TAG_IMAGE_DIALOG_H
-#define TAG_IMAGE_DIALOG_H
+#ifndef IMAGE_PROPERTIES_DIALOG_H
+#define IMAGE_PROPERTIES_DIALOG_H
 
 class TagManager;
 
 #include <QDialog>
+class QLineEdit;
 class QListWidget;
 class QPushButton;
 
-class TagImageDialog : public QDialog
+class ImagePropertiesDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	TagImageDialog(const QString& image, TagManager* manager, QWidget* parent = 0);
+	ImagePropertiesDialog(const QIcon& icon, const QString& name, TagManager* manager, const QString& image, QWidget* parent = 0);
+
+	QString name() const;
 
 public slots:
 	virtual void accept();
@@ -42,6 +45,7 @@ protected:
 private:
 	QString m_image;
 	TagManager* m_manager;
+	QLineEdit* m_name;
 	QListWidget* m_tags;
 };
 

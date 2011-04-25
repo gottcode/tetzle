@@ -20,8 +20,8 @@
 #include "new_game_tab.h"
 
 #include "add_image.h"
+#include "image_properties_dialog.h"
 #include "path.h"
-#include "tag_image_dialog.h"
 #include "tag_manager.h"
 #include "thumbnail_delegate.h"
 #include "thumbnail_loader.h"
@@ -98,6 +98,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setItemDelegate(new ThumbnailDelegate(m_images));
 	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
+	connect(m_images, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(editImageProperties()));
 
 	// Add image actions
 	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Image"), this);
@@ -108,9 +109,9 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->addToolBarAction(m_remove_action);
 	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeImage()));
 
-	m_tag_action = new QAction(QIcon::fromTheme("image-x-generic", QPixmap(":/tango/image-x-generic.png")), tr("Tag Image"), this);
+	m_tag_action = new QAction(QIcon::fromTheme("image-x-generic", QPixmap(":/tango/image-x-generic.png")), tr("Image Properties"), this);
 	m_images->addToolBarAction(m_tag_action);
-	connect(m_tag_action, SIGNAL(triggered()), this, SLOT(changeTags()));
+	connect(m_tag_action, SIGNAL(triggered()), this, SLOT(editImageProperties()));
 
 	// Add image splitter
 	m_image_contents = new QSplitter(this);
@@ -159,7 +160,6 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 		item = createItem(image, details);
 	}
 	m_images->sortItems();
-	connect(m_images, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(imageChanged(QListWidgetItem*)));
 
 	// Load values
 	QSettings settings;
@@ -312,34 +312,33 @@ void NewGameTab::removeImage()
 
 //-----------------------------------------------------------------------------
 
-void NewGameTab::changeTags()
+void NewGameTab::editImageProperties()
 {
 	QListWidgetItem* item = m_images->currentItem();
-	if (item && !item->isHidden()) {
-		TagImageDialog dialog(item->data(ImageRole).toString(), m_image_tags, this);
-		if (dialog.exec() == QDialog::Accepted) {
-			item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
-			updateToolTip(item);
-		}
+	if (!item || item->isHidden()) {
+		return;
 	}
-}
 
-//-----------------------------------------------------------------------------
+	QString filename = item->data(ImageRole).toString();
+	ImagePropertiesDialog dialog(item->icon(), item->text(), m_image_tags, filename, window());
+	if (dialog.exec() == QDialog::Accepted) {
+		// Update name
+		item->setText(dialog.name());
+		if (item->text() != item->data(NameRole).toString()) {
+			item->setData(NameRole, item->text());
 
-void NewGameTab::imageChanged(QListWidgetItem* item)
-{
-	if (item && item->text() != item->data(NameRole).toString()) {
+			QSettings details(Path::image("details"), QSettings::IniFormat);
+			details.setValue(filename + "/Name", item->text());
+			emit imageRenamed(filename, item->text());
+
+			m_images->sortItems();
+			m_images->scrollToItem(item);
+		}
+
+		// Update tags
+		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
 		updateToolTip(item);
 
-		// Update name
-		QString filename = item->data(ImageRole).toString();
-		QSettings details(Path::image("details"), QSettings::IniFormat);
-		details.setValue(filename + "/Name", item->text());
-		emit imageRenamed(filename, item->text());
-
-		// Show item
-		m_images->sortItems();
-		m_images->scrollToItem(item);
 	}
 }
 
@@ -471,7 +470,7 @@ void NewGameTab::addImage(const QString& image)
 		m_images->blockSignals(true);
 		item = createItem(filename, details);
 		m_images->blockSignals(false);
-		m_images->editItem(item);
+		m_images->setCurrentItem(item);
 	}
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
@@ -485,7 +484,6 @@ QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& d
 	item->setData(ImageRole, image);
 	item->setData(NameRole, item->text());
 	item->setData(TagsRole, m_image_tags->tags(image));
-	item->setFlags(item->flags() | Qt::ItemIsEditable);
 	updateToolTip(item);
 	return item;
 }
