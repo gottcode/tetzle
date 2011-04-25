@@ -298,7 +298,7 @@ void NewGameTab::removeImage()
 			QFile::remove(Path::save(game));
 		}
 		delete item;
-		m_image_tags->setImageTags(current_image, QStringList());
+		m_image_tags->removeImage(current_image);
 		m_accept_button->setEnabled(m_images->count() > 0);
 		if (!m_accept_button->isEnabled()) {
 			m_slider->setMaximum(-1);
@@ -449,6 +449,7 @@ void NewGameTab::addImage(const QString& image)
 		filename = QString("%1.%2").arg(image_id).arg(info.suffix().toLower());
 		details.setValue(filename + "/SHA1", image_hash);
 		details.setValue(filename + "/Name", info.completeBaseName());
+		m_image_tags->addImage(filename);
 
 		// Copy and rotate image
 		QFile::copy(image, Path::image(filename));

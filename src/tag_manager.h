@@ -40,6 +40,8 @@ public:
 	QString tags(const QString& image) const;
 
 	void clearFilter();
+	void addImage(const QString& image);
+	void removeImage(const QString& image);
 	void setImageTags(const QString& image, const QStringList& tags);
 
 signals:
@@ -51,7 +53,7 @@ protected:
 private slots:
 	void addTag();
 	void removeTag();
-	void currentTagChanged(int current);
+	void currentTagChanged(QListWidgetItem* item);
 	void tagChanged(QListWidgetItem* item);
 	void updateFilter();
 
@@ -60,8 +62,10 @@ private:
 
 private:
 	QHash<QString, QStringList> m_tags;
+	QStringList m_untagged;
 	ToolBarList* m_filter;
 	QListWidgetItem* m_all_images_item;
+	QListWidgetItem* m_untagged_item;
 	QAction* m_remove_action;
 };
 

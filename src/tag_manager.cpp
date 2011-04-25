@@ -39,7 +39,7 @@ TagManager::TagManager(QWidget* parent)
 	m_filter = new ToolBarList(this);
 	m_filter->setSelectionBehavior(QAbstractItemView::SelectItems);
 	m_filter->setSelectionMode(QAbstractItemView::SingleSelection);
-	connect(m_filter, SIGNAL(currentRowChanged(int)), this, SLOT(currentTagChanged(int)));
+	connect(m_filter, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(currentTagChanged(QListWidgetItem*)));
 	connect(m_filter, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(tagChanged(QListWidgetItem*)));
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -56,6 +56,11 @@ TagManager::TagManager(QWidget* parent)
 	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeTag()));
 
 	// Add tags
+	m_untagged_item = new QListWidgetItem(tr("Untagged"));
+	m_untagged_item->setData(Qt::UserRole, m_untagged_item->text());
+	m_filter->addItem(m_untagged_item);
+	m_untagged = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
+
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
 	QStringList tags = file.childKeys();
@@ -69,6 +74,7 @@ TagManager::TagManager(QWidget* parent)
 			if (!folder.exists(i.value())) {
 				i.remove();
 			}
+			m_untagged.removeAll(i.value());
 		}
 		m_tags[tag] = images;
 
@@ -129,8 +135,31 @@ void TagManager::clearFilter()
 
 //-----------------------------------------------------------------------------
 
+void TagManager::addImage(const QString& image)
+{
+	m_untagged.append(image);
+	updateFilter();
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::removeImage(const QString& image)
+{
+	setImageTags(image, QStringList());
+	m_untagged.removeAll(image);
+	updateFilter();
+}
+
+//-----------------------------------------------------------------------------
+
 void TagManager::setImageTags(const QString& image, const QStringList& tags)
 {
+	if (!tags.isEmpty()) {
+		m_untagged.removeAll(image);
+	} else {
+		m_untagged.append(image);
+	}
+
 	bool changed = false;
 	QMutableHashIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
@@ -218,9 +247,9 @@ void TagManager::removeTag()
 
 //-----------------------------------------------------------------------------
 
-void TagManager::currentTagChanged(int current)
+void TagManager::currentTagChanged(QListWidgetItem* item)
 {
-	m_remove_action->setEnabled(current > 0);
+	m_remove_action->setEnabled((item != m_all_images_item) && (item != m_untagged_item));
 	updateFilter();
 }
 
@@ -263,11 +292,20 @@ void TagManager::tagChanged(QListWidgetItem* item)
 
 void TagManager::updateFilter()
 {
+	QListWidgetItem* item = m_filter->currentItem();
 	QStringList filter;
-	if (m_filter->currentItem() != m_all_images_item) {
-		filter = images(m_filter->currentItem()->text());
-	} else {
-		filter = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
+	if (item == m_all_images_item) {
+		filter = m_untagged;
+		QHashIterator<QString, QStringList> i(m_tags);
+		while (i.hasNext()) {
+			i.next();
+			filter += i.value();
+		}
+		filter.removeDuplicates();
+	} else if (item == m_untagged_item) {
+		filter = m_untagged;
+	} else if (item) {
+		filter = images(item->text());
 	}
 	emit filterChanged(filter);
 }
