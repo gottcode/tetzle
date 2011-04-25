@@ -61,6 +61,7 @@ private:
 private:
 	QHash<QString, QStringList> m_tags;
 	ToolBarList* m_filter;
+	QListWidgetItem* m_all_images_item;
 	QAction* m_remove_action;
 };
 

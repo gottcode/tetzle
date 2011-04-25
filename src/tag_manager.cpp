@@ -32,7 +32,8 @@
 //-----------------------------------------------------------------------------
 
 TagManager::TagManager(QWidget* parent)
-	: QWidget(parent)
+	: QWidget(parent),
+	m_all_images_item(0)
 {
 	// Add filter
 	m_filter = new ToolBarList(this);
@@ -71,19 +72,20 @@ TagManager::TagManager(QWidget* parent)
 		}
 		m_tags[tag] = images;
 
-		QListWidgetItem* item = new QListWidgetItem(tag, m_filter);
+		QListWidgetItem* item = new QListWidgetItem(tag);
 		item->setData(Qt::UserRole, item->text());
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+		m_filter->addItem(item);
 	}
 	m_filter->sortItems();
 
-	QListWidgetItem* item = new QListWidgetItem(tr("All Images"));
-	item->setData(Qt::UserRole, item->text());
-	QFont font = item->font();
+	m_all_images_item = new QListWidgetItem(tr("All Images"));
+	m_all_images_item->setData(Qt::UserRole, m_all_images_item->text());
+	QFont font = m_filter->font();
 	font.setBold(true);
-	item->setFont(font);
-	m_filter->insertItem(0, item);
-	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
+	m_all_images_item->setFont(font);
+	m_filter->insertItem(0, m_all_images_item);
+	m_filter->setCurrentItem(m_all_images_item, QItemSelectionModel::ClearAndSelect);
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +124,7 @@ QString TagManager::tags(const QString& image) const
 
 void TagManager::clearFilter()
 {
-	m_filter->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
+	m_filter->setCurrentItem(m_all_images_item, QItemSelectionModel::ClearAndSelect);
 }
 
 //-----------------------------------------------------------------------------
@@ -159,10 +161,9 @@ void TagManager::changeEvent(QEvent* event)
 {
 	QWidget::changeEvent(event);
 	if (event->type() == QEvent::FontChange) {
-		QListWidgetItem* all_images = m_filter->item(0);
 		QFont font = m_filter->font();
 		font.setBold(true);
-		all_images->setFont(font);
+		m_all_images_item->setFont(font);
 	}
 }
 
@@ -180,9 +181,10 @@ void TagManager::addTag()
 	storeTags();
 
 	// Add tag item
-	QListWidgetItem* item = new QListWidgetItem(tag, m_filter);
+	QListWidgetItem* item = new QListWidgetItem(tag);
 	item->setData(Qt::UserRole, item->text());
 	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+	m_filter->addItem(item);
 	m_filter->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
 	m_filter->editItem(item);
 }
@@ -246,9 +248,9 @@ void TagManager::tagChanged(QListWidgetItem* item)
 			m_tags.insert(tag, m_tags.take(old_tag));
 			storeTags();
 
-			QListWidgetItem* all_images = m_filter->takeItem(0);
+			m_all_images_item = m_filter->takeItem(0);
 			m_filter->sortItems();
-			m_filter->insertItem(0, all_images);
+			m_filter->insertItem(0, m_all_images_item);
 		}
 	}
 	m_filter->blockSignals(false);
@@ -262,7 +264,7 @@ void TagManager::tagChanged(QListWidgetItem* item)
 void TagManager::updateFilter()
 {
 	QStringList filter;
-	if (m_filter->currentRow() > 0) {
+	if (m_filter->currentItem() != m_all_images_item) {
 		filter = images(m_filter->currentItem()->text());
 	} else {
 		filter = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
