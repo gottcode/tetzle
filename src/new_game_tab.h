@@ -56,6 +56,7 @@ private slots:
 	void imageSelected(QListWidgetItem* item);
 	void pieceCountChanged(int value);
 	void filterImages(const QStringList& filter);
+	void updateTagsStrings();
 
 private:
 	void addImage(const QString& image);

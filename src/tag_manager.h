@@ -46,6 +46,7 @@ public:
 
 signals:
 	void filterChanged(const QStringList& images);
+	void tagsChanged();
 
 protected:
 	virtual void changeEvent(QEvent* event);

@@ -90,6 +90,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Add image filter
 	m_image_tags = new TagManager(this);
 	connect(m_image_tags, SIGNAL(filterChanged(const QStringList&)), this, SLOT(filterImages(const QStringList&)));
+	connect(m_image_tags, SIGNAL(tagsChanged()), this, SLOT(updateTagsStrings()));
 
 	// Add image selector
 	m_images = new ToolBarList(this);
@@ -411,6 +412,19 @@ void NewGameTab::filterImages(const QStringList& filter)
 	// Disable tag button if no images are visible
 	item = m_images->currentItem();
 	m_tag_action->setEnabled(item && !item->isHidden());
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::updateTagsStrings()
+{
+	QListWidgetItem* item;
+	int count = m_images->count();
+	for (int i = 0; i < count; ++i) {
+		item = m_images->item(i);
+		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
+		updateToolTip(item);
+	}
 }
 
 //-----------------------------------------------------------------------------

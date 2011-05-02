@@ -280,6 +280,8 @@ void TagManager::tagChanged(QListWidgetItem* item)
 			m_all_images_item = m_filter->takeItem(0);
 			m_filter->sortItems();
 			m_filter->insertItem(0, m_all_images_item);
+
+			emit tagsChanged();
 		}
 	}
 	m_filter->blockSignals(false);
