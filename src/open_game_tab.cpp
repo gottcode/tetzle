@@ -95,19 +95,15 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setCurrentRow(0);
 
 	// Create buttons
-	QDialogButtonBox* buttons = new QDialogButtonBox(this);
+	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Open | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(buttons, SIGNAL(rejected()), parent, SLOT(reject()));
 
-	m_accept_button = buttons->addButton(QDialogButtonBox::Open);
-	m_accept_button->setDefault(true);
+	m_accept_button = buttons->button(QDialogButtonBox::Open);
 	m_accept_button->setEnabled(m_games->count() > 0);
 
-	QPushButton* cancel_button = buttons->addButton(QDialogButtonBox::Cancel);
-	cancel_button->setAutoDefault(false);
-
 	QPushButton* delete_button = buttons->addButton(tr("Delete"), QDialogButtonBox::ActionRole);
-	delete_button->setAutoDefault(false);
+	delete_button->setEnabled(m_accept_button->isEnabled());
 	connect(delete_button, SIGNAL(clicked()), this, SLOT(deleteGame()));
 
 	// Arrange widgets

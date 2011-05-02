@@ -131,16 +131,12 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_count->setMinimumWidth(m_count->fontMetrics().width(tr("%L1 pieces").arg(9999)));
 
 	// Add buttons
-	QDialogButtonBox* buttons = new QDialogButtonBox(this);
+	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(buttons, SIGNAL(rejected()), parent, SLOT(reject()));
 
-	m_accept_button = buttons->addButton(QDialogButtonBox::Ok);
-	m_accept_button->setDefault(true);
+	m_accept_button = buttons->button(QDialogButtonBox::Ok);
 	m_accept_button->setEnabled(false);
-
-	QPushButton* cancel_button = buttons->addButton(QDialogButtonBox::Cancel);
-	cancel_button->setAutoDefault(false);
 
 	// Arrange widgets
 	QGridLayout* layout = new QGridLayout(this);
