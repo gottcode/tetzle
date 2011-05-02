@@ -23,6 +23,7 @@
 
 #include <QFile>
 #include <QGLShaderProgram>
+#include <QSettings>
 
 //-----------------------------------------------------------------------------
 
@@ -74,6 +75,26 @@ static PFNGLDELETEVERTEXARRAYSPROC deleteVertexArrays = 0;
 typedef void (APIENTRYP PFNGLGENVERTEXARRAYSPROC) (GLsizei n, GLuint *arrays);
 static PFNGLGENVERTEXARRAYSPROC genVertexArrays = 0;
 
+namespace
+{
+	enum StateFlags
+	{
+		MultiTextureFlag = 0x01,
+		VertexBufferObjectFlag = 0x02,
+		FragmentShadersFlag = 0x04,
+		VertexArrayObjectFlag = 0x08
+	};
+
+	enum Versions
+	{
+		Version11 = 0,
+		Version13 = MultiTextureFlag,
+		Version15 = MultiTextureFlag | VertexBufferObjectFlag,
+		Version21 = FragmentShadersFlag | MultiTextureFlag | VertexBufferObjectFlag,
+		Version30 = VertexArrayObjectFlag | FragmentShadersFlag | MultiTextureFlag | VertexBufferObjectFlag
+	};
+}
+
 static void* getProcAddress(const QString& name)
 {
 	void* result;
@@ -99,12 +120,14 @@ static inline void convertMatrix(const qreal* in, GLfloat* out)
 void GraphicsLayer::init()
 {
 	unsigned int state = 0;
+	int detected = 11;
 
 	// Try to load multi-texture functions
 	activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
 	clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
 	if ((activeTexture != 0) && (clientActiveTexture != 0)) {
-		state |= 0x01;
+		state |= MultiTextureFlag;
+		detected = 13;
 	}
 
 	// Try to load vertex buffer object functions
@@ -114,42 +137,68 @@ void GraphicsLayer::init()
 	deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
 	genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
 	if ((bindBuffer != 0) && (bufferData != 0) && (bufferSubData != 0) && (deleteBuffers != 0) && (genBuffers != 0)) {
-		state |= 0x02;
+		state |= VertexBufferObjectFlag;
+		if (state & Version15) {
+			detected = 15;
+		}
 	}
 
 	// Check for minimum supported programmable pipeline
 	if (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_2_1) {
-		state |= 0x04;
+		state |= FragmentShadersFlag;
 		if (activeTexture != 0) {
-			state |= 0x01;
+			state |= MultiTextureFlag;
 		}
 	}
 
 	// Try to load vertex array object functions
-	if (state >= 0x07) {
+	if (state & Version21) {
+		detected = 21;
 		bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
 		deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
 		genVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getProcAddress("glGenVertexArrays");
 		if ((bindVertexArray != 0) && (deleteVertexArrays != 0) && (genVertexArrays != 0)) {
-			genVertexArrays(1, &vao_id);
-			bindVertexArray(vao_id);
+			state |= VertexArrayObjectFlag;
+			detected = 30;
 		}
 	}
 
+	// Check for a requested state
+	unsigned int new_state = 0;
+	int requested = QSettings().value("GraphicsLayer", detected).toInt();
+	if (requested == 30) {
+		new_state = Version30;
+	} else if (requested == 21) {
+		new_state = Version21;
+	} else if (requested == 15) {
+		new_state = Version15;
+	} else if (requested == 13) {
+		new_state = Version13;
+	} else if (requested == 11) {
+		new_state = Version11;
+	} else {
+		new_state = state;
+		qWarning("Requested GraphicsLayer%d is invalid; using detected GraphicsLayer%d instead.", requested, detected);
+	}
+	if (state & new_state) {
+		state = new_state;
+	} else {
+		qWarning("Unable to use requested GraphicsLayer%d; using detected GraphicsLayer%d instead.", requested, detected);
+	}
+
 	// Create graphics layer instance
-	switch (state) {
-	case 0x07:
+	if (state & Version30) {
+		genVertexArrays(1, &vao_id);
+		bindVertexArray(vao_id);
 		graphics_layer = new GraphicsLayer21;
-		break;
-	case 0x03:
+	} else if (state & Version21) {
+		graphics_layer = new GraphicsLayer21;
+	} else if (state & Version15) {
 		graphics_layer = new GraphicsLayer15;
-		break;
-	case 0x01:
+	} else if (state & Version13) {
 		graphics_layer = new GraphicsLayer13;
-		break;
-	default:
+	} else {
 		graphics_layer = new GraphicsLayer11;
-		break;
 	}
 	graphics_layer->setTextureUnits(1);
 }

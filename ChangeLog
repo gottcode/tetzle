@@ -1,3 +1,6 @@
+2011-05-02 Graeme Gott <graeme@gottcode.org>
+	* Allow user to override detected graphics layer.
+
 2011-05-01 Graeme Gott <graeme@gottcode.org>
 	* Improve button handling in choose game dialog.
 
