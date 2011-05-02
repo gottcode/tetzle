@@ -85,8 +85,14 @@ unix: !macx {
 	icon.files = icons/hicolor/*
 	icon.path = $$PREFIX/share/icons/hicolor/
 
-	desktop.files = icons/tetzle.desktop
+	pixmap.files = icons/tetzle.xpm
+	pixmap.path = $$PREFIX/share/pixmaps/
+
+	desktop.files = data/unix/tetzle.desktop
 	desktop.path = $$PREFIX/share/applications/
 
-	INSTALLS += target icon desktop
+	qm.files = translations/*.qm
+	qm.path = $$PREFIX/share/tetzle/translations/
+
+	INSTALLS += target icon pixmap desktop qm
 }

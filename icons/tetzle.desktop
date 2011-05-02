@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Tetzle
-Exec=tetzle %F
-Icon=tetzle
-Terminal=false
-Type=Application
-Categories=Qt;Game;
