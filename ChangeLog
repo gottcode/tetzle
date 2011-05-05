@@ -1,3 +1,7 @@
+2011-05-05 Graeme Gott <graeme@gottcode.org>
+	* Add Applications link to DMG.
+	* Add background image to DMG.
+
 2011-05-02 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Changed tags didn't show up under image names.
 	* Allow user to override detected graphics layer.
