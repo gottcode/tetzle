@@ -78,13 +78,15 @@ Window::Window(const QStringList& files)
 	QMenu* menu;
 
 	menu = menuBar()->addMenu(tr("&Game"));
-	menu->addAction(tr("&Choose..."), this, SLOT(chooseGame()), tr("Ctrl+N"));
+	QAction* choose_action = menu->addAction(tr("&Choose..."), this, SLOT(chooseGame()));
+	choose_action->setShortcuts(QList<QKeySequence>() << QKeySequence::New << QKeySequence::Open);
 	menu->addSeparator();
 	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, SLOT(retrievePieces()), tr("Ctrl+R"));
 	retrieve_pieces_action->setEnabled(false);
 	connect(m_board, SIGNAL(retrievePiecesAvailable(bool)), retrieve_pieces_action, SLOT(setEnabled(bool)));
 	menu->addSeparator();
-	menu->addAction(tr("&Quit"), this, SLOT(close()), tr("Ctrl+Q"));
+	QAction* quit_action = menu->addAction(tr("&Quit"), this, SLOT(close()), QKeySequence::Quit);
+	quit_action->setMenuRole(QAction::QuitRole);
 
 	menu = menuBar()->addMenu(tr("&View"));
 	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, SLOT(zoomIn()), tr("+"));
@@ -116,10 +118,12 @@ Window::Window(const QStringList& files)
 	menu->addAction(tr("&Language..."), this, SLOT(setLocale()));
 
 	menu = menuBar()->addMenu(tr("&Help"));
-	menu->addAction(tr("&Controls"), this, SLOT(showControls()));
+	menu->addAction(tr("&Controls"), this, SLOT(showControls()), QKeySequence::HelpContents);
 	menu->addSeparator();
-	menu->addAction(tr("&About"), this, SLOT(showAbout()));
-	menu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+	QAction* about_action = menu->addAction(tr("&About"), this, SLOT(showAbout()));
+	about_action->setMenuRole(QAction::AboutRole);
+	QAction* about_qt_action = menu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+	about_qt_action->setMenuRole(QAction::AboutQtRole);
 
 	// Restore geometry
 	QSettings settings;
