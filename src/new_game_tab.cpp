@@ -463,9 +463,7 @@ void NewGameTab::addImage(const QString& image)
 
 		// Copy and rotate image
 		QFile::copy(image, Path::image(filename));
-		QProcess rotate;
-		rotate.start(QString("jhead -autorot \"%1\"").arg(Path::image(filename)));
-		rotate.waitForFinished(-1);
+		QProcess::execute(QString("jhead -autorot \"%1\"").arg(Path::image(filename)));
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {

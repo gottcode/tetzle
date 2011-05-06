@@ -18,8 +18,13 @@ echo -n 'Copying application bundle... '
 mkdir "$APP"
 cp -Rpf "$BUNDLE" "$APP/"
 EXE_PATH="$APP/$BUNDLE/Contents/MacOS/"
-cp -f 'tools/mac/jpegtran' $EXE_PATH
-cp -f 'tools/mac/jhead' $EXE_PATH
+if [[ $(file "${BUNDLE}/Contents/MacOS/${APP}" | grep '64-bit') ]]; then
+	cp -f 'tools/mac/jpegtran' $EXE_PATH
+	cp -f 'tools/mac/jhead' $EXE_PATH
+else
+	cp -f 'tools/mac/universal/jpegtran' $EXE_PATH
+	cp -f 'tools/mac/universal/jhead' $EXE_PATH
+fi
 echo 'Done'
 
 # Copy translations
