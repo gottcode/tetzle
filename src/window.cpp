@@ -146,6 +146,13 @@ Window::Window(const QStringList& files)
 
 //-----------------------------------------------------------------------------
 
+void Window::addImages(const QStringList& files)
+{
+	chooseGame(files);
+}
+
+//-----------------------------------------------------------------------------
+
 void Window::changeEvent(QEvent* event)
 {
 	if (event->type() == QEvent::WindowStateChange) {

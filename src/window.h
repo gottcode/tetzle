@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ class Window : public QMainWindow
 	Q_OBJECT
 public:
 	Window(const QStringList& files = QStringList());
+
+	void addImages(const QStringList& files);
 
 protected:
 	virtual void changeEvent(QEvent* event);

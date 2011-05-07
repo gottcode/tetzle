@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFileOpenEvent>
 #include <QLabel>
 #include <QSettings>
 
@@ -27,13 +28,33 @@
 #include "path.h"
 #include "window.h"
 
-int main(int argc, char** argv)
+//-----------------------------------------------------------------------------
+
+class Application : public QApplication
 {
-	QApplication app(argc, argv);
-	app.setApplicationName("Tetzle");
-	app.setApplicationVersion("1.2.1");
-	app.setOrganizationDomain("gottcode.org");
-	app.setOrganizationName("GottCode");
+public:
+	Application(int& argc, char** argv);
+
+	void createWindow();
+
+protected:
+	virtual bool event(QEvent* e);
+
+private:
+	QStringList m_files;
+	Window* m_window;
+};
+
+//-----------------------------------------------------------------------------
+
+Application::Application(int& argc, char** argv)
+	: QApplication(argc, argv),
+	m_window(0)
+{
+	setApplicationName("Tetzle");
+	setApplicationVersion("1.2.1");
+	setOrganizationDomain("gottcode.org");
+	setOrganizationName("GottCode");
 	{
 		QIcon fallback(":/hicolor/128x128/apps/tetzle.png");
 		fallback.addFile(":/hicolor/64x64/apps/tetzle.png");
@@ -41,8 +62,43 @@ int main(int argc, char** argv)
 		fallback.addFile(":/hicolor/32x32/apps/tetzle.png");
 		fallback.addFile(":/hicolor/22x22/apps/tetzle.png");
 		fallback.addFile(":/hicolor/16x16/apps/tetzle.png");
-		app.setWindowIcon(QIcon::fromTheme("tetzle", fallback));
+		setWindowIcon(QIcon::fromTheme("tetzle", fallback));
 	}
+
+	m_files = arguments().mid(1);
+	processEvents();
+}
+
+//-----------------------------------------------------------------------------
+
+void Application::createWindow()
+{
+	m_window = new Window(m_files);
+}
+
+//-----------------------------------------------------------------------------
+
+bool Application::event(QEvent* e)
+{
+	if (e->type() != QEvent::FileOpen) {
+		return QApplication::event(e);
+	} else {
+		QString file = static_cast<QFileOpenEvent*>(e)->file();
+		if (m_window) {
+			m_window->addImages(QStringList(file));
+		} else {
+			m_files.append(file);
+		}
+		e->accept();
+		return true;
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+int main(int argc, char** argv)
+{
+	Application app(argc, argv);
 
 	QDir dir(app.applicationDirPath());
 	if (dir.exists("jhead") || dir.exists("jhead.exe")) {
@@ -57,8 +113,6 @@ int main(int argc, char** argv)
 			qputenv("PATH", path.toLocal8Bit());
 		}
 	}
-
-	QStringList files = app.arguments().mid(1);
 
 	// Load application language
 	LocaleDialog::loadTranslator();
@@ -136,7 +190,9 @@ int main(int argc, char** argv)
 		settings.setValue("Version", 2);
 	}
 
-	Window window(files);
+	app.createWindow();
 
 	return app.exec();
 }
+
+//-----------------------------------------------------------------------------
