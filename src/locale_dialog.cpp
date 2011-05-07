@@ -60,6 +60,7 @@ LocaleDialog::LocaleDialog(QWidget* parent)
 	display_texts.insert("pt", QString::fromUtf8("Portugu\303\252s (pt)"));
 	display_texts.insert("pt_BR", QString::fromUtf8("Portugu\303\252s (pt_BR)"));
 	display_texts.insert("ru", QString::fromUtf8("\320\240\321\203\321\201\321\201\320\272\320\270\320\271 (ru)"));
+	display_texts.insert("uk_UA", QString::fromUtf8("\320\243\320\272\321\200\320\260\321\227\320\275\321\201\321\214\320\272\320\260 (uk_UA)"));
 	foreach (const QString& translation, translations) {
 		if (translation.startsWith("qt")) {
 			continue;
