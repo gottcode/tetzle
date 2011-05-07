@@ -39,11 +39,15 @@ GraphicsLayer* graphics_layer = 0;
 #endif
 
 // Multi-texture extension
-#ifndef GL_TEXTURE0
+#ifndef GL_VERSION_1_3
 #define GL_TEXTURE0 0x84C0
-#endif
-#ifndef GL_TEXTURE1
 #define GL_TEXTURE1 0x84C1
+#endif
+
+#ifndef GL_VERSION_1_3_DEPRECATED
+#define GL_COMBINE     0x8570
+#define GL_COMBINE_RGB 0x8571
+#define GL_ADD_SIGNED  0x8574
 #endif
 
 typedef void (APIENTRYP PFNGLACTIVETEXTUREPROC) (GLenum texture);
@@ -52,6 +56,13 @@ typedef void (APIENTRYP PFNGLCLIENTACTIVETEXTUREPROC) (GLenum texture);
 static PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture = 0;
 
 // Vertex buffer object extension
+#ifndef GL_VERSION_1_5
+#define GL_ARRAY_BUFFER 0x8892
+#define GL_DYNAMIC_DRAW 0x88E8
+typedef ptrdiff_t GLintptr;
+typedef ptrdiff_t GLsizeiptr;
+#endif
+
 static GLuint vbo_id = 0;
 
 typedef void (APIENTRYP PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
@@ -138,7 +149,7 @@ void GraphicsLayer::init()
 	genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
 	if ((bindBuffer != 0) && (bufferData != 0) && (bufferSubData != 0) && (deleteBuffers != 0) && (genBuffers != 0)) {
 		state |= VertexBufferObjectFlag;
-		if (state & Version15) {
+		if (state == Version15) {
 			detected = 15;
 		}
 	}
@@ -152,7 +163,7 @@ void GraphicsLayer::init()
 	}
 
 	// Try to load vertex array object functions
-	if (state & Version21) {
+	if (state == Version21) {
 		detected = 21;
 		bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
 		deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
@@ -180,22 +191,22 @@ void GraphicsLayer::init()
 		new_state = state;
 		qWarning("Requested GraphicsLayer%d is invalid; using detected GraphicsLayer%d instead.", requested, detected);
 	}
-	if (state & new_state) {
+	if (state >= new_state) {
 		state = new_state;
 	} else {
 		qWarning("Unable to use requested GraphicsLayer%d; using detected GraphicsLayer%d instead.", requested, detected);
 	}
 
 	// Create graphics layer instance
-	if (state & Version30) {
+	if (state == Version30) {
 		genVertexArrays(1, &vao_id);
 		bindVertexArray(vao_id);
 		graphics_layer = new GraphicsLayer21;
-	} else if (state & Version21) {
+	} else if (state == Version21) {
 		graphics_layer = new GraphicsLayer21;
-	} else if (state & Version15) {
+	} else if (state == Version15) {
 		graphics_layer = new GraphicsLayer15;
-	} else if (state & Version13) {
+	} else if (state == Version13) {
 		graphics_layer = new GraphicsLayer13;
 	} else {
 		graphics_layer = new GraphicsLayer11;
