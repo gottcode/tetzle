@@ -380,6 +380,7 @@ void Board::openGame(int id)
 	updateSceneRectangle();
 	if (rect.contains(m_scene)) {
 		m_scene = rect;
+		updateArray(m_scene_array, m_scene, 0);
 	}
 
 	// Draw tiles
