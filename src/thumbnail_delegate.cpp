@@ -56,11 +56,13 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Find colors
 	QIcon::Mode mode = QIcon::Normal;
-	QPalette::ColorGroup cg = (option.state & QStyle::State_HasFocus) ? QPalette::Normal : QPalette::Inactive;
+	QPalette::ColorGroup cg = QApplication::focusWidget() ? QPalette::Normal : QPalette::Inactive;
 	QColor color = option.palette.color(cg, QPalette::Text);
+	QColor background_color;
 	if (option.state & QStyle::State_Selected) {
 		mode = QIcon::Selected;
 		color = option.palette.color(cg, QPalette::HighlightedText);
+		background_color = option.palette.color(cg, QPalette::Highlight);
 	}
 
 	// Calculate element locations
@@ -95,6 +97,9 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Draw background
 	QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+	if (background_color.isValid()) {
+		option.backgroundBrush = background_color;
+	}
 	style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
 	// Draw decoration
