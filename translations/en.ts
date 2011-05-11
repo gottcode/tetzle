@@ -119,17 +119,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="449"/>
+        <location filename="../src/board.cpp" line="450"/>
         <source>Retrieving pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="987"/>
+        <location filename="../src/board.cpp" line="988"/>
         <source>Placing pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="1317"/>
+        <location filename="../src/board.cpp" line="1318"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
@@ -173,17 +173,22 @@
 <context>
     <name>LocaleDialog</name>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="48"/>
+        <location filename="../src/locale_dialog.cpp" line="94"/>
         <source>Select application language:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="153"/>
+        <location filename="../src/locale_dialog.cpp" line="97"/>
+        <source>&lt;System Language&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/locale_dialog.cpp" line="184"/>
         <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="153"/>
+        <location filename="../src/locale_dialog.cpp" line="184"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
