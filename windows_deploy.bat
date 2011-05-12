@@ -5,7 +5,8 @@ SET VERSION=1.2.1
 
 ECHO Copying executable
 MKDIR %APP%
-TYPE COPYING | FIND "" /V > %APP%\COPYING.txt
+TYPE COPYING | FIND "" /V > %APP%\License.txt
+TYPE CREDITS | FIND "" /V > %APP%\Credits.txt
 COPY release\%APP%.exe %APP% >nul
 COPY tools\windows\jpegtran.exe %APP% >nul
 COPY tools\windows\jhead.exe %APP% >nul

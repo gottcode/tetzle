@@ -25,6 +25,8 @@ else
 	cp -f 'tools/mac/universal/jpegtran' $EXE_PATH
 	cp -f 'tools/mac/universal/jhead' $EXE_PATH
 fi
+cp 'COPYING' "${APP}/License.txt"
+cp 'CREDITS' "${APP}/Credits.txt"
 echo 'Done'
 
 # Copy translations
@@ -102,15 +104,17 @@ echo '
 			set viewOptions to the icon view options of container window
 			tell viewOptions
 				set arrangement to not arranged
-				set icon size to 128
+				set icon size to 80
 				set label position to bottom
-				set shows icon preview to false
+				set shows icon preview to true
 				set shows item info to false
 			end tell
 			set background picture of viewOptions to file ".background:background.png"
 
-			set position of item "'${BUNDLE}'" of container window to {90, 150}
-			set position of item "Applications" of container window to {310, 150}
+			set position of item "'${BUNDLE}'" of container window to {90, 90}
+			set position of item "Applications" of container window to {310, 90}
+			set position of item "Credits.txt" of container window to {140, 215}
+			set position of item "License.txt" of container window to {260, 215}
 			close
 			open
 
