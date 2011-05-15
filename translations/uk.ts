@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/board.cpp" line="218"/>
         <source>Generating puzzle...</source>
-        <translation>Генерування пазлу...</translation>
+        <translation>Генерування пазла...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="224"/>
@@ -94,7 +94,7 @@
     <message>
         <location filename="../src/board.cpp" line="277"/>
         <source>Loading puzzle...</source>
-        <translation>Завантаження пазлу...</translation>
+        <translation>Завантаження пазла...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="302"/>
@@ -104,14 +104,14 @@
     <message>
         <location filename="../src/board.cpp" line="352"/>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Невідомий елемент &apos;%1&apos;</translation>
+        <translation>Невідомий елемент «%1»</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="357"/>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Помилка аналізу XML-файла.
+        <translation>Error parsing XML file.
 
 %1</translation>
     </message>
@@ -141,12 +141,12 @@
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="38"/>
         <source>Choose Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрати гру</translation>
     </message>
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="52"/>
         <source>Current Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Поточні ігри</translation>
     </message>
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="57"/>
@@ -159,38 +159,38 @@
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="39"/>
         <source>Image Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Властивості зображення</translation>
     </message>
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="72"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Назва:</translation>
     </message>
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="73"/>
         <source>Tags:</source>
-        <translation type="unfinished"></translation>
+        <translation>Мітки:</translation>
     </message>
 </context>
 <context>
     <name>LocaleDialog</name>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="94"/>
+        <location filename="../src/locale_dialog.cpp" line="95"/>
         <source>Select application language:</source>
         <translation>Вибрати мову програми:</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="97"/>
+        <location filename="../src/locale_dialog.cpp" line="98"/>
         <source>&lt;System Language&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Системна мова&gt;</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="184"/>
+        <location filename="../src/locale_dialog.cpp" line="185"/>
         <source>Note</source>
         <translation>Нотатка</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="184"/>
+        <location filename="../src/locale_dialog.cpp" line="185"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation>Перезапустіть програму, щоб зміна мови набула сили.</translation>
     </message>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../src/new_game_tab.cpp" line="105"/>
         <source>Add Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати зображення</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="109"/>
@@ -211,13 +211,13 @@
     <message>
         <location filename="../src/new_game_tab.cpp" line="113"/>
         <source>Image Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Властивості зображення</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="132"/>
         <location filename="../src/new_game_tab.cpp" line="382"/>
         <source>%L1 pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 елементів</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="193"/>
@@ -246,7 +246,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/new_game_tab.cpp" line="492"/>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation>Без назви</translation>
     </message>
 </context>
 <context>
@@ -254,12 +254,12 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/open_game_tab.cpp" line="86"/>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation>Без назви</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="89"/>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 елементів %2 %3% завершено</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="105"/>
@@ -290,27 +290,27 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/tag_manager.cpp" line="50"/>
         <source>Add Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати мітку</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="54"/>
         <source>Remove Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Вилучити мітку</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="59"/>
         <source>Untagged</source>
-        <translation type="unfinished"></translation>
+        <translation>Без мітки</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="88"/>
         <source>All Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Всі зображення</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="208"/>
         <source>Untitled %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Без назви %1</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="232"/>
@@ -320,17 +320,17 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/tag_manager.cpp" line="232"/>
         <source>Remove selected tag?</source>
-        <translation>Вилучити вибрану позначку?</translation>
+        <translation>Вилучити вибрану мітку?</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="273"/>
         <source>Sorry</source>
-        <translation type="unfinished"></translation>
+        <translation>На жаль</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="273"/>
         <source>A tag with that name already exists.</source>
-        <translation type="unfinished"></translation>
+        <translation>Мітка з такою назвою вже є.</translation>
     </message>
 </context>
 <context>
@@ -364,12 +364,12 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="81"/>
         <source>&amp;Choose...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вибрати...</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="91"/>
         <source>&amp;View</source>
-        <translation>&amp;Вигляд</translation>
+        <translation>&amp;Перегляд</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="92"/>
@@ -424,7 +424,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="116"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Налаштування</translation>
+        <translation>&amp;Параметри</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="117"/>
@@ -485,7 +485,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="264"/>
         <source>Left Drag</source>
-        <translation>Ліве перетягування</translation>
+        <translation>Перетягування лівою кнопкою</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="265"/>
@@ -510,7 +510,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="269"/>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Масштабувати пазл:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Масштаб пазла:&lt;/b&gt; </translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="270"/>
@@ -525,7 +525,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="272"/>
         <source>Move mouse or W,A,D,S</source>
-        <translation>Перемістити мишу або W, A, D, S</translation>
+        <translation>Перемістити мишу або клавіші W, A, D, S</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="285"/>
@@ -535,7 +535,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="285"/>
         <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
-        <translation>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;Гра-головоломка з елементами тетраміно&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</translation>
+        <translation>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;Гра-головоломка з елементами тетраміно&lt;br/&gt;&lt;small&gt;Авторське право &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</translation>
     </message>
 </context>
 <context>
