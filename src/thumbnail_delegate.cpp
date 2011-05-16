@@ -56,7 +56,11 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Find colors
 	QIcon::Mode mode = QIcon::Normal;
+#ifndef Q_WS_MAC
+	QPalette::ColorGroup cg = option.widget->hasFocus() ? QPalette::Normal : QPalette::Inactive;
+#else
 	QPalette::ColorGroup cg = QApplication::focusWidget() ? QPalette::Normal : QPalette::Inactive;
+#endif
 	QColor color = option.palette.color(cg, QPalette::Text);
 	QColor background_color;
 	if (option.state & QStyle::State_Selected) {
