@@ -765,7 +765,7 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 
 void Board::mousePressEvent(QMouseEvent* event)
 {
-	if (m_action_button != Qt::NoButton) {
+	if (m_finished || m_action_button != Qt::NoButton) {
 		return;
 	}
 
@@ -783,7 +783,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 
 void Board::mouseReleaseEvent(QMouseEvent* event)
 {
-	if (event->button() != m_action_button) {
+	if (m_finished || event->button() != m_action_button) {
 		return;
 	}
 
