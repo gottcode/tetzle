@@ -49,6 +49,7 @@ public:
 	void findNeighbors(const QList<Piece*>& pieces);
 	void moveBy(const QPoint& delta);
 	void pushNeighbors(const QPointF& inertia = QPointF());
+	void rotate(int rotations);
 	void rotate(const QPoint& origin = QPoint());
 	void setDepth(int depth);
 	void setPosition(const QPoint& pos);

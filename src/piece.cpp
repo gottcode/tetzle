@@ -55,13 +55,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	}
 
 	// Rotate
-	if (rotation) {
-		for (int i = 0; i < rotation; ++i) {
-			rotate();
-		}
-	} else {
-		updateVerts();
-	}
+	rotate(rotation);
 
 	setSelected(false);
 }
@@ -106,10 +100,17 @@ void Piece::attachNeighbors()
 
 		Tile* tile = m_tiles.first();
 		Tile* piece_tile = piece->m_tiles.first();
-		QPoint delta = (tile->gridPos() - piece_tile->gridPos()) - (tile->scenePos() - piece_tile->scenePos());
+		QPoint grid_delta = piece_tile->gridPos() - tile->gridPos();
+		for (int i = 0; i < m_rotation; ++i) {
+			QPoint pos = grid_delta;
+			grid_delta.setX( -pos.y() );
+			grid_delta.setY( pos.x() );
+		}
+		QPoint top_left = tile->scenePos() + grid_delta;
+		QPoint delta = top_left - piece_tile->scenePos();
 
 		if (delta.manhattanLength() <= m_board->margin()) {
-			piece->moveBy(-delta);
+			piece->moveBy(delta);
 			attach(piece);
 		}
 	}
@@ -199,6 +200,19 @@ void Piece::pushNeighbors(const QPointF& inertia)
 
 //-----------------------------------------------------------------------------
 
+void Piece::rotate(int rotations)
+{
+	if (rotations) {
+		for (int i = 0; i < rotations; ++i) {
+			rotate();
+		}
+	} else {
+		updateVerts();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
 void Piece::rotate(const QPoint& origin)
 {
 	// Rotate 90 degrees counter-clockwise around origin
@@ -270,9 +284,15 @@ void Piece::attach(Piece* piece)
 	m_pos.setY(qMin(m_pos.y(), piece->m_pos.y()));
 
 	// Update position of attached tiles
+	int rotation = m_rotation;
+	for (int i = rotation; i < 4; ++i) {
+		rotate();
+		piece->rotate();
+	}
 	m_tiles += piece->m_tiles;
 	piece->m_tiles.clear();
 	updateTiles();
+	rotate(rotation);
 
 	// Update shadow
 	m_shadow += piece->m_shadow;
@@ -289,8 +309,6 @@ void Piece::attach(Piece* piece)
 
 	// Remove attached piece
 	m_board->removePiece(piece);
-
-	updateVerts();
 }
 
 //-----------------------------------------------------------------------------

@@ -1,3 +1,6 @@
+2011-05-17 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Attaching rotated pieces messed them up.
+
 2011-05-16 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Delegate background only looked correct on the Mac.
 	* FIXED: Could box select after finishing a game.
