@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	}
 
 	// Load application language
-	LocaleDialog::loadTranslator();
+	LocaleDialog::loadTranslator("tetzle_");
 
 	// Update data location
 	QString path = Path::datapath();

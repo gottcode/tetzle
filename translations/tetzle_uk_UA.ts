@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="uk" sourcelanguage="en">
+<TS version="2.0" language="uk_UA" sourcelanguage="en">
 <context>
     <name>AddImage</name>
     <message>
@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/board.cpp" line="218"/>
         <source>Generating puzzle...</source>
-        <translation>Генерування пазла...</translation>
+        <translation>Генерування пазлу...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="224"/>
@@ -94,7 +94,7 @@
     <message>
         <location filename="../src/board.cpp" line="277"/>
         <source>Loading puzzle...</source>
-        <translation>Завантаження пазла...</translation>
+        <translation>Завантаження пазлу...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="302"/>
@@ -104,14 +104,14 @@
     <message>
         <location filename="../src/board.cpp" line="352"/>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Невідомий елемент «%1»</translation>
+        <translation>Невідомий елемент &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="357"/>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Error parsing XML file.
+        <translation>Помилка аналізу XML-файла.
 
 %1</translation>
     </message>
@@ -175,22 +175,22 @@
 <context>
     <name>LocaleDialog</name>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="95"/>
+        <location filename="../src/locale_dialog.cpp" line="98"/>
         <source>Select application language:</source>
         <translation>Вибрати мову програми:</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="98"/>
+        <location filename="../src/locale_dialog.cpp" line="101"/>
         <source>&lt;System Language&gt;</source>
         <translation>&lt;Системна мова&gt;</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="185"/>
+        <location filename="../src/locale_dialog.cpp" line="195"/>
         <source>Note</source>
         <translation>Нотатка</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="185"/>
+        <location filename="../src/locale_dialog.cpp" line="195"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation>Перезапустіть програму, щоб зміна мови набула сили.</translation>
     </message>
@@ -295,7 +295,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/tag_manager.cpp" line="54"/>
         <source>Remove Tag</source>
-        <translation>Вилучити мітку</translation>
+        <translation>Видалити мітку</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="59"/>
@@ -369,7 +369,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="91"/>
         <source>&amp;View</source>
-        <translation>&amp;Перегляд</translation>
+        <translation>&amp;Вигляд</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="92"/>
@@ -424,7 +424,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="116"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Параметри</translation>
+        <translation>&amp;Налаштування</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="117"/>
@@ -485,7 +485,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="264"/>
         <source>Left Drag</source>
-        <translation>Перетягування лівою кнопкою</translation>
+        <translation>Ліве перетягування</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="265"/>
@@ -510,7 +510,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="269"/>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Масштаб пазла:&lt;/b&gt; </translation>
+        <translation>&lt;b&gt;Масштабувати пазл:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="270"/>
@@ -525,7 +525,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="272"/>
         <source>Move mouse or W,A,D,S</source>
-        <translation>Перемістити мишу або клавіші W, A, D, S</translation>
+        <translation>Перемістити мишу або W, A, D, S</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="285"/>
@@ -535,7 +535,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="285"/>
         <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
-        <translation>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;Гра-головоломка з елементами тетраміно&lt;br/&gt;&lt;small&gt;Авторське право &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</translation>
+        <translation>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;Гра-головоломка з елементами тетраміно&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</translation>
     </message>
 </context>
 <context>

@@ -68,9 +68,9 @@ SOURCES = src/add_image.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 
-TRANSLATIONS = translations/en.ts \
-	translations/uk.ts \
-	translations/uk_UA.ts
+TRANSLATIONS = translations/tetzle_en.ts \
+	translations/tetzle_uk.ts \
+	translations/tetzle_uk_UA.ts
 
 RESOURCES = data/data.qrc icons/icon.qrc
 macx:ICON = icons/tetzle.icns
