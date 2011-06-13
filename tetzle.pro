@@ -69,6 +69,7 @@ SOURCES = src/add_image.cpp \
 	src/zoom_slider.cpp
 
 TRANSLATIONS = translations/tetzle_en.ts \
+	translations/tetzle_ru.ts \
 	translations/tetzle_uk.ts \
 	translations/tetzle_uk_UA.ts
 
