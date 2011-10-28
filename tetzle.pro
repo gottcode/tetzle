@@ -90,7 +90,7 @@ unix: !macx {
 	icon.files = icons/hicolor/*
 	icon.path = $$PREFIX/share/icons/hicolor/
 
-	pixmap.files = icons/tetzle.xpm
+	pixmap.files = icons/tetzle_32.xpm
 	pixmap.path = $$PREFIX/share/pixmaps/
 
 	desktop.files = data/unix/tetzle.desktop
