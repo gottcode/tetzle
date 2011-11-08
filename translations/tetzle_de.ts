@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.0" language="de" sourcelanguage="en">
 <context>
     <name>AddImage</name>
     <message>
@@ -123,7 +123,7 @@
     <message>
         <location filename="../src/board.cpp" line="450"/>
         <source>Retrieving pieces...</source>
-        <translation>Teile werden gemischt...</translation>
+        <translation>Teile werden geholt...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="988"/>
@@ -206,7 +206,7 @@
         <location filename="../src/new_game_tab.cpp" line="109"/>
         <location filename="../src/new_game_tab.cpp" line="290"/>
         <source>Remove Image</source>
-        <translation>Bild löschen</translation>
+        <translation>Bild entfernen</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="113"/>
@@ -347,24 +347,24 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
         <translation>&amp;Spiel</translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="81"/>
-        <source>&amp;Choose...</source>
-        <translation>&amp;Auswählen...</translation>
-    </message>
-    <message>
         <location filename="../src/window.cpp" line="84"/>
         <source>&amp;Retrieve Pieces</source>
-        <translation>Teile &amp;mischen</translation>
+        <translation>&amp;Teile holen</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="84"/>
         <source>Ctrl+R</source>
-        <translation>Ctrl+M</translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="88"/>
         <source>&amp;Quit</source>
         <translation>&amp;Beenden</translation>
+    </message>
+    <message>
+        <location filename="../src/window.cpp" line="81"/>
+        <source>&amp;Choose...</source>
+        <translation>&amp;Auswählen...</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="91"/>
