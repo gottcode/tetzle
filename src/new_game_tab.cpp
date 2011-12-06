@@ -351,6 +351,7 @@ void NewGameTab::imageSelected(QListWidgetItem* item)
 		return;
 	}
 
+	// Prevent removing the image of the game currently open
 	QString image = item->data(ImageRole).toString();
 	m_remove_action->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 

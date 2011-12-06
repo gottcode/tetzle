@@ -1310,7 +1310,7 @@ void Board::finishGame()
 	emit retrievePiecesAvailable(false);
 
 	QFile::remove(Path::save(m_id));
-	QSettings().remove("OpenGame/Image");
+	QSettings().remove("OpenGame");
 	m_id = 0;
 
 	emit finished();
@@ -1343,7 +1343,7 @@ void Board::cleanup()
 	m_pos = QPoint(0, 0);
 	m_finished = false;
 
-	QSettings().remove("OpenGame/Image");
+	QSettings().remove("OpenGame");
 }
 
 //-----------------------------------------------------------------------------

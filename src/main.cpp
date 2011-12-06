@@ -190,6 +190,9 @@ int main(int argc, char** argv)
 		settings.setValue("Version", 2);
 	}
 
+	// Reset tracking of the game currently open
+	settings.remove("OpenGame");
+
 	app.createWindow();
 
 	return app.exec();
