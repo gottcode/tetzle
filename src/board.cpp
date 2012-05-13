@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -606,7 +606,9 @@ void Board::paintGL()
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
 	QColor border = fill.lighter(125);
-	drawArray(m_scene_array, fill, border);
+	if (m_scene.isValid()) {
+		drawArray(m_scene_array, fill, border);
+	}
 
 	// Draw pieces
 	graphics_layer->bindTexture(0, m_image);

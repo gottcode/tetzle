@@ -1,3 +1,6 @@
+2012-05-13 Graeme Gott <graeme@gottcode.org>
+	* Don't draw empty scene rectangle.
+
 2011-12-06 Graeme Gott <graeme@gottcode.org>
 	* FIXED: Could not remove image of previous game.
 
