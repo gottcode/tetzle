@@ -76,6 +76,13 @@ static PFNGLDELETEBUFFERSPROC deleteBuffers = 0;
 typedef void (APIENTRYP PFNGLGENBUFFERSPROC) (GLsizei n, GLuint *buffers);
 static PFNGLGENBUFFERSPROC genBuffers = 0;
 
+// Shaders extension
+#ifndef GL_VERSION_2_0
+#define GL_SHADING_LANGUAGE_VERSION 0x8B8C
+#endif
+
+static QString glsl_version;
+
 // Vertex attribute object extension
 static GLuint vao_id = 0;
 
@@ -155,7 +162,13 @@ void GraphicsLayer::init()
 	}
 
 	// Check for minimum supported programmable pipeline
-	if (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_2_1) {
+	QByteArray glsl = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+	int index = glsl.indexOf(' ');
+	if (index != -1) {
+		glsl.truncate(index);
+	}
+	glsl.replace('.', "");
+	if (QGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
 		state |= FragmentShadersFlag;
 		if (activeTexture != 0) {
 			state |= MultiTextureFlag;
@@ -199,10 +212,12 @@ void GraphicsLayer::init()
 
 	// Create graphics layer instance
 	if (state == Version30) {
+		glsl_version = (glsl <= "420") ? glsl : "420";
 		genVertexArrays(1, &vao_id);
 		bindVertexArray(vao_id);
 		graphics_layer = new GraphicsLayer21;
 	} else if (state == Version21) {
+		glsl_version = "120";
 		graphics_layer = new GraphicsLayer21;
 	} else if (state == Version15) {
 		graphics_layer = new GraphicsLayer15;
@@ -512,20 +527,12 @@ QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 	}
 
 	// Update GLSL version
-	QString version;
-	version = (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_3_0) ? "130" : version;
-#if QT_VERSION >= 0x040700
-	version = (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_3_1) ? "140" : version;
-	version = (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_3_2) ? "150" : version;
-	version = (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_3_3) ? "330" : version;
-	version = (QGLFormat::openGLVersionFlags() & QGLFormat::OpenGL_Version_4_0) ? "400" : version;
-#endif
-	if (!version.isEmpty()) {
-		vertex.replace("#version 120\n", "#version " + version + "\n");
+	if (glsl_version >= "130") {
+		vertex.replace("#version 120\n", "#version " + glsl_version + "\n");
 		vertex.replace("attribute ", "in ");
 		vertex.replace("varying ", "out ");
 
-		frag.replace("#version 120\n", "#version " + version + "\n\nout vec4 out_color;\n");
+		frag.replace("#version 120\n", "#version " + glsl_version + "\n\nout vec4 out_color;\n");
 		frag.replace("gl_FragColor", "out_color");
 		frag.replace("varying ", "in ");
 	}
