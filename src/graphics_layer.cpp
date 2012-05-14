@@ -83,6 +83,14 @@ static PFNGLGENBUFFERSPROC genBuffers = 0;
 
 static QString glsl_version;
 
+// OpenGL 3 string
+#ifndef GL_VERSION_3_0
+#define GL_NUM_EXTENSIONS 0x821D
+#endif
+
+typedef const GLubyte* (APIENTRYP PFNGLGETSTRINGIPROC)(GLenum name, GLuint index);
+static PFNGLGETSTRINGIPROC getStringi = 0;
+
 // Vertex attribute object extension
 static GLuint vao_id = 0;
 
@@ -138,14 +146,13 @@ static inline void convertMatrix(const qreal* in, GLfloat* out)
 void GraphicsLayer::init()
 {
 	unsigned int state = 0;
-	int detected = 11;
+	unsigned int symbols = 0;
 
 	// Try to load multi-texture functions
 	activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
 	clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
-	if ((activeTexture != 0) && (clientActiveTexture != 0)) {
-		state |= MultiTextureFlag;
-		detected = 13;
+	if (activeTexture && clientActiveTexture) {
+		symbols |= MultiTextureFlag;
 	}
 
 	// Try to load vertex buffer object functions
@@ -154,11 +161,8 @@ void GraphicsLayer::init()
 	bufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
 	deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
 	genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
-	if ((bindBuffer != 0) && (bufferData != 0) && (bufferSubData != 0) && (deleteBuffers != 0) && (genBuffers != 0)) {
-		state |= VertexBufferObjectFlag;
-		if (state == Version15) {
-			detected = 15;
-		}
+	if (bindBuffer && bufferData && bufferSubData && deleteBuffers && genBuffers) {
+		symbols |= VertexBufferObjectFlag;
 	}
 
 	// Check for minimum supported programmable pipeline
@@ -170,21 +174,57 @@ void GraphicsLayer::init()
 	glsl.replace('.', "");
 	if (QGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
 		state |= FragmentShadersFlag;
-		if (activeTexture != 0) {
-			state |= MultiTextureFlag;
+		symbols |= FragmentShadersFlag;
+		if (activeTexture) {
+			symbols |= MultiTextureFlag;
 		}
 	}
 
 	// Try to load vertex array object functions
-	if (state == Version21) {
-		detected = 21;
-		bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
-		deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
-		genVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getProcAddress("glGenVertexArrays");
-		if ((bindVertexArray != 0) && (deleteVertexArrays != 0) && (genVertexArrays != 0)) {
-			state |= VertexArrayObjectFlag;
-			detected = 30;
+	bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
+	deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
+	genVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getProcAddress("glGenVertexArrays");
+	if (bindVertexArray && deleteVertexArrays && genVertexArrays) {
+		symbols |= VertexArrayObjectFlag;
+	}
+
+	// Try to determine OpenGL extensions
+	QList<QByteArray> extensions;
+	const char* ext = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
+	if (!ext) {
+		getStringi = (PFNGLGETSTRINGIPROC) getProcAddress("glGetStringi");
+		if (getStringi) {
+			int count = 0;
+			glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+			for (int i = 0; i < count; ++i) {
+				extensions += reinterpret_cast<const char*>(getStringi(GL_EXTENSIONS, i));
+			}
 		}
+	} else {
+		extensions = QByteArray(ext).split(' ');
+	}
+	foreach (const QByteArray& extension, extensions) {
+		if (extension == "GL_ARB_multitexture") {
+			state |= MultiTextureFlag;
+		} else if (extension == "GL_ARB_vertex_buffer_object") {
+			state |= VertexBufferObjectFlag;
+		} else if (extension == "GL_ARB_vertex_array_object") {
+			state |= VertexArrayObjectFlag;
+		}
+	}
+
+	// Find maximum supported state
+	int detected = 0;
+	if ((state == Version30) && (symbols >= Version30)) {
+		detected = 30;
+	} else if ((state == Version21) && (symbols >= Version21)) {
+		detected = 21;
+	} else if ((state == Version15) && (symbols >= Version15)) {
+		detected = 15;
+	} else if ((state == Version13) && (symbols >= Version13)) {
+		detected = 13;
+	} else {
+		detected = 11;
 	}
 
 	// Check for a requested state

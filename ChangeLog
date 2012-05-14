@@ -1,4 +1,5 @@
 2012-05-13 Graeme Gott <graeme@gottcode.org>
+	* Improve detection of graphics layer.
 	* Improve check for GLSL.
 	* Don't draw empty scene rectangle.
 
