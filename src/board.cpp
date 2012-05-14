@@ -1234,10 +1234,10 @@ void Board::updateArray(VertexArray& array, const QRect& rect, int z)
 	int y2 = y1 + rect.height();
 
 	QVector<Vertex> verts;
-	verts.append( Vertex(x1,y1,z) );
-	verts.append( Vertex(x1,y2,z) );
-	verts.append( Vertex(x2,y2,z) );
-	verts.append( Vertex(x2,y1,z) );
+	verts.append( Vertex::init(x1,y1,z) );
+	verts.append( Vertex::init(x1,y2,z) );
+	verts.append( Vertex::init(x2,y2,z) );
+	verts.append( Vertex::init(x2,y1,z) );
 	graphics_layer->updateArray(array, verts);
 }
 

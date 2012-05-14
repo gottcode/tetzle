@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,9 +38,10 @@ struct Vertex
 
 	unsigned char pad[4];
 
-	Vertex(GLfloat x_ = 0, GLfloat y_ = 0, GLfloat z_ = 0, GLfloat s_ = 0, GLfloat t_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
-		: x(x_), y(y_), z(z_), s(s_), t(t_), s2(s2_), t2(t2_)
+	static Vertex init(GLfloat x_ = 0, GLfloat y_ = 0, GLfloat z_ = 0, GLfloat s_ = 0, GLfloat t_ = 0, GLfloat s2_ = 0, GLfloat t2_ = 0)
 	{
+		Vertex result = { x_, y_, z_, s_, t_, s2_, t2_, {0,0,0,0} };
+		return result;
 	}
 };
 

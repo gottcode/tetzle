@@ -434,19 +434,19 @@ GraphicsLayer21::GraphicsLayer21()
 
 	// Load shaders
 	QGLShaderProgram* program = loadProgram(0);
-	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
+	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 
 	program = loadProgram(1);
-	program->setAttributeBuffer(TexCoord0, GL_FLOAT, sizeof(GLfloat) * 3, 2, sizeof(Vertex));
-	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
+	program->setAttributeBuffer(TexCoord0, GL_FLOAT, offsetof(Vertex, s), 2, sizeof(Vertex));
+	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 	program->setUniformValue("texture0", GLuint(0));
 
 	program = loadProgram(2);
-	program->setAttributeBuffer(TexCoord1, GL_FLOAT, sizeof(GLfloat) * 5, 2, sizeof(Vertex));
-	program->setAttributeBuffer(TexCoord0, GL_FLOAT, sizeof(GLfloat) * 3, 2, sizeof(Vertex));
-	program->setAttributeBuffer(Position, GL_FLOAT, 0, 3, sizeof(Vertex));
+	program->setAttributeBuffer(TexCoord1, GL_FLOAT, offsetof(Vertex, s2), 2, sizeof(Vertex));
+	program->setAttributeBuffer(TexCoord0, GL_FLOAT, offsetof(Vertex, s), 2, sizeof(Vertex));
+	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 	program->setUniformValue("texture0", GLuint(0));
 	program->setUniformValue("texture1", GLuint(1));
@@ -778,7 +778,7 @@ void GraphicsLayer15::setTextureUnits(unsigned int units)
 	if (units > 1) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 5));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, s2)));
 	} else {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
@@ -789,13 +789,13 @@ void GraphicsLayer15::setTextureUnits(unsigned int units)
 	if (units > 0) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(sizeof(GLfloat) * 3));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, s)));
 	} else {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), 0);
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, x)));
 }
 
 //-----------------------------------------------------------------------------
