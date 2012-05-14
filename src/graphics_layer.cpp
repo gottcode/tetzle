@@ -214,35 +214,28 @@ void GraphicsLayer::init()
 	}
 
 	// Find maximum supported state
-	int detected = 0;
-	if ((state == Version30) && (symbols >= Version30)) {
-		detected = 30;
-	} else if ((state == Version21) && (symbols >= Version21)) {
-		detected = 21;
-	} else if ((state == Version15) && (symbols >= Version15)) {
-		detected = 15;
-	} else if ((state == Version13) && (symbols >= Version13)) {
-		detected = 13;
-	} else {
-		detected = 11;
+	int detected = 11;
+	switch (qMin(state, symbols)) {
+	case Version30: detected = 30; break;
+	case Version21: detected = 21; break;
+	case Version15: detected = 15; break;
+	case Version13: detected = 13; break;
+	default: break;
 	}
 
 	// Check for a requested state
 	unsigned int new_state = 0;
 	int requested = QSettings().value("GraphicsLayer", detected).toInt();
-	if (requested == 30) {
-		new_state = Version30;
-	} else if (requested == 21) {
-		new_state = Version21;
-	} else if (requested == 15) {
-		new_state = Version15;
-	} else if (requested == 13) {
-		new_state = Version13;
-	} else if (requested == 11) {
-		new_state = Version11;
-	} else {
+	switch (requested) {
+	case 30: new_state = Version30; break;
+	case 21: new_state = Version21; break;
+	case 15: new_state = Version15; break;
+	case 13: new_state = Version13; break;
+	case 11: new_state = Version11; break;
+	default:
 		new_state = state;
 		qWarning("Requested GraphicsLayer%d is invalid; using detected GraphicsLayer%d instead.", requested, detected);
+		break;
 	}
 	if (state >= new_state) {
 		state = new_state;
@@ -251,20 +244,26 @@ void GraphicsLayer::init()
 	}
 
 	// Create graphics layer instance
-	if (state == Version30) {
+	switch (state) {
+	case Version30:
 		glsl_version = (glsl <= "420") ? glsl : "420";
 		genVertexArrays(1, &vao_id);
 		bindVertexArray(vao_id);
 		graphics_layer = new GraphicsLayer21;
-	} else if (state == Version21) {
+		break;
+	case Version21:
 		glsl_version = "120";
 		graphics_layer = new GraphicsLayer21;
-	} else if (state == Version15) {
+		break;
+	case Version15:
 		graphics_layer = new GraphicsLayer15;
-	} else if (state == Version13) {
+		break;
+	case Version13:
 		graphics_layer = new GraphicsLayer13;
-	} else {
+		break;
+	default:
 		graphics_layer = new GraphicsLayer11;
+		break;
 	}
 	graphics_layer->setTextureUnits(1);
 }
