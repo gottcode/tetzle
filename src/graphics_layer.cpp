@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include "appearance_dialog.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QGLShaderProgram>
 #include <QSettings>
@@ -226,6 +227,12 @@ void GraphicsLayer::init()
 	// Check for a requested state
 	unsigned int new_state = 0;
 	int requested = QSettings().value("GraphicsLayer", detected).toInt();
+	QStringList args = QCoreApplication::arguments();
+	foreach (const QString& arg, args) {
+		if (arg.startsWith("--graphics-layer=")) {
+			requested = arg.mid(17).toInt();
+		}
+	}
 	switch (requested) {
 	case 30: new_state = Version30; break;
 	case 21: new_state = Version21; break;
