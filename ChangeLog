@@ -1,3 +1,6 @@
+2012-05-17 Graeme Gott <graeme@gottcode.org>
+	* Set shaders to always start with color set to white.
+
 2012-05-14 Graeme Gott <graeme@gottcode.org>
 	* Make vertex be POD.
 	* Add command line argument to override detected graphics layer.

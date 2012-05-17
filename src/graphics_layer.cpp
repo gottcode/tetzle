@@ -531,6 +531,7 @@ void GraphicsLayer21::setTextureUnits(unsigned int units)
 
 	m_color_location = m_program->uniformLocation("color");
 	m_matrix_location = m_program->uniformLocation("matrix");
+	m_program->setUniformValue(m_color_location, Qt::white);
 	m_program->setUniformValue(m_matrix_location, m_matrix);
 
 	if (units > 1) {
