@@ -1,7 +1,7 @@
 @ECHO OFF
 
 SET APP=Tetzle
-SET VERSION=2.0.0
+SET VERSION=2.0.1
 
 ECHO Copying executable
 MKDIR %APP%

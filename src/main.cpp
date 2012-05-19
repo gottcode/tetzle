@@ -52,7 +52,7 @@ Application::Application(int& argc, char** argv)
 	m_window(0)
 {
 	setApplicationName("Tetzle");
-	setApplicationVersion("2.0.0");
+	setApplicationVersion("2.0.1");
 	setOrganizationDomain("gottcode.org");
 	setOrganizationName("GottCode");
 	{
