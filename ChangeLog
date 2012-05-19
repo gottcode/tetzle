@@ -1,3 +1,6 @@
+2012-05-19 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Final board did not have correct shadow.
+
 2012-05-17 Graeme Gott <graeme@gottcode.org>
 	* Set shaders to always start with color set to white.
 

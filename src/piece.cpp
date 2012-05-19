@@ -283,6 +283,10 @@ void Piece::attach(Piece* piece)
 	m_pos.setX(qMin(m_pos.x(), piece->m_pos.x()));
 	m_pos.setY(qMin(m_pos.y(), piece->m_pos.y()));
 
+	// Update shadow
+	m_shadow += piece->m_shadow;
+	updateShadow();
+
 	// Update position of attached tiles
 	int rotation = m_rotation;
 	for (int i = rotation; i < 4; ++i) {
@@ -293,10 +297,6 @@ void Piece::attach(Piece* piece)
 	piece->m_tiles.clear();
 	updateTiles();
 	rotate(rotation);
-
-	// Update shadow
-	m_shadow += piece->m_shadow;
-	updateShadow();
 
 	// Update neighbors
 	m_neighbors += piece->m_neighbors;
