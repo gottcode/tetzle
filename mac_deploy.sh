@@ -18,6 +18,7 @@ echo -n 'Copying application bundle... '
 mkdir "$APP"
 cp -Rpf "$BUNDLE" "$APP/"
 EXE_PATH="$APP/$BUNDLE/Contents/MacOS/"
+strip "$EXE_PATH/$APP"
 if [[ $(file "${BUNDLE}/Contents/MacOS/${APP}" | grep '64-bit') ]]; then
 	cp -f 'tools/mac/jpegtran' $EXE_PATH
 	cp -f 'tools/mac/jhead' $EXE_PATH
@@ -68,14 +69,6 @@ rm -Rf "$APP/$BUNDLE/Contents/Frameworks/QtXmlPatterns.framework"
 rm -Rf "$APP/$BUNDLE/Contents/PlugIns/qmltooling"
 echo 'Done'
 
-# Create alias to Applications folder
-echo -n 'Creating Applications alias... '
-echo '
-	tell application "Finder"
-		make new alias file to POSIX file "/Applications" at POSIX file "'${PWD}/${APP}'" with properties {name:"Applications"}
-	end tell
-' | osascript
-
 # Copy background
 echo -n 'Copying background... '
 mkdir "${APP}/.background"
@@ -112,6 +105,7 @@ echo '
 			end tell
 			set background picture of viewOptions to file ".background:background.png"
 
+			make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
 			set position of item "'${BUNDLE}'" of container window to {90, 90}
 			set position of item "Applications" of container window to {310, 90}
 			set position of item "Credits.txt" of container window to {140, 215}
