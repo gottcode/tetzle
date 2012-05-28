@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ Application::Application(int& argc, char** argv)
 	m_window(0)
 {
 	setApplicationName("Tetzle");
-	setApplicationVersion("2.0.1");
+	setApplicationVersion(VERSIONSTR);
 	setOrganizationDomain("gottcode.org");
 	setOrganizationName("GottCode");
 	{
