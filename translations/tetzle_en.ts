@@ -55,81 +55,81 @@
 <context>
     <name>Board</name>
     <message>
-        <location filename="../src/board.cpp" line="183"/>
-        <location filename="../src/board.cpp" line="289"/>
-        <location filename="../src/board.cpp" line="357"/>
+        <location filename="../src/board.cpp" line="187"/>
+        <location filename="../src/board.cpp" line="293"/>
+        <location filename="../src/board.cpp" line="361"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="183"/>
-        <location filename="../src/board.cpp" line="289"/>
+        <location filename="../src/board.cpp" line="187"/>
+        <location filename="../src/board.cpp" line="293"/>
         <source>Missing image.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="190"/>
-        <location filename="../src/board.cpp" line="265"/>
+        <location filename="../src/board.cpp" line="194"/>
+        <location filename="../src/board.cpp" line="269"/>
         <location filename="../src/main.cpp" line="146"/>
         <source>Please Wait</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="212"/>
-        <location filename="../src/board.cpp" line="364"/>
+        <location filename="../src/board.cpp" line="216"/>
+        <location filename="../src/board.cpp" line="368"/>
         <source>Loading image...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="218"/>
+        <location filename="../src/board.cpp" line="222"/>
         <source>Generating puzzle...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="224"/>
-        <location filename="../src/board.cpp" line="238"/>
+        <location filename="../src/board.cpp" line="228"/>
+        <location filename="../src/board.cpp" line="242"/>
         <source>Creating pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="277"/>
+        <location filename="../src/board.cpp" line="281"/>
         <source>Loading puzzle...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="302"/>
+        <location filename="../src/board.cpp" line="306"/>
         <source>Unknown data format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="352"/>
+        <location filename="../src/board.cpp" line="356"/>
         <source>Unknown element &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="357"/>
+        <location filename="../src/board.cpp" line="361"/>
         <source>Error parsing XML file.
 
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="368"/>
+        <location filename="../src/board.cpp" line="372"/>
         <source>Loading pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="450"/>
+        <location filename="../src/board.cpp" line="454"/>
         <source>Retrieving pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="988"/>
+        <location filename="../src/board.cpp" line="994"/>
         <source>Placing pieces...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="1318"/>
+        <location filename="../src/board.cpp" line="1326"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
@@ -173,22 +173,22 @@
 <context>
     <name>LocaleDialog</name>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="98"/>
+        <location filename="../src/locale_dialog.cpp" line="49"/>
         <source>Select application language:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="101"/>
+        <location filename="../src/locale_dialog.cpp" line="52"/>
         <source>&lt;System Language&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="195"/>
+        <location filename="../src/locale_dialog.cpp" line="177"/>
         <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="195"/>
+        <location filename="../src/locale_dialog.cpp" line="177"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -213,7 +213,7 @@
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="132"/>
-        <location filename="../src/new_game_tab.cpp" line="382"/>
+        <location filename="../src/new_game_tab.cpp" line="383"/>
         <source>%L1 pieces</source>
         <translation type="unfinished"></translation>
     </message>
@@ -240,7 +240,7 @@ There are saved games using this image that will also be removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/new_game_tab.cpp" line="492"/>
+        <location filename="../src/new_game_tab.cpp" line="493"/>
         <source>Untitled</source>
         <translation type="unfinished"></translation>
     </message>
@@ -334,6 +334,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/main.cpp" line="147"/>
         <location filename="../src/window.cpp" line="50"/>
+        <location filename="../src/window.cpp" line="286"/>
         <source>Tetzle</source>
         <translation type="unfinished"></translation>
     </message>
@@ -525,12 +526,22 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <location filename="../src/window.cpp" line="285"/>
-        <source>About</source>
+        <source>About Tetzle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/window.cpp" line="285"/>
-        <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
+        <location filename="../src/window.cpp" line="287"/>
+        <source>A jigsaw puzzle with tetrominoes for pieces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/window.cpp" line="288"/>
+        <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/window.cpp" line="289"/>
+        <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
