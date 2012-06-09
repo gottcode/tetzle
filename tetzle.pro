@@ -1,12 +1,9 @@
 TEMPLATE = app
 QT += opengl
-CONFIG += warn_on release
+CONFIG += warn_on
 macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 	CONFIG += x86_64
-	# Comment the above line and uncomment the following lines to compile Universal for 10.4+
-	# QMAKE_MAC_SDK = /Developer/SDKs/MacOSX10.4u.sdk
-	# CONFIG += x86 ppc
 }
 
 MOC_DIR = build
