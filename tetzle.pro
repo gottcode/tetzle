@@ -73,6 +73,8 @@ SOURCES = src/add_image.cpp \
 
 TRANSLATIONS = translations/tetzle_de.ts \
 	translations/tetzle_en.ts \
+	translations/tetzle_fr.ts \
+	translations/tetzle_lv.ts \
 	translations/tetzle_ru.ts \
 	translations/tetzle_uk.ts \
 	translations/tetzle_uk_UA.ts

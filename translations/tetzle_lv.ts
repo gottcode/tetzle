@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="lv" sourcelanguage="en">
 <context>
     <name>AddImage</name>
     <message>
         <location filename="../src/add_image.cpp" line="77"/>
         <source>Open Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Atvērt attēlu</translation>
     </message>
 </context>
 <context>
@@ -14,7 +14,7 @@
     <message>
         <location filename="../src/appearance_dialog.cpp" line="55"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Izskats</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="64"/>
@@ -34,17 +34,17 @@
     <message>
         <location filename="../src/appearance_dialog.cpp" line="73"/>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Krāsas</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="92"/>
         <source>Background:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fons:</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="93"/>
         <source>Shadow:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ēna:</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="94"/>
@@ -59,7 +59,7 @@
         <location filename="../src/board.cpp" line="293"/>
         <location filename="../src/board.cpp" line="361"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Kļūda</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="187"/>
@@ -72,7 +72,7 @@
         <location filename="../src/board.cpp" line="269"/>
         <location filename="../src/main.cpp" line="146"/>
         <source>Please Wait</source>
-        <translation type="unfinished"></translation>
+        <translation>Lūdzu, uzgaidiet</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="216"/>

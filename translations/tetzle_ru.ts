@@ -175,22 +175,22 @@
 <context>
     <name>LocaleDialog</name>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="49"/>
+        <location filename="../src/locale_dialog.cpp" line="50"/>
         <source>Select application language:</source>
         <translation>Выберите язык программы:</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="52"/>
+        <location filename="../src/locale_dialog.cpp" line="53"/>
         <source>&lt;System Language&gt;</source>
         <translation>&lt;Язык системы&gt;</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="177"/>
+        <location filename="../src/locale_dialog.cpp" line="181"/>
         <source>Note</source>
         <translation>Заметка:</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="177"/>
+        <location filename="../src/locale_dialog.cpp" line="181"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation>Пожалуйста, перезапустите программу для того, чтобы изменения вступили в силу.</translation>
     </message>
@@ -425,7 +425,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="116"/>
         <source>&amp;Settings</source>
-        <translation>%Настройки</translation>
+        <translation>Н&amp;астройки</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="117"/>
@@ -547,14 +547,6 @@ There are saved games using this image that will also be removed.</source>
         <location filename="../src/window.cpp" line="289"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="obsolete">Об игре</translation>
-    </message>
-    <message>
-        <source>&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;A jigsaw puzzle with tetrominoes for pieces&lt;br/&gt;&lt;small&gt;Copyright &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</source>
-        <translation type="obsolete">&lt;center&gt;&lt;big&gt;&lt;b&gt;Tetzle %1&lt;/b&gt;&lt;/big&gt;&lt;br/&gt;Игра-головоломка с пазлами в виде фигур из тетриса.&lt;br/&gt;&lt;small&gt;Копирайт &amp;copy; 2008-2011 Graeme Gott&lt;/small&gt;&lt;/center&gt;</translation>
     </message>
 </context>
 <context>
