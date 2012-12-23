@@ -122,9 +122,12 @@ namespace
 	};
 }
 
-static void* getProcAddress(const QString& name)
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+typedef void* QFunctionPointer;
+#endif
+static QFunctionPointer getProcAddress(const QString& name)
 {
-	void* result;
+	QFunctionPointer result = 0;
 	QString names[] = { name, name + "ARB", name + "EXT" };
 	for (int i = 0; i < 3; ++i) {
 		result = QGLContext::currentContext()->getProcAddress(names[i]);
@@ -133,6 +136,11 @@ static void* getProcAddress(const QString& name)
 		}
 	}
 	return result;
+}
+
+static inline void convertMatrix(const float* in, GLfloat* out)
+{
+	std::copy(in, in + 16, out);
 }
 
 static inline void convertMatrix(const qreal* in, GLfloat* out)

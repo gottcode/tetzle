@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,9 +48,9 @@ private slots:
 	void imageLoaded(const Thumbnail& details);
 
 private:
-	QAtomicInt m_done;
+	bool m_done;
 	QList<Thumbnail> m_details;
-	QMutex m_details_mutex;
+	QMutex m_mutex;
 };
 
 #endif

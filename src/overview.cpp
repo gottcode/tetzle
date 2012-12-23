@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,8 +47,9 @@ Overview::Overview(QWidget* parent)
 	// Create scene
 	QGraphicsScene* scene = new QGraphicsScene(this);
 	setScene(scene);
-	m_pixmap = new QGraphicsPixmapItem(0, scene);
+	m_pixmap = new QGraphicsPixmapItem;
 	m_pixmap->setTransformationMode(Qt::SmoothTransformation);
+	scene->addItem(m_pixmap);
 	reset();
 
 	// Restore geometry

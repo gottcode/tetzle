@@ -1,4 +1,7 @@
 TEMPLATE = app
+greaterThan(QT_MAJOR_VERSION, 4) {
+	QT += widgets
+}
 QT += opengl
 CONFIG += warn_on
 macx {

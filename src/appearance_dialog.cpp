@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,11 +37,15 @@ namespace
 {
 	QPixmap coloredShadow(const QColor& color)
 	{
-		QPixmap source = QPixmap(":/shadow.png").alphaChannel();
-		QPixmap shadow(source.size());
-		shadow.fill(color);
-		shadow.setAlphaChannel(source);
-		return shadow;
+		QPixmap source(":/shadow.png");
+		QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
+		QPainter painter(&shadow);
+		painter.setCompositionMode(QPainter::CompositionMode_Source);
+		painter.drawPixmap(0, 0, source);
+		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+		painter.fillRect(shadow.rect(), color);
+		painter.end();
+		return QPixmap::fromImage(shadow, Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
 	}
 }
 
@@ -110,8 +114,8 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	// Load settings
 	QSettings settings;
 	m_background->setColor(settings.value("Colors/Background", "#9d8975").value<QColor>());
-	m_shadow->setColor(settings.value("Colors/Shadow", Qt::black).value<QColor>());
-	m_highlight->setColor(settings.value("Colors/Highlight", Qt::white).value<QColor>());
+	m_shadow->setColor(settings.value("Colors/Shadow", QColor(Qt::black)).value<QColor>());
+	m_highlight->setColor(settings.value("Colors/Highlight", QColor(Qt::white)).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
 	m_has_shadows->setChecked(settings.value("Appearance/Shadows", true).toBool());
 	if (!m_bevels_enabled) {

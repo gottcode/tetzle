@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,8 +78,9 @@ namespace
 
 //-----------------------------------------------------------------------------
 
-ThumbnailLoader::ThumbnailLoader(QObject* parent)
-	: QThread(parent)
+ThumbnailLoader::ThumbnailLoader(QObject* parent) :
+	QThread(parent),
+	m_done(false)
 {
 	connect(this, SIGNAL(loaded(const Thumbnail&)), this, SLOT(imageLoaded(const Thumbnail&)), Qt::QueuedConnection);
 }
@@ -88,7 +89,9 @@ ThumbnailLoader::ThumbnailLoader(QObject* parent)
 
 ThumbnailLoader::~ThumbnailLoader()
 {
+	m_mutex.lock();
 	m_done = true;
+	m_mutex.unlock();
 	wait();
 }
 
@@ -110,9 +113,9 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 	Thumbnail details = { list, list->model()->index(list->row(item), 0), image, thumb_info.filePath() };
 
 	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {
-		loader->m_details_mutex.lock();
+		loader->m_mutex.lock();
 		loader->m_details.append(details);
-		loader->m_details_mutex.unlock();
+		loader->m_mutex.unlock();
 		if (!loader->isRunning()) {
 			loader->start();
 		}
@@ -127,15 +130,15 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 
 void ThumbnailLoader::run()
 {
-	while (!m_done) {
+	forever {
 		// Fetch next thumbnail to process
-		m_details_mutex.lock();
-		if (m_details.isEmpty()) {
-			m_details_mutex.unlock();
+		m_mutex.lock();
+		if (m_done || m_details.isEmpty()) {
+			m_mutex.unlock();
 			break;
 		}
 		Thumbnail details = m_details.takeFirst();
-		m_details_mutex.unlock();
+		m_mutex.unlock();
 
 		// Skip already generated thumbnails
 		if (!QFile::exists(details.image)) {

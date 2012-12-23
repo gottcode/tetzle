@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,16 @@
 
 #include "add_image.h"
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+#include <QStandardPaths>
+#else
 #include <QDesktopServices>
+#endif
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QImageReader>
+#include <QMimeData>
 #include <QSettings>
 #include <QUrl>
 #include <QWidget>
@@ -73,7 +78,12 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 
 QStringList AddImage::getOpenFileNames(QWidget* parent)
 {
-	QString dir = QSettings().value("AddImage/Path", QDesktopServices::storageLocation(QDesktopServices::PicturesLocation)).toString();
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+	QString dir = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+#else
+	QString dir = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
+#endif
+	dir = QSettings().value("AddImage/Path", dir).toString();
 	QStringList images = QFileDialog::getOpenFileNames(parent, tr("Open Image"), dir, supportedFormats());
 	if (!images.isEmpty()) {
 		QSettings().setValue("AddImage/Path", QFileInfo(images.last()).absolutePath());

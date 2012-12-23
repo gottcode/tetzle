@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,22 @@
 
 #include "path.h"
 
-#include <QDesktopServices>
 #include <QString>
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+#include <QStandardPaths>
+#else
+#include <QDesktopServices>
+#endif
 
 //-----------------------------------------------------------------------------
 
 QString Path::datapath()
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+	static QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/";
+#else
 	static QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/";
+#endif
 	return path;
 }
 
