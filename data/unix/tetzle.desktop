@@ -8,4 +8,4 @@ TryExec=tetzle
 Exec=tetzle %F
 Terminal=false
 MimeType=image/bmp;image/gif;image/jpg;image/jpeg;image/png;image/x-png;image/x-ico;image/tiff;image/x-portable-bitmap;image/x-portable-graymap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap;image/svg+xml;image/svg+xml-compressed;
-Categories=Qt;Game;LogicGame
+Categories=Qt;Game;LogicGame;
