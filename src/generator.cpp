@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2013 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,10 +136,10 @@ void Generator::solve()
 
 //-----------------------------------------------------------------------------
 
-void Generator::solution(const QVector<DLX::Node*>& rows, unsigned int count)
+void Generator::solution(const QVector<DLX::Node*>& rows)
 {
 	QList<Tile*> piece;
-	for (unsigned int i = 0; i < count; ++i) {
+	for (int i = 0; i < rows.count(); ++i) {
 		piece.clear();
 		DLX::Node* j = rows[i];
 		do {

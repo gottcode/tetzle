@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2013 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public:
 
 private:
 	void solve();
-	void solution(const QVector<DLX::Node*>& rows, unsigned int count);
+	void solution(const QVector<DLX::Node*>& rows);
 
 private:
 	int m_columns;
