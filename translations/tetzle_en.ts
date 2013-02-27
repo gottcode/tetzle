@@ -4,7 +4,7 @@
 <context>
     <name>AddImage</name>
     <message>
-        <location filename="../src/add_image.cpp" line="77"/>
+        <location filename="../src/add_image.cpp" line="87"/>
         <source>Open Image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,42 +12,42 @@
 <context>
     <name>AppearanceDialog</name>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="55"/>
+        <location filename="../src/appearance_dialog.cpp" line="59"/>
         <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="64"/>
+        <location filename="../src/appearance_dialog.cpp" line="68"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="66"/>
+        <location filename="../src/appearance_dialog.cpp" line="70"/>
         <source>Beveled borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="69"/>
+        <location filename="../src/appearance_dialog.cpp" line="73"/>
         <source>Drop shadows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="73"/>
+        <location filename="../src/appearance_dialog.cpp" line="77"/>
         <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="92"/>
+        <location filename="../src/appearance_dialog.cpp" line="96"/>
         <source>Background:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="93"/>
+        <location filename="../src/appearance_dialog.cpp" line="97"/>
         <source>Shadow:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="94"/>
+        <location filename="../src/appearance_dialog.cpp" line="98"/>
         <source>Highlight:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -183,12 +183,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="181"/>
+        <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="181"/>
+        <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation type="unfinished"></translation>
     </message>

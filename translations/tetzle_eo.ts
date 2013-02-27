@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru">
+<TS version="2.0" language="eo">
 <context>
     <name>AddImage</name>
     <message>
         <location filename="../src/add_image.cpp" line="87"/>
         <source>Open Image</source>
-        <translation>Открыть изображение</translation>
+        <translation>Malfermi bildon</translation>
     </message>
 </context>
 <context>
@@ -14,42 +14,42 @@
     <message>
         <location filename="../src/appearance_dialog.cpp" line="59"/>
         <source>Appearance</source>
-        <translation>Вид</translation>
+        <translation>Apero</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="68"/>
         <source>Options</source>
-        <translation>Опции</translation>
+        <translation>Opcioj</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="70"/>
         <source>Beveled borders</source>
-        <translation>Видимые границы</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="73"/>
         <source>Drop shadows</source>
-        <translation>Убрать тени</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="77"/>
         <source>Colors</source>
-        <translation>Цвета</translation>
+        <translation>Koloroj</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="96"/>
         <source>Background:</source>
-        <translation>Задний фон</translation>
+        <translation>Fono:</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="97"/>
         <source>Shadow:</source>
-        <translation>Тень</translation>
+        <translation>Ombro:</translation>
     </message>
     <message>
         <location filename="../src/appearance_dialog.cpp" line="98"/>
         <source>Highlight:</source>
-        <translation>Подсветка</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59,81 +59,81 @@
         <location filename="../src/board.cpp" line="293"/>
         <location filename="../src/board.cpp" line="361"/>
         <source>Error</source>
-        <translation>Ошибка</translation>
+        <translation>Eraro</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="187"/>
         <location filename="../src/board.cpp" line="293"/>
         <source>Missing image.</source>
-        <translation>Изображение отсутствует.</translation>
+        <translation>Bildo mankas.</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="194"/>
         <location filename="../src/board.cpp" line="269"/>
         <location filename="../src/main.cpp" line="146"/>
         <source>Please Wait</source>
-        <translation>Пожалуйста, подождите</translation>
+        <translation>Bonvile atendu</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="216"/>
         <location filename="../src/board.cpp" line="368"/>
         <source>Loading image...</source>
-        <translation>Загрузка изображения...</translation>
+        <translation>Ŝargado de bildo...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="222"/>
         <source>Generating puzzle...</source>
-        <translation>Генерация пазла...</translation>
+        <translation>Generado de puzlo...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="228"/>
         <location filename="../src/board.cpp" line="242"/>
         <source>Creating pieces...</source>
-        <translation>Создание пазлов...</translation>
+        <translation>Kreado de eroj...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="281"/>
         <source>Loading puzzle...</source>
-        <translation>Загрузка пазла...</translation>
+        <translation>Ŝargado de puzlo...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="306"/>
         <source>Unknown data format</source>
-        <translation>Неизвестный формат файла</translation>
+        <translation>Nekonata aranĝo de datumoj</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="356"/>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Неизвестный элемент &apos;%1&apos;</translation>
+        <translation>Nekonata ero &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="361"/>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Ошибка при обработке XML-файла.
+        <translation>Eraro dum analizado de XML-dosiero.
 
 %1</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="372"/>
         <source>Loading pieces...</source>
-        <translation>Загрузка пазлов...</translation>
+        <translation>Ŝargado de eroj...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="454"/>
         <source>Retrieving pieces...</source>
-        <translation>Перемешиваем пазлы...</translation>
+        <translation>Ricevado de eroj...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="994"/>
         <source>Placing pieces...</source>
-        <translation>Размещение пазлов...</translation>
+        <translation>Metado de eroj...</translation>
     </message>
     <message>
         <location filename="../src/board.cpp" line="1326"/>
         <source>Success</source>
-        <translation>Успех!</translation>
+        <translation>Sukcese</translation>
     </message>
 </context>
 <context>
@@ -141,17 +141,17 @@
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="38"/>
         <source>Choose Game</source>
-        <translation>Выберите игру</translation>
+        <translation>Elektu ludon</translation>
     </message>
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="52"/>
         <source>Current Games</source>
-        <translation>Текущие игры</translation>
+        <translation>Aktuala ludo</translation>
     </message>
     <message>
         <location filename="../src/choose_game_dialog.cpp" line="57"/>
         <source>New Game</source>
-        <translation>Новая игра</translation>
+        <translation>Nova ludo</translation>
     </message>
 </context>
 <context>
@@ -159,17 +159,17 @@
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="39"/>
         <source>Image Properties</source>
-        <translation>Настройки изображения</translation>
+        <translation>Ecoj de bildo</translation>
     </message>
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="72"/>
         <source>Name:</source>
-        <translation>Название:</translation>
+        <translation>Nomo:</translation>
     </message>
     <message>
         <location filename="../src/image_properties_dialog.cpp" line="73"/>
         <source>Tags:</source>
-        <translation>Тэги:</translation>
+        <translation>Etkedoj:</translation>
     </message>
 </context>
 <context>
@@ -177,22 +177,22 @@
     <message>
         <location filename="../src/locale_dialog.cpp" line="50"/>
         <source>Select application language:</source>
-        <translation>Выберите язык программы:</translation>
+        <translation>Elektu lingvon de alikaĵo:</translation>
     </message>
     <message>
         <location filename="../src/locale_dialog.cpp" line="53"/>
         <source>&lt;System Language&gt;</source>
-        <translation>&lt;Язык системы&gt;</translation>
+        <translation>&lt;Lingvo de sistemo&gt;</translation>
     </message>
     <message>
         <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Note</source>
-        <translation>Предупреждение</translation>
+        <translation>Noto</translation>
     </message>
     <message>
         <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation>Пожалуйста, перезапустите программу для того, чтобы изменения вступили в силу.</translation>
+        <translation>Bonvole restartigu ĉi tiun aplikaĵon por efektivigi la ŝanĝon de lingvo.</translation>
     </message>
 </context>
 <context>
@@ -200,53 +200,53 @@
     <message>
         <location filename="../src/new_game_tab.cpp" line="105"/>
         <source>Add Image</source>
-        <translation>Добавить изображение</translation>
+        <translation>Aldoni bildon</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="109"/>
         <location filename="../src/new_game_tab.cpp" line="290"/>
         <source>Remove Image</source>
-        <translation>Удалить изображение</translation>
+        <translation>Forigi bildon</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="113"/>
         <source>Image Properties</source>
-        <translation>Настройки изображения</translation>
+        <translation>Ecoj de bildo</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="132"/>
         <location filename="../src/new_game_tab.cpp" line="383"/>
         <source>%L1 pieces</source>
-        <translation>%L1 пазлов</translation>
+        <translation>%L1 eroj</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="193"/>
         <source>Copying images...</source>
-        <translation>Копируем изображения...</translation>
+        <translation>Kopiado de bildo...</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="193"/>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Nuligi</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="286"/>
         <source>Remove selected image?</source>
-        <translation>Удалить выбранное изображение?</translation>
+        <translation>Ĉu forigi elektitan bildon?</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="288"/>
         <source>Remove selected image?
 
 There are saved games using this image that will also be removed.</source>
-        <translation>Удалить выбранное изображение?
+        <translation>Ĉu forigi elektitan bildon?
 
-Сохраненные игры, использующие это изображение, также будут удалены.</translation>
+Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</translation>
     </message>
     <message>
         <location filename="../src/new_game_tab.cpp" line="493"/>
         <source>Untitled</source>
-        <translation>Без названия</translation>
+        <translation>Sentitola</translation>
     </message>
 </context>
 <context>
@@ -254,27 +254,27 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/open_game_tab.cpp" line="86"/>
         <source>Untitled</source>
-        <translation>Без названия</translation>
+        <translation>Sentitola</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="89"/>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation>%L1 пазлов %2 %3% завершено</translation>
+        <translation>%L1 eroj %2 %3% plenumita</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="105"/>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Forigi</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="148"/>
         <source>Delete Game</source>
-        <translation>Удалить игру</translation>
+        <translation>Forigi ludon</translation>
     </message>
     <message>
         <location filename="../src/open_game_tab.cpp" line="148"/>
         <source>Delete selected game?</source>
-        <translation>Удалить выбранную игру?</translation>
+        <translation>Ĉu forigi ludon?</translation>
     </message>
 </context>
 <context>
@@ -282,7 +282,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/overview.cpp" line="38"/>
         <source>Overview</source>
-        <translation>Общий вид</translation>
+        <translation>Superrigardo</translation>
     </message>
 </context>
 <context>
@@ -290,47 +290,47 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/tag_manager.cpp" line="50"/>
         <source>Add Tag</source>
-        <translation>Добавить тэг</translation>
+        <translation>Aldoni etikedon</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="54"/>
         <source>Remove Tag</source>
-        <translation>Удалить тэг</translation>
+        <translation>Forigi etikedon</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="59"/>
         <source>Untagged</source>
-        <translation>Нет тега</translation>
+        <translation>Senetikeda</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="88"/>
         <source>All Images</source>
-        <translation>Все изображения</translation>
+        <translation>Ĉiuj bildoj</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="208"/>
         <source>Untitled %1</source>
-        <translation>Без названия %1</translation>
+        <translation>Sentitola %1</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="232"/>
         <source>Question</source>
-        <translation>Вопрос</translation>
+        <translation>Demando</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="232"/>
         <source>Remove selected tag?</source>
-        <translation>Удалить выбранный тэг?</translation>
+        <translation>Ĉu forigi elektitan etikedon?</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="273"/>
         <source>Sorry</source>
-        <translation>Извините</translation>
+        <translation>Mi pardonpetas</translation>
     </message>
     <message>
         <location filename="../src/tag_manager.cpp" line="273"/>
         <source>A tag with that name already exists.</source>
-        <translation>Такой тэг уже существует.</translation>
+        <translation>Samnoma etikedo jam ekzistas.</translation>
     </message>
 </context>
 <context>
@@ -340,42 +340,42 @@ There are saved games using this image that will also be removed.</source>
         <location filename="../src/window.cpp" line="50"/>
         <location filename="../src/window.cpp" line="286"/>
         <source>Tetzle</source>
-        <translation>Tetzle</translation>
+        <translation>Tetzlo</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="80"/>
         <source>&amp;Game</source>
-        <translation>&amp;Игра</translation>
+        <translation>&amp;Ludo</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="84"/>
         <source>&amp;Retrieve Pieces</source>
-        <translation>&amp;Перемешать пазлы</translation>
+        <translation>&amp;Ricevi erojn</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="84"/>
         <source>Ctrl+R</source>
-        <translation>Ctrl+R</translation>
+        <translation>Stir+R</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="88"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Выход</translation>
+        <translation>&amp;Eliri</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="81"/>
         <source>&amp;Choose...</source>
-        <translation>&amp;Выбрать...</translation>
+        <translation>&amp;Elektu...</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="91"/>
         <source>&amp;View</source>
-        <translation>&amp;Вид</translation>
+        <translation>&amp;Vido</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="92"/>
         <source>Zoom &amp;In</source>
-        <translation>У&amp;величить</translation>
+        <translation>Pl&amp;igrandigi</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="92"/>
@@ -385,7 +385,7 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="95"/>
         <source>Zoom &amp;Out</source>
-        <translation>У&amp;меньшить</translation>
+        <translation>&amp;Malpligrandigi</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="95"/>
@@ -395,22 +395,22 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="98"/>
         <source>Best &amp;Fit</source>
-        <translation>Наилучший вид</translation>
+        <translation>&amp;Plejbona adapto</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="101"/>
         <source>Show O&amp;verview</source>
-        <translation>Показывать &amp;общий вид</translation>
+        <translation>&amp;Montri superrigardon</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="101"/>
         <source>Tab</source>
-        <translation>Tab</translation>
+        <translation>Langeto</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="107"/>
         <source>F&amp;ullscreen</source>
-        <translation>&amp;На весь экран</translation>
+        <translation>T&amp;utekrane</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="111"/>
@@ -420,133 +420,133 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <location filename="../src/window.cpp" line="113"/>
         <source>Ctrl+F</source>
-        <translation>Ctrl+F</translation>
+        <translation>Stir+F</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="116"/>
         <source>&amp;Settings</source>
-        <translation>Н&amp;астройки</translation>
+        <translation>&amp;Agordoj</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="117"/>
         <source>&amp;Appearance...</source>
-        <translation>&amp;Вид...</translation>
+        <translation>&amp;Apero...</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="118"/>
         <source>&amp;Language...</source>
-        <translation>&amp;Язык...</translation>
+        <translation>&amp;Lingvo...</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="120"/>
         <source>&amp;Help</source>
-        <translation>&amp;Помощь</translation>
+        <translation>&amp;Helpo</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="121"/>
         <source>&amp;Controls</source>
-        <translation>&amp;Управление</translation>
+        <translation>&amp;Stiriloj</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="123"/>
         <source>&amp;About</source>
-        <translation>&amp;Об игре</translation>
+        <translation>&amp;Pri</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="125"/>
         <source>About &amp;Qt</source>
-        <translation>О Qt&amp;</translation>
+        <translation>Pri &amp;Qt</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="252"/>
         <source>Controls</source>
-        <translation>Управление</translation>
+        <translation>Stiriloj</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="259"/>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Брать пазлы:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Prenu erojn;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="260"/>
         <location filename="../src/window.cpp" line="262"/>
         <source>Left Click or Space</source>
-        <translation>Левый клик или пробел</translation>
+        <translation>Maldekstra alklako aŭ spaceto</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="261"/>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Отпускать пазлы:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Demetu erojn:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="263"/>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Выделять пазлы&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Elektu erojn:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="264"/>
         <source>Left Drag</source>
-        <translation>Зажать левую кнопку мыши и выделять</translation>
+        <translation>Maldekstra ŝovo</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="265"/>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Вращение элементов:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Turnu erojn:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="266"/>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation>Правый клик, Ctrl + левый клик, или R</translation>
+        <translation>Dekstra alklako, stirklavo + maldekstra alklako aŭ R</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="267"/>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Двигать полотно пазла:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Ŝovu puzlon:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="268"/>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
-        <translation>Зажать колесико мышки, Shift+ Левый клик, или кнопки Влево, Вправо, Вверх и Вниз</translation>
+        <translation>Meza alklako, majuskliga klavo + dekstra alklako aŭ sagoj</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="269"/>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Увеличить пазл:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Pligrandigu puzlon:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="270"/>
         <source>Scrollwheel or +/-</source>
-        <translation>Колесо прокрутки или +/-</translation>
+        <translation>Rulumrado aŭ +/-</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="271"/>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Двигать курсор:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Movu kursoron:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="272"/>
         <source>Move mouse or W,A,D,S</source>
-        <translation>Мышь или W,A,S,D</translation>
+        <translation>Movi muson aŭ W, A, D kaj S</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="285"/>
         <source>About Tetzle</source>
-        <translation>О Tetlze</translation>
+        <translation>Pri Tetzlo</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="287"/>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation>Игра-головоломка с тетрамино</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="288"/>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation>Копирайт &amp;copy; 20080%1 Graeme Gott</translation>
+        <translation>Kopirajto &amp;copy; 2008-%1 Graeme GOTT</translation>
     </message>
     <message>
         <location filename="../src/window.cpp" line="289"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation>Опубликовано под лицензией &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
+        <translation>Publikigita sub la permesilo &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
 </context>
 <context>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="uk_UA" sourcelanguage="en">
+<TS version="2.0" language="uk_UA">
 <context>
     <name>AddImage</name>
     <message>
-        <location filename="../src/add_image.cpp" line="77"/>
+        <location filename="../src/add_image.cpp" line="87"/>
         <source>Open Image</source>
         <translation>Відкрити зображення</translation>
     </message>
@@ -12,42 +12,42 @@
 <context>
     <name>AppearanceDialog</name>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="55"/>
+        <location filename="../src/appearance_dialog.cpp" line="59"/>
         <source>Appearance</source>
         <translation>Вигляд</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="64"/>
+        <location filename="../src/appearance_dialog.cpp" line="68"/>
         <source>Options</source>
         <translation>Параметри</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="66"/>
+        <location filename="../src/appearance_dialog.cpp" line="70"/>
         <source>Beveled borders</source>
         <translation>Скісні краї</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="69"/>
+        <location filename="../src/appearance_dialog.cpp" line="73"/>
         <source>Drop shadows</source>
         <translation>Різкі тіні</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="73"/>
+        <location filename="../src/appearance_dialog.cpp" line="77"/>
         <source>Colors</source>
         <translation>Колір</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="92"/>
+        <location filename="../src/appearance_dialog.cpp" line="96"/>
         <source>Background:</source>
         <translation>Фон:</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="93"/>
+        <location filename="../src/appearance_dialog.cpp" line="97"/>
         <source>Shadow:</source>
         <translation>Тінь:</translation>
     </message>
     <message>
-        <location filename="../src/appearance_dialog.cpp" line="94"/>
+        <location filename="../src/appearance_dialog.cpp" line="98"/>
         <source>Highlight:</source>
         <translation>Підсвічування:</translation>
     </message>
@@ -185,12 +185,12 @@
         <translation>&lt;Системна мова&gt;</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="181"/>
+        <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Note</source>
         <translation>Нотатка</translation>
     </message>
     <message>
-        <location filename="../src/locale_dialog.cpp" line="181"/>
+        <location filename="../src/locale_dialog.cpp" line="183"/>
         <source>Please restart this application for the change in language to take effect.</source>
         <translation>Перезапустіть програму, щоб зміна мови набула сили.</translation>
     </message>
