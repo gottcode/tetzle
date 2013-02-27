@@ -1,17 +1,16 @@
+lessThan(QT_VERSION, 4.7) {
+	error("Tetzle requires Qt 4.7 or greater")
+}
+
 TEMPLATE = app
+QT += opengl
 greaterThan(QT_MAJOR_VERSION, 4) {
 	QT += widgets
 }
-QT += opengl
 CONFIG += warn_on
 macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
-	CONFIG += x86_64
 }
-
-MOC_DIR = build
-OBJECTS_DIR = build
-RCC_DIR = build
 
 VERSION = $$system(git rev-parse --short HEAD)
 isEmpty(VERSION) {
@@ -74,13 +73,7 @@ SOURCES = src/add_image.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 
-TRANSLATIONS = translations/tetzle_de.ts \
-	translations/tetzle_en.ts \
-	translations/tetzle_fr.ts \
-	translations/tetzle_lv.ts \
-	translations/tetzle_ru.ts \
-	translations/tetzle_uk.ts \
-	translations/tetzle_uk_UA.ts
+TRANSLATIONS = $$files(translations/tetzle_*.ts)
 
 RESOURCES = data/data.qrc icons/icon.qrc
 macx:ICON = icons/tetzle.icns
