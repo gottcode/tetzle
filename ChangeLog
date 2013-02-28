@@ -1,4 +1,5 @@
 2013-02-28 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Treated command-line parameters as files to open.
 	* FIXED: Did not migrate data from previous versions.
 	* Update data path for Qt 5.
 

@@ -73,6 +73,14 @@ Application::Application(int& argc, char** argv)
 
 void Application::createWindow()
 {
+	// Remove command-line parameters from file list
+	for (int i = 0; i < m_files.size(); ++i) {
+		if (m_files.at(i).startsWith("--")) {
+			m_files.removeAt(i);
+			--i;
+		}
+	}
+
 	m_window = new Window(m_files);
 }
 
