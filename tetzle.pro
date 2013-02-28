@@ -12,11 +12,8 @@ macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }
 
-VERSION = $$system(git rev-parse --short HEAD)
-isEmpty(VERSION) {
-	VERSION = 0
-}
-DEFINES += VERSIONSTR=\\\"git.$${VERSION}\\\"
+VERSION = 2.0.2
+DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
 	TARGET = tetzle
