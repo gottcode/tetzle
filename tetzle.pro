@@ -12,7 +12,7 @@ macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }
 
-VERSION = 2.0.2
+VERSION = 2.0.2.1
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
