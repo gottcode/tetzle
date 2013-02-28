@@ -33,6 +33,8 @@
 #endif
 #include <QStringList>
 
+#include <cstdlib>
+
 //-----------------------------------------------------------------------------
 
 QString Path::datapath()
