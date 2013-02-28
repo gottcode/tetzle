@@ -117,15 +117,38 @@ int main(int argc, char** argv)
 	// Load application language
 	LocaleDialog::loadTranslator("tetzle_");
 
-	// Update data location
+	// Create data location
 	QString path = Path::datapath();
 	if (!QFile::exists(path)) {
+		QDir dir(path);
+		dir.mkpath(dir.absolutePath());
+
+		// Migrate data from old location
 		QString oldpath = Path::oldDataPath();
-		if (!QFile::exists(oldpath)) {
-			QDir dir(path);
-			dir.mkpath(dir.absolutePath());
-		} else {
-			QFile::rename(oldpath, path);
+		if (QFile::exists(oldpath)) {
+			QStringList old_dirs = QStringList() << "";
+
+			QDir olddir(oldpath);
+			for (int i = 0; i < old_dirs.count(); ++i) {
+				QString subpath = old_dirs.at(i);
+				dir.mkpath(path + "/" + subpath);
+				olddir.setPath(oldpath + "/" + subpath);
+
+				QStringList subdirs = olddir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+				foreach (const QString& subdir, subdirs) {
+					old_dirs.append(subpath + "/" + subdir);
+				}
+
+				QStringList files = olddir.entryList(QDir::Files);
+				foreach (const QString& file, files) {
+					QFile::rename(olddir.absoluteFilePath(file), path + "/" + subpath + "/" + file);
+				}
+			}
+
+			olddir.setPath(oldpath);
+			for (int i = old_dirs.count() - 1; i >= 0; --i) {
+				olddir.rmdir(oldpath + "/" + old_dirs.at(i));
+			}
 		}
 	}
 	dir.setPath(path);
