@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2013 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,20 +120,10 @@ int main(int argc, char** argv)
 	// Update data location
 	QString path = Path::datapath();
 	if (!QFile::exists(path)) {
-#if defined(Q_OS_MAC)
-		QString oldpath = QDir::homePath() + "/Library/Application Support/GottCode/Tetzle/";
-#elif defined(Q_OS_UNIX)
-		QString oldpath = getenv("$XDG_DATA_HOME");
-		if (oldpath.isEmpty()) {
-			oldpath = QDir::homePath() + "/.local/share/";
-		}
-		oldpath += "/games/tetzle/";
-#elif defined(Q_OS_WIN32)
-		QString oldpath = QDir::homePath() + "/Application Data/GottCode/Tetzle/";
-#endif
+		QString oldpath = Path::oldDataPath();
 		if (!QFile::exists(oldpath)) {
-			dir = QDir::home();
-			dir.mkpath(path);
+			QDir dir(path);
+			dir.mkpath(dir.absolutePath());
 		} else {
 			QFile::rename(oldpath, path);
 		}

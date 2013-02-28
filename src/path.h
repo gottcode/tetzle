@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2013 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ class Path
 {
 public:
 	static QString datapath();
+	static QString oldDataPath();
 
 	static QString image(const QString& file);
 	static QString thumbnail(const QString& image);
