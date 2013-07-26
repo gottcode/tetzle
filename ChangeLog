@@ -1,3 +1,6 @@
+2013-07-26 Graeme Gott <graeme@gottcode.org>
+	* FIXED: Build failure on ARM.
+
 2013-02-28 Graeme Gott <graeme@gottcode.org>
 	* Tag version 2.0.2.1.
 	* FIXED: Compile error.
