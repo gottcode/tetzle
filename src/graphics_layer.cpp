@@ -143,11 +143,9 @@ static inline void convertMatrix(const float* in, GLfloat* out)
 	std::copy(in, in + 16, out);
 }
 
-static inline void convertMatrix(const qreal* in, GLfloat* out)
+static inline void convertMatrix(const double* in, GLfloat* out)
 {
-	for (int i = 0; i < 16; ++i) {
-		out[i] = static_cast<GLfloat>(in[i]);
-	}
+	std::copy(in, in + 16, out);
 }
 
 //-----------------------------------------------------------------------------
