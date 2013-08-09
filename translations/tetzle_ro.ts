@@ -70,7 +70,7 @@
     <message>
         <location filename="../src/board.cpp" line="194"/>
         <location filename="../src/board.cpp" line="269"/>
-        <location filename="../src/main.cpp" line="146"/>
+        <location filename="../src/main.cpp" line="167"/>
         <source>Please Wait</source>
         <translation>Vă rugăm aşteptaţi</translation>
     </message>
@@ -336,7 +336,7 @@ Există jocuri salvate care folosesc această imagine, care vor fi, de asemenea,
 <context>
     <name>Window</name>
     <message>
-        <location filename="../src/main.cpp" line="147"/>
+        <location filename="../src/main.cpp" line="168"/>
         <location filename="../src/window.cpp" line="50"/>
         <location filename="../src/window.cpp" line="286"/>
         <source>Tetzle</source>
