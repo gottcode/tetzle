@@ -1,8 +1,17 @@
 [Desktop Entry]
 Type=Application
 Name=Tetzle
+Name[cs]=Tetzle
+Name[ro]=Tetzle
+Name[tr]=Tetzle
 GenericName=Jigsaw Puzzle Game
+GenericName[cs]=Skládanka
+GenericName[ro]=Joc puzzle
+GenericName[tr]=Yap-Boz Bulmaca Oyunu
 Comment=Jigsaw puzzle with tetromino pieces
+Comment[cs]=Skládanka s díly ve tvaru tetromina
+Comment[ro]=Joc puzzle cu piese teromino
+Comment[tr]=Tetris benzeri parçalı bir yap-boz oyunu
 Icon=tetzle
 TryExec=tetzle
 Exec=tetzle %F
