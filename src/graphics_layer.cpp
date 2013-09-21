@@ -563,9 +563,17 @@ void GraphicsLayer21::uploadData()
 
 QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 {
+	// Find shader code version
+	QString shader_version;
+	if (glsl_version >= "130") {
+		shader_version = "130";
+	} else {
+		shader_version = "120";
+	}
+
 	// Load vertex shader code
 	QString vertex;
-	QFile file(QString(":/shaders/textures%1.vert").arg(index));
+	QFile file(QString(":/shaders/%1/textures%2.vert").arg(shader_version).arg(index));
 	if (file.open(QFile::ReadOnly)) {
 		vertex = file.readAll();
 		file.close();
@@ -573,21 +581,16 @@ QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 
 	// Load fragment shader code
 	QString frag;
-	file.setFileName(QString(":/shaders/textures%1.frag").arg(index));
+	file.setFileName(QString(":/shaders/%1/textures%2.frag").arg(shader_version).arg(index));
 	if (file.open(QFile::ReadOnly)) {
 		frag = file.readAll();
 		file.close();
 	}
 
 	// Update GLSL version
-	if (glsl_version >= "130") {
-		vertex.replace("#version 120\n", "#version " + glsl_version + "\n");
-		vertex.replace("attribute ", "in ");
-		vertex.replace("varying ", "out ");
-
-		frag.replace("#version 120\n", "#version " + glsl_version + "\n\nout vec4 out_color;\n");
-		frag.replace("gl_FragColor", "out_color");
-		frag.replace("varying ", "in ");
+	if (glsl_version > shader_version) {
+		vertex.replace("#version " + shader_version + "\n", "#version " + glsl_version + "\n");
+		frag.replace("#version " + shader_version + "\n", "#version " + glsl_version + "\n");
 	}
 
 	// Create program

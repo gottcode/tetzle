@@ -4,12 +4,19 @@
 	<file>loading.png</file>
 	<file>shadow.png</file>
 
-	<file>shaders/textures0.frag</file>
-	<file>shaders/textures0.vert</file>
-	<file>shaders/textures1.frag</file>
-	<file>shaders/textures1.vert</file>
-	<file>shaders/textures2.frag</file>
-	<file>shaders/textures2.vert</file>
+	<file>shaders/120/textures0.frag</file>
+	<file>shaders/120/textures0.vert</file>
+	<file>shaders/120/textures1.frag</file>
+	<file>shaders/120/textures1.vert</file>
+	<file>shaders/120/textures2.frag</file>
+	<file>shaders/120/textures2.vert</file>
+
+	<file>shaders/130/textures0.frag</file>
+	<file>shaders/130/textures0.vert</file>
+	<file>shaders/130/textures1.frag</file>
+	<file>shaders/130/textures1.vert</file>
+	<file>shaders/130/textures2.frag</file>
+	<file>shaders/130/textures2.vert</file>
 
 	<file>tango/image-x-generic.png</file>
 	<file>tango/list-add.png</file>
