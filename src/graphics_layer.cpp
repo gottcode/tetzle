@@ -83,6 +83,7 @@ static PFNGLGENBUFFERSPROC genBuffers = 0;
 #endif
 
 static QString glsl_version;
+static QString shader_version;
 
 // OpenGL 3 string
 #ifndef GL_VERSION_3_0
@@ -179,6 +180,7 @@ void GraphicsLayer::init()
 		glsl.truncate(index);
 	}
 	glsl.replace('.', "");
+	glsl.truncate(3);
 	if (QGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
 		state |= FragmentShadersFlag;
 		symbols |= FragmentShadersFlag;
@@ -259,13 +261,18 @@ void GraphicsLayer::init()
 	// Create graphics layer instance
 	switch (state) {
 	case Version30:
-		glsl_version = (glsl <= "420") ? glsl : "420";
+		glsl_version = (glsl <= "440") ? glsl : "440";
+		if (glsl_version >= "330") {
+			shader_version = "330";
+		} else {
+			shader_version = "130";
+		}
 		genVertexArrays(1, &vao_id);
 		bindVertexArray(vao_id);
 		graphics_layer = new GraphicsLayer21;
 		break;
 	case Version21:
-		glsl_version = "120";
+		glsl_version = shader_version = "120";
 		graphics_layer = new GraphicsLayer21;
 		break;
 	case Version15:
@@ -563,14 +570,6 @@ void GraphicsLayer21::uploadData()
 
 QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 {
-	// Find shader code version
-	QString shader_version;
-	if (glsl_version >= "130") {
-		shader_version = "130";
-	} else {
-		shader_version = "120";
-	}
-
 	// Load vertex shader code
 	QString vertex;
 	QFile file(QString(":/shaders/%1/textures%2.vert").arg(shader_version).arg(index));
@@ -599,12 +598,14 @@ QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 	m_programs[index]->addShaderFromSourceCode(QGLShader::Fragment, frag);
 
 	// Set attribute locations
-	m_programs[index]->bindAttributeLocation("position", Position);
-	if (index > 0) {
-		m_programs[index]->bindAttributeLocation("texcoord0", TexCoord0);
-	}
-	if (index > 1) {
-		m_programs[index]->bindAttributeLocation("texcoord1", TexCoord1);
+	if (shader_version < "330") {
+		m_programs[index]->bindAttributeLocation("position", Position);
+		if (index > 0) {
+			m_programs[index]->bindAttributeLocation("texcoord0", TexCoord0);
+		}
+		if (index > 1) {
+			m_programs[index]->bindAttributeLocation("texcoord1", TexCoord1);
+		}
 	}
 
 	// Link and bind program
