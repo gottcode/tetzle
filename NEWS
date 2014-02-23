@@ -1,0 +1,77 @@
+2.0.3
+-----
+* Fixed OpenGL shaders not working in Windows 7.
+* Fixed build failure on ARM.
+* Translation updates: Malay, Polish.
+
+2.0.2.1
+-------
+* Fixed compile error.
+
+2.0.2
+-----
+* Added support for Qt 5.
+* Bug fixes.
+* Translation updates: Esperanto, French, Romanian.
+
+2.0.1
+-----
+* Bug fixes.
+* Translation updates: German, Russian.
+
+2.0.0
+-----
+* Redesigned game visuals.
+* Merged new and open game dialogs.
+* Rewrote collision detection.
+* Rewrote OpenGL render code.
+* Translation updates: Ukrainian.
+
+1.2.1
+-----
+* Fixed: Tile borders were not correctly scaled.
+* Fixed: Mouse cursor drifted off pieces when moving.
+
+1.2.0
+-----
+* Real collision detection added by Ulrik Mikaelsson.
+* Complete keyboard shortcuts added by Frank Tetzel.
+* Toggling borders added by Frank Tetzel.
+* Added zooming and panning to overview.
+* Added retrieving pieces.
+* Added option to use entire image.
+
+1.1.0
+-----
+* Added rectangle selecting multiple pieces.
+* Support for grabbing multiple pieces added by Ulrik Mikaelsson.
+* Algorithm for pushing pieces replaced by Ulrik Mikaelsson.
+* Improved mouse cursor handling.
+* Code cleanups.
+* Bug fixes.
+
+1.0.2
+-----
+* Added image plugins for the Mac and Windows.
+* Minor bug fixes.
+
+1.0.1
+-----
+* Fullscreen mode added by Ulrik Mikaelsson.
+* Bug fixes.
+
+1.0.0
+-----
+* Added label system for images.
+* Improved zooming.
+* Minor bug fixes.
+
+0.7.0
+-----
+* Added puzzle overview.
+* Improved saving games.
+* Added keyboard commands.
+* Added thumbnails to dialogs.
+* Added help menu.
+* Added zooming options.
+* Bug fixes.
