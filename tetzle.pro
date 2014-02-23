@@ -73,10 +73,11 @@ SOURCES = src/add_image.cpp \
 TRANSLATIONS = $$files(translations/tetzle_*.ts)
 
 RESOURCES = data/data.qrc icons/icon.qrc
-macx:ICON = icons/tetzle.icns
-win32:RC_FILE = icons/icon.rc
-
-unix: !macx {
+macx {
+	ICON = icons/tetzle.icns
+} else:win32 {
+	RC_FILE = icons/icon.rc
+} else:unix {
 	isEmpty(PREFIX) {
 		PREFIX = /usr/local
 	}
@@ -98,5 +99,8 @@ unix: !macx {
 	qm.files = translations/*.qm
 	qm.path = $$PREFIX/share/tetzle/translations/
 
-	INSTALLS += target icon pixmap desktop qm
+	man.files = doc/tetzle.6
+	man.path = $$PREFIX/share/man/man6
+
+	INSTALLS += target icon pixmap desktop qm man
 }
