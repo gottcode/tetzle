@@ -1,7 +1,7 @@
 @ECHO OFF
 
 SET APP=Tetzle
-FOR /f %%i IN ('git rev-parse --short HEAD') DO SET VERSION=%%i
+SET VERSION=2.0.3
 
 ECHO Copying executable
 MKDIR %APP%
