@@ -14,9 +14,12 @@ Translations
 Czech:
 * Jan Nekvasil
 
+Dutch:
+* Robert Borst
+
 German:
 * Markus Enzenberger
-* michtrz
+* Michał Trzebiatowski
 
 Esperanto:
 * Michael Moroni
@@ -24,11 +27,14 @@ Esperanto:
 French:
 * Stéphane Aulery
 
+Lithuanian:
+* Moo
+
 Malay:
 * abuyop
 
 Polish:
-* michtrz
+* Michał Trzebiatowski
 
 Portuguese (Brazil):
 * Filipe Oliveira
@@ -57,4 +63,4 @@ Icons
 
 Libraries
 ---------
-* Qt, http://qt-project.org/
+* Qt, http://www.qt.io/
