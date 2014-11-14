@@ -4,6 +4,16 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Tetzle</name>
+  <name xml:lang="cs">Tetzle</name>
+  <name xml:lang="de">Tetzle</name>
+  <name xml:lang="es">Tetzle</name>
+  <name xml:lang="ms">Tetzle</name>
+  <name xml:lang="nl">Tetzle</name>
+  <name xml:lang="pl">Tetzle</name>
+  <name xml:lang="pt_BR">Tetzle</name>
+  <name xml:lang="ro">Tetzle</name>
+  <name xml:lang="ru">Tetzle</name>
+  <name xml:lang="tr">Tetzle</name>
   <summary>Jigsaw puzzle with tetromino pieces</summary>
   <summary xml:lang="cs">Skládanka s díly ve tvaru tetromina</summary>
   <summary xml:lang="de">Ein Puzzlespiel mit Tetrominos als Puzzleteile</summary>

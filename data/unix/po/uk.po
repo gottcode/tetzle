@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 18:21+0000\n"
+"POT-Creation-Date: 2014-11-14 20:57+0000\n"
 "PO-Revision-Date: 2014-11-14 18:22+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/tetzle/"
@@ -19,20 +19,20 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:3
+#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:1
+msgid "Tetzle"
+msgstr ""
+
+#: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr ""
 
-#: ../tetzle.appdata.xml.in.h:2
+#: ../tetzle.appdata.xml.in.h:3
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
 "image can be imported and used to create puzzles with a wide range of sizes. "
 "Games are saved automatically, and you can select between currently in "
 "progress games."
-msgstr ""
-
-#: ../tetzle.desktop.in.h:1
-msgid "Tetzle"
 msgstr ""
 
 #: ../tetzle.desktop.in.h:2
