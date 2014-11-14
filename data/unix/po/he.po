@@ -1,0 +1,39 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Graeme Gott
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Tetzle\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-14 18:21+0000\n"
+"PO-Revision-Date: 2014-11-14 18:22+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hebrew (http://www.transifex.com/projects/p/tetzle/language/"
+"he/)\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:3
+msgid "Jigsaw puzzle with tetromino pieces"
+msgstr ""
+
+#: ../tetzle.appdata.xml.in.h:2
+msgid ""
+"Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
+"image can be imported and used to create puzzles with a wide range of sizes. "
+"Games are saved automatically, and you can select between currently in "
+"progress games."
+msgstr ""
+
+#: ../tetzle.desktop.in.h:1
+msgid "Tetzle"
+msgstr ""
+
+#: ../tetzle.desktop.in.h:2
+msgid "Jigsaw Puzzle Game"
+msgstr ""

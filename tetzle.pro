@@ -96,11 +96,14 @@ macx {
 	desktop.files = data/unix/tetzle.desktop
 	desktop.path = $$PREFIX/share/applications/
 
+	appdata.files = data/unix/tetzle.appdata.xml
+	appdata.path = $$PREFIX/share/appdata/
+
 	qm.files = translations/*.qm
 	qm.path = $$PREFIX/share/tetzle/translations/
 
 	man.files = doc/tetzle.6
 	man.path = $$PREFIX/share/man/man6
 
-	INSTALLS += target icon pixmap desktop qm man
+	INSTALLS += target icon pixmap desktop appdata qm man
 }
