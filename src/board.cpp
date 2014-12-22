@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	QPalette palette = dialog.colors();
 	qglClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
-	foreach (Piece* piece, m_pieces) {
+	for (Piece* piece : m_pieces) {
 		piece->setSelected(piece->isSelected());
 	}
 }
@@ -196,8 +196,8 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate ID
 	m_id = 0;
-	foreach (QString file, QDir(Path::saves()).entryList(QDir::Files)) {
-		m_id = qMax(m_id, file.section(".", 0, 0).toInt());
+	for (const QString& file : QDir(Path::saves()).entryList(QDir::Files)) {
+		m_id = std::max(m_id, file.section(".", 0, 0).toInt());
 	}
 	m_id++;
 
@@ -205,10 +205,10 @@ void Board::newGame(const QString& image, int difficulty)
 	QSizeF size = QImageReader(Path::image(image)).size();
 	if (size.width() > size.height()) {
 		m_columns = 4 * difficulty;
-		m_rows = qMax(qRound(m_columns * size.height() / size.width()), 1);
+		m_rows = std::max(qRound(m_columns * size.height() / size.width()), 1);
 	} else {
 		m_rows = 4 * difficulty;
-		m_columns = qMax(qRound(m_rows * size.width() / size.height()), 1);
+		m_columns = std::max(qRound(m_rows * size.width() / size.height()), 1);
 	}
 	m_total_pieces = (m_columns * m_rows) / 4;
 
@@ -332,9 +332,9 @@ void Board::openGame(int id)
 				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toString().toInt();
 			}
 			int column = attributes.value("column").toString().toInt();
-			m_columns = qMax(m_columns, column);
+			m_columns = std::max(m_columns, column);
 			int row = attributes.value("row").toString().toInt();
-			m_rows = qMax(m_rows, row);
+			m_rows = std::max(m_rows, row);
 			int bevel = attributes.value("bevel").toString().toInt();
 			if (bevel) {
 				m_load_bevels = true;
@@ -431,13 +431,13 @@ void Board::saveGame()
 		.arg(m_scene.width())
 		.arg(m_scene.height()));
 
-	foreach (Piece* piece, m_pieces) {
+	for (Piece* piece : m_pieces) {
 		piece->save(xml);
 	}
-	foreach (Piece* piece, m_selected_pieces) {
+	for (Piece* piece : m_selected_pieces) {
 		piece->save(xml);
 	}
-	foreach (Piece* piece, m_active_pieces) {
+	for (Piece* piece : m_active_pieces) {
 		piece->save(xml);
 	}
 
@@ -466,7 +466,7 @@ void Board::retrievePieces()
 
 	// Move all pieces to center of view
 	std::random_shuffle(pieces.begin(), pieces.end());
-	foreach (Piece* piece, pieces) {
+	for (Piece* piece : pieces) {
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->setSelected(false);
@@ -502,7 +502,7 @@ void Board::zoomFit()
 	// Find new scale level
 	float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
 	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
-	float factor = qBound(0.0f, qMin(sx, sy), 1.0f);
+	float factor = qBound(0.0f, std::min(sx, sy), 1.0f);
 	int level = 0;
 	for (int i = 9; i >= 0; --i) {
 		if (ZoomSlider::scaleFactor(i) <= factor) {
@@ -1123,16 +1123,16 @@ void Board::loadImage()
 	GLint max_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
 	max_size /= 2;
-	if (max_size < qMax(size.width(), size.height())) {
+	if (max_size < std::max(size.width(), size.height())) {
 		size.scale(max_size, max_size, Qt::KeepAspectRatio);
 	}
 
 	// Create puzzle texture
 	int tile_size = Tile::size;
 	if (m_columns > m_rows) {
-		tile_size = qMin(tile_size, size.width() / m_columns);
+		tile_size = std::min(tile_size, size.width() / m_columns);
 	} else {
-		tile_size = qMin(tile_size, size.height() / m_rows);
+		tile_size = std::min(tile_size, size.height() / m_rows);
 	}
 	QSize scaled_size = size;
 	size = QSize(m_columns * tile_size, m_rows * tile_size);
@@ -1141,7 +1141,7 @@ void Board::loadImage()
 	source.setScaledClipRect(QRect((scaled_size.width() - size.width()) / 2, (scaled_size.height() - size.height()) / 2, size.width(), size.height()));
 	QImage image = source.read();
 
-	int image_texture_size = powerOfTwo(qMax(size.width(), size.height()));
+	int image_texture_size = powerOfTwo(std::max(size.width(), size.height()));
 	m_image_ts = static_cast<float>(tile_size) / static_cast<float>(image_texture_size);
 	QImage texture(image_texture_size, image_texture_size, QImage::Format_ARGB32);
 	texture.fill(QColor(Qt::darkGray).rgba());
@@ -1252,7 +1252,7 @@ void Board::updateArray(VertexArray& array, const QRect& rect, int z)
 void Board::updateSceneRectangle()
 {
 	m_scene = QRect(0,0,0,0);
-	foreach (Piece* piece, m_pieces) {
+	for (Piece* piece : m_pieces) {
 		updateSceneRectangle(piece);
 	}
 }

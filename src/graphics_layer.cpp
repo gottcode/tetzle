@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -212,7 +212,7 @@ void GraphicsLayer::init()
 	} else {
 		extensions = QByteArray(ext).split(' ');
 	}
-	foreach (const QByteArray& extension, extensions) {
+	for (const QByteArray& extension : extensions) {
 		if (extension == "GL_ARB_multitexture") {
 			state |= MultiTextureFlag;
 		} else if (extension == "GL_ARB_vertex_buffer_object") {
@@ -224,7 +224,7 @@ void GraphicsLayer::init()
 
 	// Find maximum supported state
 	int detected = 11;
-	switch (qMin(state, symbols)) {
+	switch (std::min(state, symbols)) {
 	case Version30: detected = 30; break;
 	case Version21: detected = 21; break;
 	case Version15: detected = 15; break;
@@ -236,7 +236,7 @@ void GraphicsLayer::init()
 	unsigned int new_state = 0;
 	int requested = QSettings().value("GraphicsLayer", detected).toInt();
 	QStringList args = QCoreApplication::arguments();
-	foreach (const QString& arg, args) {
+	for (const QString& arg : args) {
 		if (arg.startsWith("--graphics-layer=")) {
 			requested = arg.mid(17).toInt();
 		}
@@ -422,7 +422,7 @@ void GraphicsLayer::clearChanged()
 void GraphicsLayer::uploadChanged()
 {
 	if (!m_changed_regions.isEmpty()) {
-		foreach (const VertexArray& region, m_changed_regions) {
+		for (const VertexArray& region : m_changed_regions) {
 			bufferSubData(GL_ARRAY_BUFFER, region.start * sizeof(Vertex), region.length() * sizeof(Vertex), m_data.constBegin() + region.start);
 		}
 		m_changed_regions.clear();

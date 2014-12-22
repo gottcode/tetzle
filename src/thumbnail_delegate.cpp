@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPainter>
+
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 
@@ -135,7 +137,7 @@ QSize ThumbnailDelegate::sizeHint(const QStyleOptionViewItem& option, const QMod
 	if (option.decorationPosition == QStyleOptionViewItem::Top) {
 		return QSize(150, 78 + text_height);
 	} else {
-		return QSize(option.rect.width(), qMax(78, text_height + 4));
+		return QSize(option.rect.width(), std::max(78, text_height + 4));
 	}
 }
 

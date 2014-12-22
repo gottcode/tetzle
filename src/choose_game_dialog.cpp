@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ QStringList ChooseGameDialog::currentGames()
 	QStringList result;
 
 	QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files, QDir::Time);
-	foreach (QString game, files) {
+	for (const QString& game : files) {
 		// Load XML file
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {

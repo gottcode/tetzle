@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2013 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2013, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ namespace
 		cells[2] = p3;
 		cells[3] = p4;
 		for (int i = 0; i < 4; ++i) {
-			width = qMax(width, cells[i].x());
-			height = qMax(height, cells[i].y());
+			width = std::max(width, cells[i].x());
+			height = std::max(height, cells[i].y());
 		}
 	}
 }

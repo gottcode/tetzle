@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <QSettings>
 #include <QWheelEvent>
 
+#include <algorithm>
 #include <cmath>
 
 //-----------------------------------------------------------------------------
@@ -70,7 +71,7 @@ void Overview::load(const QImage& image)
 {
 	// Find minimum scale
 	m_min_scale_level = 9;
-	int side_max = qMax(image.width(), image.height()) * 0.9;
+	int side_max = std::max(image.width(), image.height()) * 0.9;
 	int side = 400;
 	if (side_max > side) {
 		for (int i = 9; i >= 0; --i) {

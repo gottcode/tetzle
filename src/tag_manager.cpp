@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ TagManager::TagManager(QWidget* parent)
 	QStringList tags = file.childKeys();
 	QStringList images;
 	QDir folder(Path::images(), "*.*");
-	foreach (QString tag, tags) {
+	for (const QString& tag : tags) {
 		images = file.value(tag).toStringList();
 		QMutableStringListIterator i(images);
 		while (i.hasNext()) {

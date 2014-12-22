@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include "board.h"
 #include "tile.h"
 
+#include <algorithm>
 #include <cmath>
 
 //-----------------------------------------------------------------------------
@@ -93,7 +94,7 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachNeighbors()
 {
-	foreach (Piece* piece, m_neighbors) {
+	for (Piece* piece : m_neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
@@ -123,9 +124,9 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 	// Find neighbor tiles
 	static QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
 	QList<QPoint> tiles;
-	foreach (Tile* tile, m_shadow) {
+	for (Tile* tile : m_shadow) {
 		QPoint pos(tile->column(), tile->row());
-		foreach (const QPoint& delta, deltas) {
+		for (const QPoint& delta : deltas) {
 			QPoint neighbor = pos + delta;
 			if (!containsTile(neighbor.x(), neighbor.y()) && !tiles.contains(neighbor)) {
 				tiles.append(neighbor);
@@ -134,8 +135,8 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 	}
 
 	// Find neighbor pieces
-	foreach (Piece* piece, pieces) {
-		foreach (const QPoint& tile, tiles) {
+	for (Piece* piece : pieces) {
+		for (const QPoint& tile : tiles) {
 			if (piece->containsTile(tile.x(), tile.y())) {
 				m_neighbors.insert(piece);
 				break;
@@ -168,7 +169,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		}
 
 		// Scale movement vector so that the largest dimension is 1
-		QPointF direction = vector / qMax(fabs(vector.x()), fabs(vector.y()));
+		QPointF direction = vector / std::max(fabs(vector.x()), fabs(vector.y()));
 
 		// Push target until it is clear from current source
 		// We use a binary-search, pushing away if collision, retracting otherwise
@@ -280,8 +281,8 @@ void Piece::attach(Piece* piece)
 	Q_ASSERT(piece != this);
 
 	// Update position
-	m_pos.setX(qMin(m_pos.x(), piece->m_pos.x()));
-	m_pos.setY(qMin(m_pos.y(), piece->m_pos.y()));
+	m_pos.setX(std::min(m_pos.x(), piece->m_pos.x()));
+	m_pos.setY(std::min(m_pos.y(), piece->m_pos.y()));
 
 	// Update shadow
 	m_shadow += piece->m_shadow;
@@ -302,7 +303,7 @@ void Piece::attach(Piece* piece)
 	m_neighbors += piece->m_neighbors;
 	m_neighbors.remove(piece);
 	m_neighbors.remove(this);
-	foreach (Piece* neighbor, m_neighbors) {
+	for (Piece* neighbor : m_neighbors) {
 		neighbor->m_neighbors.remove(piece);
 		neighbor->m_neighbors.insert(this);
 	}
@@ -369,10 +370,10 @@ void Piece::updateTiles()
 	QPoint pos;
 	for (int i = 0; i < count; ++i) {
 		pos = m_tiles.at(i)->gridPos();
-		top_left.setX( qMin(pos.x(), top_left.x()) );
-		top_left.setY( qMin(pos.y(), top_left.y()) );
-		bottom_right.setX( qMax(pos.x() + Tile::size, bottom_right.x()) );
-		bottom_right.setY( qMax(pos.y() + Tile::size, bottom_right.y()) );
+		top_left.setX( std::min(pos.x(), top_left.x()) );
+		top_left.setY( std::min(pos.y(), top_left.y()) );
+		bottom_right.setX( std::max(pos.x() + Tile::size, bottom_right.x()) );
+		bottom_right.setY( std::max(pos.y() + Tile::size, bottom_right.y()) );
 	}
 	m_rect.setRect(0, 0, bottom_right.x() - top_left.x(), bottom_right.y() - top_left.y());
 

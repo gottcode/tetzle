@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
 	QStringList files = ChooseGameDialog::currentGames();
-	foreach (QString game, files) {
+	for (const QString& game : files) {
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;

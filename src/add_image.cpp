@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ void AddImage::dragEnterEvent(QDragEnterEvent* event)
 	bool accept = false;
 
 	QList<QUrl> urls = event->mimeData()->urls();
-	foreach (const QUrl& url, urls) {
+	for (const QUrl& url : urls) {
 		if (QDir::match(supportedFormats(), url.toLocalFile())) {
 			accept = true;
 			break;
@@ -60,7 +60,7 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 
 	QStringList files;
 	QList<QUrl> urls = event->mimeData()->urls();
-	foreach (const QUrl& url, urls) {
+	for (const QUrl& url : urls) {
 		QString file = url.toLocalFile();
 		if (QDir::match(supportedFormats(), file)) {
 			files.append(file);
@@ -98,7 +98,7 @@ QString AddImage::supportedFormats()
 	static QString string;
 	if (string.isEmpty()) {
 		QStringList formats;
-		foreach (QByteArray type, QImageReader::supportedImageFormats()) {
+		for (const QByteArray& type : QImageReader::supportedImageFormats()) {
 			formats.append("*." + type);
 		}
 		string = "Images(" + formats.join(" ") + ")";

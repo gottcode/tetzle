@@ -137,12 +137,12 @@ int main(int argc, char** argv)
 				olddir.setPath(oldpath + "/" + subpath);
 
 				QStringList subdirs = olddir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-				foreach (const QString& subdir, subdirs) {
+				for (const QString& subdir : subdirs) {
 					old_dirs.append(subpath + "/" + subdir);
 				}
 
 				QStringList files = olddir.entryList(QDir::Files);
-				foreach (const QString& file, files) {
+				for (const QString& file : files) {
 					QFile::rename(olddir.absoluteFilePath(file), path + "/" + subpath + "/" + file);
 				}
 			}
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
 		for (int i = 0; i < old_dirs.count(); ++i) {
 			dir.setPath(old_dirs.at(i));
 			QStringList entries = dir.entryList(QDir::Files);
-			foreach (QString info, entries) {
+			for (const QString& info : entries) {
 				dir.remove(info);
 			}
 		}

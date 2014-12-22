@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 	m_tags = new QListWidget(this);
 	m_tags->setSortingEnabled(true);
 	QStringList tags = m_manager->tags();
-	foreach (const QString& tag, tags) {
+	for (const QString& tag : tags) {
 		QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 		item->setCheckState(m_manager->images(tag).contains(image) ? Qt::Checked : Qt::Unchecked);

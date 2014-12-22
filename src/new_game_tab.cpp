@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@
 #include <QSplitter>
 #include <QXmlStreamReader>
 
+#include <algorithm>
 #include <cmath>
 
 //-----------------------------------------------------------------------------
@@ -153,7 +154,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Load images
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QListWidgetItem* item = 0;
-	foreach (QString image, QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
+	for (const QString& image : QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
 		item = createItem(image, details);
 	}
 	m_images->sortItems();
@@ -262,7 +263,7 @@ void NewGameTab::removeImage()
 
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
-	foreach (QString game, QDir(Path::saves(), "*.xml").entryList(QDir::Files)) {
+	for (const QString& game : QDir(Path::saves(), "*.xml").entryList(QDir::Files)) {
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
@@ -291,7 +292,7 @@ void NewGameTab::removeImage()
 		QString image_id = current_image.section(".", 0, 0);
 		QFile::remove(Path::image(current_image));
 		QFile::remove(Path::thumbnail(image_id));
-		foreach (QString game, games) {
+		for (const QString& game : games) {
 			QFile::remove(Path::save(game));
 		}
 		delete item;
@@ -379,7 +380,7 @@ void NewGameTab::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
 		int side1 = 4 * value;
-		int side2 = qMax(qRound(side1 * m_ratio), 1);
+		int side2 = std::max(qRound(side1 * m_ratio), 1);
 		m_count->setText(tr("%L1 pieces").arg(side1 * side2 / 4));
 	}
 }
@@ -439,8 +440,8 @@ void NewGameTab::addImage(const QString& image)
 
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files);
-	foreach (QString file, images) {
-		image_id = qMax(image_id, file.section(".", 0, 0).toInt());
+	for (const QString& file : images) {
+		image_id = std::max(image_id, file.section(".", 0, 0).toInt());
 
 		QString key = file + "/SHA1";
 		if (!details.contains(key)) {
