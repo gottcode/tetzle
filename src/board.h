@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@ class Tile;
 #include <QGLWidget>
 #include <QHash>
 
+#include <random>
+
 class Board : public QGLWidget
 {
 	Q_OBJECT
@@ -43,6 +45,7 @@ public:
 	int id() const;
 	int margin() const;
 	QRect marginRect(const QRect& rect) const;
+	int randomInt(int max);
 	float tileTextureSize() const;
 	const QPointF* corners(int rotation) const;
 	void setAppearance(const AppearanceDialog& dialog);
@@ -143,6 +146,8 @@ private:
 
 	int m_action_key;
 	Qt::MouseButton m_action_button;
+
+	std::mt19937 m_random;
 };
 
 
@@ -159,6 +164,12 @@ inline int Board::margin() const
 inline QRect Board::marginRect(const QRect& rect) const
 {
 	return rect.adjusted(-margin(), -margin(), margin(), margin());
+}
+
+inline int Board::randomInt(int max)
+{
+	std::uniform_int_distribution<int> dis(0, max - 1);
+	return dis(m_random);
 }
 
 inline float Board::tileTextureSize() const

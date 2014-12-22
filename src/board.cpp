@@ -44,10 +44,10 @@
 #include <QXmlStreamWriter>
 
 #include <algorithm>
+#include <random>
 
 #include <cmath>
 #include <cstdlib>
-#include <ctime>
 
 #ifndef GL_CLAMP_TO_EDGE
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -220,17 +220,18 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate puzzle
 	updateStatusMessage(tr("Generating puzzle..."));
-	std::srand(std::time(0));
-	Generator generator(m_columns, m_rows);
+	std::random_device rd;
+	m_random.seed(rd());
+	Generator generator(m_columns, m_rows, m_random);
 	QList< QList<Tile*> > pieces = generator.pieces();
-	std::random_shuffle(pieces.begin(), pieces.end());
+	std::shuffle(pieces.begin(), pieces.end(), m_random);
 
 	updateStatusMessage(tr("Creating pieces..."));
 	int count = pieces.count();
 	int step = (count > 25) ? (count / 25) : 1;
 	for (int i = 0; i < count; ++i) {
 		// Create piece
-		Piece* piece = new Piece(QPoint(0, 0), rand() % 4, pieces.at(i), this);
+		Piece* piece = new Piece(QPoint(0, 0), randomInt(4), pieces.at(i), this);
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->pushNeighbors();
@@ -465,7 +466,7 @@ void Board::retrievePieces()
 	m_scene = QRect(0,0,0,0);
 
 	// Move all pieces to center of view
-	std::random_shuffle(pieces.begin(), pieces.end());
+	std::shuffle(pieces.begin(), pieces.end(), m_random);
 	for (Piece* piece : pieces) {
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());

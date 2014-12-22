@@ -86,8 +86,8 @@ bool Piece::collidesWith(const Piece* other) const
 
 QPoint Piece::randomPoint() const
 {
-	Tile* tile = m_tiles.at(rand() % m_tiles.count());
-	return tile->scenePos() + QPoint(rand() % Tile::size, rand() % Tile::size);
+	Tile* tile = m_tiles.at(m_board->randomInt(m_tiles.count()));
+	return tile->scenePos() + QPoint(m_board->randomInt(Tile::size), m_board->randomInt(Tile::size));
 }
 
 //-----------------------------------------------------------------------------
@@ -164,8 +164,8 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
 		while (vector.manhattanLength() < 1.0) {
-			vector.setX( (rand() % Tile::size) - (Tile::size / 2) );
-			vector.setY( (rand() % Tile::size) - (Tile::size / 2) );
+			vector.setX( (m_board->randomInt(Tile::size)) - (Tile::size / 2) );
+			vector.setY( (m_board->randomInt(Tile::size)) - (Tile::size / 2) );
 		}
 
 		// Scale movement vector so that the largest dimension is 1

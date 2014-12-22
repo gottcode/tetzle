@@ -54,9 +54,10 @@ namespace
 
 //-----------------------------------------------------------------------------
 
-Generator::Generator(int columns, int rows)
-	: m_columns(columns),
-	m_rows(rows)
+Generator::Generator(int columns, int rows, std::mt19937& random) :
+	m_columns(columns),
+	m_rows(rows),
+	m_random(random)
 {
 	do {
 		m_pieces.clear();
@@ -110,7 +111,7 @@ void Generator::solve()
 	for (int i = 0; i < m_columns * m_rows; ++i) {
 		cells.append(i);
 	}
-	std::random_shuffle(cells.begin(), cells.end());
+	std::shuffle(cells.begin(), cells.end(), m_random);
 
 	int cell, col, row;
 	for (int i = 0; i < m_columns * m_rows; ++i) {
@@ -118,7 +119,7 @@ void Generator::solve()
 		row = cell / m_columns;
 		col = cell - (row * m_columns);
 
-		std::random_shuffle(ids.begin(), ids.end());
+		std::shuffle(ids.begin(), ids.end(), m_random);
 		for (int i = 0; i < size; ++i) {
 			const Shape& shape = shapes.at(ids.at(i));
 			if (shape.width + col < m_columns && shape.height + row < m_rows) {

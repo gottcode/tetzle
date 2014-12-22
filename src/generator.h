@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2013 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2013, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,12 @@ namespace DLX
 }
 class Tile;
 
+#include <random>
+
 class Generator
 {
 public:
-	Generator(int columns, int rows);
+	Generator(int columns, int rows, std::mt19937& random);
 
 	QList< QList<Tile*> > pieces() const;
 
@@ -44,6 +46,7 @@ private:
 	int m_columns;
 	int m_rows;
 	QList< QList<Tile*> > m_pieces;
+	std::mt19937& m_random;
 };
 
 inline QList< QList<Tile*> > Generator::pieces() const
