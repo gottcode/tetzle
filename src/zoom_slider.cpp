@@ -23,6 +23,8 @@
 #include <QLabel>
 #include <QSlider>
 
+#include <cmath>
+
 //-----------------------------------------------------------------------------
 
 namespace
@@ -60,7 +62,7 @@ float ZoomSlider::scaleFactor(int level)
 void ZoomSlider::setValue(int level, float factor)
 {
 	m_slider->setValue(level);
-	m_label->setText(tr("%1%").arg(qRound(factor * 100)));
+	m_label->setText(tr("%1%").arg(std::lround(factor * 100)));
 }
 
 //-----------------------------------------------------------------------------

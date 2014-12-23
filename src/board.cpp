@@ -205,10 +205,10 @@ void Board::newGame(const QString& image, int difficulty)
 	QSizeF size = QImageReader(Path::image(image)).size();
 	if (size.width() > size.height()) {
 		m_columns = 4 * difficulty;
-		m_rows = std::max(qRound(m_columns * size.height() / size.width()), 1);
+		m_rows = std::max(std::lround(m_columns * size.height() / size.width()), 1L);
 	} else {
 		m_rows = 4 * difficulty;
-		m_columns = std::max(qRound(m_rows * size.width() / size.height()), 1);
+		m_columns = std::max(std::lround(m_rows * size.width() / size.height()), 1L);
 	}
 	m_total_pieces = (m_columns * m_rows) / 4;
 

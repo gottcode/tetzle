@@ -363,11 +363,11 @@ void NewGameTab::imageSelected(QListWidgetItem* item)
 		m_ratio = static_cast<float>(m_image_size.width()) / static_cast<float>(m_image_size.height());
 	}
 
-	int max = qRound(std::sqrt(250.0f / m_ratio));
-	int min = qRound(std::sqrt(2.5f / m_ratio));
+	int max = std::lround(std::sqrt(250.0f / m_ratio));
+	int min = std::lround(std::sqrt(2.5f / m_ratio));
 	int value = min;
 	if (m_images->count() > 1) {
-		value = qRound(static_cast<float>(max * m_slider->value()) / static_cast<float>(m_slider->maximum()));
+		value = std::lround(static_cast<float>(max * m_slider->value()) / static_cast<float>(m_slider->maximum()));
 	}
 	m_slider->setRange(min, max);
 	m_slider->setValue(value);
@@ -380,7 +380,7 @@ void NewGameTab::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
 		int side1 = 4 * value;
-		int side2 = std::max(qRound(side1 * m_ratio), 1);
+		int side2 = std::max(std::lround(side1 * m_ratio), 1L);
 		m_count->setText(tr("%L1 pieces").arg(side1 * side2 / 4));
 	}
 }
