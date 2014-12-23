@@ -47,7 +47,6 @@
 Window::Window(const QStringList& files)
 	: m_board(0)
 {
-	setWindowTitle(tr("Tetzle"));
 	setAcceptDrops(true);
 	resize(640, 480);
 
