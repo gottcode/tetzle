@@ -94,7 +94,7 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachNeighbors()
 {
-	for (Piece* piece : m_neighbors) {
+	foreach (Piece* piece, m_neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
