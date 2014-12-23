@@ -28,9 +28,7 @@
 #include <QDir>
 #include <QFile>
 #include <QString>
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
 #include <QStandardPaths>
-#endif
 #include <QStringList>
 
 #include <cstdlib>
@@ -39,11 +37,7 @@
 
 QString Path::datapath()
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
 	static QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/";
-#else
-	static QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/";
-#endif
 	return path;
 }
 
@@ -54,10 +48,8 @@ QString Path::oldDataPath()
 	QStringList oldpaths;
 	QString oldpath;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
 	// Data path from Qt 4 version of 2.0
 	oldpaths.append(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
-#endif
 
 	// Data path from 1.0
 #if defined(Q_OS_MAC)

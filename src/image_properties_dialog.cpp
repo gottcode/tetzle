@@ -63,8 +63,8 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 
 	// Add dialog buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
-	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(buttons, &QDialogButtonBox::accepted, this, &ImagePropertiesDialog::accept);
+	connect(buttons, &QDialogButtonBox::rejected, this, &ImagePropertiesDialog::reject);
 
 	// Layout dialog
 	QFormLayout* layout = new QFormLayout(this);

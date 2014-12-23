@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	m_slider = new QSlider(Qt::Horizontal, this);
 	m_slider->setRange(0, 9);
 	m_slider->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-	connect(m_slider, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
+	connect(m_slider, &QSlider::valueChanged, this, &ZoomSlider::valueChanged);
 
 	QHBoxLayout* layout = new QHBoxLayout(this);
 	layout->setMargin(0);

@@ -1,14 +1,10 @@
-lessThan(QT_VERSION, 4.7) {
-	error("Tetzle requires Qt 4.7 or greater")
+lessThan(QT_VERSION, 5.2) {
+	error("Tetzle requires Qt 5.2 or greater")
 }
 
 TEMPLATE = app
-QT += opengl
-greaterThan(QT_MAJOR_VERSION, 4) {
-	QT += widgets
-}
-CONFIG += warn_on
-QMAKE_CXXFLAGS += -std=c++11
+QT += opengl widgets
+CONFIG += warn_on c++11
 macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }

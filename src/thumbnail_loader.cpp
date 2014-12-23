@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ ThumbnailLoader::ThumbnailLoader(QObject* parent) :
 	QThread(parent),
 	m_done(false)
 {
-	connect(this, SIGNAL(loaded(const Thumbnail&)), this, SLOT(imageLoaded(const Thumbnail&)), Qt::QueuedConnection);
+	connect(this, &ThumbnailLoader::loaded, this, &ThumbnailLoader::imageLoaded, Qt::QueuedConnection);
 }
 
 //-----------------------------------------------------------------------------

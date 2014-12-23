@@ -90,8 +90,8 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 {
 	// Add image filter
 	m_image_tags = new TagManager(this);
-	connect(m_image_tags, SIGNAL(filterChanged(const QStringList&)), this, SLOT(filterImages(const QStringList&)));
-	connect(m_image_tags, SIGNAL(tagsChanged()), this, SLOT(updateTagsStrings()));
+	connect(m_image_tags, &TagManager::filterChanged, this, &NewGameTab::filterImages);
+	connect(m_image_tags, &TagManager::tagsChanged, this, &NewGameTab::updateTagsStrings);
 
 	// Add image selector
 	m_images = new ToolBarList(this);
@@ -99,21 +99,21 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setIconSize(QSize(74, 74));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setItemDelegate(new ThumbnailDelegate(m_images));
-	connect(m_images, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(imageSelected(QListWidgetItem*)));
-	connect(m_images, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(editImageProperties()));
+	connect(m_images, &ToolBarList::currentItemChanged, this, &NewGameTab::imageSelected);
+	connect(m_images, &ToolBarList::itemActivated, this, &NewGameTab::editImageProperties);
 
 	// Add image actions
 	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Image"), this);
 	m_images->addToolBarAction(add_action);
-	connect(add_action, SIGNAL(triggered()), this, SLOT(addImage()));
+	connect(add_action, &QAction::triggered, this, &NewGameTab::addImageClicked);
 
 	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Image"), this);
 	m_images->addToolBarAction(m_remove_action);
-	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeImage()));
+	connect(m_remove_action, &QAction::triggered, this, &NewGameTab::removeImage);
 
 	m_tag_action = new QAction(QIcon::fromTheme("image-x-generic", QPixmap(":/tango/image-x-generic.png")), tr("Image Properties"), this);
 	m_images->addToolBarAction(m_tag_action);
-	connect(m_tag_action, SIGNAL(triggered()), this, SLOT(editImageProperties()));
+	connect(m_tag_action, &QAction::triggered, this, &NewGameTab::editImageProperties);
 
 	// Add image splitter
 	m_image_contents = new QSplitter(this);
@@ -126,7 +126,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Add pieces slider
 	m_slider = new QSlider(Qt::Horizontal, this);
 	m_slider->setRange(1, 1);
-	connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(pieceCountChanged(int)));
+	connect(m_slider, &QSlider::valueChanged, this, &NewGameTab::pieceCountChanged);
 
 	m_count = new QLabel(this);
 	m_count->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -134,8 +134,8 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	// Add buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
-	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), parent, SLOT(reject()));
+	connect(buttons, &QDialogButtonBox::accepted, this, &NewGameTab::accept);
+	connect(buttons, &QDialogButtonBox::rejected, parent, &QDialog::reject);
 
 	m_accept_button = buttons->button(QDialogButtonBox::Ok);
 	m_accept_button->setEnabled(false);
@@ -244,7 +244,7 @@ void NewGameTab::accept()
 
 //-----------------------------------------------------------------------------
 
-void NewGameTab::addImage()
+void NewGameTab::addImageClicked()
 {
 	addImages(AddImage::getOpenFileNames(this));
 }

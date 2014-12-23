@@ -66,12 +66,12 @@ Window::Window(const QStringList& files)
 
 	// Add contents
 	m_board = new Board(this);
-	connect(m_board, SIGNAL(completionChanged(int)), m_completed, SLOT(setValue(int)));
-	connect(m_board, SIGNAL(finished()), this, SLOT(gameFinished()));
-	connect(m_board, SIGNAL(clearMessage()), statusBar(), SLOT(clearMessage()));
-	connect(m_board, SIGNAL(showMessage(const QString&)), statusBar(), SLOT(showMessage(const QString&)));
-	connect(m_board, SIGNAL(zoomChanged(int, float)), m_slider, SLOT(setValue(int, float)));
-	connect(m_slider, SIGNAL(valueChanged(int)), m_board, SLOT(zoom(int)));
+	connect(m_board, &Board::completionChanged, m_completed, &QProgressBar::setValue);
+	connect(m_board, &Board::finished, this, &Window::gameFinished);
+	connect(m_board, &Board::clearMessage, statusBar(), &QStatusBar::clearMessage);
+	connect(m_board, &Board::showMessage, statusBar(), &QStatusBar::showMessage);
+	connect(m_board, &Board::zoomChanged, m_slider, &ZoomSlider::setValue);
+	connect(m_slider, &ZoomSlider::valueChanged, m_board, &Board::zoom);
 	setCentralWidget(m_board);
 
 	// Add menus
@@ -83,7 +83,7 @@ Window::Window(const QStringList& files)
 	menu->addSeparator();
 	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, SLOT(retrievePieces()), tr("Ctrl+R"));
 	retrieve_pieces_action->setEnabled(false);
-	connect(m_board, SIGNAL(retrievePiecesAvailable(bool)), retrieve_pieces_action, SLOT(setEnabled(bool)));
+	connect(m_board, &Board::retrievePiecesAvailable, retrieve_pieces_action, &QAction::setEnabled);
 	menu->addSeparator();
 	QAction* quit_action = menu->addAction(tr("&Quit"), this, SLOT(close()), QKeySequence::Quit);
 	quit_action->setMenuRole(QAction::QuitRole);
@@ -91,21 +91,21 @@ Window::Window(const QStringList& files)
 	menu = menuBar()->addMenu(tr("&View"));
 	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, SLOT(zoomIn()), tr("+"));
 	zoom_in_action->setEnabled(false);
-	connect(m_board, SIGNAL(zoomInAvailable(bool)), zoom_in_action, SLOT(setEnabled(bool)));
+	connect(m_board, &Board::zoomInAvailable, zoom_in_action, &QAction::setEnabled);
 	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, SLOT(zoomOut()), tr("-"));
 	zoom_out_action->setEnabled(false);
-	connect(m_board, SIGNAL(zoomOutAvailable(bool)), zoom_out_action, SLOT(setEnabled(bool)));
+	connect(m_board, &Board::zoomOutAvailable, zoom_out_action, &QAction::setEnabled);
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, SLOT(zoomFit()));
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
 	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
 	m_toggle_overview_action->setCheckable(true);
 	m_toggle_overview_action->setEnabled(false);
-	connect(m_board, SIGNAL(overviewToggled(bool)), m_toggle_overview_action, SLOT(setChecked(bool)));
+	connect(m_board, &Board::overviewToggled, m_toggle_overview_action, &QAction::setChecked);
 	menu->addSeparator();
 
 	QAction* fullscreen_action = menu->addAction(tr("F&ullscreen"));
-	connect(fullscreen_action, SIGNAL(toggled(bool)), this, SLOT(setFullScreen(bool)));
+	connect(fullscreen_action, &QAction::toggled, this, &Window::setFullScreen);
 	fullscreen_action->setCheckable(true);
 #if !defined(Q_OS_MAC)
 	fullscreen_action->setShortcut(tr("F11"));
@@ -140,7 +140,7 @@ Window::Window(const QStringList& files)
 
 	// Create auto-save timer
 	QTimer* timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), m_board, SLOT(saveGame()));
+	connect(timer, &QTimer::timeout, m_board, &Board::saveGame);
 	timer->start(300000);
 }
 
@@ -196,10 +196,8 @@ void Window::chooseGame(const QStringList& files)
 	m_board->saveGame();
 
 	ChooseGameDialog dialog(files, m_board->id(), this);
-	connect(&dialog, SIGNAL(accepted()), m_slider, SLOT(hide()));
-	connect(&dialog, SIGNAL(accepted()), m_completed, SLOT(hide()));
-	connect(&dialog, SIGNAL(newGame(const QString&, int)), m_board, SLOT(newGame(const QString&, int)));
-	connect(&dialog, SIGNAL(openGame(int)), m_board, SLOT(openGame(int)));
+	connect(&dialog, &ChooseGameDialog::newGame, m_board, &Board::newGame);
+	connect(&dialog, &ChooseGameDialog::openGame, m_board, &Board::openGame);
 	if (dialog.exec() == QDialog::Accepted) {
 		m_toggle_overview_action->setEnabled(true);
 		m_zoom_fit_action->setEnabled(true);

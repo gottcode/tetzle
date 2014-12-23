@@ -123,9 +123,6 @@ namespace
 	};
 }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
-typedef void* QFunctionPointer;
-#endif
 static QFunctionPointer getProcAddress(const QString& name)
 {
 	QFunctionPointer result = 0;

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,28 +68,28 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	QGroupBox* options_group = new QGroupBox(tr("Options"), this);
 
 	m_has_bevels = new QCheckBox(tr("Beveled borders"), options_group);
-	connect(m_has_bevels, SIGNAL(stateChanged(int)), this, SLOT(updatePreview()));
+	connect(m_has_bevels, &QCheckBox::stateChanged, this, &AppearanceDialog::updatePreview);
 
 	m_has_shadows = new QCheckBox(tr("Drop shadows"), options_group);
-	connect(m_has_shadows, SIGNAL(stateChanged(int)), this, SLOT(updatePreview()));
+	connect(m_has_shadows, &QCheckBox::stateChanged, this, &AppearanceDialog::updatePreview);
 
 	// Create colors widgets
 	QGroupBox* colors_group = new QGroupBox(tr("Colors"), this);
 
 	m_background = new ColorButton(colors_group);
-	connect(m_background, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
+	connect(m_background, &ColorButton::changed, this, &AppearanceDialog::updatePreview);
 
 	m_shadow = new ColorButton(colors_group);
-	connect(m_shadow, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
+	connect(m_shadow, &ColorButton::changed, this, &AppearanceDialog::updatePreview);
 
 	m_highlight = new ColorButton(colors_group);
-	connect(m_highlight, SIGNAL(changed(const QColor&)), this, SLOT(updatePreview()));
+	connect(m_highlight, &ColorButton::changed, this, &AppearanceDialog::updatePreview);
 
 	// Create buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults, Qt::Horizontal, this);
-	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
-	connect(buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(restoreDefaults()));
+	connect(buttons, &QDialogButtonBox::accepted, this, &AppearanceDialog::accept);
+	connect(buttons, &QDialogButtonBox::rejected, this, &AppearanceDialog::reject);
+	connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &AppearanceDialog::restoreDefaults);
 
 	// Lay out dialog
 	QFormLayout* colors_layout = new QFormLayout(colors_group);

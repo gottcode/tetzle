@@ -66,7 +66,7 @@ signals:
 	void completionChanged(int value);
 	void overviewToggled(bool visible);
 	void retrievePiecesAvailable(bool available);
-	void showMessage(const QString& message);
+	void showMessage(const QString& message, int timeout = 0);
 	void clearMessage();
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);

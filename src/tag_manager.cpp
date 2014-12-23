@@ -39,8 +39,8 @@ TagManager::TagManager(QWidget* parent)
 	m_filter = new ToolBarList(this);
 	m_filter->setSelectionBehavior(QAbstractItemView::SelectItems);
 	m_filter->setSelectionMode(QAbstractItemView::SingleSelection);
-	connect(m_filter, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(currentTagChanged(QListWidgetItem*)));
-	connect(m_filter, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(tagChanged(QListWidgetItem*)));
+	connect(m_filter, &ToolBarList::currentItemChanged, this, &TagManager::currentTagChanged);
+	connect(m_filter, &ToolBarList::itemChanged, this, &TagManager::tagChanged);
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setMargin(0);
@@ -49,11 +49,11 @@ TagManager::TagManager(QWidget* parent)
 	// Add filter actions
 	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Tag"), this);
 	m_filter->addToolBarAction(add_action);
-	connect(add_action, SIGNAL(triggered()), this, SLOT(addTag()));
+	connect(add_action, &QAction::triggered, this, &TagManager::addTag);
 
 	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Tag"), this);
 	m_filter->addToolBarAction(m_remove_action);
-	connect(m_remove_action, SIGNAL(triggered()), this, SLOT(removeTag()));
+	connect(m_remove_action, &QAction::triggered, this, &TagManager::removeTag);
 
 	// Add tags
 	m_untagged_item = new QListWidgetItem(tr("Untagged"));

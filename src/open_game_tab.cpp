@@ -96,15 +96,15 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 
 	// Create buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Open | QDialogButtonBox::Cancel, Qt::Horizontal, this);
-	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), parent, SLOT(reject()));
+	connect(buttons, &QDialogButtonBox::accepted, this, &OpenGameTab::accept);
+	connect(buttons, &QDialogButtonBox::rejected, parent, &QDialog::reject);
 
 	m_accept_button = buttons->button(QDialogButtonBox::Open);
 	m_accept_button->setEnabled(m_games->count() > 0);
 
 	QPushButton* delete_button = buttons->addButton(tr("Delete"), QDialogButtonBox::ActionRole);
 	delete_button->setEnabled(m_accept_button->isEnabled());
-	connect(delete_button, SIGNAL(clicked()), this, SLOT(deleteGame()));
+	connect(delete_button, &QPushButton::clicked, this, &OpenGameTab::deleteGame);
 
 	// Arrange widgets
 	QVBoxLayout* layout = new QVBoxLayout(this);

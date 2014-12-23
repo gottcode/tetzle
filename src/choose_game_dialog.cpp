@@ -47,16 +47,16 @@ ChooseGameDialog::ChooseGameDialog(const QStringList& files, int current_id, QWi
 
 	// Create tabs
 	OpenGameTab* open_game_tab = new OpenGameTab(current_id, this);
-	connect(open_game_tab, SIGNAL(openGame(int)), this, SLOT(accept()));
-	connect(open_game_tab, SIGNAL(openGame(int)), this, SIGNAL(openGame(int)));
+	connect(open_game_tab, &OpenGameTab::openGame, this, &ChooseGameDialog::accept);
+	connect(open_game_tab, &OpenGameTab::openGame, this, &ChooseGameDialog::openGame);
 	m_tabs->addTab(open_game_tab, tr("Current Games"));
 
 	m_new_game_tab = new NewGameTab(files, this);
-	connect(m_new_game_tab, SIGNAL(newGame(const QString&, int)), this, SLOT(accept()));
-	connect(m_new_game_tab, SIGNAL(newGame(const QString&, int)), this, SIGNAL(newGame(const QString&, int)));
+	connect(m_new_game_tab, &NewGameTab::newGame, this, &ChooseGameDialog::accept);
+	connect(m_new_game_tab, &NewGameTab::newGame, this, &ChooseGameDialog::newGame);
 	m_tabs->addTab(m_new_game_tab, tr("New Game"));
 
-	connect(m_new_game_tab, SIGNAL(imageRenamed(const QString&, const QString&)), open_game_tab, SLOT(imageRenamed(const QString&, const QString&)));
+	connect(m_new_game_tab, &NewGameTab::imageRenamed, open_game_tab, &OpenGameTab::imageRenamed);
 
 	if (!files.isEmpty() || currentGames().count() <= (current_id != 0)) {
 		m_tabs->setCurrentIndex(1);

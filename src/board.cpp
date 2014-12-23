@@ -113,7 +113,7 @@ Board::Board(QWidget* parent)
 
 	// Create overview dialog
 	m_overview = new Overview(parent);
-	connect(m_overview, SIGNAL(toggled(bool)), this, SIGNAL(overviewToggled(bool)));
+	connect(m_overview, &Overview::toggled, this, &Board::overviewToggled);
 }
 
 //-----------------------------------------------------------------------------
