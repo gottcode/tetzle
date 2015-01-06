@@ -162,16 +162,6 @@ Section "install"
 	;Copy files
 	SetOutPath $INSTDIR
 	File ..\release\Tetzle.exe
-	File $%QTDIR%\bin\icudt51.dll
-	File $%QTDIR%\bin\icuin51.dll
-	File $%QTDIR%\bin\icuuc51.dll
-	File $%QTDIR%\bin\libgcc_s_dw2-1.dll
-	File $%QTDIR%\bin\libstdc++-6.dll
-	File $%QTDIR%\bin\libwinpthread-1.dll
-	File $%QTDIR%\bin\Qt5Core.dll
-	File $%QTDIR%\bin\Qt5Gui.dll
-	File $%QTDIR%\bin\Qt5OpenGL.dll
-	File $%QTDIR%\bin\Qt5Widgets.dll
 
 	;Create ReadMe file
 	File /oname=ReadMe.txt ..\README
@@ -189,9 +179,6 @@ Section "install"
 	File ..\NEWS
 	${FileJoin} "ReadMe.txt" "NEWS" "ReadMe.txt"
 	Delete $INSTDIR\NEWS
-
-	SetOutPath $INSTDIR\platforms
-	File $%QTDIR%\plugins\platforms\qwindows.dll
 
 	SetOutPath $INSTDIR\translations
 	File ..\translations\*.qm
@@ -247,13 +234,10 @@ Section "Uninstall"
 	;Remove files
 	Delete $INSTDIR\Tetzle.exe
 	Delete $INSTDIR\ReadMe.txt
-	Delete $INSTDIR\*.dll
-	Delete $INSTDIR\platforms\qwindows.dll
 	Delete $INSTDIR\translations\*.qm
 	Delete $INSTDIR\uninstall.exe
 
 	;Remove directories
-	RMDir $INSTDIR\platforms
 	RMDir $INSTDIR\translations
 	RMDir $INSTDIR
 
