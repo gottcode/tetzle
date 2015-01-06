@@ -9,15 +9,25 @@ macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }
 
+# Allow in-tree builds
+!win32 {
+	MOC_DIR = build
+	OBJECTS_DIR = build
+	RCC_DIR = build
+}
+
+# Set program version
 VERSION = 2.0.3
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
+# Set program name
 unix: !macx {
 	TARGET = tetzle
 } else {
 	TARGET = Tetzle
 }
 
+# Specify program sources
 HEADERS = src/add_image.h \
 	src/appearance_dialog.h \
 	src/board.h \
@@ -67,8 +77,10 @@ SOURCES = src/add_image.cpp \
 	src/window.cpp \
 	src/zoom_slider.cpp
 
+# Allow for updating translations
 TRANSLATIONS = $$files(translations/tetzle_*.ts)
 
+# Install program data
 RESOURCES = data/data.qrc icons/icon.qrc
 macx {
 	ICON = icons/tetzle.icns
