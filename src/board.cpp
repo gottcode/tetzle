@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2015 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1110,10 +1110,6 @@ void Board::loadImage()
 	// Load puzzle image
 	if (!m_overview->isVisible() && settings.value("Overview/Visible", true).toBool()) {
 		m_overview->show();
-#if defined(Q_WS_X11)
-		extern void qt_x11_wait_for_window_manager(QWidget* widget);
-		qt_x11_wait_for_window_manager(m_overview);
-#endif
 		m_overview->repaint();
 		activateWindow();
 	}

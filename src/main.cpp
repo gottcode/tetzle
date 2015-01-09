@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,10 +166,6 @@ int main(int argc, char** argv)
 		label.setFixedSize(label.sizeHint());
 		label.show();
 		app.processEvents();
-#if defined(Q_WS_X11)
-		extern void qt_x11_wait_for_window_manager(QWidget* widget);
-		qt_x11_wait_for_window_manager(&label);
-#endif
 
 		QStringList old_dirs;
 		old_dirs += (path + "/previews/");

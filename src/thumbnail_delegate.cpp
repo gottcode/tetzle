@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2014, 2015 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Find colors
 	QIcon::Mode mode = QIcon::Normal;
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	QPalette::ColorGroup cg = option.widget->hasFocus() ? QPalette::Normal : QPalette::Inactive;
 #else
 	QPalette::ColorGroup cg = QApplication::focusWidget() ? QPalette::Normal : QPalette::Inactive;
