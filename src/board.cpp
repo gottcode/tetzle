@@ -48,6 +48,7 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 
 #ifndef GL_CLAMP_TO_EDGE
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -220,8 +221,12 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate puzzle
 	updateStatusMessage(tr("Generating puzzle..."));
+#ifndef Q_OS_WIN
 	std::random_device rd;
 	m_random.seed(rd());
+#else
+	m_random.seed(time(0));
+#endif
 	Generator generator(m_columns, m_rows, m_random);
 	QList< QList<Tile*> > pieces = generator.pieces();
 	std::shuffle(pieces.begin(), pieces.end(), m_random);
