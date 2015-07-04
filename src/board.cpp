@@ -244,7 +244,7 @@ void Board::newGame(const QString& image, int difficulty)
 		// Show pieces
 		if ((i % step) == 0) {
 			m_pos = m_scene.center();
-			updateGL();
+			update();
 			updateStatusMessage(tr("Creating pieces..."));
 		}
 	}
@@ -519,7 +519,7 @@ void Board::zoomFit()
 
 	m_pos = m_scene.center();
 	if (m_scale_level == level) {
-		updateGL();
+		update();
 		return;
 	}
 
@@ -550,7 +550,7 @@ void Board::zoom(int level)
 	updateCursor();
 
 	// Update scene
-	updateGL();
+	update();
 	emit zoomChanged(m_scale_level, m_scale);
 	emit zoomOutAvailable(m_scale_level > 0);
 	emit zoomInAvailable(m_scale_level < 9);
@@ -701,28 +701,28 @@ void Board::keyPressEvent(QKeyEvent* event)
 	// Scroll left
 	case Qt::Key_Left:
 		scroll(QPoint(2 * offset, 0));
-		updateGL();
+		update();
 		updateCursor();
 		break;
 
 	// Scroll up
 	case Qt::Key_Up:
 		scroll(QPoint(0, 2 * offset));
-		updateGL();
+		update();
 		updateCursor();
 		break;
 
 	// Scroll right
 	case Qt::Key_Right:
 		scroll(QPoint(-2 * offset, 0));
-		updateGL();
+		update();
 		updateCursor();
 		break;
 
 	// Scroll down
 	case Qt::Key_Down:
 		scroll(QPoint(0, -2 * offset));
-		updateGL();
+		update();
 		updateCursor();
 		break;
 
@@ -877,7 +877,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		updateArray(m_selection_array, QRect(event->pos(), m_select_pos).normalized(), 3000);
 	}
 
-	updateGL();
+	update();
 
 	m_cursor_pos = event->pos();
 
@@ -985,7 +985,7 @@ void Board::grabPiece()
 	piece->setSelected(true);
 	updateCursor();
 
-	updateGL();
+	update();
 }
 
 //-----------------------------------------------------------------------------
@@ -1029,7 +1029,7 @@ void Board::releasePieces()
 	if (pieceCount() == 1) {
 		finishGame();
 	} else {
-		updateGL();
+		update();
 	}
 }
 
@@ -1061,7 +1061,7 @@ void Board::rotatePiece()
 		finishGame();
 	}
 
-	updateGL();
+	update();
 }
 
 //-----------------------------------------------------------------------------
@@ -1083,7 +1083,7 @@ void Board::selectPieces()
 	m_active_pieces += m_selected_pieces;
 	m_selected_pieces.clear();
 
-	updateGL();
+	update();
 	updateCursor();
 }
 

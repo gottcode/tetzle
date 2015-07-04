@@ -108,7 +108,7 @@ void Message::setVisible(bool visible)
 {
 	m_visible = visible;
 	if (m_visible) {
-		m_parent->updateGL();
+		m_parent->update();
 		QApplication::processEvents();
 	}
 }

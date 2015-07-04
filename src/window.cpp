@@ -155,7 +155,7 @@ void Window::addImages(const QStringList& files)
 void Window::changeEvent(QEvent* event)
 {
 	if (event->type() == QEvent::WindowStateChange) {
-		m_board->updateGL();
+		m_board->update();
 	}
 	return QMainWindow::changeEvent(event);
 }
