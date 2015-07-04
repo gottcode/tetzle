@@ -73,6 +73,8 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_has_shadows = new QCheckBox(tr("Drop shadows"), options_group);
 	connect(m_has_shadows, &QCheckBox::stateChanged, this, &AppearanceDialog::updatePreview);
 
+	m_has_message = new QCheckBox(tr("Success message"), options_group);
+
 	// Create colors widgets
 	QGroupBox* colors_group = new QGroupBox(tr("Colors"), this);
 
@@ -100,6 +102,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	QVBoxLayout* options_layout = new QVBoxLayout(options_group);
 	options_layout->addWidget(m_has_bevels);
 	options_layout->addWidget(m_has_shadows);
+	options_layout->addWidget(m_has_message);
 
 	QGridLayout* layout = new QGridLayout(this);
 	layout->setSpacing(12);
@@ -118,6 +121,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_highlight->setColor(settings.value("Colors/Highlight", QColor(Qt::white)).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
 	m_has_shadows->setChecked(settings.value("Appearance/Shadows", true).toBool());
+	m_has_message->setChecked(settings.value("Appearance/Message", true).toBool());
 	if (!m_bevels_enabled) {
 		m_has_bevels->setChecked(false);
 		m_has_bevels->setEnabled(false);
@@ -137,6 +141,13 @@ bool AppearanceDialog::hasBevels() const
 bool AppearanceDialog::hasShadows() const
 {
 	return m_has_shadows->isChecked();
+}
+
+//-----------------------------------------------------------------------------
+
+bool AppearanceDialog::hasMessage() const
+{
+	return m_has_message->isChecked();
 }
 
 //-----------------------------------------------------------------------------
@@ -167,6 +178,7 @@ void AppearanceDialog::accept()
 	settings.setValue("Colors/Highlight", m_highlight->color());
 	settings.setValue("Appearance/Bevels", m_has_bevels->isChecked());
 	settings.setValue("Appearance/Shadows", m_has_shadows->isChecked());
+	settings.setValue("Appearance/Message", m_has_message->isChecked());
 	QDialog::accept();
 }
 

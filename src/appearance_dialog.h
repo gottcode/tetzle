@@ -34,6 +34,7 @@ public:
 
 	bool hasBevels() const;
 	bool hasShadows() const;
+	bool hasMessage() const;
 	QPalette colors() const;
 
 	static void setBevelsEnabled(bool enabled);
@@ -48,6 +49,7 @@ private slots:
 private:
 	QCheckBox* m_has_bevels;
 	QCheckBox* m_has_shadows;
+	QCheckBox* m_has_message;
 	ColorButton* m_background;
 	ColorButton* m_shadow;
 	ColorButton* m_highlight;

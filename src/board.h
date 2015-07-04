@@ -117,6 +117,7 @@ private:
 	Message* m_message;
 	bool m_has_bevels;
 	bool m_has_shadows;
+	bool m_has_message;
 
 	GLuint m_image;
 	GLuint m_bumpmap_image;
