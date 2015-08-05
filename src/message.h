@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2015 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,12 @@
 
 #include "graphics_layer.h"
 
-class Message
+class QTimer;
+
+class Message : public QObject
 {
+	Q_OBJECT
+
 public:
 	Message(QGLWidget* parent);
 	~Message();
@@ -31,7 +35,11 @@ public:
 	void draw() const;
 	void setText(const QString& text);
 	void setViewport(const QSize& size);
-	void setVisible(bool visible);
+	void setVisible(bool visible, bool stay = true);
+
+public slots:
+	void hide();
+	void show();
 
 private:
 	void cleanup();
@@ -39,6 +47,7 @@ private:
 
 private:
 	QGLWidget* m_parent;
+	QTimer* m_hide_timer;
 	GLuint m_image;
 	VertexArray m_array;
 

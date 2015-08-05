@@ -1326,7 +1326,7 @@ void Board::finishGame()
 	emit finished();
 
 	m_message->setText(tr("Success"));
-	m_message->setVisible(true);
+	m_message->setVisible(true, false);
 }
 
 //-----------------------------------------------------------------------------

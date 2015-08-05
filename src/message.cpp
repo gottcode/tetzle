@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2015 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include <QApplication>
 #include <QPainter>
+#include <QTimer>
 
 //-----------------------------------------------------------------------------
 
@@ -28,11 +29,16 @@ int powerOfTwo(int value);
 
 //-----------------------------------------------------------------------------
 
-Message::Message(QGLWidget* parent)
-	: m_parent(parent),
+Message::Message(QGLWidget* parent) :
+	QObject(parent),
+	m_parent(parent),
 	m_image(0),
 	m_visible(false)
 {
+	m_hide_timer = new QTimer(this);
+	m_hide_timer->setInterval(2000);
+	m_hide_timer->setSingleShot(true);
+	connect(m_hide_timer, &QTimer::timeout, this, &Message::hide);
 }
 
 //-----------------------------------------------------------------------------
@@ -104,13 +110,32 @@ void Message::setViewport(const QSize& size)
 
 //-----------------------------------------------------------------------------
 
-void Message::setVisible(bool visible)
+void Message::setVisible(bool visible, bool stay)
 {
 	m_visible = visible;
-	if (m_visible) {
-		m_parent->update();
-		QApplication::processEvents();
+
+	if (m_visible && !stay) {
+		m_hide_timer->start();
+	} else {
+		m_hide_timer->stop();
 	}
+
+	m_parent->update();
+	QApplication::processEvents();
+}
+
+//-----------------------------------------------------------------------------
+
+void Message::hide()
+{
+	setVisible(false);
+}
+
+//-----------------------------------------------------------------------------
+
+void Message::show()
+{
+	setVisible(true);
 }
 
 //-----------------------------------------------------------------------------
