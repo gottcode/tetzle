@@ -91,6 +91,7 @@ Board::Board(QWidget* parent)
 	m_load_bevels(true),
 	m_has_bevels(true),
 	m_has_shadows(true),
+	m_has_message(true),
 	m_image(0),
 	m_image_ts(0),
 	m_columns(0),
@@ -157,6 +158,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 {
 	m_has_bevels = dialog.hasBevels();
 	m_has_shadows = dialog.hasShadows();
+	m_has_message = dialog.hasMessage();
 
 	QPalette palette = dialog.colors();
 	qglClearColor(palette.color(QPalette::Base).darker(150));
@@ -1325,8 +1327,10 @@ void Board::finishGame()
 
 	emit finished();
 
-	m_message->setText(tr("Success"));
-	m_message->setVisible(true);
+	if (m_has_message) {
+		m_message->setText(tr("Success"));
+		m_message->setVisible(true);
+	}
 }
 
 //-----------------------------------------------------------------------------
