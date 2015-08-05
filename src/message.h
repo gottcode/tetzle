@@ -22,6 +22,7 @@
 
 #include "graphics_layer.h"
 
+class QTimeLine;
 class QTimer;
 
 class Message : public QObject
@@ -45,9 +46,13 @@ private:
 	void cleanup();
 	void updateVerts();
 
+private slots:
+	void fade(int frame);
+
 private:
 	QGLWidget* m_parent;
 	QTimer* m_hide_timer;
+	QTimeLine* m_fade_timer;
 	GLuint m_image;
 	VertexArray m_array;
 
@@ -55,6 +60,8 @@ private:
 	QSize m_size;
 	QSize m_viewport;
 	bool m_visible;
+
+	QColor m_color;
 };
 
 #endif

@@ -21,6 +21,7 @@
 
 #include <QApplication>
 #include <QPainter>
+#include <QTimeLine>
 #include <QTimer>
 
 //-----------------------------------------------------------------------------
@@ -33,12 +34,20 @@ Message::Message(QGLWidget* parent) :
 	QObject(parent),
 	m_parent(parent),
 	m_image(0),
-	m_visible(false)
+	m_visible(false),
+	m_color(Qt::white)
 {
 	m_hide_timer = new QTimer(this);
 	m_hide_timer->setInterval(2000);
 	m_hide_timer->setSingleShot(true);
 	connect(m_hide_timer, &QTimer::timeout, this, &Message::hide);
+
+	m_fade_timer = new QTimeLine(160, this);
+	m_fade_timer->setCurveShape(QTimeLine::LinearCurve);
+	m_fade_timer->setDirection(QTimeLine::Backward);
+	m_fade_timer->setFrameRange(0, 10);
+	m_fade_timer->setUpdateInterval(16);
+	connect(m_fade_timer, &QTimeLine::frameChanged, this, &Message::fade);
 }
 
 //-----------------------------------------------------------------------------
@@ -53,9 +62,11 @@ Message::~Message()
 
 void Message::draw() const
 {
-	if (m_visible) {
+	if (m_visible || (m_fade_timer->state() == QTimeLine::Running)) {
+		graphics_layer->setColor(m_color);
 		graphics_layer->bindTexture(0, m_image);
 		graphics_layer->draw(m_array);
+		graphics_layer->setColor(Qt::white);
 	}
 }
 
@@ -114,6 +125,13 @@ void Message::setVisible(bool visible, bool stay)
 {
 	m_visible = visible;
 
+	m_color.setAlpha(255);
+	if (m_visible) {
+		m_fade_timer->stop();
+	} else {
+		m_fade_timer->start();
+	}
+
 	if (m_visible && !stay) {
 		m_hide_timer->start();
 	} else {
@@ -163,6 +181,15 @@ void Message::updateVerts()
 	verts.append( Vertex::init(x2,y2,z, 1,1) );
 	verts.append( Vertex::init(x2,y1,z, 1,0) );
 	graphics_layer->updateArray(m_array, verts);
+}
+
+//-----------------------------------------------------------------------------
+
+void Message::fade(int frame)
+{
+	m_color.setAlpha(frame * 25);
+	m_parent->update();
+	QApplication::processEvents();
 }
 
 //-----------------------------------------------------------------------------
