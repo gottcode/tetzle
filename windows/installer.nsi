@@ -182,7 +182,7 @@ Section "install"
 
 	SetOutPath $INSTDIR\translations
 	File ..\translations\*.qm
-	File $%QTDIR%\translations\qt_*.qm
+	File $%QTDIR%\translations\qtbase_*.qm
 
 	;Registry information for add/remove programs
 	WriteRegStr HKLM "Software\${APPNAME}" "" "$INSTDIR"

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,10 +114,10 @@ void LocaleDialog::loadTranslator(const QString& name, const QStringList& datadi
 
 	// Load translators
 	static QTranslator qt_translator;
-	if (translations.contains("qt_" + current) || translations.contains("qt_" + current.left(2))) {
-		qt_translator.load("qt_" + current, m_path);
+	if (translations.contains("qtbase_" + current) || translations.contains("qtbase_" + current.left(2))) {
+		qt_translator.load("qtbase_" + current, m_path);
 	} else {
-		qt_translator.load("qt_" + current, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		qt_translator.load("qtbase_" + current, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	}
 	QCoreApplication::installTranslator(&qt_translator);
 
@@ -144,6 +144,13 @@ QString LocaleDialog::languageName(const QString& language)
 		}
 	} else {
 		name = locale.nativeLanguageName();
+	}
+	if (name.isEmpty() || name == "C") {
+		if (language == "eo") {
+			name = "Esperanto";
+		} else {
+			name = language;
+		}
 	}
 	if (locale.textDirection() == Qt::RightToLeft) {
 		name.prepend(QChar(0x202b));
