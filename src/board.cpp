@@ -82,8 +82,8 @@ namespace
 
 //-----------------------------------------------------------------------------
 
-Board::Board(QWidget* parent)
-	: QGLWidget(parent),
+Board::Board(QWidget* parent) :
+	GLWidget(parent),
 	m_id(0),
 	m_load_bevels(true),
 	m_has_bevels(true),
@@ -156,7 +156,8 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	m_has_shadows = dialog.hasShadows();
 
 	QPalette palette = dialog.colors();
-	qglClearColor(palette.color(QPalette::Base).darker(150));
+	const QColor c = palette.color(QPalette::Base).darker(150);
+	glClearColor(c.redF(), c.greenF(), c.blueF(), c.alphaF());
 	setPalette(palette);
 	for (Piece* piece : m_pieces) {
 		piece->setSelected(piece->isSelected());
@@ -764,7 +765,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 			m_action_key = event->key();
 		}
 	}
-	QGLWidget::keyPressEvent(event);
+	GLWidget::keyPressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -774,7 +775,7 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 	if (!event->isAutoRepeat()) {
 		m_action_key = 0;
 	}
-	QGLWidget::keyReleaseEvent(event);
+	GLWidget::keyReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -792,7 +793,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 		m_select_pos = event->pos();
 	}
 
-	QGLWidget::mousePressEvent(event);
+	GLWidget::mousePressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -821,7 +822,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	}
 	m_action_button = Qt::NoButton;
 
-	QGLWidget::mouseReleaseEvent(event);
+	GLWidget::mouseReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -900,7 +901,7 @@ void Board::wheelEvent(QWheelEvent* event)
 		zoomOut();
 	}
 
-	QGLWidget::wheelEvent(event);
+	GLWidget::wheelEvent(event);
 }
 
 //-----------------------------------------------------------------------------

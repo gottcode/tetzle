@@ -3,7 +3,10 @@ lessThan(QT_VERSION, 5.2) {
 }
 
 TEMPLATE = app
-QT += opengl widgets
+QT += widgets
+lessThan(QT_VERSION, 5.4) {
+	QT += opengl
+}
 CONFIG += warn_on c++11
 macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist

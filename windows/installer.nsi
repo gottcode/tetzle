@@ -167,7 +167,6 @@ Section "install"
 	File $%QTDIR%\bin\libwinpthread-1.dll
 	File $%QTDIR%\bin\Qt5Core.dll
 	File $%QTDIR%\bin\Qt5Gui.dll
-	File $%QTDIR%\bin\Qt5OpenGL.dll
 	File $%QTDIR%\bin\Qt5Widgets.dll
 
 	SetOutPath $INSTDIR\platforms

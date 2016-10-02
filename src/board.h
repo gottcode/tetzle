@@ -27,13 +27,19 @@ class Overview;
 class Piece;
 class Tile;
 
-#include <QGLWidget>
 #include <QHash>
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0))
+#include <QOpenGLWidget>
+typedef QOpenGLWidget GLWidget;
+#else
+#include <QGLWidget>
+typedef QGLWidget GLWidget;
+#endif
 class QOpenGLTexture;
 
 #include <random>
 
-class Board : public QGLWidget
+class Board : public GLWidget
 {
 	Q_OBJECT
 
