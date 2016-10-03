@@ -21,11 +21,12 @@
 #define GRAPHICS_LAYER_H
 
 #include <QMatrix4x4>
-#include <QOpenGLExtraFunctions>
+#include <QOpenGLFunctions>
 #include <QOpenGLFunctions_1_1>
 #include <QOpenGLFunctions_1_3>
 class QOpenGLBuffer;
 class QOpenGLShaderProgram;
+class QOpenGLVertexArrayObject;
 
 struct Vertex
 {
@@ -112,10 +113,10 @@ extern GraphicsLayer* graphics_layer;
 
 
 // Programmable pipeline
-class GraphicsLayer21 : public GraphicsLayer, protected QOpenGLExtraFunctions
+class GraphicsLayer21 : public GraphicsLayer, protected QOpenGLFunctions
 {
 public:
-	GraphicsLayer21();
+	GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array = nullptr);
 	~GraphicsLayer21();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
@@ -151,6 +152,7 @@ private:
 	int m_color_location;
 	int m_matrix_location;
 
+	QOpenGLVertexArrayObject* m_vertex_array;
 	QOpenGLBuffer* m_vertex_buffer;
 };
 

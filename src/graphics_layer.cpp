@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
 #include <QSettings>
 
 //-----------------------------------------------------------------------------
@@ -93,8 +94,6 @@ typedef const GLubyte* (APIENTRYP PFNGLGETSTRINGIPROC)(GLenum name, GLuint index
 static PFNGLGETSTRINGIPROC getStringi = 0;
 
 // Vertex attribute object extension
-static GLuint vao_id = 0;
-
 typedef void (APIENTRYP PFNGLBINDVERTEXARRAYPROC) (GLuint array);
 static PFNGLBINDVERTEXARRAYPROC bindVertexArray = 0;
 typedef void (APIENTRYP PFNGLDELETEVERTEXARRAYSPROC) (GLsizei n, const GLuint *arrays);
@@ -255,6 +254,7 @@ void GraphicsLayer::init()
 	}
 
 	// Create graphics layer instance
+	QOpenGLVertexArrayObject* vertex_array = nullptr;
 	switch (state) {
 	case Version30:
 		glsl_version = (glsl <= "440") ? glsl : "440";
@@ -263,9 +263,10 @@ void GraphicsLayer::init()
 		} else {
 			shader_version = "130";
 		}
-		genVertexArrays(1, &vao_id);
-		bindVertexArray(vao_id);
-		graphics_layer = new GraphicsLayer21;
+		vertex_array = new QOpenGLVertexArrayObject;
+		vertex_array->create();
+		vertex_array->bind();
+		graphics_layer = new GraphicsLayer21(vertex_array);
 		break;
 	case Version21:
 		glsl_version = shader_version = "120";
@@ -408,8 +409,9 @@ void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer21::GraphicsLayer21() :
-	m_program(nullptr)
+GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array) :
+	m_program(nullptr),
+	m_vertex_array(vertex_array)
 {
 	initializeOpenGLFunctions();
 
@@ -465,10 +467,7 @@ GraphicsLayer21::~GraphicsLayer21()
 	delete m_vertex_buffer;
 
 	// Delete vertex array object
-	if (vao_id) {
-		glBindVertexArray(0);
-		glDeleteVertexArrays(1, &vao_id);
-	}
+	delete m_vertex_array;
 }
 
 //-----------------------------------------------------------------------------
