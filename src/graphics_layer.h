@@ -24,6 +24,7 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLFunctions_1_1>
 #include <QOpenGLFunctions_1_3>
+class QOpenGLBuffer;
 class QOpenGLShaderProgram;
 
 struct Vertex
@@ -94,7 +95,7 @@ protected:
 
 protected:
 	void clearChanged();
-	void uploadChanged();
+	void uploadChanged(QOpenGLBuffer* vertex_buffer);
 
 	const Vertex& at(int index) const
 	{
@@ -149,6 +150,8 @@ private:
 	QOpenGLShaderProgram* m_programs[3];
 	int m_color_location;
 	int m_matrix_location;
+
+	QOpenGLBuffer* m_vertex_buffer;
 };
 
 
@@ -202,6 +205,9 @@ public:
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setTextureUnits(unsigned int units);
 	virtual void uploadData();
+
+private:
+	QOpenGLBuffer* m_vertex_buffer;
 };
 
 #endif

@@ -23,7 +23,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
-#include <QOpenGLFunctions_1_5>
+#include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QSettings>
 
@@ -64,8 +64,6 @@ static PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture = 0;
 typedef ptrdiff_t GLintptr;
 typedef ptrdiff_t GLsizeiptr;
 #endif
-
-static GLuint vbo_id = 0;
 
 typedef void (APIENTRYP PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
 static PFNGLBINDBUFFERPROC bindBuffer = 0;
@@ -393,17 +391,17 @@ void GraphicsLayer::clearChanged()
 
 //-----------------------------------------------------------------------------
 
-void GraphicsLayer::uploadChanged()
+void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 {
 	if (!m_changed_regions.isEmpty()) {
 		for (const VertexArray& region : m_changed_regions) {
-			bufferSubData(GL_ARRAY_BUFFER, region.start * sizeof(Vertex), region.length() * sizeof(Vertex), m_data.constBegin() + region.start);
+			vertex_buffer->write(region.start * sizeof(Vertex), m_data.constBegin() + region.start, region.length() * sizeof(Vertex));
 		}
 		m_changed_regions.clear();
 	} else if (m_changed) {
 		GLsizeiptr size = m_data.count() * sizeof(Vertex);
-		bufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_DRAW);
-		bufferSubData(GL_ARRAY_BUFFER, 0, size, m_data.constData());
+		vertex_buffer->allocate(size);
+		vertex_buffer->write(0, m_data.constData(), size);
 		m_changed = false;
 	}
 }
@@ -429,8 +427,10 @@ GraphicsLayer21::GraphicsLayer21() :
 	glFrontFace(GL_CCW);
 
 	// Create vertex buffer object
-	glGenBuffers(1, &vbo_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	m_vertex_buffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+	m_vertex_buffer->setUsagePattern(QOpenGLBuffer::DynamicDraw);
+	m_vertex_buffer->create();
+	m_vertex_buffer->bind();
 
 	// Load shaders
 	QOpenGLShaderProgram* program = loadProgram(0);
@@ -462,8 +462,7 @@ GraphicsLayer21::~GraphicsLayer21()
 	}
 
 	// Delete vertex buffer object
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDeleteBuffers(1, &vbo_id);
+	delete m_vertex_buffer;
 
 	// Delete vertex array object
 	if (vao_id) {
@@ -588,7 +587,7 @@ void GraphicsLayer21::setViewport(GLint x, GLint y, GLsizei width, GLsizei heigh
 
 void GraphicsLayer21::uploadData()
 {
-	uploadChanged();
+	uploadChanged(m_vertex_buffer);
 }
 
 //-----------------------------------------------------------------------------
@@ -922,22 +921,18 @@ void GraphicsLayer13::uploadData()
 
 GraphicsLayer15::GraphicsLayer15()
 {
-	auto funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_1_5>();
-
-	// Create vertex buffer object
-	funcs->glGenBuffers(1, &vbo_id);
-	funcs->glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	m_vertex_buffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+	m_vertex_buffer->setUsagePattern(QOpenGLBuffer::DynamicDraw);
+	m_vertex_buffer->create();
+	m_vertex_buffer->bind();
 }
 
 //-----------------------------------------------------------------------------
 
 GraphicsLayer15::~GraphicsLayer15()
 {
-	auto funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_1_5>();
-
 	// Delete vertex buffer object
-	funcs->glBindBuffer(GL_ARRAY_BUFFER, 0);
-	funcs->glDeleteBuffers(1, &vbo_id);
+	delete m_vertex_buffer;
 }
 
 //-----------------------------------------------------------------------------
@@ -980,7 +975,7 @@ void GraphicsLayer15::setTextureUnits(unsigned int units)
 
 void GraphicsLayer15::uploadData()
 {
-	uploadChanged();
+	uploadChanged(m_vertex_buffer);
 }
 
 //-----------------------------------------------------------------------------
