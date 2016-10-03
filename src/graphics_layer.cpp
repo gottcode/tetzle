@@ -23,10 +23,12 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#if (QT_VERSION < QT_VERSION_CHECK(5,4,0))
+#include <QGLFormat>
+#endif
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
-#include <QSettings>
 
 //-----------------------------------------------------------------------------
 
@@ -34,105 +36,8 @@ GraphicsLayer* graphics_layer = 0;
 
 //-----------------------------------------------------------------------------
 
-#ifndef APIENTRY
-#define APIENTRY
-#endif
-#ifndef APIENTRYP
-#define APIENTRYP APIENTRY *
-#endif
-
-// Multi-texture extension
-#ifndef GL_VERSION_1_3
-#define GL_TEXTURE0 0x84C0
-#define GL_TEXTURE1 0x84C1
-#endif
-
-#ifndef GL_VERSION_1_3_DEPRECATED
-#define GL_COMBINE     0x8570
-#define GL_COMBINE_RGB 0x8571
-#define GL_ADD_SIGNED  0x8574
-#endif
-
-typedef void (APIENTRYP PFNGLACTIVETEXTUREPROC) (GLenum texture);
-static PFNGLACTIVETEXTUREPROC activeTexture = 0;
-typedef void (APIENTRYP PFNGLCLIENTACTIVETEXTUREPROC) (GLenum texture);
-static PFNGLCLIENTACTIVETEXTUREPROC clientActiveTexture = 0;
-
-// Vertex buffer object extension
-#ifndef GL_VERSION_1_5
-#define GL_ARRAY_BUFFER 0x8892
-#define GL_DYNAMIC_DRAW 0x88E8
-typedef ptrdiff_t GLintptr;
-typedef ptrdiff_t GLsizeiptr;
-#endif
-
-typedef void (APIENTRYP PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
-static PFNGLBINDBUFFERPROC bindBuffer = 0;
-typedef void (APIENTRYP PFNGLBUFFERDATAPROC) (GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
-static PFNGLBUFFERDATAPROC bufferData = 0;
-typedef void (APIENTRYP PFNGLBUFFERSUBDATAPROC) (GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
-static PFNGLBUFFERSUBDATAPROC bufferSubData = 0;
-typedef void (APIENTRYP PFNGLDELETEBUFFERSPROC) (GLsizei n, const GLuint *buffers);
-static PFNGLDELETEBUFFERSPROC deleteBuffers = 0;
-typedef void (APIENTRYP PFNGLGENBUFFERSPROC) (GLsizei n, GLuint *buffers);
-static PFNGLGENBUFFERSPROC genBuffers = 0;
-
-// Shaders extension
-#ifndef GL_VERSION_2_0
-#define GL_SHADING_LANGUAGE_VERSION 0x8B8C
-#endif
-
 static QString glsl_version;
 static QString shader_version;
-
-// OpenGL 3 string
-#ifndef GL_VERSION_3_0
-#define GL_NUM_EXTENSIONS 0x821D
-#endif
-
-typedef const GLubyte* (APIENTRYP PFNGLGETSTRINGIPROC)(GLenum name, GLuint index);
-static PFNGLGETSTRINGIPROC getStringi = 0;
-
-// Vertex attribute object extension
-typedef void (APIENTRYP PFNGLBINDVERTEXARRAYPROC) (GLuint array);
-static PFNGLBINDVERTEXARRAYPROC bindVertexArray = 0;
-typedef void (APIENTRYP PFNGLDELETEVERTEXARRAYSPROC) (GLsizei n, const GLuint *arrays);
-static PFNGLDELETEVERTEXARRAYSPROC deleteVertexArrays = 0;
-typedef void (APIENTRYP PFNGLGENVERTEXARRAYSPROC) (GLsizei n, GLuint *arrays);
-static PFNGLGENVERTEXARRAYSPROC genVertexArrays = 0;
-
-namespace
-{
-	enum StateFlags
-	{
-		MultiTextureFlag = 0x01,
-		VertexBufferObjectFlag = 0x02,
-		FragmentShadersFlag = 0x04,
-		VertexArrayObjectFlag = 0x08
-	};
-
-	enum Versions
-	{
-		Version11 = 0,
-		Version13 = MultiTextureFlag,
-		Version15 = MultiTextureFlag | VertexBufferObjectFlag,
-		Version21 = FragmentShadersFlag | MultiTextureFlag | VertexBufferObjectFlag,
-		Version30 = VertexArrayObjectFlag | FragmentShadersFlag | MultiTextureFlag | VertexBufferObjectFlag
-	};
-}
-
-static QFunctionPointer getProcAddress(const QByteArray& name)
-{
-	QFunctionPointer result = 0;
-	QByteArray names[] = { name, name + "ARB", name + "EXT" };
-	for (int i = 0; i < 3; ++i) {
-		result = QOpenGLContext::currentContext()->getProcAddress(names[i]);
-		if (result) {
-			break;
-		}
-	}
-	return result;
-}
 
 static inline void convertMatrix(const float* in, GLfloat* out)
 {
@@ -148,141 +53,86 @@ static inline void convertMatrix(const double* in, GLfloat* out)
 
 void GraphicsLayer::init()
 {
-	unsigned int state = 0;
-	unsigned int symbols = 0;
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0))
+	const auto requested = QSurfaceFormat::defaultFormat();
+#else
+	const auto requested = QGLFormat::toSurfaceFormat(QGLFormat::defaultFormat());
+#endif
+	const auto context = QOpenGLContext::currentContext()->format();
+	const auto version = std::min((context.profile() == QSurfaceFormat::CoreProfile) ? qMakePair(4,5) : requested.version(), context.version());
 
-	// Try to load multi-texture functions
-	activeTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
-	clientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC) getProcAddress("glClientActiveTexture");
-	if (activeTexture && clientActiveTexture) {
-		symbols |= MultiTextureFlag;
-	}
-
-	// Try to load vertex buffer object functions
-	bindBuffer = (PFNGLBINDBUFFERPROC) getProcAddress("glBindBuffer");
-	bufferData = (PFNGLBUFFERDATAPROC) getProcAddress("glBufferData");
-	bufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
-	deleteBuffers = (PFNGLDELETEBUFFERSPROC) getProcAddress("glDeleteBuffers");
-	genBuffers = (PFNGLGENBUFFERSPROC) getProcAddress("glGenBuffers");
-	if (bindBuffer && bufferData && bufferSubData && deleteBuffers && genBuffers) {
-		symbols |= VertexBufferObjectFlag;
-	}
-
-	// Check for minimum supported programmable pipeline
-	QByteArray glsl = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-	int index = glsl.indexOf(' ');
-	if (index != -1) {
-		glsl.truncate(index);
-	}
-	glsl.replace('.', "");
-	glsl.truncate(3);
-	if (QOpenGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
-		state |= FragmentShadersFlag;
-		symbols |= FragmentShadersFlag;
-		if (activeTexture) {
-			symbols |= MultiTextureFlag;
-		}
-	}
-
-	// Try to load vertex array object functions
-	bindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getProcAddress("glBindVertexArray");
-	deleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getProcAddress("glDeleteVertexArrays");
-	genVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getProcAddress("glGenVertexArrays");
-	if (bindVertexArray && deleteVertexArrays && genVertexArrays) {
-		symbols |= VertexArrayObjectFlag;
-	}
-
-	// Try to determine OpenGL extensions
-	QList<QByteArray> extensions;
-	const char* ext = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
-	if (!ext) {
-		getStringi = (PFNGLGETSTRINGIPROC) getProcAddress("glGetStringi");
-		if (getStringi) {
-			int count = 0;
-			glGetIntegerv(GL_NUM_EXTENSIONS, &count);
-			for (int i = 0; i < count; ++i) {
-				extensions += reinterpret_cast<const char*>(getStringi(GL_EXTENSIONS, i));
-			}
-		}
-	} else {
-		extensions = QByteArray(ext).split(' ');
-	}
-	for (const QByteArray& extension : extensions) {
-		if (extension == "GL_ARB_multitexture") {
-			state |= MultiTextureFlag;
-		} else if (extension == "GL_ARB_vertex_buffer_object") {
-			state |= VertexBufferObjectFlag;
-		} else if (extension == "GL_ARB_vertex_array_object") {
-			state |= VertexArrayObjectFlag;
-		}
-	}
-
-	// Find maximum supported state
-	int detected = 11;
-	switch (std::min(state, symbols)) {
-	case Version30: detected = 30; break;
-	case Version21: detected = 21; break;
-	case Version15: detected = 15; break;
-	case Version13: detected = 13; break;
-	default: break;
-	}
-
-	// Check for a requested state
-	unsigned int new_state = 0;
-	int requested = QSettings().value("GraphicsLayer", detected).toInt();
-	QStringList args = QCoreApplication::arguments();
-	for (const QString& arg : args) {
-		if (arg.startsWith("--graphics-layer=")) {
-			requested = arg.mid(17).toInt();
-		}
-	}
-	switch (requested) {
-	case 30: new_state = Version30; break;
-	case 21: new_state = Version21; break;
-	case 15: new_state = Version15; break;
-	case 13: new_state = Version13; break;
-	case 11: new_state = Version11; break;
-	default:
-		new_state = state;
-		qWarning("Requested GraphicsLayer%d is invalid; using detected GraphicsLayer%d instead.", requested, detected);
-		break;
-	}
-	if (state >= new_state) {
-		state = new_state;
-	} else {
-		qWarning("Unable to use requested GraphicsLayer%d; using detected GraphicsLayer%d instead.", requested, detected);
-	}
-
-	// Create graphics layer instance
-	QOpenGLVertexArrayObject* vertex_array = nullptr;
-	switch (state) {
-	case Version30:
-		glsl_version = (glsl <= "440") ? glsl : "440";
-		if (glsl_version >= "330") {
+	if (version >= qMakePair(3,0)) {
+		if (version >= qMakePair(3,3)) {
+			glsl_version = QByteArray::number((version.first * 100) + (version.second * 10));
 			shader_version = "330";
-		} else {
+		} else if (version == qMakePair(3,2)) {
+			glsl_version = "150";
 			shader_version = "130";
+		} else if (version == qMakePair(3,1)) {
+			glsl_version = "140";
+			shader_version = "130";
+		} else {
+			glsl_version = shader_version = "130";
 		}
-		vertex_array = new QOpenGLVertexArrayObject;
+		auto vertex_array = new QOpenGLVertexArrayObject;
 		vertex_array->create();
 		vertex_array->bind();
 		graphics_layer = new GraphicsLayer21(vertex_array);
-		break;
-	case Version21:
+	} else if (version >= qMakePair(2,1)) {
 		glsl_version = shader_version = "120";
 		graphics_layer = new GraphicsLayer21;
-		break;
-	case Version15:
+	} else if (version >= qMakePair(1,5)) {
 		graphics_layer = new GraphicsLayer15;
-		break;
-	case Version13:
+	} else if (version >= qMakePair(1,3)) {
 		graphics_layer = new GraphicsLayer13;
-		break;
-	default:
+	} else {
 		graphics_layer = new GraphicsLayer11;
+	}
+
+	graphics_layer->setTextureUnits(1);
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer::setVersion(int version)
+{
+	QSurfaceFormat f;
+	switch (version) {
+	case 11:
+	case 12:
+		f.setVersion(1,1);
+		break;
+	case 13:
+	case 14:
+		f.setVersion(1,3);
+		break;
+	case 15:
+	case 20:
+		f.setVersion(1,5);
+		break;
+	case 21:
+		f.setVersion(2,1);
+		break;
+	case 30:
+	case 31:
+	case 32:
+	case 33:
+	case 40:
+	case 41:
+	case 42:
+	case 43:
+	case 44:
+	case 45:
+	default:
+		f.setVersion(4,5);
+		f.setProfile(QSurfaceFormat::CoreProfile);
 		break;
 	}
-	graphics_layer->setTextureUnits(1);
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0))
+	QSurfaceFormat::setDefaultFormat(f);
+#else
+	QGLFormat::setDefaultFormat(QGLFormat::fromSurfaceFormat(f));
+#endif
 }
 
 //-----------------------------------------------------------------------------

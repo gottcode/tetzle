@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDir>
 #include <QFileOpenEvent>
 #include <QLabel>
@@ -103,6 +104,31 @@ int main(int argc, char** argv)
 {
 	Application app(argc, argv);
 
+	// Load application language
+	LocaleDialog::loadTranslator("tetzle_");
+
+	// Load command-line settings
+	QSettings settings;
+	QCommandLineParser parser;
+	parser.setApplicationDescription(QCoreApplication::translate("Window", "A jigsaw puzzle with tetrominoes for pieces"));
+	parser.addHelpOption();
+	parser.addVersionOption();
+	parser.addOption(QCommandLineOption(QStringList() << "G" << "graphics-layer",
+		QCoreApplication::translate("main", "Select OpenGL version."),
+		QCoreApplication::translate("main", "version")));
+	parser.process(app);
+
+	// Set OpenGL version
+	QString requested = settings.value("GraphicsLayer").toString();
+	if (parser.isSet("graphics-layer")) {
+		requested = parser.value("graphics-layer");
+	}
+	requested = requested.remove('.');
+	requested = requested.split(' ').first();
+
+	GraphicsLayer::setVersion(requested.toInt());
+
+	// Find jhead executable
 	QDir dir(app.applicationDirPath());
 	if (dir.exists("jhead") || dir.exists("jhead.exe")) {
 		QString path = QString::fromLocal8Bit(qgetenv("PATH"));
@@ -116,9 +142,6 @@ int main(int argc, char** argv)
 			qputenv("PATH", path.toLocal8Bit());
 		}
 	}
-
-	// Load application language
-	LocaleDialog::loadTranslator("tetzle_");
 
 	// Create data location
 	QString path = Path::datapath();
@@ -189,7 +212,6 @@ int main(int argc, char** argv)
 	dir.mkpath(path + "/images/thumbnails/");
 
 	// Update settings layout
-	QSettings settings;
 	if (settings.value("Version", 0).toInt() < 2) {
 		settings.setValue("NewGame/Image", settings.value("Image"));
 		settings.remove("Image");

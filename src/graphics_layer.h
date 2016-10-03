@@ -74,6 +74,7 @@ public:
 	virtual ~GraphicsLayer();
 
 	static void init();
+	static void setVersion(int version);
 
 	void updateArray(VertexArray& array, const QVector<Vertex>& data);
 	void removeArray(VertexArray& array);
