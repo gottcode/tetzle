@@ -23,6 +23,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#include <QOpenGLFunctions_1_5>
 #include <QOpenGLShaderProgram>
 #include <QSettings>
 
@@ -287,20 +288,9 @@ void GraphicsLayer::init()
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer::GraphicsLayer()
-:	m_changed(true)
+GraphicsLayer::GraphicsLayer() :
+	m_changed(true)
 {
-	glDisable(GL_BLEND);
-
-	// Enable OpenGL features
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
-	// Set OpenGL parameters
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc(GL_LEQUAL);
-	glFrontFace(GL_CCW);
-
 	// Start with a 1MB vertex buffer
 	m_data.resize(0x100000 / sizeof(Vertex));
 	VertexArray free_region;
@@ -312,19 +302,6 @@ GraphicsLayer::GraphicsLayer()
 
 GraphicsLayer::~GraphicsLayer()
 {
-	// Delete VBO
-	if (vbo_id != 0) {
-		bindBuffer(GL_ARRAY_BUFFER, 0);
-		deleteBuffers(1, &vbo_id);
-		vbo_id = 0;
-	}
-
-	// Delete VAO
-	if (vao_id != 0) {
-		bindVertexArray(0);
-		deleteVertexArrays(1, &vao_id);
-		vao_id = 0;
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -433,14 +410,27 @@ void GraphicsLayer::uploadChanged()
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer21::GraphicsLayer21()
-:	m_program(0)
+GraphicsLayer21::GraphicsLayer21() :
+	m_program(nullptr)
 {
+	initializeOpenGLFunctions();
+
 	AppearanceDialog::setBevelsEnabled(true);
 
-	// Create VBO
-	genBuffers(1, &vbo_id);
-	bindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	glDisable(GL_BLEND);
+
+	// Enable OpenGL features
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+
+	// Set OpenGL parameters
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LEQUAL);
+	glFrontFace(GL_CCW);
+
+	// Create vertex buffer object
+	glGenBuffers(1, &vbo_id);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
 	// Load shaders
 	QOpenGLShaderProgram* program = loadProgram(0);
@@ -469,18 +459,33 @@ GraphicsLayer21::~GraphicsLayer21()
 	// Unload shaders
 	for (int i = 0; i < 3; ++i) {
 		delete m_programs[i];
-		m_programs[i] = 0;
 	}
-	m_program = 0;
+
+	// Delete vertex buffer object
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDeleteBuffers(1, &vbo_id);
+
+	// Delete vertex array object
+	if (vao_id) {
+		glBindVertexArray(0);
+		glDeleteVertexArrays(1, &vao_id);
+	}
 }
 
 //-----------------------------------------------------------------------------
 
 void GraphicsLayer21::bindTexture(unsigned int unit, GLuint texture)
 {
-	activeTexture(GL_TEXTURE0 + unit);
+	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	activeTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer21::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 //-----------------------------------------------------------------------------
@@ -492,6 +497,15 @@ void GraphicsLayer21::draw(const VertexArray& array, GLenum mode)
 
 //-----------------------------------------------------------------------------
 
+GLint GraphicsLayer21::getMaxTextureSize()
+{
+	GLint max_size;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
+	return max_size;
+}
+
+//-----------------------------------------------------------------------------
+
 void GraphicsLayer21::setBlended(bool enabled)
 {
 	if (enabled) {
@@ -499,6 +513,13 @@ void GraphicsLayer21::setBlended(bool enabled)
 	} else {
 		glDisable(GL_BLEND);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer21::setClearColor(const QColor& color)
+{
+	glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF());
 }
 
 //-----------------------------------------------------------------------------
@@ -554,6 +575,13 @@ void GraphicsLayer21::setTextureUnits(unsigned int units)
 		m_program->disableAttributeArray(TexCoord1);
 		m_program->disableAttributeArray(TexCoord0);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer21::setViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	glViewport(x, y, width, height);
 }
 
 //-----------------------------------------------------------------------------
@@ -615,15 +643,23 @@ QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 
 GraphicsLayer11::GraphicsLayer11()
 {
+	initializeOpenGLFunctions();
+
 	AppearanceDialog::setBevelsEnabled(false);
 
 	// Disable unused OpenGL features
 	glDisable(GL_LIGHTING);
+	glDisable(GL_BLEND);
 
 	// Enable OpenGL features
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	// Set OpenGL parameters
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LEQUAL);
+	glFrontFace(GL_CCW);
 	setColor(Qt::white);
 }
 
@@ -637,11 +673,27 @@ void GraphicsLayer11::bindTexture(unsigned int unit, GLuint texture)
 
 //-----------------------------------------------------------------------------
 
+void GraphicsLayer11::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+//-----------------------------------------------------------------------------
+
 void GraphicsLayer11::draw(const VertexArray& array, GLenum mode)
 {
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(array.start).s);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &at(array.start).x);
 	glDrawArrays(mode, 0, array.length());
+}
+
+//-----------------------------------------------------------------------------
+
+GLint GraphicsLayer11::getMaxTextureSize()
+{
+	GLint max_size;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
+	return max_size;
 }
 
 //-----------------------------------------------------------------------------
@@ -653,6 +705,13 @@ void GraphicsLayer11::setBlended(bool enabled)
 	} else {
 		glDisable(GL_BLEND);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer11::setClearColor(const QColor& color)
+{
+	glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF());
 }
 
 //-----------------------------------------------------------------------------
@@ -697,6 +756,13 @@ void GraphicsLayer11::setTextureUnits(unsigned int units)
 
 //-----------------------------------------------------------------------------
 
+void GraphicsLayer11::setViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	glViewport(x, y, width, height);
+}
+
+//-----------------------------------------------------------------------------
+
 void GraphicsLayer11::uploadData()
 {
 	clearChanged();
@@ -706,31 +772,54 @@ void GraphicsLayer11::uploadData()
 
 GraphicsLayer13::GraphicsLayer13()
 {
+	initializeOpenGLFunctions();
+
 	AppearanceDialog::setBevelsEnabled(true);
 
+	// Disable unused OpenGL features
+	glDisable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+
+	// Enable OpenGL features
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
 	// Set OpenGL parameters
-	activeTexture(GL_TEXTURE1);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LEQUAL);
+	glFrontFace(GL_CCW);
+	setColor(Qt::white);
+
+	glActiveTexture(GL_TEXTURE1);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 	glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
-	activeTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
 }
 
 //-----------------------------------------------------------------------------
 
 void GraphicsLayer13::bindTexture(unsigned int unit, GLuint texture)
 {
-	activeTexture(GL_TEXTURE0 + unit);
+	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	activeTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 //-----------------------------------------------------------------------------
 
 void GraphicsLayer13::draw(const VertexArray& array, GLenum mode)
 {
-	clientActiveTexture(GL_TEXTURE1);
+	glClientActiveTexture(GL_TEXTURE1);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(array.start).s2);
-	clientActiveTexture(GL_TEXTURE0);
+	glClientActiveTexture(GL_TEXTURE0);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &at(array.start).s);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &at(array.start).x);
 	glDrawArrays(mode, 0, array.length());
@@ -738,10 +827,64 @@ void GraphicsLayer13::draw(const VertexArray& array, GLenum mode)
 
 //-----------------------------------------------------------------------------
 
+GLint GraphicsLayer13::getMaxTextureSize()
+{
+	GLint max_size;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
+	return max_size;
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::setBlended(bool enabled)
+{
+	if (enabled) {
+		glEnable(GL_BLEND);
+	} else {
+		glDisable(GL_BLEND);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::setClearColor(const QColor& color)
+{
+	glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::setColor(const QColor& color)
+{
+	glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::setModelview(const QMatrix4x4& matrix)
+{
+	GLfloat modelview[16];
+	convertMatrix(matrix.constData(), modelview);
+	glLoadMatrixf(modelview);
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::setProjection(const QMatrix4x4& matrix)
+{
+	GLfloat projection[16];
+	convertMatrix(matrix.constData(), projection);
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(projection);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+//-----------------------------------------------------------------------------
+
 void GraphicsLayer13::setTextureUnits(unsigned int units)
 {
-	activeTexture(GL_TEXTURE1);
-	clientActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE1);
+	glClientActiveTexture(GL_TEXTURE1);
 	if (units > 1) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -750,8 +893,8 @@ void GraphicsLayer13::setTextureUnits(unsigned int units)
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	activeTexture(GL_TEXTURE0);
-	clientActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
+	glClientActiveTexture(GL_TEXTURE0);
 	if (units > 0) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -763,11 +906,38 @@ void GraphicsLayer13::setTextureUnits(unsigned int units)
 
 //-----------------------------------------------------------------------------
 
+void GraphicsLayer13::setViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	glViewport(x, y, width, height);
+}
+
+//-----------------------------------------------------------------------------
+
+void GraphicsLayer13::uploadData()
+{
+	clearChanged();
+}
+
+//-----------------------------------------------------------------------------
+
 GraphicsLayer15::GraphicsLayer15()
 {
-	// Create VBO
-	genBuffers(1, &vbo_id);
-	bindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	auto funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_1_5>();
+
+	// Create vertex buffer object
+	funcs->glGenBuffers(1, &vbo_id);
+	funcs->glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+}
+
+//-----------------------------------------------------------------------------
+
+GraphicsLayer15::~GraphicsLayer15()
+{
+	auto funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_1_5>();
+
+	// Delete vertex buffer object
+	funcs->glBindBuffer(GL_ARRAY_BUFFER, 0);
+	funcs->glDeleteBuffers(1, &vbo_id);
 }
 
 //-----------------------------------------------------------------------------
@@ -781,8 +951,8 @@ void GraphicsLayer15::draw(const VertexArray& array, GLenum mode)
 
 void GraphicsLayer15::setTextureUnits(unsigned int units)
 {
-	activeTexture(GL_TEXTURE1);
-	clientActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE1);
+	glClientActiveTexture(GL_TEXTURE1);
 	if (units > 1) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -792,8 +962,8 @@ void GraphicsLayer15::setTextureUnits(unsigned int units)
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	activeTexture(GL_TEXTURE0);
-	clientActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
+	glClientActiveTexture(GL_TEXTURE0);
 	if (units > 0) {
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -21,7 +21,9 @@
 #define GRAPHICS_LAYER_H
 
 #include <QMatrix4x4>
-#include <QOpenGLContext>
+#include <QOpenGLExtraFunctions>
+#include <QOpenGLFunctions_1_1>
+#include <QOpenGLFunctions_1_3>
 class QOpenGLShaderProgram;
 
 struct Vertex
@@ -75,12 +77,16 @@ public:
 	void removeArray(VertexArray& array);
 
 	virtual void bindTexture(unsigned int unit, GLuint texture)=0;
+	virtual void clear()=0;
 	virtual void draw(const VertexArray& region, GLenum mode = GL_TRIANGLES)=0;
+	virtual GLint getMaxTextureSize()=0;
 	virtual void setBlended(bool enabled)=0;
+	virtual void setClearColor(const QColor& color)=0;
 	virtual void setColor(const QColor& color)=0;
 	virtual void setModelview(const QMatrix4x4& matrix)=0;
 	virtual void setProjection(const QMatrix4x4& matrix)=0;
 	virtual void setTextureUnits(unsigned int units)=0;
+	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height)=0;
 	virtual void uploadData()=0;
 
 protected:
@@ -105,19 +111,23 @@ extern GraphicsLayer* graphics_layer;
 
 
 // Programmable pipeline
-class GraphicsLayer21 : public GraphicsLayer
+class GraphicsLayer21 : public GraphicsLayer, protected QOpenGLExtraFunctions
 {
 public:
 	GraphicsLayer21();
 	~GraphicsLayer21();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
+	virtual void clear();
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
+	virtual GLint getMaxTextureSize();
 	virtual void setBlended(bool enabled);
+	virtual void setClearColor(const QColor& color);
 	virtual void setColor(const QColor& color);
 	virtual void setModelview(const QMatrix4x4& matrix);
 	virtual void setProjection(const QMatrix4x4& matrix);
 	virtual void setTextureUnits(unsigned int units);
+	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 	virtual void uploadData();
 
 private:
@@ -143,30 +153,43 @@ private:
 
 
 // Fixed function pipeline
-class GraphicsLayer11 : public GraphicsLayer
+class GraphicsLayer11 : public GraphicsLayer, protected QOpenGLFunctions_1_1
 {
 public:
 	GraphicsLayer11();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
+	virtual void clear();
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
+	virtual GLint getMaxTextureSize();
 	virtual void setBlended(bool enabled);
+	virtual void setClearColor(const QColor& color);
 	virtual void setColor(const QColor& color);
 	virtual void setModelview(const QMatrix4x4& matrix);
 	virtual void setProjection(const QMatrix4x4& matrix);
 	virtual void setTextureUnits(unsigned int units);
+	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 	virtual void uploadData();
 };
 
 
-class GraphicsLayer13 : public GraphicsLayer11
+class GraphicsLayer13 : public GraphicsLayer, protected QOpenGLFunctions_1_3
 {
 public:
 	GraphicsLayer13();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
+	virtual void clear();
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
+	virtual GLint getMaxTextureSize();
+	virtual void setBlended(bool enabled);
+	virtual void setClearColor(const QColor& color);
+	virtual void setColor(const QColor& color);
+	virtual void setModelview(const QMatrix4x4& matrix);
+	virtual void setProjection(const QMatrix4x4& matrix);
 	virtual void setTextureUnits(unsigned int units);
+	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+	virtual void uploadData();
 };
 
 
@@ -174,6 +197,7 @@ class GraphicsLayer15 : public GraphicsLayer13
 {
 public:
 	GraphicsLayer15();
+	~GraphicsLayer15();
 
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setTextureUnits(unsigned int units);

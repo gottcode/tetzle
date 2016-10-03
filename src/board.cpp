@@ -156,8 +156,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	m_has_shadows = dialog.hasShadows();
 
 	QPalette palette = dialog.colors();
-	const QColor c = palette.color(QPalette::Base).darker(150);
-	glClearColor(c.redF(), c.greenF(), c.blueF(), c.alphaF());
+	graphics_layer->setClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
 	for (Piece* piece : m_pieces) {
 		piece->setSelected(piece->isSelected());
@@ -592,7 +591,7 @@ void Board::initializeGL()
 
 void Board::resizeGL(int w, int h)
 {
-	glViewport(0, 0, w, h);
+	graphics_layer->setViewport(0, 0, w, h);
 
 	QMatrix4x4 matrix;
 	matrix.ortho(0, w, h, 0, -4000, 3);
@@ -605,7 +604,7 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	graphics_layer->clear();
 
 	graphics_layer->uploadData();
 
@@ -1127,9 +1126,7 @@ void Board::loadImage()
 
 	// Find image size
 	QSize size = source.size();
-	GLint max_size;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_size);
-	max_size /= 2;
+	const GLint max_size = graphics_layer->getMaxTextureSize() / 2;
 	if (max_size < std::max(size.width(), size.height())) {
 		size.scale(max_size, max_size, Qt::KeepAspectRatio);
 	}
