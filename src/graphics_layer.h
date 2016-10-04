@@ -20,8 +20,8 @@
 #ifndef GRAPHICS_LAYER_H
 #define GRAPHICS_LAYER_H
 
-#include <qgl.h>
 #include <QMatrix4x4>
+#include <QOpenGLContext>
 class QOpenGLShaderProgram;
 
 struct Vertex

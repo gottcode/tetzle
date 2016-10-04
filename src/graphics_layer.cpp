@@ -123,12 +123,12 @@ namespace
 	};
 }
 
-static QFunctionPointer getProcAddress(const QString& name)
+static QFunctionPointer getProcAddress(const QByteArray& name)
 {
 	QFunctionPointer result = 0;
-	QString names[] = { name, name + "ARB", name + "EXT" };
+	QByteArray names[] = { name, name + "ARB", name + "EXT" };
 	for (int i = 0; i < 3; ++i) {
-		result = QGLContext::currentContext()->getProcAddress(names[i]);
+		result = QOpenGLContext::currentContext()->getProcAddress(names[i]);
 		if (result) {
 			break;
 		}

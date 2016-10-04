@@ -22,16 +22,18 @@
 
 #include "graphics_layer.h"
 
+#include <QColor>
 class QOpenGLTexture;
 class QTimeLine;
 class QTimer;
+class QWidget;
 
 class Message : public QObject
 {
 	Q_OBJECT
 
 public:
-	Message(QGLWidget* parent);
+	Message(QWidget* parent);
 	~Message();
 
 	void draw() const;
@@ -51,7 +53,7 @@ private slots:
 	void fade(int frame);
 
 private:
-	QGLWidget* m_parent;
+	QWidget* m_parent;
 	QTimer* m_hide_timer;
 	QTimeLine* m_fade_timer;
 	QOpenGLTexture* m_image;

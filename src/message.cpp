@@ -24,6 +24,7 @@
 #include <QPainter>
 #include <QTimeLine>
 #include <QTimer>
+#include <QWidget>
 
 //-----------------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ int powerOfTwo(int value);
 
 //-----------------------------------------------------------------------------
 
-Message::Message(QGLWidget* parent) :
+Message::Message(QWidget* parent) :
 	QObject(parent),
 	m_parent(parent),
 	m_image(nullptr),
