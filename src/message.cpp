@@ -20,6 +20,7 @@
 #include "message.h"
 
 #include <QApplication>
+#include <QOpenGLTexture>
 #include <QPainter>
 #include <QTimeLine>
 #include <QTimer>
@@ -33,7 +34,7 @@ int powerOfTwo(int value);
 Message::Message(QGLWidget* parent) :
 	QObject(parent),
 	m_parent(parent),
-	m_image(0),
+	m_image(nullptr),
 	m_visible(false),
 	m_color(Qt::white)
 {
@@ -62,9 +63,9 @@ Message::~Message()
 
 void Message::draw() const
 {
-	if (m_visible || (m_fade_timer->state() == QTimeLine::Running)) {
+	if (m_image && (m_visible || (m_fade_timer->state() == QTimeLine::Running))) {
 		graphics_layer->setColor(m_color);
-		graphics_layer->bindTexture(0, m_image);
+		graphics_layer->bindTexture(0, m_image->textureId());
 		graphics_layer->draw(m_array);
 		graphics_layer->setColor(Qt::white);
 	}
@@ -106,7 +107,9 @@ void Message::setText(const QString& text)
 		painter.setPen(Qt::white);
 		painter.drawText(height / 2, height / 2 + metrics.ascent(), m_text);
 	}
-	m_image = m_parent->bindTexture(image.mirrored(false, true));
+	m_image = new QOpenGLTexture(image);
+	m_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+	m_image->setMagnificationFilter(QOpenGLTexture::Linear);
 
 	updateVerts();
 }
@@ -160,9 +163,8 @@ void Message::show()
 
 void Message::cleanup()
 {
-	if (m_image) {
-		m_parent->deleteTexture(m_image);
-	}
+	delete m_image;
+	m_image = nullptr;
 }
 
 //-----------------------------------------------------------------------------

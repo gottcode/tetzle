@@ -36,6 +36,7 @@
 #include <QMatrix4x4>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QOpenGLTexture>
 #include <QPainter>
 #include <QSettings>
 #include <QWheelEvent>
@@ -49,10 +50,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-
-#ifndef GL_CLAMP_TO_EDGE
-#define GL_CLAMP_TO_EDGE 0x812F
-#endif
 
 //-----------------------------------------------------------------------------
 
@@ -91,7 +88,7 @@ Board::Board(QWidget* parent)
 	m_load_bevels(true),
 	m_has_bevels(true),
 	m_has_shadows(true),
-	m_image(0),
+	m_image(nullptr),
 	m_image_ts(0),
 	m_columns(0),
 	m_rows(0),
@@ -122,8 +119,8 @@ Board::Board(QWidget* parent)
 Board::~Board()
 {
 	cleanup();
-	deleteTexture(m_bumpmap_image);
-	deleteTexture(m_shadow_image);
+	delete m_bumpmap_image;
+	delete m_shadow_image;
 	delete m_message;
 	delete graphics_layer;
 	graphics_layer = 0;
@@ -576,8 +573,13 @@ void Board::initializeGL()
 	GraphicsLayer::init();
 
 	// Load static images
-	m_bumpmap_image = bindTexture(QImage(":/bumpmap.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
-	m_shadow_image = bindTexture(QImage(":/shadow.png"), GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
+	m_bumpmap_image = new QOpenGLTexture(QImage(":/bumpmap.png"));
+	m_bumpmap_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+	m_bumpmap_image->setMagnificationFilter(QOpenGLTexture::Linear);
+
+	m_shadow_image = new QOpenGLTexture(QImage(":/shadow.png"));
+	m_shadow_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+	m_shadow_image->setMagnificationFilter(QOpenGLTexture::Linear);
 
 	// Load colors
 	AppearanceDialog dialog;
@@ -621,41 +623,43 @@ void Board::paintGL()
 	}
 
 	// Draw pieces
-	graphics_layer->bindTexture(0, m_image);
-	if (m_has_bevels && m_load_bevels) {
-		graphics_layer->setTextureUnits(2);
-		graphics_layer->bindTexture(1, m_bumpmap_image);
-	}
-
-	int count = m_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
-		if (viewport.intersects(r)) {
-			m_pieces.at(i)->drawTiles();
+	if (m_image) {
+		graphics_layer->bindTexture(0, m_image->textureId());
+		if (m_has_bevels && m_load_bevels) {
+			graphics_layer->setTextureUnits(2);
+			graphics_layer->bindTexture(1, m_bumpmap_image->textureId());
 		}
-	}
 
-	count = m_selected_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		m_selected_pieces.at(i)->drawTiles();
-	}
+		int count = m_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+			if (viewport.intersects(r)) {
+				m_pieces.at(i)->drawTiles();
+			}
+		}
 
-	count = m_active_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		m_active_pieces.at(i)->drawTiles();
-	}
+		count = m_selected_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			m_selected_pieces.at(i)->drawTiles();
+		}
 
-	if (m_has_bevels) {
-		graphics_layer->setTextureUnits(1);
+		count = m_active_pieces.count();
+		for (int i = 0; i < count; ++i) {
+			m_active_pieces.at(i)->drawTiles();
+		}
+
+		if (m_has_bevels) {
+			graphics_layer->setTextureUnits(1);
+		}
 	}
 
 	// Draw shadows
 	graphics_layer->setBlended(true);
-	if (m_has_shadows) {
-		graphics_layer->bindTexture(0, m_shadow_image);
+	if (m_image && m_has_shadows) {
+		graphics_layer->bindTexture(0, m_shadow_image->textureId());
 
 		graphics_layer->setColor(palette().color(QPalette::Text));
-		count = m_pieces.count();
+		int count = m_pieces.count();
 		for (int i = 0; i < count; ++i) {
 			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
 			if (viewport.intersects(r)) {
@@ -1151,9 +1155,10 @@ void Board::loadImage()
 		QPainter painter(&texture);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	m_image = bindTexture(texture, GL_TEXTURE_2D, GL_RGBA, QGLContext::LinearFilteringBindOption | QGLContext::MipmapBindOption);
+	m_image = new QOpenGLTexture(texture);
+	m_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+	m_image->setMagnificationFilter(QOpenGLTexture::Linear);
+	m_image->setWrapMode(QOpenGLTexture::ClampToEdge);
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);
@@ -1344,7 +1349,8 @@ void Board::finishGame()
 
 void Board::cleanup()
 {
-	deleteTexture(m_image);
+	delete m_image;
+	m_image = nullptr;
 
 	emit clearMessage();
 	m_overview->reset();

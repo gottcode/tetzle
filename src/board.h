@@ -29,6 +29,7 @@ class Tile;
 
 #include <QGLWidget>
 #include <QHash>
+class QOpenGLTexture;
 
 #include <random>
 
@@ -125,9 +126,9 @@ private:
 	bool m_has_bevels;
 	bool m_has_shadows;
 
-	GLuint m_image;
-	GLuint m_bumpmap_image;
-	GLuint m_shadow_image;
+	QOpenGLTexture* m_image;
+	QOpenGLTexture* m_bumpmap_image;
+	QOpenGLTexture* m_shadow_image;
 	float m_image_ts;
 	QPointF m_corners[4][4];
 	Region m_scene_array;

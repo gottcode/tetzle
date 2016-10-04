@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 #include "graphics_layer.h"
 
+class QOpenGLTexture;
 class QTimeLine;
 class QTimer;
 
@@ -53,7 +54,7 @@ private:
 	QGLWidget* m_parent;
 	QTimer* m_hide_timer;
 	QTimeLine* m_fade_timer;
-	GLuint m_image;
+	QOpenGLTexture* m_image;
 	VertexArray m_array;
 
 	QString m_text;
