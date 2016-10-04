@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
 #include <QSettings>
 
 //-----------------------------------------------------------------------------
@@ -178,7 +178,7 @@ void GraphicsLayer::init()
 	}
 	glsl.replace('.', "");
 	glsl.truncate(3);
-	if (QGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
+	if (QOpenGLShaderProgram::hasOpenGLShaderPrograms() && (glsl >= "120")) {
 		state |= FragmentShadersFlag;
 		symbols |= FragmentShadersFlag;
 		if (activeTexture) {
@@ -443,7 +443,7 @@ GraphicsLayer21::GraphicsLayer21()
 	bindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
 	// Load shaders
-	QGLShaderProgram* program = loadProgram(0);
+	QOpenGLShaderProgram* program = loadProgram(0);
 	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 
@@ -531,7 +531,7 @@ void GraphicsLayer21::setProjection(const QMatrix4x4& matrix)
 void GraphicsLayer21::setTextureUnits(unsigned int units)
 {
 	Q_ASSERT(units < 3);
-	QGLShaderProgram* program = m_programs[units];
+	QOpenGLShaderProgram* program = m_programs[units];
 	if (m_program == program) {
 		return;
 	}
@@ -565,7 +565,7 @@ void GraphicsLayer21::uploadData()
 
 //-----------------------------------------------------------------------------
 
-QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
+QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 {
 	// Load vertex shader code
 	QString vertex;
@@ -590,9 +590,9 @@ QGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 	}
 
 	// Create program
-	m_programs[index] = new QGLShaderProgram;
-	m_programs[index]->addShaderFromSourceCode(QGLShader::Vertex, vertex);
-	m_programs[index]->addShaderFromSourceCode(QGLShader::Fragment, frag);
+	m_programs[index] = new QOpenGLShaderProgram;
+	m_programs[index]->addShaderFromSourceCode(QOpenGLShader::Vertex, vertex);
+	m_programs[index]->addShaderFromSourceCode(QOpenGLShader::Fragment, frag);
 
 	// Set attribute locations
 	if (shader_version < "330") {

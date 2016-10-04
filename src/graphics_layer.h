@@ -22,7 +22,7 @@
 
 #include <qgl.h>
 #include <QMatrix4x4>
-class QGLShaderProgram;
+class QOpenGLShaderProgram;
 
 struct Vertex
 {
@@ -121,7 +121,7 @@ public:
 	virtual void uploadData();
 
 private:
-	QGLShaderProgram* loadProgram(unsigned int index);
+	QOpenGLShaderProgram* loadProgram(unsigned int index);
 
 private:
 	enum Attribute
@@ -135,8 +135,8 @@ private:
 	QMatrix4x4 m_projection;
 	GLfloat m_matrix[4][4];
 
-	QGLShaderProgram* m_program;
-	QGLShaderProgram* m_programs[3];
+	QOpenGLShaderProgram* m_program;
+	QOpenGLShaderProgram* m_programs[3];
 	int m_color_location;
 	int m_matrix_location;
 };
