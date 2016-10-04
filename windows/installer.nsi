@@ -162,12 +162,27 @@ Section "install"
 	;Copy files
 	SetOutPath $INSTDIR
 	File ..\release\Tetzle.exe
+	File $%QTDIR%\bin\libEGL.dll
+	File $%QTDIR%\bin\libGLESv2.dll
 	File $%QTDIR%\bin\libgcc_s_dw2-1.dll
 	File $%QTDIR%\bin\libstdc++-6.dll
 	File $%QTDIR%\bin\libwinpthread-1.dll
+	File $%QTDIR%\bin\opengl32sw.dll
 	File $%QTDIR%\bin\Qt5Core.dll
 	File $%QTDIR%\bin\Qt5Gui.dll
 	File $%QTDIR%\bin\Qt5Widgets.dll
+
+	SetOutPath $INSTDIR\imageformats
+	File $%QTDIR%\plugins\imageformats\qdds.dll
+	File $%QTDIR%\plugins\imageformats\qgif.dll
+	File $%QTDIR%\plugins\imageformats\qicns.dll
+	File $%QTDIR%\plugins\imageformats\qico.dll
+	File $%QTDIR%\plugins\imageformats\qjpeg.dll
+	File $%QTDIR%\plugins\imageformats\qsvg.dll
+	File $%QTDIR%\plugins\imageformats\qtga.dll
+	File $%QTDIR%\plugins\imageformats\qtiff.dll
+	File $%QTDIR%\plugins\imageformats\qwbmp.dll
+	File $%QTDIR%\plugins\imageformats\qwebp.dll
 
 	SetOutPath $INSTDIR\platforms
 	File $%QTDIR%\plugins\platforms\qwindows.dll
@@ -245,11 +260,13 @@ Section "Uninstall"
 	Delete $INSTDIR\Tetzle.exe
 	Delete $INSTDIR\ReadMe.txt
 	Delete $INSTDIR\*.dll
+	Delete $INSTDIR\imageformats\*.dll
 	Delete $INSTDIR\platforms\*.dll
 	Delete $INSTDIR\translations\*.qm
 	Delete $INSTDIR\Uninstall.exe
 
 	;Remove directories
+	RMDir $INSTDIR\imageformats
 	RMDir $INSTDIR\platforms
 	RMDir $INSTDIR\translations
 	RMDir $INSTDIR
