@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -400,7 +400,7 @@ void Piece::updateVerts()
 	int z = m_depth;
 
 	// Update tile verts
-	verts.reserve(m_tiles.count() * 4);
+	verts.reserve(m_tiles.count() * 6);
 	for (int i = 0; i < m_tiles.count(); ++i) {
 		Tile* tile = m_tiles.at(i);
 
@@ -421,8 +421,10 @@ void Piece::updateVerts()
 
 		verts.append( Vertex::init(x1,y1,z, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
 		verts.append( Vertex::init(x1,y2,z, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
-		verts.append( Vertex::init(x2,y2,z, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
 		verts.append( Vertex::init(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
+		verts.append( Vertex::init(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
+		verts.append( Vertex::init(x1,y2,z, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
+		verts.append( Vertex::init(x2,y2,z, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
 	}
 	graphics_layer->updateArray(m_tile_array, verts);
 
@@ -431,7 +433,7 @@ void Piece::updateVerts()
 	static const int offset = Tile::size / 2;
 	static const int size = Tile::size * 2;
 	verts.clear();
-	verts.reserve(m_shadow.count() * 4);
+	verts.reserve(m_shadow.count() * 6);
 	for (int i = 0; i < m_shadow.count(); ++i) {
 		QPoint pos = m_shadow.at(i)->scenePos();
 		int x1 = pos.x() - offset;
@@ -441,8 +443,10 @@ void Piece::updateVerts()
 
 		verts.append( Vertex::init(x1,y1,z, 0,0) );
 		verts.append( Vertex::init(x1,y2,z, 0,1) );
-		verts.append( Vertex::init(x2,y2,z, 1,1) );
 		verts.append( Vertex::init(x2,y1,z, 1,0) );
+		verts.append( Vertex::init(x2,y1,z, 1,0) );
+		verts.append( Vertex::init(x1,y2,z, 0,1) );
+		verts.append( Vertex::init(x2,y2,z, 1,1) );
 	}
 	graphics_layer->updateArray(m_shadow_array, verts);
 

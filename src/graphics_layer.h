@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public:
 	void removeArray(VertexArray& array);
 
 	virtual void bindTexture(unsigned int unit, GLuint texture)=0;
-	virtual void draw(const VertexArray& region, GLenum mode = GL_QUADS)=0;
+	virtual void draw(const VertexArray& region, GLenum mode = GL_TRIANGLES)=0;
 	virtual void setBlended(bool enabled)=0;
 	virtual void setColor(const QColor& color)=0;
 	virtual void setModelview(const QMatrix4x4& matrix)=0;
@@ -112,7 +112,7 @@ public:
 	~GraphicsLayer21();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setBlended(bool enabled);
 	virtual void setColor(const QColor& color);
 	virtual void setModelview(const QMatrix4x4& matrix);
@@ -149,7 +149,7 @@ public:
 	GraphicsLayer11();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setBlended(bool enabled);
 	virtual void setColor(const QColor& color);
 	virtual void setModelview(const QMatrix4x4& matrix);
@@ -165,7 +165,7 @@ public:
 	GraphicsLayer13();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setTextureUnits(unsigned int units);
 };
 
@@ -175,7 +175,7 @@ class GraphicsLayer15 : public GraphicsLayer13
 public:
 	GraphicsLayer15();
 
-	virtual void draw(const VertexArray& array, GLenum mode = GL_QUADS);
+	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
 	virtual void setTextureUnits(unsigned int units);
 	virtual void uploadData();
 };

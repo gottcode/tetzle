@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1089,15 +1089,15 @@ void Board::selectPieces()
 
 //-----------------------------------------------------------------------------
 
-void Board::drawArray(const VertexArray& array, const QColor& fill, const QColor& border)
+void Board::drawArray(const Region& region, const QColor& fill, const QColor& border)
 {
 	graphics_layer->setTextureUnits(0);
 
 	graphics_layer->setColor(fill);
-	graphics_layer->draw(array);
+	graphics_layer->draw(region.fill);
 
 	graphics_layer->setColor(border);
-	graphics_layer->draw(array, GL_LINE_LOOP);
+	graphics_layer->draw(region.border, GL_LINE_LOOP);
 
 	graphics_layer->setColor(Qt::white);
 
@@ -1234,19 +1234,30 @@ void Board::updateCompleted()
 
 //-----------------------------------------------------------------------------
 
-void Board::updateArray(VertexArray& array, const QRect& rect, int z)
+void Board::updateArray(Region& region, const QRect& rect, int z)
 {
 	int x1 = rect.x();
 	int y1 = rect.y();
 	int x2 = x1 + rect.width();
 	int y2 = y1 + rect.height();
 
-	QVector<Vertex> verts;
-	verts.append( Vertex::init(x1,y1,z) );
-	verts.append( Vertex::init(x1,y2,z) );
-	verts.append( Vertex::init(x2,y2,z) );
-	verts.append( Vertex::init(x2,y1,z) );
-	graphics_layer->updateArray(array, verts);
+	graphics_layer->updateArray(region.fill,
+	{
+		Vertex::init(x1,y1,z),
+		Vertex::init(x1,y2,z),
+		Vertex::init(x2,y1,z),
+		Vertex::init(x2,y1,z),
+		Vertex::init(x1,y2,z),
+		Vertex::init(x2,y2,z)
+	});
+
+	graphics_layer->updateArray(region.border,
+	{
+		Vertex::init(x1,y1,z),
+		Vertex::init(x1,y2,z),
+		Vertex::init(x2,y2,z),
+		Vertex::init(x2,y1,z)
+	});
 }
 
 //-----------------------------------------------------------------------------

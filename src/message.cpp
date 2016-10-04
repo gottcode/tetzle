@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -175,12 +175,15 @@ void Message::updateVerts()
 	int y2 = y1 + m_size.height();
 	int z = 3990;
 
-	QVector<Vertex> verts;
-	verts.append( Vertex::init(x1,y1,z, 0,0) );
-	verts.append( Vertex::init(x1,y2,z, 0,1) );
-	verts.append( Vertex::init(x2,y2,z, 1,1) );
-	verts.append( Vertex::init(x2,y1,z, 1,0) );
-	graphics_layer->updateArray(m_array, verts);
+	graphics_layer->updateArray(m_array,
+	{
+		Vertex::init(x1,y1,z, 0,0),
+		Vertex::init(x1,y2,z, 0,1),
+		Vertex::init(x2,y1,z, 1,0),
+		Vertex::init(x2,y1,z, 1,0),
+		Vertex::init(x1,y2,z, 0,1),
+		Vertex::init(x2,y2,z, 1,1)
+	});
 }
 
 //-----------------------------------------------------------------------------

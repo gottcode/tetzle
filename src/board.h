@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,13 @@ class Tile;
 class Board : public QGLWidget
 {
 	Q_OBJECT
+
+	struct Region
+	{
+		VertexArray fill;
+		VertexArray border;
+	};
+
 public:
 	Board(QWidget* parent = 0);
 	~Board();
@@ -95,13 +102,13 @@ private:
 	void rotatePiece();
 	void selectPieces();
 
-	void drawArray(const VertexArray& region, const QColor& fill, const QColor& border);
+	void drawArray(const Region& region, const QColor& fill, const QColor& border);
 	void loadImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
-	void updateArray(VertexArray& array, const QRect& rect, int z);
+	void updateArray(Region& region, const QRect& rect, int z);
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
@@ -123,8 +130,8 @@ private:
 	GLuint m_shadow_image;
 	float m_image_ts;
 	QPointF m_corners[4][4];
-	VertexArray m_scene_array;
-	VertexArray m_selection_array;
+	Region m_scene_array;
+	Region m_selection_array;
 
 	int m_columns;
 	int m_rows;
