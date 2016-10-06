@@ -39,12 +39,8 @@ GraphicsLayer* graphics_layer = 0;
 static QString glsl_version;
 static QString shader_version;
 
-static inline void convertMatrix(const float* in, GLfloat* out)
-{
-	std::copy(in, in + 16, out);
-}
-
-static inline void convertMatrix(const double* in, GLfloat* out)
+template <typename T>
+static inline void convertMatrix(const T* in, GLfloat* out)
 {
 	std::copy(in, in + 16, out);
 }
