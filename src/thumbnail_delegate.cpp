@@ -51,7 +51,7 @@ ThumbnailDelegate::ThumbnailDelegate(QListWidget* list)
 
 void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt, const QModelIndex& index) const
 {
-	QStyleOptionViewItemV4 option = opt;
+	QStyleOptionViewItem option = opt;
 	initStyleOption(&option, index);
 
 	painter->save();
