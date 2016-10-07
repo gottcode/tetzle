@@ -449,4 +449,15 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
         <translation>%1%</translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Select OpenGL version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

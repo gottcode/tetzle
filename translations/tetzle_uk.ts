@@ -449,4 +449,15 @@ There are saved games using this image that will also be removed.</source>
         <translation>%1%</translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Select OpenGL version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

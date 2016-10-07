@@ -449,4 +449,15 @@ Terdapat permainan tersimpan menggunakan imej ini yang mana juga dibuang.</trans
         <translation>%1%</translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Select OpenGL version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>
