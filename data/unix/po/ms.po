@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# abuyop <abuyop@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Malay (Malaysia) (http://www.transifex.com/projects/p/tetzle/"
+"PO-Revision-Date: 2014-11-29 05:29+0000\n"
+"Last-Translator: abuyop <abuyop@gmail.com>\n"
+"Language-Team: Malay (Malaysia) (http://www.transifex.com/gottcode/tetzle/"
 "language/ms_MY/)\n"
 "Language: ms\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr "Tetzle"
 
 #: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
-msgstr "Teka-teki susun suai gambar dengan kepingan tetromino"
+msgstr "Teka-teki susun suai gambar dengan cebisan tetromino"
 
 #: ../tetzle.appdata.xml.in.h:3
 msgid ""
@@ -33,6 +34,10 @@ msgid ""
 "Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
+"Tetzle merupakan permainan teka-teki susun suai gambar yang menggunakan "
+"tetromino sebagai cebisannya. Mana-mana imej boleh diimport dan digunakan "
+"untuk menghasilkan teka-teki dengan pelbagai julat saiz. Permainan disimpan "
+"secara automatik, dan anda boleh pilih permainan yang sedang dimainkan."
 
 #: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"

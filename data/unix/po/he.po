@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# GenghisKhan <genghiskhan@gmx.ca>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hebrew (http://www.transifex.com/projects/p/tetzle/language/"
+"PO-Revision-Date: 2015-09-14 14:35+0000\n"
+"Last-Translator: GenghisKhan <genghiskhan@gmx.ca>\n"
+"Language-Team: Hebrew (http://www.transifex.com/gottcode/tetzle/language/"
 "he/)\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -36,4 +37,4 @@ msgstr ""
 
 #: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"
-msgstr ""
+msgstr "משחק פאזל משונן"

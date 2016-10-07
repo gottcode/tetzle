@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Adolfo Jayme-Barrientos, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Spanish (http://www.transifex.com/projects/p/tetzle/language/"
+"PO-Revision-Date: 2014-11-16 04:14+0000\n"
+"Last-Translator: Adolfo Jayme-Barrientos\n"
+"Language-Team: Spanish (http://www.transifex.com/gottcode/tetzle/language/"
 "es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"

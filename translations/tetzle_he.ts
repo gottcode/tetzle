@@ -55,31 +55,31 @@
     </message>
     <message>
         <source>Please Wait</source>
-        <translation>נא להמתין</translation>
+        <translation>אנא המתן</translation>
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>טוען תמונה כעת...</translation>
+        <translation>כעת טוען תמונה...</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>מחולל פאזל כעת...</translation>
+        <translation>כעת מפיק פאזל...</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>יוצר חתיכות כעת...</translation>
+        <translation>כעת יוצר חתיכות...</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>טוען פאזל כעת...</translation>
+        <translation>כעת טוען פאזל...</translation>
     </message>
     <message>
         <source>Unknown data format</source>
-        <translation type="unfinished"></translation>
+        <translation>פורמט מידע לא מוכר</translation>
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>אלמנט לא ידוע &apos;%1&apos;</translation>
+        <translation>אלמנט לא מוכר &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Error parsing XML file.
@@ -91,15 +91,15 @@
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>טוען חתיכות כעת...</translation>
+        <translation>כעת טוען חתיכות...</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>מאחזר חתיכות כעת...</translation>
+        <translation>כעת מאחזר חתיכות...</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>ממקם חתיכות כעת...</translation>
+        <translation>כעת ממקם חתיכות...</translation>
     </message>
     <message>
         <source>Success</source>
@@ -133,14 +133,14 @@
     </message>
     <message>
         <source>Tags:</source>
-        <translation type="unfinished"></translation>
+        <translation>תגיות:</translation>
     </message>
 </context>
 <context>
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation>בחירת שפת יישום:</translation>
+        <translation>בחר שפת יישום:</translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
@@ -230,15 +230,15 @@ There are saved games using this image that will also be removed.</source>
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>הוסף תגית</translation>
     </message>
     <message>
         <source>Remove Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>הסר תגית</translation>
     </message>
     <message>
         <source>Untagged</source>
-        <translation type="unfinished"></translation>
+        <translation>לא מתויג</translation>
     </message>
     <message>
         <source>All Images</source>
@@ -254,7 +254,7 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <source>Remove selected tag?</source>
-        <translation type="unfinished"></translation>
+        <translation>להסיר תגית נבחרת?</translation>
     </message>
     <message>
         <source>Sorry</source>
@@ -262,7 +262,7 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <source>A tag with that name already exists.</source>
-        <translation type="unfinished"></translation>
+        <translation>תגית בשם זה כבר קיימת.</translation>
     </message>
 </context>
 <context>

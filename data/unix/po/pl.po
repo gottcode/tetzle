@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# M T <michtrz@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/tetzle/language/"
+"PO-Revision-Date: 2015-10-25 22:19+0000\n"
+"Last-Translator: M T <michtrz@gmail.com>\n"
+"Language-Team: Polish (http://www.transifex.com/gottcode/tetzle/language/"
 "pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,10 @@ msgid ""
 "Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
+"Tetzle to gra puzzle, która składa się z części o kształcie tetromina. "
+"Możesz importować każdy obraz i użyć go do tworzenia puzzli w rożnych "
+"rozmiarach. Gry są zapisywane automatycznie i możesz wybrać obecne postępy w "
+"grach."
 
 #: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"

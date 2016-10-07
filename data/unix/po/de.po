@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# enz <markus.enzenberger@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/tetzle/language/"
+"PO-Revision-Date: 2014-12-21 11:44+0000\n"
+"Last-Translator: enz <markus.enzenberger@gmail.com>\n"
+"Language-Team: German (http://www.transifex.com/gottcode/tetzle/language/"
 "de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr "Tetzle"
 
 #: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
-msgstr "Ein Puzzlespiel mit Tetrominos als Puzzleteile"
+msgstr "Puzzlespiel mit Tetromino-Puzzleteilen"
 
 #: ../tetzle.appdata.xml.in.h:3
 msgid ""
@@ -33,6 +34,10 @@ msgid ""
 "Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
+"Tetzle ist ein Puzzlespiel mit Tetromino-Puzzleteilen. Beliebige Bilder "
+"können importiert werden, um Puzzles verschiedener Größe zu erzeugen. Spiele "
+"werden automatisch gespeichert und Sie können zwischen mehreren aktiven "
+"Spielen wechseln."
 
 #: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"

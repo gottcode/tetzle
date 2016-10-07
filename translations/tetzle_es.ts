@@ -24,7 +24,7 @@
     </message>
     <message>
         <source>Drop shadows</source>
-        <translation>Colocar sombras</translation>
+        <translation>Sombras paralelas</translation>
     </message>
     <message>
         <source>Colors</source>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>Highlight:</source>
-        <translation>Destacar:</translation>
+        <translation>Resalte:</translation>
     </message>
 </context>
 <context>
@@ -51,27 +51,27 @@
     </message>
     <message>
         <source>Missing image.</source>
-        <translation>Falta imagen.</translation>
+        <translation>Falta una imagen.</translation>
     </message>
     <message>
         <source>Please Wait</source>
-        <translation>Por favor, Espera</translation>
+        <translation>Espere un momento</translation>
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>Cargando imagen ...</translation>
+        <translation>Cargando la imagen…</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>Generando puzzle...</translation>
+        <translation>Generando el rompecabezas…</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>Creando piezas ...</translation>
+        <translation>Creando las piezas…</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>Cargando puzzle ...</translation>
+        <translation>Cargando el rompecabezas…</translation>
     </message>
     <message>
         <source>Unknown data format</source>
@@ -79,27 +79,27 @@
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Elemento desconocido &apos;% 1&apos;</translation>
+        <translation>El elemento «%1» es desconocido</translation>
     </message>
     <message>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Error identificando el archivo XML.
+        <translation>Error al analizar el archivo XML.
 
-% 1</translation>
+%1</translation>
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>Cargando piezas</translation>
+        <translation>Cargando las piezas…</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>Recuperando piezas ...</translation>
+        <translation>Obteniendo las piezas…</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>Colocación de las piezas...</translation>
+        <translation>Colocando las piezas…</translation>
     </message>
     <message>
         <source>Success</source>
@@ -118,7 +118,7 @@
     </message>
     <message>
         <source>New Game</source>
-        <translation>Nuevo Juego </translation>
+        <translation>Partida nueva</translation>
     </message>
 </context>
 <context>
@@ -140,11 +140,11 @@
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation>Seleccionar idioma del programa:</translation>
+        <translation>Seleccione el idioma del programa:</translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
-        <translation>&lt;Idioma del Sistema&gt;</translation>
+        <translation>&lt;Idioma del sistema&gt;</translation>
     </message>
     <message>
         <source>Note</source>
@@ -152,7 +152,7 @@
     </message>
     <message>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation>Por favor, reinicia el programa para aplicar el cambio de idioma.</translation>
+        <translation>Reinicie el programa para que el cambio de idioma surta efecto.</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     </message>
     <message>
         <source>Copying images...</source>
-        <translation>Copia de imágenes ...</translation>
+        <translation>Copiando las imágenes…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -183,7 +183,7 @@
     </message>
     <message>
         <source>Remove selected image?</source>
-        <translation>Eliminar la imagen seleccionada?</translation>
+        <translation>¿Quiere eliminar la imagen seleccionada?</translation>
     </message>
     <message>
         <source>Remove selected image?
@@ -232,11 +232,11 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation>Añadir Etiqueta</translation>
+        <translation>Añadir etiqueta</translation>
     </message>
     <message>
         <source>Remove Tag</source>
-        <translation>Quitar Etiqueta</translation>
+        <translation>Quitar etiqueta</translation>
     </message>
     <message>
         <source>Untagged</source>
@@ -311,7 +311,7 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     </message>
     <message>
         <source>-</source>
-        <translation>-</translation>
+        <translation>−</translation>
     </message>
     <message>
         <source>Best &amp;Fit</source>
@@ -327,7 +327,7 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>P&amp;antalla Completa</translation>
+        <translation>&amp;Pantalla completa</translation>
     </message>
     <message>
         <source>F11</source>
@@ -339,19 +339,19 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>&amp;Ajustes</translation>
+        <translation>&amp;Configuración</translation>
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation>&amp;Apariencia...</translation>
+        <translation>&amp;Apariencia…</translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation>&amp;Idioma...</translation>
+        <translation>&amp;Idioma…</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Ayuda</translation>
+        <translation>Ay&amp;uda</translation>
     </message>
     <message>
         <source>&amp;Controls</source>
@@ -427,11 +427,11 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation>Un puzzle con tetrominoes para piezas</translation>
+        <translation>Un rompecabezas que usa tetrominós como piezas</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation>Copyright &amp;copy; 2008-%1 Graeme Gott</translation>
+        <translation>&amp;copy; 2008-%1 Graeme Gott</translation>
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
@@ -442,11 +442,11 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     <name>ZoomSlider</name>
     <message>
         <source>??%</source>
-        <translation>??%</translation>
+        <translation>?? %</translation>
     </message>
     <message>
         <source>%1%</source>
-        <translation>%1%</translation>
+        <translation>%1 %</translation>
     </message>
 </context>
 <context>

@@ -5,444 +5,448 @@
     <name>AddImage</name>
     <message>
         <source>Open Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Atverti paveikslą</translation>
     </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
     <message>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Išvaizda</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Parinktys</translation>
     </message>
     <message>
         <source>Beveled borders</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuožulnūs kraštai</translation>
     </message>
     <message>
         <source>Drop shadows</source>
-        <translation type="unfinished"></translation>
+        <translation>Mesti šešėlius</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Spalvos</translation>
     </message>
     <message>
         <source>Background:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fonas:</translation>
     </message>
     <message>
         <source>Shadow:</source>
-        <translation type="unfinished"></translation>
+        <translation>Šešėlis</translation>
     </message>
     <message>
         <source>Highlight:</source>
-        <translation type="unfinished"></translation>
+        <translation>Paryškinimas:</translation>
     </message>
 </context>
 <context>
     <name>Board</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Klaida</translation>
     </message>
     <message>
         <source>Missing image.</source>
-        <translation type="unfinished"></translation>
+        <translation>Trūksta paveikslo.</translation>
     </message>
     <message>
         <source>Please Wait</source>
-        <translation type="unfinished"></translation>
+        <translation>Prašome palaukti</translation>
     </message>
     <message>
         <source>Loading image...</source>
-        <translation type="unfinished"></translation>
+        <translation>Įkeliamas paveikslas...</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuriama dėlionė...</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuriamos dalys...</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation type="unfinished"></translation>
+        <translation>Įkeliama dėlionė...</translation>
     </message>
     <message>
         <source>Unknown data format</source>
-        <translation type="unfinished"></translation>
+        <translation>Nežinomas duomenų formatas</translation>
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Nežinomas elementas &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>XML failo analizės klaida.
+
+%1</translation>
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation type="unfinished"></translation>
+        <translation>Įkeliamos dalys...</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaunamos dalys...</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation type="unfinished"></translation>
+        <translation>Talpinamos dalys...</translation>
     </message>
     <message>
         <source>Success</source>
-        <translation type="unfinished"></translation>
+        <translation>Sėkmė</translation>
     </message>
 </context>
 <context>
     <name>ChooseGameDialog</name>
     <message>
         <source>Choose Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Pasirinkite žaidimą</translation>
     </message>
     <message>
         <source>Current Games</source>
-        <translation type="unfinished"></translation>
+        <translation>Dabartiniai žaidimai</translation>
     </message>
     <message>
         <source>New Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Naujas žaidimas</translation>
     </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
     <message>
         <source>Image Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Paveikslo savybės</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pavadinimas:</translation>
     </message>
     <message>
         <source>Tags:</source>
-        <translation type="unfinished"></translation>
+        <translation>Žymės:</translation>
     </message>
 </context>
 <context>
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pasirinkite programos kalbą:</translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Sistemos kalba&gt;</translation>
     </message>
     <message>
         <source>Note</source>
-        <translation type="unfinished"></translation>
+        <translation>Pastaba</translation>
     </message>
     <message>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kad įsigaliotų kalbos pakeitimai, prašome paleisti programą iš naujo.</translation>
     </message>
 </context>
 <context>
     <name>NewGameTab</name>
     <message>
         <source>Add Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Pridėti paveikslą</translation>
     </message>
     <message>
         <source>Remove Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Pašalinti paveikslą</translation>
     </message>
     <message>
         <source>Image Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Paveikslo savybės</translation>
     </message>
     <message>
         <source>%L1 pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 dalių</translation>
     </message>
     <message>
         <source>Copying images...</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopijuojami paveikslai...</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Atšaukti</translation>
     </message>
     <message>
         <source>Remove selected image?</source>
-        <translation type="unfinished"></translation>
+        <translation>Šalinti pažymėtą paveikslą?</translation>
     </message>
     <message>
         <source>Remove selected image?
 
 There are saved games using this image that will also be removed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Šalinti pasirinktą paveikslą?
+
+Yra išsaugotų žaidimų, kurie naudoja šį paveikslą. Šie žaidimai taip pat bus pašalinti.</translation>
     </message>
     <message>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevardis</translation>
     </message>
 </context>
 <context>
     <name>OpenGameTab</name>
     <message>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevardis</translation>
     </message>
     <message>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 dalių %2 %3% pabaigta</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Ištrinti</translation>
     </message>
     <message>
         <source>Delete Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Ištrinti žaidimą</translation>
     </message>
     <message>
         <source>Delete selected game?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ištrinti pasirinktą žaidimą?</translation>
     </message>
 </context>
 <context>
     <name>Overview</name>
     <message>
         <source>Overview</source>
-        <translation type="unfinished"></translation>
+        <translation>Apžvalga</translation>
     </message>
 </context>
 <context>
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Pridėti žymę</translation>
     </message>
     <message>
         <source>Remove Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Šalinti žymę</translation>
     </message>
     <message>
         <source>Untagged</source>
-        <translation type="unfinished"></translation>
+        <translation>Nesužymėti</translation>
     </message>
     <message>
         <source>All Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Visi paveikslai</translation>
     </message>
     <message>
         <source>Untitled %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevardis %1</translation>
     </message>
     <message>
         <source>Question</source>
-        <translation type="unfinished"></translation>
+        <translation>Klausimas</translation>
     </message>
     <message>
         <source>Remove selected tag?</source>
-        <translation type="unfinished"></translation>
+        <translation>Šalinti pasirinktą žymę?</translation>
     </message>
     <message>
         <source>Sorry</source>
-        <translation type="unfinished"></translation>
+        <translation>Atleiskite</translation>
     </message>
     <message>
         <source>A tag with that name already exists.</source>
-        <translation type="unfinished"></translation>
+        <translation>Žymė tokiu pavadinimu jau yra.</translation>
     </message>
 </context>
 <context>
     <name>Window</name>
     <message>
         <source>Tetzle</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetzle</translation>
     </message>
     <message>
         <source>&amp;Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Žai&amp;dimas</translation>
     </message>
     <message>
         <source>&amp;Retrieve Pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Atstatyti dalis</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+R</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Baigti</translation>
     </message>
     <message>
         <source>&amp;Choose...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pasirinkti</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Rodinys</translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Padidinti</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sumažinti</translation>
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
     <message>
         <source>Best &amp;Fit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Geriausias pritaikymas</translation>
     </message>
     <message>
         <source>Show O&amp;verview</source>
-        <translation type="unfinished"></translation>
+        <translation>Ro&amp;dyti apžvalgą</translation>
     </message>
     <message>
         <source>Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Tab</translation>
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visas ekranas</translation>
     </message>
     <message>
         <source>F11</source>
-        <translation type="unfinished"></translation>
+        <translation>F11</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+F</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nustatymai</translation>
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Išvaizda</translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ka&amp;lba</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pagalba</translation>
     </message>
     <message>
         <source>&amp;Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Valdymas</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Apie</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>Apie &amp;Qt</translation>
     </message>
     <message>
         <source>Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Valdymas</translation>
     </message>
     <message>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Pakelti dalis:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Left Click or Space</source>
-        <translation type="unfinished"></translation>
+        <translation>Kairiojo mygtuko spustelėjimas arba Tarpas</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Nuleisti dalis:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Pasirinkti dalis:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Left Drag</source>
-        <translation type="unfinished"></translation>
+        <translation>Vilkti, nuspaudus kairįjį mygtuką</translation>
     </message>
     <message>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Pasukti dalis:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation type="unfinished"></translation>
+        <translation>Dešiniojo mygtuko spustelėjimas, Control + Kairiojo mygtuko spustelėjimas, arba R</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Vilkti dėlionę:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
-        <translation type="unfinished"></translation>
+        <translation>Vidurinio mygtuko spustelėjimas, Shift + Kairiojo mygtuko spustelėjimas, arba Krypties klavišai</translation>
     </message>
     <message>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Padidinti dėlionę:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Scrollwheel or +/-</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelės ratukas arba +/-</translation>
     </message>
     <message>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Perkelti žymeklį:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Move mouse or W,A,D,S</source>
-        <translation type="unfinished"></translation>
+        <translation>Perkelti pele arba klavišais W,A,D,S</translation>
     </message>
     <message>
         <source>About Tetzle</source>
-        <translation type="unfinished"></translation>
+        <translation>Apie Tetzle</translation>
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>Dėlionė su tetromino figūromis</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorių Teisės &amp;copy; 2008-%1 Graeme Gott</translation>
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation type="unfinished"></translation>
+        <translation>Išleista pagal &lt;a href=%1&gt;GPL 3&lt;/a&gt; licenciją</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>??%</source>
-        <translation type="unfinished"></translation>
+        <translation>??%</translation>
     </message>
     <message>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%</translation>
     </message>
 </context>
 <context>

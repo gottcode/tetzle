@@ -59,19 +59,19 @@
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>Bild wird geladen...</translation>
+        <translation>Bild wird geladen ...</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>Puzzle wird erzeugt...</translation>
+        <translation>Puzzle wird erzeugt ...</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>Teile werden erzeugt...</translation>
+        <translation>Teile werden erzeugt ...</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>Puzzle wird geladen...</translation>
+        <translation>Puzzle wird geladen ...</translation>
     </message>
     <message>
         <source>Unknown data format</source>
@@ -91,15 +91,15 @@
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>Teile werden geladen...</translation>
+        <translation>Teile werden geladen ...</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>Teile werden geholt...</translation>
+        <translation>Teile werden geholt ...</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>Teile werden gelegt...</translation>
+        <translation>Teile werden gelegt ...</translation>
     </message>
     <message>
         <source>Success</source>
@@ -175,7 +175,7 @@
     </message>
     <message>
         <source>Copying images...</source>
-        <translation>Bilder werden kopiert...</translation>
+        <translation>Bilder werden kopiert ...</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -291,7 +291,7 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     </message>
     <message>
         <source>&amp;Choose...</source>
-        <translation>&amp;Auswählen...</translation>
+        <translation>&amp;Auswählen ...</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -343,11 +343,11 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation>&amp;Erscheinungsbild...</translation>
+        <translation>&amp;Erscheinungsbild ...</translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation>&amp;Sprache...</translation>
+        <translation>&amp;Sprache ...</translation>
     </message>
     <message>
         <source>&amp;Help</source>
