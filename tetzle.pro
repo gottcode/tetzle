@@ -119,6 +119,7 @@ macx {
 
 	qm.files = translations/*.qm
 	qm.path = $$PREFIX/share/tetzle/translations/
+	qm.CONFIG += no_check_exist
 
 	man.files = doc/tetzle.6
 	man.path = $$PREFIX/share/man/man6
