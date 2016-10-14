@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QIcon>
 #include <QSettings>
 #include <QWheelEvent>
 
@@ -109,7 +110,7 @@ void Overview::reset()
 	zoom(m_min_scale_level);
 
 	// Show loading icon
-	setPixmap(QPixmap(":/loading.png"));
+	setPixmap(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")).pixmap(128,128));
 }
 
 //-----------------------------------------------------------------------------

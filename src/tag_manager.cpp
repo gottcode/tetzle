@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,11 +47,11 @@ TagManager::TagManager(QWidget* parent)
 	layout->addWidget(m_filter);
 
 	// Add filter actions
-	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Tag"), this);
+	QAction* add_action = new QAction(m_filter->fetchIcon("list-add"), tr("Add Tag"), this);
 	m_filter->addToolBarAction(add_action);
 	connect(add_action, &QAction::triggered, this, &TagManager::addTag);
 
-	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Tag"), this);
+	m_remove_action = new QAction(m_filter->fetchIcon("list-remove"), tr("Remove Tag"), this);
 	m_filter->addToolBarAction(m_remove_action);
 	connect(m_remove_action, &QAction::triggered, this, &TagManager::removeTag);
 

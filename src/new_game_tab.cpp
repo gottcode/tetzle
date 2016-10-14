@@ -103,15 +103,15 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	connect(m_images, &ToolBarList::itemActivated, this, &NewGameTab::editImageProperties);
 
 	// Add image actions
-	QAction* add_action = new QAction(QIcon::fromTheme("list-add", QPixmap(":/tango/list-add.png")), tr("Add Image"), this);
+	QAction* add_action = new QAction(m_images->fetchIcon("list-add"), tr("Add Image"), this);
 	m_images->addToolBarAction(add_action);
 	connect(add_action, &QAction::triggered, this, &NewGameTab::addImageClicked);
 
-	m_remove_action = new QAction(QIcon::fromTheme("list-remove", QPixmap(":/tango/list-remove.png")), tr("Remove Image"), this);
+	m_remove_action = new QAction(m_images->fetchIcon("list-remove"), tr("Remove Image"), this);
 	m_images->addToolBarAction(m_remove_action);
 	connect(m_remove_action, &QAction::triggered, this, &NewGameTab::removeImage);
 
-	m_tag_action = new QAction(QIcon::fromTheme("image-x-generic", QPixmap(":/tango/image-x-generic.png")), tr("Image Properties"), this);
+	m_tag_action = new QAction(m_images->fetchIcon("image-x-generic"), tr("Image Properties"), this);
 	m_images->addToolBarAction(m_tag_action);
 	connect(m_tag_action, &QAction::triggered, this, &NewGameTab::editImageProperties);
 

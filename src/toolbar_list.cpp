@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ ToolBarList::ToolBarList(QWidget* parent)
 	m_toolbar = new QToolBar(this);
 	m_toolbar->setFloatable(false);
 	m_toolbar->setMovable(false);
-	m_toolbar->setIconSize(QSize(16,16));
 	m_toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	m_toolbar->setStyleSheet("QToolBar { border-top: 1px solid palette(mid); }");
 	m_toolbar->hide();
@@ -50,6 +49,19 @@ void ToolBarList::addToolBarAction(QAction* action)
 		m_toolbar->show();
 		updateGeometries();
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+QIcon ToolBarList::fetchIcon(const QString& name)
+{
+	QIcon icon(QString(":/tango/64x64/%1.png").arg(name));
+	icon.addFile(QString(":/tango/48x48/%1.png").arg(name));
+	icon.addFile(QString(":/tango/32x32/%1.png").arg(name));
+	icon.addFile(QString(":/tango/24x24/%1.png").arg(name));
+	icon.addFile(QString(":/tango/22x22/%1.png").arg(name));
+	icon.addFile(QString(":/tango/16x16/%1.png").arg(name));
+	return QIcon::fromTheme(name, icon);
 }
 
 //-----------------------------------------------------------------------------

@@ -67,8 +67,8 @@ namespace
 		};
 	};
 
-	ThumbnailItem::ThumbnailItem(const QString& text)
-		: QListWidgetItem(QPixmap(":/loading.png"), text)
+	ThumbnailItem::ThumbnailItem(const QString& text) :
+		QListWidgetItem(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")), text)
 	{
 	}
 

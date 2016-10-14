@@ -1,7 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 	<file>bumpmap.png</file>
-	<file>loading.png</file>
 	<file>shadow.png</file>
 
 	<file>shaders/120/textures0.frag</file>
@@ -25,8 +24,26 @@
 	<file>shaders/330/textures2.frag</file>
 	<file>shaders/330/textures2.vert</file>
 
-	<file>tango/image-x-generic.png</file>
-	<file>tango/list-add.png</file>
-	<file>tango/list-remove.png</file>
+	<file>tango/16x16/image-x-generic.png</file>
+	<file>tango/16x16/list-add.png</file>
+	<file>tango/16x16/list-remove.png</file>
+	<file>tango/22x22/image-x-generic.png</file>
+	<file>tango/22x22/list-add.png</file>
+	<file>tango/22x22/list-remove.png</file>
+	<file>tango/24x24/image-x-generic.png</file>
+	<file>tango/24x24/list-add.png</file>
+	<file>tango/24x24/list-remove.png</file>
+	<file>tango/32x32/image-x-generic.png</file>
+	<file>tango/32x32/list-add.png</file>
+	<file>tango/32x32/list-remove.png</file>
+	<file>tango/48x48/image-x-generic.png</file>
+	<file>tango/48x48/list-add.png</file>
+	<file>tango/48x48/list-remove.png</file>
+	<file>tango/64x64/image-x-generic.png</file>
+	<file>tango/64x64/list-add.png</file>
+	<file>tango/64x64/list-remove.png</file>
+	<file>tango/image-loading.png</file>
+	<file>tango/image-loading@2x.png</file>
+	<file>tango/image-loading@3x.png</file>
 </qresource>
 </RCC>
