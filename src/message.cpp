@@ -93,7 +93,13 @@ void Message::setText(const QString& text)
 	m_size = QSize(powerOfTwo(size.width()), powerOfTwo(size.height()));
 
 	// Create texture
-	QImage image(m_size, QImage::Format_ARGB32);
+#if (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
+	const qreal pixelratio = m_parent->devicePixelRatioF();
+#else
+	const qreal pixelratio = m_parent->devicePixelRatio();
+#endif
+	QImage image(m_size * pixelratio, QImage::Format_ARGB32);
+	image.setDevicePixelRatio(pixelratio);
 	image.fill(Qt::transparent);
 	{
 		QPainter painter(&image);

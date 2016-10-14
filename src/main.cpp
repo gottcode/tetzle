@@ -60,6 +60,7 @@ Application::Application(int& argc, char** argv)
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
 	setWindowIcon(QIcon::fromTheme("tetzle", QIcon(":/tetzle.png")));
 #endif
+	setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
 	m_files = arguments().mid(1);
 	processEvents();

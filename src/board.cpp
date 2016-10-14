@@ -591,10 +591,12 @@ void Board::initializeGL()
 
 void Board::resizeGL(int w, int h)
 {
-	graphics_layer->setViewport(0, 0, w, h);
+	const qreal pixelratio = devicePixelRatioF();
+
+	graphics_layer->setViewport(0, 0, w * pixelratio, h * pixelratio);
 
 	QMatrix4x4 matrix;
-	matrix.ortho(0, w, h, 0, -4000, 3);
+	matrix.ortho(0, w * pixelratio, h * pixelratio, 0, -4000, 3);
 	graphics_layer->setProjection(matrix);
 
 	m_message->setViewport(size());
@@ -609,9 +611,11 @@ void Board::paintGL()
 	graphics_layer->uploadData();
 
 	// Transform viewport
+	const qreal pixelratio = devicePixelRatioF();
 	QRect viewport = rect();
+	viewport.setSize(viewport.size() * pixelratio);
 	QMatrix4x4 matrix;
-	matrix.scale(m_scale, m_scale);
+	matrix.scale(m_scale * pixelratio, m_scale * pixelratio);
 	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
 	graphics_layer->setModelview(matrix);
 
@@ -682,7 +686,13 @@ void Board::paintGL()
 	}
 
 	// Untransform viewport
-	graphics_layer->setModelview(QMatrix4x4());
+	if (qFuzzyCompare(pixelratio, 1.0)) {
+		graphics_layer->setModelview(QMatrix4x4());
+	} else {
+		QMatrix4x4 matrix;
+		matrix.scale(pixelratio, pixelratio);
+		graphics_layer->setModelview(matrix);
+	}
 
 	// Draw selection rectangle
 	if (m_selecting) {
