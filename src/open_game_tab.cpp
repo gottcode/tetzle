@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,11 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	m_games->setItemDelegate(new ThumbnailDelegate(m_games));
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
+	const qreal pixelratio = devicePixelRatioF();
+#else
+	const qreal pixelratio = devicePixelRatio();
+#endif
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
@@ -87,7 +92,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		QString pieces = attributes.value("pieces").toString();
 		QString complete = attributes.value("complete").toString();
 		QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
-		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name, m_games);
+		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name, m_games, pixelratio);
 		item->setData(GameRole, id);
 		item->setData(ImageRole, image);
 		item->setData(DetailsRole, details);

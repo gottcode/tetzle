@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,9 +84,13 @@ QString Path::image(const QString& file)
 
 //-----------------------------------------------------------------------------
 
-QString Path::thumbnail(const QString& image)
+QString Path::thumbnail(const QString& image, qreal pixelratio)
 {
-	return thumbnails() + image + ".png";
+	QString pixel;
+	if (pixelratio > 1.0) {
+		pixel = QString("@%1x").arg(pixelratio);
+	}
+	return thumbnails() + image + pixel + ".png";
 }
 
 //-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -290,13 +290,23 @@ void NewGameTab::removeImage()
 	}
 	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString image_id = current_image.section(".", 0, 0);
+
 		QFile::remove(Path::image(current_image));
-		QFile::remove(Path::thumbnail(image_id));
+
+		QDir dir(Path::thumbnails(), image_id + "*");
+		const QStringList thumbs = dir.entryList();
+		for (const QString& thumb : thumbs) {
+			dir.remove(thumb);
+		}
+
 		for (const QString& game : games) {
 			QFile::remove(Path::save(game));
 		}
+
 		delete item;
+
 		m_image_tags->removeImage(current_image);
+
 		m_accept_button->setEnabled(m_images->count() > 0);
 		if (!m_accept_button->isEnabled()) {
 			m_slider->setMaximum(-1);
@@ -491,7 +501,12 @@ void NewGameTab::addImage(const QString& image)
 
 QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& details)
 {
-	QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images);
+#if (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
+	const qreal pixelratio = devicePixelRatioF();
+#else
+	const qreal pixelratio = devicePixelRatio();
+#endif
+	QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images, pixelratio);
 	item->setData(ImageRole, image);
 	item->setData(NameRole, item->text());
 	item->setData(TagsRole, m_image_tags->tags(image));

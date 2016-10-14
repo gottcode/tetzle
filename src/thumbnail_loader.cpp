@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,11 +34,17 @@
 
 //-----------------------------------------------------------------------------
 
+// Exported by QtGui
+void qt_blurImage(QPainter* p, QImage& blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
+
+//-----------------------------------------------------------------------------
+
 struct Thumbnail {
 	QListWidget* list;
 	QPersistentModelIndex index;
 	QString image;
 	QString thumbnail;
+	qreal pixelratio;
 };
 
 Q_DECLARE_METATYPE(Thumbnail)
@@ -97,7 +103,7 @@ ThumbnailLoader::~ThumbnailLoader()
 
 //-----------------------------------------------------------------------------
 
-QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString& text, QListWidget* list)
+QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString& text, QListWidget* list, qreal pixelratio)
 {
 	static ThumbnailLoader* loader = 0;
 	if (loader == 0) {
@@ -109,8 +115,8 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 	list->addItem(item);
 
 	QFileInfo image_info(image);
-	QFileInfo thumb_info(Path::thumbnail(image_info.baseName()));
-	Thumbnail details = { list, list->model()->index(list->row(item), 0), image, thumb_info.filePath() };
+	QFileInfo thumb_info(Path::thumbnail(image_info.baseName(), pixelratio));
+	Thumbnail details = { list, list->model()->index(list->row(item), 0), image, thumb_info.filePath(), pixelratio };
 
 	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {
 		loader->m_mutex.lock();
@@ -153,28 +159,35 @@ void ThumbnailLoader::run()
 		QSize size = source.size();
 		if (size.width() > 64 || size.height() > 64) {
 			size.scale(64, 64, Qt::KeepAspectRatio);
-			source.setScaledSize(size);
+			source.setScaledSize(size * details.pixelratio);
 		}
 
-		QImage thumbnail(74, 74, QImage::Format_ARGB32);
+		QImage thumbnail(74 * details.pixelratio, 74 * details.pixelratio, QImage::Format_ARGB32);
+		thumbnail.setDevicePixelRatio(details.pixelratio);
 		thumbnail.fill(0);
 		{
 			QPainter painter(&thumbnail);
-			painter.setRenderHint(QPainter::Antialiasing);
+
+			QImage shadow(thumbnail.size(), QImage::Format_ARGB32_Premultiplied);
+			shadow.fill(0);
+
+			QPainter shadow_painter(&shadow);
+			shadow_painter.setRenderHint(QPainter::Antialiasing);
+			shadow_painter.setPen(Qt::NoPen);
+			shadow_painter.translate(35 - (size.width() / 2), 35 - (size.height() / 2));
+			shadow_painter.fillRect(QRectF(0, 0, size.width() + 4, size.height() + 4), Qt::black);
+			shadow_painter.end();
+
+			painter.save();
+			painter.setClipping(false);
+			qt_blurImage(&painter, shadow, 8, true, false);
+			painter.restore();
+
 			painter.translate(32 - (size.width() / 2), 32 - (size.height() / 2));
-
-			painter.setPen(Qt::NoPen);
-			painter.setBrush(QColor(0,0,0,11));
-			painter.drawRoundedRect(0, 0, size.width() + 10, size.height() + 10, 4.5, 4.5);
-			painter.setBrush(QColor(0,0,0,29));
-			painter.drawRoundedRect(1, 1, size.width() + 8, size.height() + 8, 4.5, 4.5);
-			painter.setBrush(QColor(0,0,0,65));
-			painter.drawRoundedRect(2, 2, size.width() + 6, size.height() + 6, 4.5, 4.5);
-			painter.setBrush(QColor(0,0,0,108));
-			painter.drawRoundedRect(3, 3, size.width() + 4, size.height() + 4, 4.5, 4.5);
-
 			painter.fillRect(2, 2, size.width() + 4, size.height() + 4, Qt::white);
-			painter.drawImage(4, 4, source.read(), 0, 0, -1, -1, Qt::AutoColor | Qt::AvoidDither);
+			QImage image = source.read();
+			image.setDevicePixelRatio(details.pixelratio);
+			painter.drawImage(4, 4, image, 0, 0, -1, -1, Qt::AutoColor | Qt::AvoidDither);
 		}
 		thumbnail.save(details.thumbnail, 0, 0);
 

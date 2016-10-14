@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2011, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2011, 2012, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class ThumbnailLoader : public QThread
 public:
 	~ThumbnailLoader();
 
-	static QListWidgetItem* createItem(const QString& image, const QString& text, QListWidget* list);
+	static QListWidgetItem* createItem(const QString& image, const QString& text, QListWidget* list, qreal pixelratio);
 
 signals:
 	void loaded(const Thumbnail& details);

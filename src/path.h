@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2013 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2013, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #ifndef PATH_H
 #define PATH_H
 
+#include <QtGlobal>
 class QString;
 
 class Path
@@ -29,7 +30,7 @@ public:
 	static QString oldDataPath();
 
 	static QString image(const QString& file);
-	static QString thumbnail(const QString& image);
+	static QString thumbnail(const QString& image, qreal pixelratio);
 	static QString save(const QString& file);
 	static QString save(int game);
 
