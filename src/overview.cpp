@@ -68,7 +68,7 @@ Overview::Overview(QWidget* parent)
 
 //-----------------------------------------------------------------------------
 
-void Overview::load(const QImage& image)
+void Overview::load(const QImage& image, qreal pixelratio)
 {
 	// Find minimum scale
 	m_min_scale_level = 9;
@@ -86,12 +86,13 @@ void Overview::load(const QImage& image)
 	} else {
 		side = side_max;
 	}
-	QPixmap pixmap = QPixmap::fromImage(image.scaled(side, side, Qt::KeepAspectRatio, Qt::SmoothTransformation), Qt::AutoColor | Qt::AvoidDither);
+	QPixmap pixmap = QPixmap::fromImage(image.scaled(side * pixelratio, side * pixelratio, Qt::KeepAspectRatio, Qt::SmoothTransformation), Qt::AutoColor | Qt::AvoidDither);
+	pixmap.setDevicePixelRatio(pixelratio);
 	zoom(m_min_scale_level);
 
 	// Resize window
 	bool default_size = m_default;
-	QSize size = transform().mapRect(pixmap.rect()).size();
+	QSize size = transform().mapRect(QRect(QPoint(0,0), pixmap.size() / pixelratio)).size();
 	setMinimumSize(size);
 	if (default_size) {
 		resize(minimumSize());

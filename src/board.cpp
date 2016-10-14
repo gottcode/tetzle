@@ -1190,7 +1190,7 @@ void Board::loadImage()
 	m_corners[3][3] = m_corners[0][2];
 
 	// Create overview
-	m_overview->load(image);
+	m_overview->load(image, devicePixelRatioF());
 }
 
 //-----------------------------------------------------------------------------
