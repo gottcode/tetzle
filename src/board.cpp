@@ -152,6 +152,8 @@ void Board::removePiece(Piece* piece)
 
 void Board::setAppearance(const AppearanceDialog& dialog)
 {
+	makeCurrent();
+
 	m_has_bevels = dialog.hasBevels();
 	m_has_shadows = dialog.hasShadows();
 
