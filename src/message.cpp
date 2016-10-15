@@ -149,7 +149,6 @@ void Message::setVisible(bool visible, bool stay)
 	}
 
 	m_parent->update();
-	QApplication::processEvents();
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +200,6 @@ void Message::fade(int frame)
 {
 	m_color.setAlpha(frame * 25);
 	m_parent->update();
-	QApplication::processEvents();
 }
 
 //-----------------------------------------------------------------------------

@@ -1288,7 +1288,6 @@ void Board::updateSceneRectangle()
 void Board::updateStatusMessage(const QString& message)
 {
 	emit showMessage(message);
-	QApplication::processEvents();
 }
 
 //-----------------------------------------------------------------------------
