@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2012, 2014 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010, 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,9 +162,9 @@ void AppearanceDialog::setBevelsEnabled(bool enabled)
 void AppearanceDialog::accept()
 {
 	QSettings settings;
-	settings.setValue("Colors/Background", m_background->color());
-	settings.setValue("Colors/Shadow", m_shadow->color());
-	settings.setValue("Colors/Highlight", m_highlight->color());
+	settings.setValue("Colors/Background", m_background->color().name());
+	settings.setValue("Colors/Shadow", m_shadow->color().name());
+	settings.setValue("Colors/Highlight", m_highlight->color().name());
 	settings.setValue("Appearance/Bevels", m_has_bevels->isChecked());
 	settings.setValue("Appearance/Shadows", m_has_shadows->isChecked());
 	QDialog::accept();
