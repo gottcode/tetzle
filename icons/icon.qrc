@@ -1,5 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-	<file alias="tetzle.png">hicolor/128x128/apps/tetzle.png</file>
+	<file alias="tetzle.png">hicolor/256x256/apps/tetzle.png</file>
 </qresource>
 </RCC>
