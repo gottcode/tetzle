@@ -1,4 +1,4 @@
-.TH "TETZLE" "6" "February 2014"
+.TH "TETZLE" "6" "October 2016"
 
 .SH "NAME"
 tetzle \- tetromino jigsaw puzzle game
@@ -6,6 +6,7 @@ tetzle \- tetromino jigsaw puzzle game
 .SH "SYNOPSIS"
 .PP
 .B tetzle
+[\fB\-G\fR \fIversion\fR]
 
 .SH "DESCRIPTION"
 .PP
@@ -14,9 +15,16 @@ image can be imported and used to create puzzles with a wide range of
 sizes. Games are saved automatically, and you can select between currently
 in progress games.
 
+.SH "OPTIONS"
+.TP
+\fB\-G\fR \fIversion\fR, \fB\-\-graphics\-layer\fR\=\fIversion\fR
+Attempt to use the specified \fBversion\fR of OpenGL. If the requested
+version is larger than 2.1, Tetzle will default to the highest supported
+version.
+
 .SH "COPYRIGHT"
 .PP
-Copyright \(co 2014 Graeme Gott
+Copyright \(co 2016 Graeme Gott
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
