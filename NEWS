@@ -1,3 +1,21 @@
+2.1.0
+-----
+* Added support for HiDPI displays.
+* Fade success message after two seconds.
+* Generate binary translations at build time.
+* Improved Linux integration.
+* Replace application icon.
+* Rewrite OpenGL code.
+* Switched to C++11.
+* FIXED: Lad when dragging pieces.
+* FIXED: Did not change background color on the Mac.
+* FIXED: Colors were not saved on the Mac.
+* FIXED: Could not interact with interface on the Mac.
+* FIXED: Application layout did not respect RTL languages.
+* FIXED: Was not properly loading Qt translations.
+* Translation updates: Dutch, Esperanto, German, Hebrew, Lithuanian, Malay,
+  Polish, Portuguese (Brazil), Russian, Spanish.
+
 2.0.3
 -----
 * Fixed OpenGL shaders not working in Windows 7.
