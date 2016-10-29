@@ -453,11 +453,11 @@ Există jocuri salvate care folosesc această imagine, care vor fi, de asemenea,
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Selectaţi versiunea OpenGL.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>versiunea</translation>
     </message>
 </context>
 </TS>
