@@ -453,11 +453,11 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL-Version auswählen.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>Version</translation>
     </message>
 </context>
 </TS>

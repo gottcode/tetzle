@@ -453,11 +453,11 @@ Yra išsaugotų žaidimų, kurie naudoja šį paveikslą. Šie žaidimai taip pa
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pasirinkite OpenGL versiją.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>versija</translation>
     </message>
 </context>
 </TS>

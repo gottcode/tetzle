@@ -453,11 +453,11 @@ Terdapat permainan tersimpan menggunakan imej ini yang mana juga dibuang.</trans
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilih versi OpenGL</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>versi</translation>
     </message>
 </context>
 </TS>

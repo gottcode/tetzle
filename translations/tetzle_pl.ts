@@ -453,11 +453,11 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybierz wersję OpenGL.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>wersja</translation>
     </message>
 </context>
 </TS>
