@@ -12,6 +12,9 @@ macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }
 
+DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x050800
+
 # Allow in-tree builds
 !win32 {
 	MOC_DIR = build

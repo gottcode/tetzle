@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2014, 2016, 2017 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -174,7 +174,7 @@ void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
 	}
 
 	if (array.start != -1) {
-		qCopy(data.begin(), data.end(), m_data.begin() + array.start);
+		std::copy(data.begin(), data.end(), m_data.begin() + array.start);
 		if (!m_changed) {
 			m_changed_regions.append(array);
 		}
