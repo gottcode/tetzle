@@ -118,7 +118,7 @@ macx {
 	desktop.path = $$PREFIX/share/applications/
 
 	appdata.files = data/unix/tetzle.appdata.xml
-	appdata.path = $$PREFIX/share/appdata/
+	appdata.path = $$PREFIX/share/metainfo/
 
 	qm.files = translations/*.qm
 	qm.path = $$PREFIX/share/tetzle/translations/
