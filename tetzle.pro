@@ -121,7 +121,7 @@ macx {
 	appdata.files = data/unix/tetzle.appdata.xml
 	appdata.path = $$PREFIX/share/metainfo/
 
-	qm.files = translations/*.qm
+	qm.files = $$replace(TRANSLATIONS, .ts, .qm)
 	qm.path = $$PREFIX/share/tetzle/translations/
 	qm.CONFIG += no_check_exist
 
