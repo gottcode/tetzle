@@ -427,7 +427,7 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation>Ein Puzzlespiel mit Tetrominos als Puzzleteile</translation>
+        <translation>Ein Puzzlespiel mit Tetrominos als Puzzleteilen</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
