@@ -173,7 +173,6 @@ Section "install"
 	File $%QTDIR%\bin\Qt5Widgets.dll
 
 	SetOutPath $INSTDIR\imageformats
-	File $%QTDIR%\plugins\imageformats\qdds.dll
 	File $%QTDIR%\plugins\imageformats\qgif.dll
 	File $%QTDIR%\plugins\imageformats\qicns.dll
 	File $%QTDIR%\plugins\imageformats\qico.dll
