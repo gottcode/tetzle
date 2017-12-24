@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Tetzle
+Name[ca]=Tetzle
 Name[cs]=Tetzle
 Name[de]=Tetzle
 Name[es]=Tetzle
@@ -13,6 +14,7 @@ Name[ro]=Tetzle
 Name[ru]=Tetzle
 Name[tr]=Tetzle
 GenericName=Jigsaw Puzzle Game
+GenericName[ca]=Joc de trencaclosques Jigsaw
 GenericName[cs]=Skládanka
 GenericName[de]=Puzzlespiel
 GenericName[es]=Juego Rompecabezas Puzzle
@@ -26,6 +28,7 @@ GenericName[ro]=Joc puzzle
 GenericName[ru]=Игра-головоломка
 GenericName[tr]=Yap-Boz Bulmaca Oyunu
 Comment=Jigsaw puzzle with tetromino pieces
+Comment[ca]=Trencaclosques Jigsaw amb peces de tetròmino
 Comment[cs]=Skládanka s díly ve tvaru tetromina
 Comment[de]=Puzzlespiel mit Tetromino-Puzzleteilen
 Comment[es]=Puzzle con piezas tetromino
