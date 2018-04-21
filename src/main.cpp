@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,21 +129,6 @@ int main(int argc, char** argv)
 
 	GraphicsLayer::setVersion(requested.toInt());
 
-	// Find jhead executable
-	QDir dir(app.applicationDirPath());
-	if (dir.exists("jhead") || dir.exists("jhead.exe")) {
-		QString path = QString::fromLocal8Bit(qgetenv("PATH"));
-#if !defined(Q_OS_WIN)
-		QChar separator = ':';
-#else
-		QChar separator = ';';
-#endif
-		if (!path.split(separator).contains(dir.absolutePath())) {
-			path += separator + dir.absolutePath();
-			qputenv("PATH", path.toLocal8Bit());
-		}
-	}
-
 	// Create data location
 	QString path = Path::datapath();
 	if (!QFile::exists(path)) {
@@ -178,7 +163,7 @@ int main(int argc, char** argv)
 			}
 		}
 	}
-	dir.setPath(path);
+	QDir dir(path);
 	dir.mkpath(path + "/saves/");
 
 	// Update thumbnails

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016, 2018 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,6 @@
 #include <QImageReader>
 #include <QLabel>
 #include <QMessageBox>
-#include <QProcess>
 #include <QProgressDialog>
 #include <QPushButton>
 #include <QScrollBar>
@@ -474,8 +473,14 @@ void NewGameTab::addImage(const QString& image)
 		m_image_tags->addImage(filename);
 
 		// Copy and rotate image
-		QFile::copy(image, Path::image(filename));
-		QProcess::execute(QString("jhead -autorot \"%1\"").arg(Path::image(filename)));
+		QImageReader reader(image);
+		reader.setAutoTransform(true);
+		if (reader.transformation() == QImageIOHandler::TransformationNone) {
+			QFile::copy(image, Path::image(filename));
+		} else {
+			QImage image = reader.read();
+			image.save(Path::image(filename), "", 100);
+		}
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {

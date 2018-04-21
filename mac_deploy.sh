@@ -19,13 +19,6 @@ mkdir "$APP"
 cp -Rpf "$BUNDLE" "$APP/"
 EXE_PATH="$APP/$BUNDLE/Contents/MacOS/"
 strip "$EXE_PATH/$APP"
-if [[ $(file "${BUNDLE}/Contents/MacOS/${APP}" | grep '64-bit') ]]; then
-	cp -f 'tools/mac/jpegtran' $EXE_PATH
-	cp -f 'tools/mac/jhead' $EXE_PATH
-else
-	cp -f 'tools/mac/universal/jpegtran' $EXE_PATH
-	cp -f 'tools/mac/universal/jhead' $EXE_PATH
-fi
 cp 'COPYING' "${APP}/License.txt"
 cp 'CREDITS' "${APP}/Credits.txt"
 echo 'Done'
