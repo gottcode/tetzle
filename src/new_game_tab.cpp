@@ -129,7 +129,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	m_count = new QLabel(this);
 	m_count->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-	m_count->setMinimumWidth(m_count->fontMetrics().width(tr("%L1 pieces").arg(9999)));
+	m_count->setMinimumWidth(m_count->fontMetrics().boundingRect(tr("%L1 pieces").arg(9999)).width());
 
 	// Add buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);

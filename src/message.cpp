@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2015, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2015, 2016, 2018 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ void Message::setText(const QString& text)
 	// Find texture size
 	QFont font("Sans", 24);
 	QFontMetrics metrics(font);
-	int width = metrics.width(m_text);
+	int width = metrics.boundingRect(m_text).width();
 	int height = metrics.height();
 	QSize size(width + height, height * 2);
 	m_size = QSize(powerOfTwo(size.width()), powerOfTwo(size.height()));
