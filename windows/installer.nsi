@@ -63,7 +63,7 @@ Var StartMenuFolder
 ;--------------------------------
 ;Finish Page Settings
 
-!define MUI_FINISHPAGE_RUN "$INSTDIR\Tetzle.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${APPNAME}.exe"
 !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\ReadMe.txt"
 
 ;--------------------------------
@@ -160,53 +160,8 @@ FunctionEnd
 Section "install"
 
 	;Copy files
-	SetOutPath $INSTDIR
-	File ..\release\Tetzle.exe
-	File $%QTDIR%\bin\libEGL.dll
-	File $%QTDIR%\bin\libGLESv2.dll
-	File $%QTDIR%\bin\libgcc_s_dw2-1.dll
-	File $%QTDIR%\bin\libstdc++-6.dll
-	File $%QTDIR%\bin\libwinpthread-1.dll
-	File $%QTDIR%\bin\opengl32sw.dll
-	File $%QTDIR%\bin\Qt5Core.dll
-	File $%QTDIR%\bin\Qt5Gui.dll
-	File $%QTDIR%\bin\Qt5Widgets.dll
-
-	SetOutPath $INSTDIR\imageformats
-	File $%QTDIR%\plugins\imageformats\qgif.dll
-	File $%QTDIR%\plugins\imageformats\qicns.dll
-	File $%QTDIR%\plugins\imageformats\qico.dll
-	File $%QTDIR%\plugins\imageformats\qjpeg.dll
-	File $%QTDIR%\plugins\imageformats\qsvg.dll
-	File $%QTDIR%\plugins\imageformats\qtga.dll
-	File $%QTDIR%\plugins\imageformats\qtiff.dll
-	File $%QTDIR%\plugins\imageformats\qwbmp.dll
-	File $%QTDIR%\plugins\imageformats\qwebp.dll
-
-	SetOutPath $INSTDIR\platforms
-	File $%QTDIR%\plugins\platforms\qwindows.dll
-
-	SetOutPath $INSTDIR\translations
-	File ..\translations\*.qm
-	File $%QTDIR%\translations\qtbase_*.qm
-
-	;Create ReadMe file
-	SetOutPath $INSTDIR
-	File /oname=ReadMe.txt ..\README
-	FileOpen $4 "ReadMe.txt" a
-	FileSeek $4 0 END
-	FileWrite $4 "$\r$\n$\r$\nCredits$\r$\n=======$\r$\n$\r$\n"
-	FileClose $4
-	File ..\CREDITS
-	${FileJoin} "ReadMe.txt" "CREDITS" "ReadMe.txt"
-	Delete $INSTDIR\CREDITS
-	FileOpen $4 "ReadMe.txt" a
-	FileSeek $4 0 END
-	FileWrite $4 "$\r$\n$\r$\nNews$\r$\n====$\r$\n$\r$\n"
-	FileClose $4
-	File ..\NEWS
-	${FileJoin} "ReadMe.txt" "NEWS" "ReadMe.txt"
-	Delete $INSTDIR\NEWS
+	SetOutPath "$INSTDIR"
+	File /r "..\${APPNAME}\*"
 
 	;Registry information for add/remove programs
 	WriteRegStr HKLM "Software\${APPNAME}" "" "$INSTDIR"
@@ -215,7 +170,7 @@ Section "install"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$\"$INSTDIR$\""
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon" "$\"$INSTDIR\Tetzle.exe$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon" "$\"$INSTDIR\${APPNAME}.exe$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "URLInfoAbout" "$\"${ABOUTURL}$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${APPVERSION}"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "VersionMajor" ${VERSIONMAJOR}
@@ -230,10 +185,12 @@ Section "install"
 	WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 	;Create shortcut
+	SetShellVarContext all
 	!insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 	CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
-	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${APPNAME}.lnk" "$INSTDIR\Tetzle.exe"
+	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${APPNAME}.lnk" "$INSTDIR\${APPNAME}.exe"
 	!insertmacro MUI_STARTMENU_WRITE_END
+	SetShellVarContext current
 
 SectionEnd
 
@@ -256,23 +213,18 @@ Section "Uninstall"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 
 	;Remove files
-	Delete $INSTDIR\Tetzle.exe
-	Delete $INSTDIR\ReadMe.txt
-	Delete $INSTDIR\*.dll
-	Delete $INSTDIR\imageformats\*.dll
-	Delete $INSTDIR\platforms\*.dll
-	Delete $INSTDIR\translations\*.qm
-	Delete $INSTDIR\Uninstall.exe
+	!include files.nsh
+	Delete "$INSTDIR\Uninstall.exe"
 
 	;Remove directories
-	RMDir $INSTDIR\imageformats
-	RMDir $INSTDIR\platforms
-	RMDir $INSTDIR\translations
-	RMDir $INSTDIR
+	!include dirs.nsh
+	RMDir "$INSTDIR"
 
 	;Remove shortcut
+	SetShellVarContext all
 	!insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
 	Delete "$SMPROGRAMS\$StartMenuFolder\${APPNAME}.lnk"
 	RMDir "$SMPROGRAMS\$StartMenuFolder"
+	SetShellVarContext current
 
 SectionEnd
