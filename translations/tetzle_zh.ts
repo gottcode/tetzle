@@ -1,270 +1,266 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<TS version="2.1" language="zh">
 <context>
     <name>AddImage</name>
     <message>
         <source>Open Image</source>
-        <translation>Afbeelding openen</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
     <message>
         <source>Appearance</source>
-        <translation>Weergave</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opties</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Beveled borders</source>
-        <translation>Afgeschuinde randen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Drop shadows</source>
-        <translation>Slagschaduwen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation>Kleuren</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Background:</source>
-        <translation>Achtergrond:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Shadow:</source>
-        <translation>Schaduw:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Highlight:</source>
-        <translation>Markering:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Board</name>
     <message>
         <source>Error</source>
-        <translation>Fout</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Missing image.</source>
-        <translation>Ontbrekende afbeelding.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Please Wait</source>
-        <translation>Even geduld</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>Bezig met laden van afbeelding...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>Bezig met genereren van puzzel...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>Bezig met creëren van stukken...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>Bezig met laden van puzzel...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown data format</source>
-        <translation>Onbekend gegevensformaat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Onbekend element &apos;%1&apos;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Fout tijdens inlezen van XML-bestand.
-
-%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>Bezig met laden van stukken...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>Bezig met ophalen van stukken...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>Bezig met plaatsen van stukken...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Success</source>
-        <translation>Voltooid</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ChooseGameDialog</name>
     <message>
         <source>Choose Game</source>
-        <translation>Kies spel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current Games</source>
-        <translation>Huidige spellen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>New Game</source>
-        <translation>Nieuw spel</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
     <message>
         <source>Image Properties</source>
-        <translation>Afbeeldingseigenschappen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation>Naam:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Tags:</source>
-        <translation>Labels:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation>Selecteer de applicatietaal:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
-        <translation>&lt;System Language&gt;</translation>
+        <translation>&lt;系统语言&gt;</translation>
     </message>
     <message>
         <source>Note</source>
-        <translation>Opmerking</translation>
+        <translation>提示</translation>
     </message>
     <message>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation>Herstart de applicatie om de taalwijziging toe te passen.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>NewGameTab</name>
     <message>
         <source>Add Image</source>
-        <translation>Afbeelding toevoegen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove Image</source>
-        <translation>Afbeelding verwijderen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Image Properties</source>
-        <translation>Afbeeldingseigenschappen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%L1 pieces</source>
-        <translation>%L1 stukken</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Copying images...</source>
-        <translation>Bezig met kopiëren van afbeeldingen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Annuleren</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Remove selected image?</source>
-        <translation>Geselecteerde afbeelding verwijderen?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove selected image?
 
 There are saved games using this image that will also be removed.</source>
-        <translation>Geselecteerde afbeelding verwijderen?
-
-De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Untitled</source>
-        <translation>Naamloos</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>OpenGameTab</name>
     <message>
         <source>Untitled</source>
-        <translation>Naamloos</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation>%L1 stukken %2 %3% klaar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Verwijderen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delete Game</source>
-        <translation>Spel verwijderen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delete selected game?</source>
-        <translation>Geselecteerd spel verwijderen?</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Overview</name>
     <message>
         <source>Overview</source>
-        <translation>Overzicht</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation>Label toevoegen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove Tag</source>
-        <translation>Label verwijderen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Untagged</source>
-        <translation>Ongelabeld</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>All Images</source>
-        <translation>Alle afbeeldingen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Untitled %1</source>
-        <translation>Naamloos %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Question</source>
-        <translation>Vraag</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove selected tag?</source>
-        <translation>Geselecteerd label verwijderen?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sorry</source>
-        <translation>Sorry</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>A tag with that name already exists.</source>
-        <translation>Er bestaat al een label met die naam.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -275,11 +271,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Game</source>
-        <translation>&amp;Spel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Retrieve Pieces</source>
-        <translation>&amp;Stukken ophalen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ctrl+R</source>
@@ -287,19 +283,19 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Afsluiten</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Choose...</source>
-        <translation>&amp;Kiezen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>&amp;Beeld</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation>&amp;Inzoomen</translation>
+        <translation>缩 &amp;小</translation>
     </message>
     <message>
         <source>+</source>
@@ -307,7 +303,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>&amp;Uitzoomen</translation>
+        <translation>放 &amp;大</translation>
     </message>
     <message>
         <source>-</source>
@@ -315,11 +311,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Best &amp;Fit</source>
-        <translation>&amp;Beste inpassing</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show O&amp;verview</source>
-        <translation>O&amp;verzicht weergeven</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Tab</source>
@@ -327,7 +323,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>&amp;Volledig scherm</translation>
+        <translation>全&amp;屏</translation>
     </message>
     <message>
         <source>F11</source>
@@ -339,103 +335,103 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>In&amp;stellingen</translation>
+        <translation>&amp;设置</translation>
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation>Weerg&amp;ave...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation>Taa&amp;l...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Hulp</translation>
+        <translation>&amp;帮助</translation>
     </message>
     <message>
         <source>&amp;Controls</source>
-        <translation>&amp;Besturing</translation>
+        <translation>&amp;控制</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;Over</translation>
+        <translation>&amp;关于</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation>Over &amp;Qt</translation>
+        <translation>关于 &amp;Qt</translation>
     </message>
     <message>
         <source>Controls</source>
-        <translation>Besturing</translation>
+        <translation>控制</translation>
     </message>
     <message>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken oppakken:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Left Click or Space</source>
-        <translation>Linkermuisklik of spatiebalk</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken plaatsen:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken selecteren:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Left Drag</source>
-        <translation>Links slepen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken draaien:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation>Rechtermuisklik, Control + linkermuisklik of R</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Puzzel verslepen:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
-        <translation>Middelste muisklik, Shift + linkermuisklik of pijltjestoetsen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Puzzel in-/uitzoomen:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scrollwheel or +/-</source>
-        <translation>Scrolwiel of +/-</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Cursor verplaatsen:&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Move mouse or W,A,D,S</source>
-        <translation>Muis verplaatsen of W,A,D,S</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About Tetzle</source>
-        <translation>Over Tetzle</translation>
+        <translation>关于 Tetzle</translation>
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation>Een legpuzzel met tetrominovormige stukken</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation>Copyright &amp;copy; 2008-%1 Graeme Gott</translation>
+        <translation>版权所有 &amp;copy; 2008-%1 Graeme Gott</translation>
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation>Uitgegeven onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;-licentie</translation>
+        <translation>基于 &lt;a href=%1&gt;GPL 3&lt;/a&gt; 协议发布</translation>
     </message>
 </context>
 <context>
@@ -453,11 +449,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation>Selecteer OpenGL-versie.</translation>
+        <translation>选择 OpenGL 版本。</translation>
     </message>
     <message>
         <source>version</source>
-        <translation>versie</translation>
+        <translation>版本</translation>
     </message>
 </context>
 </TS>

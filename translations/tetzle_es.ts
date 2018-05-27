@@ -442,11 +442,11 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
     <name>ZoomSlider</name>
     <message>
         <source>??%</source>
-        <translation>?? %</translation>
+        <translation>??&#xa0;%</translation>
     </message>
     <message>
         <source>%1%</source>
-        <translation>%1 %</translation>
+        <translation>%1&#xa0;%</translation>
     </message>
 </context>
 <context>

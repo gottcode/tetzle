@@ -1,270 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<TS version="2.1" language="pt">
 <context>
     <name>AddImage</name>
     <message>
         <source>Open Image</source>
-        <translation>Afbeelding openen</translation>
+        <translation>Abrir Imagem</translation>
     </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
     <message>
         <source>Appearance</source>
-        <translation>Weergave</translation>
+        <translation>Aparência:</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opties</translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <source>Beveled borders</source>
-        <translation>Afgeschuinde randen</translation>
+        <translation>Bordas arredondadas</translation>
     </message>
     <message>
         <source>Drop shadows</source>
-        <translation>Slagschaduwen</translation>
+        <translation>Sombras</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation>Kleuren</translation>
+        <translation>Cores</translation>
     </message>
     <message>
         <source>Background:</source>
-        <translation>Achtergrond:</translation>
+        <translation>Fundo:</translation>
     </message>
     <message>
         <source>Shadow:</source>
-        <translation>Schaduw:</translation>
+        <translation>Sombra:</translation>
     </message>
     <message>
         <source>Highlight:</source>
-        <translation>Markering:</translation>
+        <translation>Destaque:</translation>
     </message>
 </context>
 <context>
     <name>Board</name>
     <message>
         <source>Error</source>
-        <translation>Fout</translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <source>Missing image.</source>
-        <translation>Ontbrekende afbeelding.</translation>
+        <translation>Imagem em falta</translation>
     </message>
     <message>
         <source>Please Wait</source>
-        <translation>Even geduld</translation>
+        <translation>Por Favor Aguarde</translation>
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>Bezig met laden van afbeelding...</translation>
+        <translation>A carregar imagem...</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>Bezig met genereren van puzzel...</translation>
+        <translation>A gerar o quebra-cabeças...</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>Bezig met creëren van stukken...</translation>
+        <translation>A criar as peças...</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>Bezig met laden van puzzel...</translation>
+        <translation>A carregar o quebra-cabeças...</translation>
     </message>
     <message>
         <source>Unknown data format</source>
-        <translation>Onbekend gegevensformaat</translation>
+        <translation>Formato de dados desconhecido</translation>
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Onbekend element &apos;%1&apos;</translation>
+        <translation>Elemento desconhecido &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Fout tijdens inlezen van XML-bestand.
+        <translation>Surgiu um erro ao processar o ficheiro XML.
 
 %1</translation>
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>Bezig met laden van stukken...</translation>
+        <translation>A carregar as peças...</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>Bezig met ophalen van stukken...</translation>
+        <translation>A obter as peças...</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>Bezig met plaatsen van stukken...</translation>
+        <translation>A colocar as peças...</translation>
     </message>
     <message>
         <source>Success</source>
-        <translation>Voltooid</translation>
+        <translation>Sucesso</translation>
     </message>
 </context>
 <context>
     <name>ChooseGameDialog</name>
     <message>
         <source>Choose Game</source>
-        <translation>Kies spel</translation>
+        <translation>Escolha o Jogo</translation>
     </message>
     <message>
         <source>Current Games</source>
-        <translation>Huidige spellen</translation>
+        <translation>Jogos Atuais</translation>
     </message>
     <message>
         <source>New Game</source>
-        <translation>Nieuw spel</translation>
+        <translation>Novo Jogo</translation>
     </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
     <message>
         <source>Image Properties</source>
-        <translation>Afbeeldingseigenschappen</translation>
+        <translation>Propriedades da Imagem</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation>Naam:</translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Tags:</source>
-        <translation>Labels:</translation>
+        <translation>Etiquetas:</translation>
     </message>
 </context>
 <context>
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation>Selecteer de applicatietaal:</translation>
+        <translation>Selecione o idioma da aplicação:</translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
-        <translation>&lt;System Language&gt;</translation>
+        <translation>&lt;Idioma do Sistema&gt;</translation>
     </message>
     <message>
         <source>Note</source>
-        <translation>Opmerking</translation>
+        <translation>Nota</translation>
     </message>
     <message>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation>Herstart de applicatie om de taalwijziging toe te passen.</translation>
+        <translation>Por favor reinicie esta aplicação para que a alteração do idioma surta efeito.</translation>
     </message>
 </context>
 <context>
     <name>NewGameTab</name>
     <message>
         <source>Add Image</source>
-        <translation>Afbeelding toevoegen</translation>
+        <translation>Adicionar Imagem</translation>
     </message>
     <message>
         <source>Remove Image</source>
-        <translation>Afbeelding verwijderen</translation>
+        <translation>Remover Imagem</translation>
     </message>
     <message>
         <source>Image Properties</source>
-        <translation>Afbeeldingseigenschappen</translation>
+        <translation>Propriedades da Imagem</translation>
     </message>
     <message>
         <source>%L1 pieces</source>
-        <translation>%L1 stukken</translation>
+        <translation>%L1 peças</translation>
     </message>
     <message>
         <source>Copying images...</source>
-        <translation>Bezig met kopiëren van afbeeldingen...</translation>
+        <translation>A copiar as imagens...</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Annuleren</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Remove selected image?</source>
-        <translation>Geselecteerde afbeelding verwijderen?</translation>
+        <translation>Remover a imagem selecionada?</translation>
     </message>
     <message>
         <source>Remove selected image?
 
 There are saved games using this image that will also be removed.</source>
-        <translation>Geselecteerde afbeelding verwijderen?
+        <translation>Remover a imagem selecionada?
 
-De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</translation>
+Existem jogos guardados que usam esta imagem, por isso serão também removidos.</translation>
     </message>
     <message>
         <source>Untitled</source>
-        <translation>Naamloos</translation>
+        <translation>Sem título</translation>
     </message>
 </context>
 <context>
     <name>OpenGameTab</name>
     <message>
         <source>Untitled</source>
-        <translation>Naamloos</translation>
+        <translation>Sem título</translation>
     </message>
     <message>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation>%L1 stukken %2 %3% klaar</translation>
+        <translation>%L1 peças %2 %3% completado</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Verwijderen</translation>
+        <translation>Eliminar</translation>
     </message>
     <message>
         <source>Delete Game</source>
-        <translation>Spel verwijderen</translation>
+        <translation>Eliminar Jogo</translation>
     </message>
     <message>
         <source>Delete selected game?</source>
-        <translation>Geselecteerd spel verwijderen?</translation>
+        <translation>Eliminar o jogo selecionado?</translation>
     </message>
 </context>
 <context>
     <name>Overview</name>
     <message>
         <source>Overview</source>
-        <translation>Overzicht</translation>
+        <translation>Vista geral</translation>
     </message>
 </context>
 <context>
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation>Label toevoegen</translation>
+        <translation>Adicionar Etiqueta</translation>
     </message>
     <message>
         <source>Remove Tag</source>
-        <translation>Label verwijderen</translation>
+        <translation>Remover Etiqueta</translation>
     </message>
     <message>
         <source>Untagged</source>
-        <translation>Ongelabeld</translation>
+        <translation>Sem Etiquetas</translation>
     </message>
     <message>
         <source>All Images</source>
-        <translation>Alle afbeeldingen</translation>
+        <translation>Todas as Imagens</translation>
     </message>
     <message>
         <source>Untitled %1</source>
-        <translation>Naamloos %1</translation>
+        <translation>Sem título %1</translation>
     </message>
     <message>
         <source>Question</source>
-        <translation>Vraag</translation>
+        <translation>Questão</translation>
     </message>
     <message>
         <source>Remove selected tag?</source>
-        <translation>Geselecteerd label verwijderen?</translation>
+        <translation>Remover etiqueta selecionada?</translation>
     </message>
     <message>
         <source>Sorry</source>
-        <translation>Sorry</translation>
+        <translation>Desculpe</translation>
     </message>
     <message>
         <source>A tag with that name already exists.</source>
-        <translation>Er bestaat al een label met die naam.</translation>
+        <translation>Já existe uma etiqueta com esse nome.</translation>
     </message>
 </context>
 <context>
@@ -275,11 +275,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Game</source>
-        <translation>&amp;Spel</translation>
+        <translation>&amp;Jogo</translation>
     </message>
     <message>
         <source>&amp;Retrieve Pieces</source>
-        <translation>&amp;Stukken ophalen</translation>
+        <translation>&amp;Recuperar Peças</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
@@ -287,19 +287,19 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Afsluiten</translation>
+        <translation>&amp;Sair</translation>
     </message>
     <message>
         <source>&amp;Choose...</source>
-        <translation>&amp;Kiezen...</translation>
+        <translation>&amp;Escolher Jogo...</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>&amp;Beeld</translation>
+        <translation>&amp;Visualização</translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation>&amp;Inzoomen</translation>
+        <translation>A&amp;proximar</translation>
     </message>
     <message>
         <source>+</source>
@@ -307,7 +307,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>&amp;Uitzoomen</translation>
+        <translation>A&amp;fastar</translation>
     </message>
     <message>
         <source>-</source>
@@ -315,11 +315,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Best &amp;Fit</source>
-        <translation>&amp;Beste inpassing</translation>
+        <translation>&amp;Melhor Enquadramento</translation>
     </message>
     <message>
         <source>Show O&amp;verview</source>
-        <translation>O&amp;verzicht weergeven</translation>
+        <translation>Mostrar &amp;Vista Geral</translation>
     </message>
     <message>
         <source>Tab</source>
@@ -327,7 +327,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>&amp;Volledig scherm</translation>
+        <translation>Ecrã &amp;Inteiro</translation>
     </message>
     <message>
         <source>F11</source>
@@ -339,103 +339,103 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>In&amp;stellingen</translation>
+        <translation>&amp;Configurações</translation>
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation>Weerg&amp;ave...</translation>
+        <translation>&amp;Aparência...</translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation>Taa&amp;l...</translation>
+        <translation>&amp;Idioma...</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Hulp</translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <source>&amp;Controls</source>
-        <translation>&amp;Besturing</translation>
+        <translation>&amp;Controlos</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;Over</translation>
+        <translation>S&amp;obre</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation>Over &amp;Qt</translation>
+        <translation>Sobre o &amp;Qt</translation>
     </message>
     <message>
         <source>Controls</source>
-        <translation>Besturing</translation>
+        <translation>Controlos</translation>
     </message>
     <message>
         <source>&lt;b&gt;Pick Up Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken oppakken:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Pegar nas Peças:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Left Click or Space</source>
-        <translation>Linkermuisklik of spatiebalk</translation>
+        <translation>Clique Esquerdo ou Tecla de Espaço</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drop Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken plaatsen:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Largar Peças:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Select Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken selecteren:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Selecionar Peças:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Left Drag</source>
-        <translation>Links slepen</translation>
+        <translation>Arrastar Esquerdo</translation>
     </message>
     <message>
         <source>&lt;b&gt;Rotate Pieces:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Stukken draaien:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Rodar Peças:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation>Rechtermuisklik, Control + linkermuisklik of R</translation>
+        <translation>Clique Direito, Ctrl+Clique Esquerdo, ou R</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Puzzel verslepen:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Arrastar Quebra-Cabeças:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Middle Click, Shift + Left Click, or Arrows</source>
-        <translation>Middelste muisklik, Shift + linkermuisklik of pijltjestoetsen</translation>
+        <translation>Clique do Meio, Shift+Clique Esquerdo, ou teclas de Direção</translation>
     </message>
     <message>
         <source>&lt;b&gt;Zoom Puzzle:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Puzzel in-/uitzoomen:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Magnificação:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Scrollwheel or +/-</source>
-        <translation>Scrolwiel of +/-</translation>
+        <translation>Roda do rato ou +/-</translation>
     </message>
     <message>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Cursor verplaatsen:&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Mover Cursor:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Move mouse or W,A,D,S</source>
-        <translation>Muis verplaatsen of W,A,D,S</translation>
+        <translation>Mover rato ou teclas W,A,D,S</translation>
     </message>
     <message>
         <source>About Tetzle</source>
-        <translation>Over Tetzle</translation>
+        <translation>Sobre o Tetzle</translation>
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation>Een legpuzzel met tetrominovormige stukken</translation>
+        <translation>Um quebra-cabeça com peças tetraminós</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation>Copyright &amp;copy; 2008-%1 Graeme Gott</translation>
+        <translation>Direitos de autor &amp;copy; 2008-%1 Graeme Gott</translation>
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation>Uitgegeven onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;-licentie</translation>
+        <translation>Lançado sob a licença &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -453,11 +453,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation>Selecteer OpenGL-versie.</translation>
+        <translation>Selecionar verão OpenGL.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation>versie</translation>
+        <translation>versão</translation>
     </message>
 </context>
 </TS>

@@ -3,18 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Heimen Stoffels <vistausss@outlook.com>, 2018
-# RobertBorst <webmaster@fam-borst.nl>, 2016
+# Allan Nordhøy <epost@anotheragency.no>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2018-04-15 09:17+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/gottcode/tetzle/language/"
-"nl/)\n"
-"Language: nl\n"
+"PO-Revision-Date: 2018-03-14 16:02+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/gottcode/"
+"tetzle/language/nb_NO/)\n"
+"Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,7 +25,7 @@ msgstr "Tetzle"
 
 #: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
-msgstr "Legpuzzel met tetrominostukken"
+msgstr "Puslespill med tetromino-brikker"
 
 #: ../tetzle.appdata.xml.in.h:3
 msgid ""
@@ -35,11 +34,11 @@ msgid ""
 "Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
-"Tetzle is een legpuzzel spel met tetromino als stukken. Elke afbeelding kan "
-"worden geïmporteerd en gebruikt om puzzels mee te maken in een groot bereik "
-"van maten. De spellen worden automatisch opgeslagen en je kunt tussen "
-"lopende spellen schakelen."
+"Tetzle er et puslespill som bruker tetromino-brukker. Ethvert bilde kan "
+"importeres og brukes til å opprette puslespill i mange forskjellige "
+"størrelser. Spill lagres automatisk, og du kan velge mellom spill som er "
+"underveis."
 
 #: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"
-msgstr "Legpuzzelspel"
+msgstr "Puslespill"

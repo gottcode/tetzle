@@ -7,24 +7,31 @@
   <name xml:lang="ca">Tetzle</name>
   <name xml:lang="cs">Tetzle</name>
   <name xml:lang="de">Tetzle</name>
+  <name xml:lang="el">Tetzle</name>
   <name xml:lang="es">Tetzle</name>
   <name xml:lang="lt">Tetzle</name>
   <name xml:lang="ms">Tetzle</name>
+  <name xml:lang="nb_NO">Tetzle</name>
   <name xml:lang="nl">Tetzle</name>
   <name xml:lang="pl">Tetzle</name>
+  <name xml:lang="pt">Tetzle</name>
   <name xml:lang="pt_BR">Tetzle</name>
   <name xml:lang="ro">Tetzle</name>
   <name xml:lang="ru">Tetzle</name>
   <name xml:lang="tr">Tetzle</name>
+  <name xml:lang="zh">Tetzle</name>
   <summary>Jigsaw puzzle with tetromino pieces</summary>
   <summary xml:lang="ca">Trencaclosques Jigsaw amb peces de tetròmino</summary>
   <summary xml:lang="cs">Skládanka s díly ve tvaru tetromina</summary>
   <summary xml:lang="de">Puzzlespiel mit Tetromino-Puzzleteilen</summary>
+  <summary xml:lang="el">Παζλ με κομμάτια tetromino</summary>
   <summary xml:lang="es">Puzzle con piezas tetromino</summary>
   <summary xml:lang="lt">Dėlionė su tetromino figūromis</summary>
   <summary xml:lang="ms">Teka-teki susun suai gambar dengan cebisan tetromino</summary>
-  <summary xml:lang="nl">Legpuzzel met tetromino stukjes</summary>
+  <summary xml:lang="nb_NO">Puslespill med tetromino-brikker</summary>
+  <summary xml:lang="nl">Legpuzzel met tetrominostukken</summary>
   <summary xml:lang="pl">Gra puzzle z części o kształcie tetromina</summary>
+  <summary xml:lang="pt">Um quebra-cabeça com peças tetraminós</summary>
   <summary xml:lang="pt_BR">Quebra-cabeças com peças em formato de tetris</summary>
   <summary xml:lang="ro">Joc puzzle cu piese teromino</summary>
   <summary xml:lang="ru">Игра-головоломка с тетрамино</summary>
@@ -34,10 +41,13 @@
     <p>Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any image can be imported and used to create puzzles with a wide range of sizes. Games are saved automatically, and you can select between currently in progress games.</p>
     <p xml:lang="ca">Tetzle és un trencaclosques jigsaw que fa servir tetròminos com a peces. Qualsevol imatge pot ésser importada i feta servir per a generar un trencaclosques de un ample ventall de tamany. Els jocs es desan automàticament i es poden tornar a carregar seleccionant un d'entre tots els disponibles.</p>
     <p xml:lang="de">Tetzle ist ein Puzzlespiel mit Tetromino-Puzzleteilen. Beliebige Bilder können importiert werden, um Puzzles verschiedener Größe zu erzeugen. Spiele werden automatisch gespeichert und Sie können zwischen mehreren aktiven Spielen wechseln.</p>
+    <p xml:lang="el">Το Tetzle είναι ένα παιχνίδι παζλ που χρησιμοποιεί tetromino για κομμάτια. Κάθε εικόνα μπορεί να εισαχθεί και να χρησιμοποιηθεί για δημιουργία παζλ με ένα ευρύ φάσμα μεγεθών. Τα παιχνίδια αποθηκεύονται αυτόματα, και μπορείτε να επιλέξετε ανάμεσα σε εξέλιγμένα παιχνίδια</p>
     <p xml:lang="lt">Tetzle yra dėlionės žaidimas, kuris naudoja tetromino figūras. Bet kuris paveikslas gali būti importuotas ir naudojamas įvairių dydžių dėlionei sukurti. Žaidimai yra automatiškai įrašomi, ir galima rinktis iš šiuo metu žaidžiamų žaidimų. </p>
     <p xml:lang="ms">Tetzle merupakan permainan teka-teki susun suai gambar yang menggunakan tetromino sebagai cebisannya. Mana-mana imej boleh diimport dan digunakan untuk menghasilkan teka-teki dengan pelbagai julat saiz. Permainan disimpan secara automatik, dan anda boleh pilih permainan yang sedang dimainkan.</p>
-    <p xml:lang="nl">Tetzle is een legpuzzel spel met tetromino als stukjes. Elk plaatje kan geimporteerd en gebruikt worden om puzzels mee te maken in een groot bereik van maten. De spellen worden automatisch opgeslagen en je kunt tussen lopende spellen schakelen.</p>
+    <p xml:lang="nb_NO">Tetzle er et puslespill som bruker tetromino-brukker. Ethvert bilde kan importeres og brukes til å opprette puslespill i mange forskjellige størrelser. Spill lagres automatisk, og du kan velge mellom spill som er underveis.</p>
+    <p xml:lang="nl">Tetzle is een legpuzzel spel met tetromino als stukken. Elke afbeelding kan worden geïmporteerd en gebruikt om puzzels mee te maken in een groot bereik van maten. De spellen worden automatisch opgeslagen en je kunt tussen lopende spellen schakelen.</p>
     <p xml:lang="pl">Tetzle to gra puzzle, która składa się z części o kształcie tetromina. Możesz importować każdy obraz i użyć go do tworzenia puzzli w rożnych rozmiarach. Gry są zapisywane automatycznie i możesz wybrać obecne postępy w grach.</p>
+    <p xml:lang="pt">O Tetzle é um jogo de quebra-cabeça que usa tetraminós como peças. Pode ser importada e utilizada qualquer imagem nos quebra-cabeças com uma vasta gama de tamanhos. Os jogos são gravados automaticamente e podem-se selecionar entre vários jogos gravados.</p>
     <p xml:lang="ro">Tetzle este un joc de puzzle care utilizează tetromino pentru piesel. Orice imagine poate fi importată şi utilizată pentru a crea puzzle-uri cu o gamă largă de dimensiuni. Jocurile sînt salvate automat, şi puteţi alege între jocrile curente şi în progres.</p>
     <p xml:lang="ru">Tetzle - игра-головоломка с тетрамино. Любое изображение может быть загружено и разбито на паззлы с различными настройками размера паззла. Игры сохраняются автоматически, и вы можете выбирать между ними.</p>
   </description>
