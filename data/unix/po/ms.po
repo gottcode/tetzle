@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-29 05:29+0000\n"
+"PO-Revision-Date: 2017-09-21 14:00+0000\n"
 "Last-Translator: abuyop <abuyop@gmail.com>\n"
 "Language-Team: Malay (Malaysia) (http://www.transifex.com/gottcode/tetzle/"
 "language/ms_MY/)\n"
@@ -19,15 +19,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:1
+#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
 msgid "Tetzle"
 msgstr "Tetzle"
 
-#: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
+#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr "Teka-teki susun suai gambar dengan cebisan tetromino"
 
-#: ../tetzle.appdata.xml.in.h:3
+#: ../tetzle.appdata.xml.in:10
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
 "image can be imported and used to create puzzles with a wide range of sizes. "
@@ -39,6 +39,6 @@ msgstr ""
 "untuk menghasilkan teka-teki dengan pelbagai julat saiz. Permainan disimpan "
 "secara automatik, dan anda boleh pilih permainan yang sedang dimainkan."
 
-#: ../tetzle.desktop.in.h:2
+#: ../tetzle.desktop.in:5
 msgid "Jigsaw Puzzle Game"
 msgstr "Permainan Teka-teki Susun Suai Gambar"

@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2014-11-14 18:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Turkish (http://www.transifex.com/projects/p/tetzle/language/"
+"PO-Revision-Date: 2018-05-28 19:04+0000\n"
+"Last-Translator: Graeme Gott <graeme@gottcode.org>\n"
+"Language-Team: Turkish (http://www.transifex.com/gottcode/tetzle/language/"
 "tr/)\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:1
+#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
 msgid "Tetzle"
 msgstr "Tetzle"
 
-#: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
+#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr "Tetris benzeri parçalı bir yap-boz oyunu"
 
-#: ../tetzle.appdata.xml.in.h:3
+#: ../tetzle.appdata.xml.in:10
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
 "image can be imported and used to create puzzles with a wide range of sizes. "
@@ -34,6 +34,6 @@ msgid ""
 "progress games."
 msgstr ""
 
-#: ../tetzle.desktop.in.h:2
+#: ../tetzle.desktop.in:5
 msgid "Jigsaw Puzzle Game"
 msgstr "Yap-Boz Bulmaca Oyunu"

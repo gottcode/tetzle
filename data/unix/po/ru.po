@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2015-05-31 00:19+0000\n"
+"PO-Revision-Date: 2017-09-21 14:00+0000\n"
 "Last-Translator: Artem Krosheninnikov <feeblehamster@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/gottcode/tetzle/language/"
 "ru/)\n"
@@ -21,15 +21,15 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:1
+#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
 msgid "Tetzle"
 msgstr "Tetzle"
 
-#: ../tetzle.appdata.xml.in.h:2 ../tetzle.desktop.in.h:3
+#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr "Игра-головоломка с тетрамино"
 
-#: ../tetzle.appdata.xml.in.h:3
+#: ../tetzle.appdata.xml.in:10
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
 "image can be imported and used to create puzzles with a wide range of sizes. "
@@ -40,6 +40,6 @@ msgstr ""
 "загружено и разбито на паззлы с различными настройками размера паззла. Игры "
 "сохраняются автоматически, и вы можете выбирать между ними."
 
-#: ../tetzle.desktop.in.h:2
+#: ../tetzle.desktop.in:5
 msgid "Jigsaw Puzzle Game"
 msgstr "Игра-головоломка"
