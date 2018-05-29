@@ -98,11 +98,16 @@
   </content_rating>
 
   <releases>
-    <release version="2.1.2" date="2017-12-28">
+    <release version="2.1.3" date="2018-05-29">
       <description>
         <ul>
-          <li>FIXED: Could not compile with Qt 5.10</li>
-          <li>Translation updates: Catalan</li>
+          <li>Replaced jhead with image auto-rotation in Qt 5.5</li>
+          <li>Replaced deprecated code</li>
+          <li>Extra warnings only shown in debug build</li>
+          <li>Improved Linux deployment</li>
+          <li>Improved macOS deployment</li>
+          <li>Improved Windows deployment</li>
+          <li>Translation updates: Catalan, Chinese, Dutch, Greek, Norwegian Bokmål, Portuguese, Spanish</li>
         </ul>
       </description>
     </release>

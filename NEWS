@@ -1,3 +1,14 @@
+2.1.3
+-----
+* Replaced jhead with image auto-rotation in Qt 5.5.
+* Replaced deprecated code.
+* Extra warnings only shown in debug build.
+* Improved Linux deployment.
+* Improved macOS deployment.
+* Improved Windows deployment.
+* Translation updates: Catalan, Chinese, Dutch, Greek, Norwegian Bokmål,
+  Portuguese, Spanish.
+
 2.1.2
 -----
 * FIXED: Could not compile with Qt 5.10.
