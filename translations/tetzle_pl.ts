@@ -395,7 +395,7 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
     </message>
     <message>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation>Prawy przycisk myszy, Control + Lewy przycisk myszy lub R</translation>
+        <translation>Prawy przycisk myszy, Ctrl + Lewy przycisk myszy lub R</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
