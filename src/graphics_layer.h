@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2016, 2018 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ extern GraphicsLayer* graphics_layer;
 class GraphicsLayer21 : public GraphicsLayer, protected QOpenGLFunctions
 {
 public:
-	GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array = nullptr);
+	GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array, const QByteArray& glsl, const QString& shader);
 	~GraphicsLayer21();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
@@ -134,7 +134,7 @@ public:
 	virtual void uploadData();
 
 private:
-	QOpenGLShaderProgram* loadProgram(unsigned int index);
+	QOpenGLShaderProgram* loadProgram(unsigned int index, const QByteArray& glsl, const QString& shader);
 
 private:
 	enum Attribute
@@ -158,6 +158,7 @@ private:
 };
 
 
+#ifndef QT_OPENGL_ES_2
 // Fixed function pipeline
 class GraphicsLayer11 : public GraphicsLayer, protected QOpenGLFunctions_1_1
 {
@@ -212,5 +213,6 @@ public:
 private:
 	QOpenGLBuffer* m_vertex_buffer;
 };
+#endif
 
 #endif

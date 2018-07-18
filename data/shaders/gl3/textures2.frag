@@ -1,12 +1,10 @@
-#version 330
-
 uniform sampler2D texture0;
 uniform sampler2D texture1;
 
-in vec2 frag_texcoord0;
-in vec2 frag_texcoord1;
+in highp vec2 frag_texcoord0;
+in highp vec2 frag_texcoord1;
 
-layout(location = 0) out vec4 out_color;
+out highp vec4 out_color;
 
 void main()
 {

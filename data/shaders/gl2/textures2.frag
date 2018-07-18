@@ -1,10 +1,8 @@
-#version 120
-
 uniform sampler2D texture0;
 uniform sampler2D texture1;
 
-varying vec2 frag_texcoord0;
-varying vec2 frag_texcoord1;
+varying highp vec2 frag_texcoord0;
+varying highp vec2 frag_texcoord1;
 
 void main()
 {

@@ -1,8 +1,6 @@
-#version 330
-
 uniform mat4 matrix;
 
-layout(location = 0) in vec3 position;
+attribute vec3 position;
 
 void main()
 {

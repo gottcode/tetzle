@@ -1,11 +1,9 @@
-#version 130
-
 uniform mat4 matrix;
 
-in vec3 position;
-in vec2 texcoord0;
+attribute vec2 texcoord0;
+attribute vec3 position;
 
-out vec2 frag_texcoord0;
+varying vec2 frag_texcoord0;
 
 void main()
 {

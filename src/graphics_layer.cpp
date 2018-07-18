@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2011, 2012, 2014, 2016, 2017 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2011, 2012, 2014, 2016, 2017, 2018 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,6 @@ GraphicsLayer* graphics_layer = 0;
 
 //-----------------------------------------------------------------------------
 
-static QString glsl_version;
-static QString shader_version;
-
 template <typename T>
 static inline void convertMatrix(const T* in, GLfloat* out)
 {
@@ -46,36 +43,59 @@ static inline void convertMatrix(const T* in, GLfloat* out)
 
 void GraphicsLayer::init()
 {
-	const auto requested = QSurfaceFormat::defaultFormat();
-	const auto context = QOpenGLContext::currentContext()->format();
-	const auto version = std::min((context.profile() == QSurfaceFormat::CoreProfile) ? qMakePair(4,5) : requested.version(), context.version());
+	if (!QOpenGLContext::currentContext()->isOpenGLES()) {
+		const auto requested = QSurfaceFormat::defaultFormat();
+		const auto context = QOpenGLContext::currentContext()->format();
+		const auto version = std::min((context.profile() == QSurfaceFormat::CoreProfile) ? qMakePair(4,6) : requested.version(), context.version());
 
-	if (version >= qMakePair(3,0)) {
-		if (version >= qMakePair(3,3)) {
-			glsl_version = QByteArray::number((version.first * 100) + (version.second * 10));
-			shader_version = "330";
-		} else if (version == qMakePair(3,2)) {
-			glsl_version = "150";
-			shader_version = "130";
-		} else if (version == qMakePair(3,1)) {
-			glsl_version = "140";
-			shader_version = "130";
+		if (version >= qMakePair(3,0)) {
+			const QString shader = "gl3";
+			QByteArray glsl = "130";
+			if (version >= qMakePair(3,3)) {
+				glsl = QByteArray::number((version.first * 100) + (version.second * 10));
+			} else if (version == qMakePair(3,2)) {
+				glsl = "150";
+			} else if (version == qMakePair(3,1)) {
+				glsl = "140";
+			}
+
+			auto vertex_array = new QOpenGLVertexArrayObject;
+			vertex_array->create();
+			vertex_array->bind();
+
+			graphics_layer = new GraphicsLayer21(vertex_array, glsl, shader);
+		} else if (version >= qMakePair(2,1)) {
+			const QString shader = "gl2";
+			const QByteArray glsl = "120";
+
+			graphics_layer = new GraphicsLayer21(nullptr, glsl, shader);
+#ifndef QT_OPENGL_ES_2
+		} else if (version >= qMakePair(1,5)) {
+			graphics_layer = new GraphicsLayer15;
+		} else if (version >= qMakePair(1,3)) {
+			graphics_layer = new GraphicsLayer13;
 		} else {
-			glsl_version = shader_version = "130";
+			graphics_layer = new GraphicsLayer11;
+#endif
 		}
-		auto vertex_array = new QOpenGLVertexArrayObject;
-		vertex_array->create();
-		vertex_array->bind();
-		graphics_layer = new GraphicsLayer21(vertex_array);
-	} else if (version >= qMakePair(2,1)) {
-		glsl_version = shader_version = "120";
-		graphics_layer = new GraphicsLayer21;
-	} else if (version >= qMakePair(1,5)) {
-		graphics_layer = new GraphicsLayer15;
-	} else if (version >= qMakePair(1,3)) {
-		graphics_layer = new GraphicsLayer13;
 	} else {
-		graphics_layer = new GraphicsLayer11;
+		const auto version = QOpenGLContext::currentContext()->format().version();
+
+		if (version == qMakePair(2,0)) {
+			const QString shader = "gl2";
+			const QByteArray glsl = "100";
+
+			graphics_layer = new GraphicsLayer21(nullptr, glsl, shader);
+		} else {
+			const QString shader = "gl3";
+			const QByteArray glsl = "300 es";
+
+			auto vertex_array = new QOpenGLVertexArrayObject;
+			vertex_array->create();
+			vertex_array->bind();
+
+			graphics_layer = new GraphicsLayer21(vertex_array, glsl, shader);
+		}
 	}
 
 	graphics_layer->setTextureUnits(1);
@@ -86,36 +106,51 @@ void GraphicsLayer::init()
 void GraphicsLayer::setVersion(int version)
 {
 	QSurfaceFormat f;
-	switch (version) {
-	case 11:
-	case 12:
-		f.setVersion(1,1);
-		break;
-	case 13:
-	case 14:
-		f.setVersion(1,3);
-		break;
-	case 15:
-	case 20:
-		f.setVersion(1,5);
-		break;
-	case 21:
-		f.setVersion(2,1);
-		break;
-	case 30:
-	case 31:
-	case 32:
-	case 33:
-	case 40:
-	case 41:
-	case 42:
-	case 43:
-	case 44:
-	case 45:
-	default:
-		f.setVersion(4,5);
-		f.setProfile(QSurfaceFormat::CoreProfile);
-		break;
+	if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
+		switch (version) {
+#ifndef QT_OPENGL_ES_2
+		case 11:
+		case 12:
+			f.setVersion(1,1);
+			break;
+		case 13:
+		case 14:
+			f.setVersion(1,3);
+			break;
+		case 15:
+		case 20:
+			f.setVersion(1,5);
+			break;
+#endif
+		case 21:
+			f.setVersion(2,1);
+			break;
+		case 30:
+		case 31:
+		case 32:
+		case 33:
+		case 40:
+		case 41:
+		case 42:
+		case 43:
+		case 44:
+		case 45:
+		case 46:
+		default:
+			f.setVersion(4,6);
+			f.setProfile(QSurfaceFormat::CoreProfile);
+			break;
+		}
+	} else {
+		switch (version) {
+		case 30:
+			f.setVersion(3,0);
+			break;
+		case 20:
+		default:
+			f.setVersion(2,0);
+			break;
+		}
 	}
 	QSurfaceFormat::setDefaultFormat(f);
 }
@@ -244,7 +279,7 @@ void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array) :
+GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array, const QByteArray& glsl, const QString& shader) :
 	m_program(nullptr),
 	m_vertex_array(vertex_array)
 {
@@ -270,17 +305,17 @@ GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array) :
 	m_vertex_buffer->bind();
 
 	// Load shaders
-	QOpenGLShaderProgram* program = loadProgram(0);
+	QOpenGLShaderProgram* program = loadProgram(0, glsl, shader);
 	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 
-	program = loadProgram(1);
+	program = loadProgram(1, glsl, shader);
 	program->setAttributeBuffer(TexCoord0, GL_FLOAT, offsetof(Vertex, s), 2, sizeof(Vertex));
 	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
 	program->enableAttributeArray(Position);
 	program->setUniformValue("texture0", GLuint(0));
 
-	program = loadProgram(2);
+	program = loadProgram(2, glsl, shader);
 	program->setAttributeBuffer(TexCoord1, GL_FLOAT, offsetof(Vertex, s2), 2, sizeof(Vertex));
 	program->setAttributeBuffer(TexCoord0, GL_FLOAT, offsetof(Vertex, s), 2, sizeof(Vertex));
 	program->setAttributeBuffer(Position, GL_FLOAT, offsetof(Vertex, x), 3, sizeof(Vertex));
@@ -426,29 +461,27 @@ void GraphicsLayer21::uploadData()
 
 //-----------------------------------------------------------------------------
 
-QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
+QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index, const QByteArray& glsl, const QString& shader)
 {
 	// Load vertex shader code
-	QString vertex;
-	QFile file(QString(":/shaders/%1/textures%2.vert").arg(shader_version).arg(index));
+	QByteArray vertex;
+	QFile file(QString(":/shaders/%1/textures%2.vert").arg(shader).arg(index));
 	if (file.open(QFile::ReadOnly)) {
 		vertex = file.readAll();
 		file.close();
 	}
 
 	// Load fragment shader code
-	QString frag;
-	file.setFileName(QString(":/shaders/%1/textures%2.frag").arg(shader_version).arg(index));
+	QByteArray frag;
+	file.setFileName(QString(":/shaders/%1/textures%2.frag").arg(shader).arg(index));
 	if (file.open(QFile::ReadOnly)) {
 		frag = file.readAll();
 		file.close();
 	}
 
-	// Update GLSL version
-	if (glsl_version > shader_version) {
-		vertex.replace("#version " + shader_version + "\n", "#version " + glsl_version + "\n");
-		frag.replace("#version " + shader_version + "\n", "#version " + glsl_version + "\n");
-	}
+	// Add GLSL version
+	vertex.prepend("#version " + glsl + "\n");
+	frag.prepend("#version " + glsl + "\n");
 
 	// Create program
 	m_programs[index] = new QOpenGLShaderProgram;
@@ -456,14 +489,12 @@ QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 	m_programs[index]->addShaderFromSourceCode(QOpenGLShader::Fragment, frag);
 
 	// Set attribute locations
-	if (shader_version < "330") {
-		m_programs[index]->bindAttributeLocation("position", Position);
-		if (index > 0) {
-			m_programs[index]->bindAttributeLocation("texcoord0", TexCoord0);
-		}
-		if (index > 1) {
-			m_programs[index]->bindAttributeLocation("texcoord1", TexCoord1);
-		}
+	m_programs[index]->bindAttributeLocation("position", Position);
+	if (index > 0) {
+		m_programs[index]->bindAttributeLocation("texcoord0", TexCoord0);
+	}
+	if (index > 1) {
+		m_programs[index]->bindAttributeLocation("texcoord1", TexCoord1);
 	}
 
 	// Link and bind program
@@ -473,6 +504,8 @@ QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index)
 }
 
 //-----------------------------------------------------------------------------
+
+#ifndef QT_OPENGL_ES_2
 
 GraphicsLayer11::GraphicsLayer11()
 {
@@ -811,5 +844,7 @@ void GraphicsLayer15::uploadData()
 {
 	uploadChanged(m_vertex_buffer);
 }
+
+#endif
 
 //-----------------------------------------------------------------------------
