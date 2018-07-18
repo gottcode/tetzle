@@ -83,7 +83,7 @@ namespace
 //-----------------------------------------------------------------------------
 
 Board::Board(QWidget* parent) :
-	GLWidget(parent),
+	QOpenGLWidget(parent),
 	m_id(0),
 	m_load_bevels(true),
 	m_has_bevels(true),
@@ -776,7 +776,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 			m_action_key = event->key();
 		}
 	}
-	GLWidget::keyPressEvent(event);
+	QOpenGLWidget::keyPressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -786,7 +786,7 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 	if (!event->isAutoRepeat()) {
 		m_action_key = 0;
 	}
-	GLWidget::keyReleaseEvent(event);
+	QOpenGLWidget::keyReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -804,7 +804,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 		m_select_pos = event->pos();
 	}
 
-	GLWidget::mousePressEvent(event);
+	QOpenGLWidget::mousePressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -833,7 +833,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	}
 	m_action_button = Qt::NoButton;
 
-	GLWidget::mouseReleaseEvent(event);
+	QOpenGLWidget::mouseReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -912,7 +912,7 @@ void Board::wheelEvent(QWheelEvent* event)
 		zoomOut();
 	}
 
-	GLWidget::wheelEvent(event);
+	QOpenGLWidget::wheelEvent(event);
 }
 
 //-----------------------------------------------------------------------------

@@ -23,9 +23,6 @@
 
 #include <QCoreApplication>
 #include <QFile>
-#if (QT_VERSION < QT_VERSION_CHECK(5,4,0))
-#include <QGLFormat>
-#endif
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
@@ -49,11 +46,7 @@ static inline void convertMatrix(const T* in, GLfloat* out)
 
 void GraphicsLayer::init()
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0))
 	const auto requested = QSurfaceFormat::defaultFormat();
-#else
-	const auto requested = QGLFormat::toSurfaceFormat(QGLFormat::defaultFormat());
-#endif
 	const auto context = QOpenGLContext::currentContext()->format();
 	const auto version = std::min((context.profile() == QSurfaceFormat::CoreProfile) ? qMakePair(4,5) : requested.version(), context.version());
 
@@ -124,11 +117,7 @@ void GraphicsLayer::setVersion(int version)
 		f.setProfile(QSurfaceFormat::CoreProfile);
 		break;
 	}
-#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0))
 	QSurfaceFormat::setDefaultFormat(f);
-#else
-	QGLFormat::setDefaultFormat(QGLFormat::fromSurfaceFormat(f));
-#endif
 }
 
 //-----------------------------------------------------------------------------
