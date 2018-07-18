@@ -103,6 +103,14 @@ bool Application::event(QEvent* e)
 
 int main(int argc, char** argv)
 {
+#if !defined(Q_OS_MAC) && (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
+	if (!qEnvironmentVariableIsSet("QT_DEVICE_PIXEL_RATIO")
+			&& !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+			&& !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+			&& !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	}
+#endif
 	Application app(argc, argv);
 
 	// Load application language
