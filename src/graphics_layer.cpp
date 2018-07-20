@@ -264,13 +264,14 @@ void GraphicsLayer::clearChanged()
 
 void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 {
+	const int vertex_size = sizeof(Vertex);
 	if (!m_changed_regions.isEmpty()) {
 		for (const VertexArray& region : m_changed_regions) {
-			vertex_buffer->write(region.start * sizeof(Vertex), m_data.constBegin() + region.start, region.length() * sizeof(Vertex));
+			vertex_buffer->write(region.start * vertex_size, m_data.constBegin() + region.start, region.length() * vertex_size);
 		}
 		m_changed_regions.clear();
 	} else if (m_changed) {
-		GLsizeiptr size = m_data.count() * sizeof(Vertex);
+		const int size = m_data.count() * vertex_size;
 		vertex_buffer->allocate(size);
 		vertex_buffer->write(0, m_data.constData(), size);
 		m_changed = false;
