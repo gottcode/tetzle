@@ -82,11 +82,7 @@ void GraphicsLayer::init()
 	} else {
 		const auto version = std::min(requested.version(), context.version());
 
-		if (version == qMakePair(2,0)) {
-			const QString shader = "gl2";
-
-			graphics_layer = new GraphicsLayer21(nullptr, QByteArray(), shader);
-		} else {
+		if (version >= qMakePair(3,0)) {
 			const QString shader = "gl3";
 			const QByteArray glsl = "300 es";
 
@@ -95,6 +91,10 @@ void GraphicsLayer::init()
 			vertex_array->bind();
 
 			graphics_layer = new GraphicsLayer21(vertex_array, glsl, shader);
+		} else {
+			const QString shader = "gl2";
+
+			graphics_layer = new GraphicsLayer21(nullptr, QByteArray(), shader);
 		}
 	}
 
@@ -144,6 +144,8 @@ void GraphicsLayer::setVersion(int version)
 	} else {
 		switch (version) {
 		case 30:
+		case 31:
+		case 32:
 			f.setVersion(3,0);
 			break;
 		case 20:
