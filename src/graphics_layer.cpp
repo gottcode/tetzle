@@ -84,9 +84,8 @@ void GraphicsLayer::init()
 
 		if (version == qMakePair(2,0)) {
 			const QString shader = "gl2";
-			const QByteArray glsl = "100";
 
-			graphics_layer = new GraphicsLayer21(nullptr, glsl, shader);
+			graphics_layer = new GraphicsLayer21(nullptr, QByteArray(), shader);
 		} else {
 			const QString shader = "gl3";
 			const QByteArray glsl = "300 es";
@@ -482,8 +481,10 @@ QOpenGLShaderProgram* GraphicsLayer21::loadProgram(unsigned int index, const QBy
 	}
 
 	// Add GLSL version
-	vertex.prepend("#version " + glsl + "\n");
-	frag.prepend("#version " + glsl + "\n");
+	if (!glsl.isEmpty()) {
+		vertex.prepend("#version " + glsl + "\n");
+		frag.prepend("#version " + glsl + "\n");
+	}
 
 	// Create program
 	m_programs[index] = new QOpenGLShaderProgram;
