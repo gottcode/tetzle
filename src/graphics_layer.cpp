@@ -43,9 +43,10 @@ static inline void convertMatrix(const T* in, GLfloat* out)
 
 void GraphicsLayer::init()
 {
+	const auto requested = QSurfaceFormat::defaultFormat();
+	const auto context = QOpenGLContext::currentContext()->format();
+
 	if (!QOpenGLContext::currentContext()->isOpenGLES()) {
-		const auto requested = QSurfaceFormat::defaultFormat();
-		const auto context = QOpenGLContext::currentContext()->format();
 		const auto version = std::min((context.profile() == QSurfaceFormat::CoreProfile) ? qMakePair(4,6) : requested.version(), context.version());
 
 		if (version >= qMakePair(3,0)) {
@@ -79,7 +80,7 @@ void GraphicsLayer::init()
 #endif
 		}
 	} else {
-		const auto version = QOpenGLContext::currentContext()->format().version();
+		const auto version = std::min(requested.version(), context.version());
 
 		if (version == qMakePair(2,0)) {
 			const QString shader = "gl2";
