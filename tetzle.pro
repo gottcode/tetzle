@@ -101,7 +101,9 @@ RESOURCES = data/data.qrc icons/icon.qrc
 macx {
 	ICON = icons/tetzle.icns
 } else:win32 {
-	RC_FILE = icons/icon.rc
+	RC_ICONS = icons/tetzle.ico
+	QMAKE_TARGET_DESCRIPTION = "Jigsaw puzzle game"
+	QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2018 Graeme Gott"
 } else:unix {
 	isEmpty(PREFIX) {
 		PREFIX = /usr/local
