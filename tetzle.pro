@@ -103,7 +103,7 @@ macx {
 } else:win32 {
 	RC_ICONS = icons/tetzle.ico
 	QMAKE_TARGET_DESCRIPTION = "Jigsaw puzzle game"
-	QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2018 Graeme Gott"
+	QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2019 Graeme Gott"
 } else:unix {
 	isEmpty(PREFIX) {
 		PREFIX = /usr/local
