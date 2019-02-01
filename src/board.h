@@ -117,10 +117,6 @@ private:
 	void finishGame();
 	void cleanup();
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,6,0))
-	qreal devicePixelRatioF() const { return devicePixelRatio(); }
-#endif
-
 private:
 	int m_id;
 	bool m_load_bevels;

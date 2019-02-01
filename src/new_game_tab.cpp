@@ -506,11 +506,7 @@ void NewGameTab::addImage(const QString& image)
 
 QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& details)
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
 	const qreal pixelratio = devicePixelRatioF();
-#else
-	const qreal pixelratio = devicePixelRatio();
-#endif
 	QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images, pixelratio);
 	item->setData(ImageRole, image);
 	item->setData(NameRole, item->text());

@@ -58,11 +58,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	m_games->setItemDelegate(new ThumbnailDelegate(m_games));
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5,6,0))
 	const qreal pixelratio = devicePixelRatioF();
-#else
-	const qreal pixelratio = devicePixelRatio();
-#endif
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;

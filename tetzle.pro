@@ -1,8 +1,8 @@
 lessThan(QT_MAJOR_VERSION, 5) {
-	error("Tetzle requires Qt 5.2 or greater")
+	error("Tetzle requires Qt 5.9 or greater")
 }
-equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 5) {
-	error("Tetzle requires Qt 5.5 or greater")
+equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 9) {
+	error("Tetzle requires Qt 5.9 or greater")
 }
 
 TEMPLATE = app
