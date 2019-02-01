@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ Application::Application(int& argc, char** argv)
 	setOrganizationName("GottCode");
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
 	setWindowIcon(QIcon::fromTheme("tetzle", QIcon(":/tetzle.png")));
+	setDesktopFileName("tetzle");
 #endif
 	setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
