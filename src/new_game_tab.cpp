@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014, 2016, 2018 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2014, 2016, 2018, 2019 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -203,10 +203,7 @@ void NewGameTab::addImages(const QStringList& images)
 			break;
 		}
 
-		QString image = images.at(i);
-		if (QDir::match(AddImage::supportedFormats(), image)) {
-			addImage(image);
-		}
+		addImage(images.at(i));
 
 		QApplication::processEvents();
 	}
@@ -442,6 +439,11 @@ void NewGameTab::updateTagsStrings()
 
 void NewGameTab::addImage(const QString& image)
 {
+	QImageReader reader(image);
+	if (!reader.canRead()) {
+		return;
+	}
+
 	// Find image ID
 	QString filename;
 	int image_id = 0;
@@ -473,7 +475,6 @@ void NewGameTab::addImage(const QString& image)
 		m_image_tags->addImage(filename);
 
 		// Copy and rotate image
-		QImageReader reader(image);
 		reader.setAutoTransform(true);
 		if (reader.transformation() == QImageIOHandler::TransformationNone) {
 			QFile::copy(image, Path::image(filename));
