@@ -43,7 +43,7 @@ TagManager::TagManager(QWidget* parent)
 	connect(m_filter, &ToolBarList::itemChanged, this, &TagManager::tagChanged);
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(m_filter);
 
 	// Add filter actions

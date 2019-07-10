@@ -249,7 +249,7 @@ void Window::showControls()
 	dialog.setWindowTitle(tr("Controls"));
 
 	QGridLayout* layout = new QGridLayout(&dialog);
-	layout->setMargin(12);
+	layout->setContentsMargins(12, 12, 12, 12);
 	layout->setSpacing(0);
 	layout->setColumnMinimumWidth(1, 6);
 	layout->setRowMinimumHeight(7, 12);
