@@ -98,6 +98,13 @@
   </content_rating>
 
   <releases>
+    <release version="2.1.5" date="2019-08-07">
+      <description>
+        <ul>
+          <li>Replaced deprecated code</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.1.4" date="2019-03-25">
       <description>
         <ul>

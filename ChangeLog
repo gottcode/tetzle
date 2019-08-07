@@ -1,3 +1,7 @@
+2.1.5
+-----
+* Replaced deprecated code.
+
 2.1.4
 -----
 * FIXED: Automatic high DPI support.
