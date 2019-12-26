@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2016, 2019 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ void Overview::showEvent(QShowEvent* event)
 
 void Overview::wheelEvent(QWheelEvent* event)
 {
-	if (event->delta() > 0) {
+	if (event->angleDelta().y() > 0) {
 		zoomIn();
 	} else {
 		zoomOut();
