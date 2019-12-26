@@ -20,11 +20,9 @@ CONFIG(debug, debug|release) {
 }
 
 # Allow in-tree builds
-!win32 {
-	MOC_DIR = build
-	OBJECTS_DIR = build
-	RCC_DIR = build
-}
+MOC_DIR = build
+OBJECTS_DIR = build
+RCC_DIR = build
 
 # Set program version
 VERSION = 2.1.5
