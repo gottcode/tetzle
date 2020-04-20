@@ -2,7 +2,7 @@
 
 APP='Tetzle'
 BUNDLE="$APP.app"
-VERSION='2.1.5'
+VERSION='2.1.6'
 
 # Remove any previous disk folder or DMG
 echo -n 'Preparing... '

@@ -77,6 +77,15 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="2.1.6" date="2020-04-20">
+      <description>
+        <ul>
+          <li>FIXED: Did not load locales with underscores</li>
+          <li>Improved Windows deployment</li>
+          <li>Replaced deprecated code</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.1.5" date="2019-08-07">
       <description>
         <ul>
