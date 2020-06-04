@@ -55,8 +55,8 @@ DLX::Matrix::~Matrix()
 
 void DLX::Matrix::addRow()
 {
-	m_rows.append(HeaderNode());
-	HeaderNode* row = &m_rows.last();
+	m_rows.push_back(HeaderNode());
+	HeaderNode* row = &m_rows.back();
 	row->left = row->right = row->up = row->down = row->column = row;
 }
 
@@ -67,10 +67,10 @@ void DLX::Matrix::addElement(unsigned int c)
 	Q_ASSERT(c < m_max_columns);
 
 	HeaderNode* column = &m_columns[c];
-	HeaderNode* row = &m_rows.last();
+	HeaderNode* row = &m_rows.back();
 
-	m_nodes.append(Node());
-	Node* node = &m_nodes.last();
+	m_nodes.push_back(Node());
+	Node* node = &m_nodes.back();
 
 	node->left = row->left;
 	node->right = row;

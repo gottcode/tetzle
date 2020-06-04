@@ -20,8 +20,9 @@
 #ifndef TETZLE_DANCING_LINKS_H
 #define TETZLE_DANCING_LINKS_H
 
-#include <QLinkedList>
 #include <QVector>
+
+#include <list>
 
 /**
  * Dancing Links implementation of Algorithm X.
@@ -247,8 +248,8 @@ private:
 
 	HeaderNode* m_header; /**< root element */
 	QVector<HeaderNode> m_columns; /**< constraints */
-	QLinkedList<HeaderNode> m_rows; /**< rows */
-	QLinkedList<Node> m_nodes; /**< row values */
+	std::list<HeaderNode> m_rows; /**< rows */
+	std::list<Node> m_nodes; /**< row values */
 	QVector<Node*> m_output; /**< rows where columns do not conflict */
 
 	Callback* m_solution; /**< function to call when a solution is found */
