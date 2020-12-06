@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015, 2016 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2010-2020 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 
 QString Path::datapath()
 {
-	static QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/";
+	static QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/";
 	return path;
 }
 

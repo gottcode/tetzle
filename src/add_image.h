@@ -24,7 +24,6 @@
 class QDragEnterEvent;
 class QDropEvent;
 class QString;
-class QStringList;
 class QWidget;
 
 class AddImage

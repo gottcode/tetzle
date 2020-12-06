@@ -6,16 +6,18 @@ equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 9) {
 }
 
 TEMPLATE = app
-QT += widgets
+QT += opengl widgets
+greaterThan(QT_MAJOR_VERSION, 5) {
+	QT += openglwidgets
+}
 macx {
 	QMAKE_INFO_PLIST = data/mac/Info.plist
 }
-CONFIG += c++11
 
 CONFIG(debug, debug|release) {
 	CONFIG += warn_on
 	DEFINES += QT_DEPRECATED_WARNINGS
-	DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x051500
+	DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 	DEFINES += QT_NO_NARROWING_CONVERSIONS_IN_CONNECT
 }
 

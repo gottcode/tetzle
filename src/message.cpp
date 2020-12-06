@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2015, 2016, 2018 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008-2020 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ Message::Message(QWidget* parent) :
 	connect(m_hide_timer, &QTimer::timeout, this, &Message::hide);
 
 	m_fade_timer = new QTimeLine(160, this);
-	m_fade_timer->setCurveShape(QTimeLine::LinearCurve);
+	m_fade_timer->setEasingCurve(QEasingCurve::Linear);
 	m_fade_timer->setDirection(QTimeLine::Backward);
 	m_fade_timer->setFrameRange(0, 10);
 	m_fade_timer->setUpdateInterval(16);

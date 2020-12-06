@@ -22,8 +22,10 @@
 
 #include <QMatrix4x4>
 #include <QOpenGLFunctions>
+#ifndef QT_OPENGL_ES_2
 #include <QOpenGLFunctions_1_1>
 #include <QOpenGLFunctions_1_3>
+#endif
 class QOpenGLBuffer;
 class QOpenGLShaderProgram;
 class QOpenGLVertexArrayObject;

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2012, 2014, 2015, 2016, 2019 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008-2020 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -290,7 +290,7 @@ void Board::openGame(int id)
 	QXmlStreamAttributes attributes = xml.attributes();
 	int board_zoom = 0;
 	QRect rect;
-	unsigned int version = attributes.value("version").toString().toUInt();
+	unsigned int version = attributes.value("version").toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version <= 5) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo(Path::image(m_image_path)).exists()) {
@@ -299,9 +299,9 @@ void Board::openGame(int id)
 			cleanup();
 			return;
 		}
-		board_zoom = attributes.value("zoom").toString().toInt();
-		m_pos.setX(attributes.value("x").toString().toInt());
-		m_pos.setY(attributes.value("y").toString().toInt());
+		board_zoom = attributes.value("zoom").toInt();
+		m_pos.setX(attributes.value("x").toInt());
+		m_pos.setY(attributes.value("y").toInt());
 		QStringList values = attributes.value("rect").toString().split(",");
 		rect.setRect(values.value(0).toInt(),
 			values.value(1). toInt(),
@@ -333,14 +333,14 @@ void Board::openGame(int id)
 			attributes = xml.attributes();
 			if (!piece) {
 				piece = true;
-				pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
-				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toString().toInt();
+				pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
+				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toInt();
 			}
-			int column = attributes.value("column").toString().toInt();
+			int column = attributes.value("column").toInt();
 			m_columns = std::max(m_columns, column);
-			int row = attributes.value("row").toString().toInt();
+			int row = attributes.value("row").toInt();
 			m_rows = std::max(m_rows, row);
-			int bevel = attributes.value("bevel").toString().toInt();
+			int bevel = attributes.value("bevel").toInt();
 			if (bevel) {
 				m_load_bevels = true;
 			}
@@ -349,13 +349,13 @@ void Board::openGame(int id)
 			tiles.append(tile);
 		} else if (xml.name() == QLatin1String("piece")) {
 			attributes = xml.attributes();
-			pos = QPoint(attributes.value("x").toString().toInt(), attributes.value("y").toString().toInt());
-			rotation = attributes.value("rotation").toString().toInt();
+			pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
+			rotation = attributes.value("rotation").toInt();
 			tiles.clear();
 		} else if (xml.name() == QLatin1String("group")) {
 			piece = false;
-			QStringRef r = xml.attributes().value("rotation");
-			rotation = !r.isEmpty() ? r.toString().toInt() : -1;
+			auto r = xml.attributes().value("rotation");
+			rotation = !r.isEmpty() ? r.toInt() : -1;
 			tiles.clear();
 		} else if (xml.name() != QLatin1String("overview")) {
 			xml.raiseError(tr("Unknown element '%1'").arg(xml.name().toString()));
@@ -798,7 +798,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 	}
 
 	m_action_button = event->button();
-	if (m_action_button == Qt::MidButton || (m_action_button == Qt::LeftButton && m_action_key == Qt::Key_Shift)) {
+	if (m_action_button == Qt::MiddleButton || (m_action_button == Qt::LeftButton && m_action_key == Qt::Key_Shift)) {
 		startScrolling();
 	} else if (m_action_button == Qt::LeftButton) {
 		m_select_pos = event->pos();
@@ -824,7 +824,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 		rotatePiece();
 		break;
 
-	case Qt::MidButton:
+	case Qt::MiddleButton:
 		stopScrolling();
 		break;
 
