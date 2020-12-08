@@ -1,13 +1,15 @@
-@ECHO ON>windows\dirs.nsh
-@ECHO ON>windows\files.nsh
+@ECHO ON>..\tetzle\windows\dirs.nsh
+@ECHO ON>..\tetzle\windows\files.nsh
 @ECHO OFF
 
+SET SRCDIR=..\tetzle
 SET APP=Tetzle
 SET VERSION=2.1.6
 
 ECHO Copying executable
-MKDIR %APP%
-COPY release\%APP%.exe %APP% >nul
+MKDIR %SRCDIR%\%APP%
+COPY release\%APP%.exe %SRCDIR%\%APP% >nul
+CD %SRCDIR%
 
 ECHO Copying translations
 SET TRANSLATIONS=%APP%\translations
