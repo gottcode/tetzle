@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2010, 2011, 2014, 2015, 2016, 2017, 2018, 2019, 2020 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008-2021 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -282,7 +282,7 @@ void Window::showAbout()
 	QMessageBox::about(this, tr("About Tetzle"), QString("<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("Tetzle"), QCoreApplication::applicationVersion(),
 			tr("A jigsaw puzzle with tetrominoes for pieces"),
-			tr("Copyright &copy; 2008-%1 Graeme Gott").arg("2020"),
+			tr("Copyright &copy; 2008-%1 Graeme Gott").arg("2021"),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""))
 	);
 }
