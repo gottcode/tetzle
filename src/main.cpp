@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008-2020 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008-2021 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class Application : public QApplication
 public:
 	Application(int& argc, char** argv);
 
-	void createWindow();
+	void createWindow(const QStringList& files);
 
 protected:
 	virtual bool event(QEvent* e);
@@ -62,22 +62,14 @@ Application::Application(int& argc, char** argv)
 	setDesktopFileName("tetzle");
 #endif
 
-	m_files = arguments().mid(1);
 	processEvents();
 }
 
 //-----------------------------------------------------------------------------
 
-void Application::createWindow()
+void Application::createWindow(const QStringList& files)
 {
-	// Remove command-line parameters from file list
-	for (int i = 0; i < m_files.size(); ++i) {
-		if (m_files.at(i).startsWith("--")) {
-			m_files.removeAt(i);
-			--i;
-		}
-	}
-
+	m_files += files;
 	m_window = new Window(m_files);
 }
 
@@ -128,6 +120,7 @@ int main(int argc, char** argv)
 	parser.addOption(QCommandLineOption(QStringList() << "G" << "graphics-layer",
 		QCoreApplication::translate("main", "Select OpenGL version."),
 		QCoreApplication::translate("main", "version")));
+	parser.addPositionalArgument("files", QCoreApplication::translate("main", "Images to add to the choose game dialog."), "[files]");
 	parser.process(app);
 
 	// Set OpenGL version
@@ -224,7 +217,7 @@ int main(int argc, char** argv)
 	// Reset tracking of the game currently open
 	settings.remove("OpenGame");
 
-	app.createWindow();
+	app.createWindow(parser.positionalArguments());
 
 	return app.exec();
 }
