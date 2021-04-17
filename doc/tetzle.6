@@ -1,44 +1,65 @@
-.TH "TETZLE" "6" "October 2016"
-
+.TH "TETZLE" "6" "April 2021" "Games"
+.P
 .SH "NAME"
+.P
 tetzle \- tetromino jigsaw puzzle game
-
+.P
 .SH "SYNOPSIS"
-.PP
-.B tetzle
-[\fB\-G\fR \fIversion\fR]
-
+.P
+\fBtetzle\fP [options] [\fIfiles\fP]
+.P
 .SH "DESCRIPTION"
-.PP
+.P
 Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any
 image can be imported and used to create puzzles with a wide range of
 sizes. Games are saved automatically, and you can select between currently
 in progress games.
-
+.P
 .SH "OPTIONS"
+.P
 .TP
-\fB\-G\fR \fIversion\fR, \fB\-\-graphics\-layer\fR\=\fIversion\fR
-Attempt to use the specified \fBversion\fR of OpenGL. If the requested
+\fB\-h\fP, \fB\-\-help\fP
+Displays help on commandline options.
+.TP
+\fB\-\-help-all\fP
+Displays help including Qt specific options.
+.TP
+\fB\-v\fP, \fB\-\-version\fP
+Displays version information.
+.TP
+\fB\-G VERSION\fP, \fB\-\-graphics\-layer=VERSION\fP
+Attempt to use the specified \fBVERSION\fP of OpenGL. If the requested
 version is larger than 2.1, Tetzle will default to the highest supported
 version.
-
+.TP
+\fIfiles\fP
+Images to add to the choose game dialog.
+.P
+.SH "SEE ALSO"
+.P
+\fBqt5options\fP(7)
+.P
+.SH "REPORTING BUGS"
+.P
+Report bugs to <tetzle@bugs.gottcode.org>.
+.P
 .SH "COPYRIGHT"
-.PP
-Copyright \(co 2016 Graeme Gott
-.PP
+.P
+Copyright \(co 2008\-2021 Graeme Gott
+.P
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
-.PP
+.P
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
-.PP
+.P
 You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+.P
 .SH "AUTHOR"
-.PP
+.P
 Graeme Gott <graeme@gottcode.org>.
