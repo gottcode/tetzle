@@ -115,9 +115,6 @@ macx {
 	icon.files = icons/hicolor/*
 	icon.path = $$PREFIX/share/icons/hicolor/
 
-	pixmap.files = icons/tetzle.xpm
-	pixmap.path = $$PREFIX/share/pixmaps/
-
 	desktop.files = data/unix/tetzle.desktop
 	desktop.path = $$PREFIX/share/applications/
 
@@ -131,5 +128,5 @@ macx {
 	man.files = doc/tetzle.6
 	man.path = $$PREFIX/share/man/man6
 
-	INSTALLS += target icon pixmap desktop appdata qm man
+	INSTALLS += target icon desktop appdata qm man
 }
