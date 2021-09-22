@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef NEW_GAME_TAB_H
-#define NEW_GAME_TAB_H
+#ifndef TETZLE_NEW_GAME_TAB_H
+#define TETZLE_NEW_GAME_TAB_H
 
 class TagManager;
 class ToolBarList;
@@ -64,4 +64,4 @@ private:
 	QPushButton* m_accept_button;
 };
 
-#endif
+#endif // TETZLE_NEW_GAME_TAB_H

@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef TETZLE_MESSAGE_H
+#define TETZLE_MESSAGE_H
 
 #include "graphics_layer.h"
 
@@ -54,4 +54,4 @@ private:
 	QColor m_color;
 };
 
-#endif
+#endif // TETZLE_MESSAGE_H

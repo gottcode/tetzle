@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef COLOR_BUTTON_H
-#define COLOR_BUTTON_H
+#ifndef TETZLE_COLOR_BUTTON_H
+#define TETZLE_COLOR_BUTTON_H
 
 #include <QColor>
 #include <QPushButton>
@@ -43,4 +43,4 @@ inline QString ColorButton::toString() const
 	return m_color.name();
 }
 
-#endif
+#endif // TETZLE_COLOR_BUTTON_H

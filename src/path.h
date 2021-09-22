@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef PATH_H
-#define PATH_H
+#ifndef TETZLE_PATH_H
+#define TETZLE_PATH_H
 
 #include <QtGlobal>
 class QString;
@@ -26,4 +26,4 @@ public:
 	static QString saves();
 };
 
-#endif
+#endif // TETZLE_PATH_H

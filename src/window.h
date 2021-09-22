@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef TETZLE_WINDOW_H
+#define TETZLE_WINDOW_H
 
 #include <QMainWindow>
 class QAction;
@@ -44,4 +44,4 @@ private:
 	Board* m_board;
 };
 
-#endif
+#endif // TETZLE_WINDOW_H

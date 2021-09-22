@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef IMAGE_PROPERTIES_DIALOG_H
-#define IMAGE_PROPERTIES_DIALOG_H
+#ifndef TETZLE_IMAGE_PROPERTIES_DIALOG_H
+#define TETZLE_IMAGE_PROPERTIES_DIALOG_H
 
 class TagManager;
 
@@ -36,4 +36,4 @@ private:
 	QListWidget* m_tags;
 };
 
-#endif
+#endif // TETZLE_IMAGE_PROPERTIES_DIALOG_H

@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef TAG_MANAGER_H
-#define TAG_MANAGER_H
+#ifndef TETZLE_TAG_MANAGER_H
+#define TETZLE_TAG_MANAGER_H
 
 class ToolBarList;
 
@@ -57,4 +57,4 @@ private:
 	QAction* m_remove_action;
 };
 
-#endif
+#endif // TETZLE_TAG_MANAGER_H

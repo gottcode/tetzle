@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef OPEN_GAME_TAB_H
-#define OPEN_GAME_TAB_H
+#ifndef TETZLE_OPEN_GAME_TAB_H
+#define TETZLE_OPEN_GAME_TAB_H
 
 #include <QWidget>
 class QListWidget;
@@ -34,4 +34,4 @@ private:
 	QPushButton* m_accept_button;
 };
 
-#endif
+#endif // TETZLE_OPEN_GAME_TAB_H

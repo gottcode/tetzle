@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef TETZLE_BOARD_H
+#define TETZLE_BOARD_H
 
 #include "graphics_layer.h"
 class AppearanceDialog;
@@ -177,4 +177,4 @@ inline const QPointF* Board::corners(int rotation) const
 	return m_corners[rotation];
 }
 
-#endif
+#endif // TETZLE_BOARD_H

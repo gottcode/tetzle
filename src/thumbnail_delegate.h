@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef THUMBNAIL_DELEGATE_H
-#define THUMBNAIL_DELEGATE_H
+#ifndef TETZLE_THUMBNAIL_DELEGATE_H
+#define TETZLE_THUMBNAIL_DELEGATE_H
 
 #include <QFontMetrics>
 #include <QStyledItemDelegate>
@@ -31,4 +31,4 @@ private:
 	QFontMetrics m_small_font_metrics;
 };
 
-#endif
+#endif // TETZLE_THUMBNAIL_DELEGATE_H

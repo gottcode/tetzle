@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef CHOOSE_GAME_DIALOG_H
-#define CHOOSE_GAME_DIALOG_H
+#ifndef TETZLE_CHOOSE_GAME_DIALOG_H
+#define TETZLE_CHOOSE_GAME_DIALOG_H
 
 class NewGameTab;
 
@@ -35,4 +35,4 @@ private:
 	NewGameTab* m_new_game_tab;
 };
 
-#endif
+#endif // TETZLE_CHOOSE_GAME_DIALOG_H

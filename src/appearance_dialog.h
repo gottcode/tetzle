@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef APPEARANCE_DIALOG_H
-#define APPEARANCE_DIALOG_H
+#ifndef TETZLE_APPEARANCE_DIALOG_H
+#define TETZLE_APPEARANCE_DIALOG_H
 
 #include <QDialog>
 class QAbstractButton;
@@ -42,5 +42,5 @@ private:
 	static bool m_bevels_enabled;
 };
 
-#endif
+#endif // TETZLE_APPEARANCE_DIALOG_H
 

@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#ifndef TETZLE_GENERATOR_H
+#define TETZLE_GENERATOR_H
 
 #include <QList>
 #include <QPoint>
@@ -41,4 +41,4 @@ inline QList< QList<Tile*> > Generator::pieces() const
 	return m_pieces;
 }
 
-#endif
+#endif // TETZLE_GENERATOR_H

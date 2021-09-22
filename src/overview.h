@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef OVERVIEW_H
-#define OVERVIEW_H
+#ifndef TETZLE_OVERVIEW_H
+#define TETZLE_OVERVIEW_H
 
 #include <QGraphicsView>
 
@@ -41,4 +41,4 @@ private:
 	bool m_default;
 };
 
-#endif
+#endif // TETZLE_OVERVIEW_H

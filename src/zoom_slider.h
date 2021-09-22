@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef ZOOM_SLIDER_H
-#define ZOOM_SLIDER_H
+#ifndef TETZLE_ZOOM_SLIDER_H
+#define TETZLE_ZOOM_SLIDER_H
 
 #include <QWidget>
 class QLabel;
@@ -30,4 +30,4 @@ private:
 	QSlider* m_slider;
 };
 
-#endif
+#endif // TETZLE_ZOOM_SLIDER_H

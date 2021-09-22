@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef PIECE_H
-#define PIECE_H
+#ifndef TETZLE_PIECE_H
+#define TETZLE_PIECE_H
 
 #include "graphics_layer.h"
 class Board;
@@ -122,4 +122,4 @@ inline void Piece::drawShadow() const
 	graphics_layer->draw(m_shadow_array);
 }
 
-#endif
+#endif // TETZLE_PIECE_H

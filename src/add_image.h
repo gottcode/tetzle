@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef ADD_IMAGE_H
-#define ADD_IMAGE_H
+#ifndef TETZLE_ADD_IMAGE_H
+#define TETZLE_ADD_IMAGE_H
 
 #include <QCoreApplication>
 class QDragEnterEvent;
@@ -24,4 +24,4 @@ public:
 	static QString supportedFormats();
 };
 
-#endif
+#endif // TETZLE_ADD_IMAGE_H

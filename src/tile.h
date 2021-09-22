@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef TILE_H
-#define TILE_H
+#ifndef TETZLE_TILE_H
+#define TETZLE_TILE_H
 
 #include <QPoint>
 #include <QRect>
@@ -84,4 +84,4 @@ inline void Tile::setParent(Piece* parent)
 	m_parent = parent;
 }
 
-#endif
+#endif // TETZLE_TILE_H

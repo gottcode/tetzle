@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef GRAPHICS_LAYER_H
-#define GRAPHICS_LAYER_H
+#ifndef TETZLE_GRAPHICS_LAYER_H
+#define TETZLE_GRAPHICS_LAYER_H
 
 #include <QMatrix4x4>
 #include <QOpenGLFunctions>
@@ -204,4 +204,4 @@ private:
 };
 #endif
 
-#endif
+#endif // TETZLE_GRAPHICS_LAYER_H

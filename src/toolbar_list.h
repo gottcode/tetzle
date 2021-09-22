@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef TOOLBAR_LIST_H
-#define TOOLBAR_LIST_H
+#ifndef TETZLE_TOOLBAR_LIST_H
+#define TETZLE_TOOLBAR_LIST_H
 
 #include <QListWidget>
 class QToolBar;
@@ -25,4 +25,4 @@ private:
 	QToolBar* m_toolbar;
 };
 
-#endif
+#endif // TETZLE_TOOLBAR_LIST_H

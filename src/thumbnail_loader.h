@@ -4,8 +4,8 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef THUMBNAIL_LOADER_H
-#define THUMBNAIL_LOADER_H
+#ifndef TETZLE_THUMBNAIL_LOADER_H
+#define TETZLE_THUMBNAIL_LOADER_H
 
 struct Thumbnail;
 
@@ -40,4 +40,4 @@ private:
 	QMutex m_mutex;
 };
 
-#endif
+#endif // TETZLE_THUMBNAIL_LOADER_H
