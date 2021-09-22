@@ -214,7 +214,7 @@ void Board::newGame(const QString& image, int difficulty)
 	m_random.seed(time(0));
 #endif
 	Generator generator(m_columns, m_rows, m_random);
-	QList< QList<Tile*> > pieces = generator.pieces();
+	QList<QList<Tile*>> pieces = generator.pieces();
 	std::shuffle(pieces.begin(), pieces.end(), m_random);
 
 	updateStatusMessage(tr("Creating pieces..."));

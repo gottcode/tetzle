@@ -24,7 +24,7 @@ class Generator
 public:
 	Generator(int columns, int rows, std::mt19937& random);
 
-	QList< QList<Tile*> > pieces() const;
+	QList<QList<Tile*>> pieces() const;
 
 private:
 	void solve();
@@ -33,11 +33,11 @@ private:
 private:
 	int m_columns;
 	int m_rows;
-	QList< QList<Tile*> > m_pieces;
+	QList<QList<Tile*>> m_pieces;
 	std::mt19937& m_random;
 };
 
-inline QList< QList<Tile*> > Generator::pieces() const
+inline QList<QList<Tile*>> Generator::pieces() const
 {
 	return m_pieces;
 }
