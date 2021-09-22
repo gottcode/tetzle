@@ -17,6 +17,7 @@ class QProgressBar;
 class Window : public QMainWindow
 {
 	Q_OBJECT
+
 public:
 	Window(const QStringList& files = QStringList());
 

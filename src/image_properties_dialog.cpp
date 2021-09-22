@@ -19,9 +19,9 @@
 //-----------------------------------------------------------------------------
 
 ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& name, TagManager* manager, const QString& image, QWidget* parent)
-	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	m_image(image),
-	m_manager(manager)
+	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
+	, m_image(image)
+	, m_manager(manager)
 {
 	setWindowTitle(tr("Image Properties"));
 

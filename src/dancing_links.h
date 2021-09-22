@@ -33,12 +33,12 @@ struct HeaderNode;
 struct Node
 {
 	/** Constructs a node with the value of 1. */
-	Node() :
-		left(0),
-		right(0),
-		up(0),
-		down(0),
-		column(0)
+	Node()
+		: left(0)
+		, right(0)
+		, up(0)
+		, down(0)
+		, column(0)
 	{
 	}
 
@@ -53,9 +53,9 @@ struct Node
 struct HeaderNode : public Node
 {
 	/** Constructs an empty column. */
-	HeaderNode() :
-		size(0),
-		id(0)
+	HeaderNode()
+		: size(0)
+		, id(0)
 	{
 	}
 
@@ -92,8 +92,8 @@ class Matrix
 		 *
 		 * @param f non-member function to use as callback
 		 */
-		GlobalCallback(function f) :
-			m_function(f)
+		GlobalCallback(function f)
+			: m_function(f)
 		{
 		}
 
@@ -120,9 +120,9 @@ class Matrix
 		 * @param object pointer to object of callback
 		 * @param f member function of @p object to use as callback
 		 */
-		MemberCallback(T* object, function f) :
-			m_object(object),
-			m_function(f)
+		MemberCallback(T* object, function f)
+			: m_object(object)
+			, m_function(f)
 		{
 		}
 

@@ -42,31 +42,33 @@
 
 namespace
 {
-	QString hash(const QString& path)
-	{
-		QFile file(path);
-		if (!file.open(QIODevice::ReadOnly)) {
-			return QString();
-		}
-		return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
-	}
 
-	enum ItemRoles
-	{
-		TagsRole = Qt::UserRole,
-		ImageRole,
-		NameRole
-	};
-
-	void updateToolTip(QListWidgetItem* item)
-	{
-		QString tip = item->text();
-		QString tags = item->data(TagsRole).toString();
-		if (!tags.isEmpty()) {
-			tip += "<br><small><i>" + item->data(TagsRole).toString() + "</i></small>";
-		}
-		item->setToolTip(tip);
+QString hash(const QString& path)
+{
+	QFile file(path);
+	if (!file.open(QIODevice::ReadOnly)) {
+		return QString();
 	}
+	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
+}
+
+enum ItemRoles
+{
+	TagsRole = Qt::UserRole,
+	ImageRole,
+	NameRole
+};
+
+void updateToolTip(QListWidgetItem* item)
+{
+	QString tip = item->text();
+	QString tags = item->data(TagsRole).toString();
+	if (!tags.isEmpty()) {
+		tip += "<br><small><i>" + item->data(TagsRole).toString() + "</i></small>";
+	}
+	item->setToolTip(tip);
+}
+
 }
 
 //-----------------------------------------------------------------------------

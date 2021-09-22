@@ -17,6 +17,7 @@ class QLabel;
 class AppearanceDialog : public QDialog
 {
 	Q_OBJECT
+
 public:
 	AppearanceDialog(QWidget* parent = 0);
 

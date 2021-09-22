@@ -15,36 +15,38 @@
 
 namespace
 {
-	struct Shape
-	{
-		Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
 
-		QPoint cells[4];
-		int width;
-		int height;
-	};
+struct Shape
+{
+	Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4);
 
-	Shape::Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
-		: width(0),
-		height(0)
-	{
-		cells[0] = p1;
-		cells[1] = p2;
-		cells[2] = p3;
-		cells[3] = p4;
-		for (int i = 0; i < 4; ++i) {
-			width = std::max(width, cells[i].x());
-			height = std::max(height, cells[i].y());
-		}
+	QPoint cells[4];
+	int width;
+	int height;
+};
+
+Shape::Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint& p4)
+	: width(0)
+	, height(0)
+{
+	cells[0] = p1;
+	cells[1] = p2;
+	cells[2] = p3;
+	cells[3] = p4;
+	for (int i = 0; i < 4; ++i) {
+		width = std::max(width, cells[i].x());
+		height = std::max(height, cells[i].y());
 	}
+}
+
 }
 
 //-----------------------------------------------------------------------------
 
-Generator::Generator(int columns, int rows, std::mt19937& random) :
-	m_columns(columns),
-	m_rows(rows),
-	m_random(random)
+Generator::Generator(int columns, int rows, std::mt19937& random)
+	: m_columns(columns)
+	, m_rows(rows)
+	, m_random(random)
 {
 	do {
 		m_pieces.clear();

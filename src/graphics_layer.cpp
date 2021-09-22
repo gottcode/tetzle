@@ -146,8 +146,8 @@ void GraphicsLayer::setVersion(int version)
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer::GraphicsLayer() :
-	m_changed(true)
+GraphicsLayer::GraphicsLayer()
+	: m_changed(true)
 {
 	// Start with a 1MB vertex buffer
 	m_data.resize(0x100000 / sizeof(Vertex));
@@ -269,9 +269,9 @@ void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 
 //-----------------------------------------------------------------------------
 
-GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array, const QByteArray& glsl, const QString& shader) :
-	m_program(nullptr),
-	m_vertex_array(vertex_array)
+GraphicsLayer21::GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array, const QByteArray& glsl, const QString& shader)
+	: m_program(nullptr)
+	, m_vertex_array(vertex_array)
 {
 	initializeOpenGLFunctions();
 

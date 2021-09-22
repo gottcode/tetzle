@@ -12,12 +12,12 @@
 //-----------------------------------------------------------------------------
 
 Tile::Tile(int column, int row)
-	: m_parent(0),
-	m_column(column),
-	m_row(row),
-	m_pos(column * size, row * size),
-	m_bevel(0),
-	m_bevel_coords(-1,-1)
+	: m_parent(0)
+	, m_column(column)
+	, m_row(row)
+	, m_pos(column * size, row * size)
+	, m_bevel(0)
+	, m_bevel_coords(-1,-1)
 {
 }
 

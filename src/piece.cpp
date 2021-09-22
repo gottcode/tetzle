@@ -15,14 +15,14 @@
 //-----------------------------------------------------------------------------
 
 Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board)
-	: m_board(board),
-	m_pos(pos),
-	m_tiles(tiles),
-	m_shadow(tiles),
-	m_rotation(0),
-	m_depth(2),
-	m_selected(true),
-	m_changed(false)
+	: m_board(board)
+	, m_pos(pos)
+	, m_tiles(tiles)
+	, m_shadow(tiles)
+	, m_rotation(0)
+	, m_depth(2)
+	, m_selected(true)
+	, m_changed(false)
 {
 	updateTiles();
 	updateShadow();

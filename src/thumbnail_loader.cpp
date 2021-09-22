@@ -26,7 +26,8 @@ void qt_blurImage(QPainter* p, QImage& blurImage, qreal radius, bool quality, bo
 
 //-----------------------------------------------------------------------------
 
-struct Thumbnail {
+struct Thumbnail
+{
 	QListWidget* list;
 	QPersistentModelIndex index;
 	QString image;
@@ -40,40 +41,42 @@ Q_DECLARE_METATYPE(Thumbnail)
 
 namespace
 {
-	class ThumbnailItem : public QListWidgetItem
+
+class ThumbnailItem : public QListWidgetItem
+{
+public:
+	ThumbnailItem(const QString& text = QString());
+
+	virtual bool operator<(const QListWidgetItem& other) const;
+
+private:
+	enum ItemRoles
 	{
-	public:
-		ThumbnailItem(const QString& text = QString());
-
-		virtual bool operator<(const QListWidgetItem& other) const;
-
-	private:
-		enum ItemRoles
-		{
-			ImageRole = Qt::UserRole + 1
-		};
+		ImageRole = Qt::UserRole + 1
 	};
+};
 
-	ThumbnailItem::ThumbnailItem(const QString& text) :
-		QListWidgetItem(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")), text)
-	{
-	}
+ThumbnailItem::ThumbnailItem(const QString& text)
+	: QListWidgetItem(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")), text)
+{
+}
 
-	bool ThumbnailItem::operator<(const QListWidgetItem& other) const
-	{
-		int compare = text().localeAwareCompare(other.text());
-		if (compare == 0) {
-			compare = data(ImageRole).toString().localeAwareCompare(other.data(ImageRole).toString());
-		}
-		return compare < 0;
+bool ThumbnailItem::operator<(const QListWidgetItem& other) const
+{
+	int compare = text().localeAwareCompare(other.text());
+	if (compare == 0) {
+		compare = data(ImageRole).toString().localeAwareCompare(other.data(ImageRole).toString());
 	}
+	return compare < 0;
+}
+
 }
 
 //-----------------------------------------------------------------------------
 
-ThumbnailLoader::ThumbnailLoader(QObject* parent) :
-	QThread(parent),
-	m_done(false)
+ThumbnailLoader::ThumbnailLoader(QObject* parent)
+	: QThread(parent)
+	, m_done(false)
 {
 	connect(this, &ThumbnailLoader::loaded, this, &ThumbnailLoader::imageLoaded, Qt::QueuedConnection);
 }

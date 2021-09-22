@@ -54,41 +54,43 @@ int powerOfTwo(int value)
 
 namespace
 {
-	struct PieceDetails
-	{
-		QPoint pos;
-		int rotation;
-		QList<Tile*> tiles;
 
-		PieceDetails(const QPoint& pos_, int rotation_, const QList<Tile*>& tiles_)
-			: pos(pos_), rotation(rotation_), tiles(tiles_)
-		{
-		}
-	};
+struct PieceDetails
+{
+	QPoint pos;
+	int rotation;
+	QList<Tile*> tiles;
+
+	PieceDetails(const QPoint& pos_, int rotation_, const QList<Tile*>& tiles_)
+		: pos(pos_), rotation(rotation_), tiles(tiles_)
+	{
+	}
+};
+
 }
 
 //-----------------------------------------------------------------------------
 
-Board::Board(QWidget* parent) :
-	QOpenGLWidget(parent),
-	m_id(0),
-	m_load_bevels(true),
-	m_has_bevels(true),
-	m_has_shadows(true),
-	m_image(nullptr),
-	m_image_ts(0),
-	m_columns(0),
-	m_rows(0),
-	m_total_pieces(0),
-	m_completed(0),
-	m_pos(0, 0),
-	m_scale_level(9),
-	m_scale(0),
-	m_scrolling(false),
-	m_selecting(false),
-	m_finished(false),
-	m_action_key(0),
-	m_action_button(Qt::NoButton)
+Board::Board(QWidget* parent)
+	: QOpenGLWidget(parent)
+	, m_id(0)
+	, m_load_bevels(true)
+	, m_has_bevels(true)
+	, m_has_shadows(true)
+	, m_image(nullptr)
+	, m_image_ts(0)
+	, m_columns(0)
+	, m_rows(0)
+	, m_total_pieces(0)
+	, m_completed(0)
+	, m_pos(0, 0)
+	, m_scale_level(9)
+	, m_scale(0)
+	, m_scrolling(false)
+	, m_selecting(false)
+	, m_finished(false)
+	, m_action_key(0)
+	, m_action_button(Qt::NoButton)
 {
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
@@ -758,6 +760,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 	case Qt::Key_D:
 		moveCursor(QPoint(offset, 0));
 		break;
+
 	default:
 		if (!event->isAutoRepeat()) {
 			m_action_key = event->key();

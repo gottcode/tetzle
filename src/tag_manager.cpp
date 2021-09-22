@@ -19,8 +19,8 @@
 //-----------------------------------------------------------------------------
 
 TagManager::TagManager(QWidget* parent)
-	: QWidget(parent),
-	m_all_images_item(0)
+	: QWidget(parent)
+	, m_all_images_item(0)
 {
 	// Add filter
 	m_filter = new ToolBarList(this);

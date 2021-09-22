@@ -14,6 +14,7 @@ class QSlider;
 class ZoomSlider : public QWidget
 {
 	Q_OBJECT
+
 public:
 	ZoomSlider(QWidget* parent = 0);
 

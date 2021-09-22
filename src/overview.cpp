@@ -20,9 +20,9 @@
 //-----------------------------------------------------------------------------
 
 Overview::Overview(QWidget* parent)
-	: QGraphicsView(parent),
-	m_min_scale_level(0),
-	m_scale_level(0)
+	: QGraphicsView(parent)
+	, m_min_scale_level(0)
+	, m_scale_level(0)
 {
 	setWindowTitle(tr("Overview"));
 	setWindowFlags(Qt::Tool);

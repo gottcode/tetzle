@@ -24,12 +24,14 @@
 
 namespace
 {
-	enum ItemRoles
-	{
-		DetailsRole = Qt::UserRole,
-		ImageRole,
-		GameRole
-	};
+
+enum ItemRoles
+{
+	DetailsRole = Qt::UserRole,
+	ImageRole,
+	GameRole
+};
+
 }
 
 //-----------------------------------------------------------------------------

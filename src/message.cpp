@@ -19,12 +19,12 @@ int powerOfTwo(int value);
 
 //-----------------------------------------------------------------------------
 
-Message::Message(QWidget* parent) :
-	QObject(parent),
-	m_parent(parent),
-	m_image(nullptr),
-	m_visible(false),
-	m_color(Qt::white)
+Message::Message(QWidget* parent)
+	: QObject(parent)
+	, m_parent(parent)
+	, m_image(nullptr)
+	, m_visible(false)
+	, m_color(Qt::white)
 {
 	m_hide_timer = new QTimer(this);
 	m_hide_timer->setInterval(2000);

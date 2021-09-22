@@ -12,6 +12,7 @@
 class Overview : public QGraphicsView
 {
 	Q_OBJECT
+
 public:
 	Overview(QWidget* parent = 0);
 

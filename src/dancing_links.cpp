@@ -8,12 +8,12 @@
 
 //-----------------------------------------------------------------------------
 
-DLX::Matrix::Matrix(unsigned int max_columns) :
-	m_max_columns(max_columns),
-	m_columns(max_columns),
-	m_output(max_columns),
-	m_solutions(0),
-	m_tries(0)
+DLX::Matrix::Matrix(unsigned int max_columns)
+	: m_max_columns(max_columns)
+	, m_columns(max_columns)
+	, m_output(max_columns)
+	, m_solutions(0)
+	, m_tries(0)
 {
 	m_header = new HeaderNode;
 	m_header->column = m_header;

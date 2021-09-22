@@ -22,18 +22,20 @@
 
 namespace
 {
-	QPixmap coloredShadow(const QColor& color)
-	{
-		QPixmap source(":/shadow.png");
-		QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
-		QPainter painter(&shadow);
-		painter.setCompositionMode(QPainter::CompositionMode_Source);
-		painter.drawPixmap(0, 0, source);
-		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-		painter.fillRect(shadow.rect(), color);
-		painter.end();
-		return QPixmap::fromImage(shadow, Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
-	}
+
+QPixmap coloredShadow(const QColor& color)
+{
+	QPixmap source(":/shadow.png");
+	QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
+	QPainter painter(&shadow);
+	painter.setCompositionMode(QPainter::CompositionMode_Source);
+	painter.drawPixmap(0, 0, source);
+	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+	painter.fillRect(shadow.rect(), color);
+	painter.end();
+	return QPixmap::fromImage(shadow, Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
+}
+
 }
 
 bool AppearanceDialog::m_bevels_enabled = true;

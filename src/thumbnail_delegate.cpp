@@ -17,18 +17,20 @@
 
 namespace
 {
-	enum ItemsRole
-	{
-		SmallDisplayRole = Qt::UserRole
-	};
+
+enum ItemsRole
+{
+	SmallDisplayRole = Qt::UserRole
+};
+
 }
 
 //-----------------------------------------------------------------------------
 
 ThumbnailDelegate::ThumbnailDelegate(QListWidget* list)
-	: QStyledItemDelegate(list),
-	m_list(list),
-	m_small_font_metrics(m_small_font)
+	: QStyledItemDelegate(list)
+	, m_list(list)
+	, m_small_font_metrics(m_small_font)
 {
 	setFont(list->font());
 	list->installEventFilter(this);

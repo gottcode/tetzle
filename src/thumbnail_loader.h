@@ -20,6 +20,7 @@ class ThumbnailLoader : public QThread
 	Q_OBJECT
 
 	ThumbnailLoader(QObject* parent = 0);
+
 public:
 	~ThumbnailLoader();
 
