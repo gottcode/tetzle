@@ -172,7 +172,7 @@ void Board::newGame(const QString& image, int difficulty)
 	zoom(0);
 
 	// Prevent starting a game with a missing image
-	if (!QFileInfo(Path::image(image)).exists()) {
+	if (!QFileInfo::exists(Path::image(image))) {
 		QMessageBox::warning(this, tr("Error"), tr("Missing image."));
 		return;
 	}
@@ -283,7 +283,7 @@ void Board::openGame(int id)
 	unsigned int version = attributes.value("version").toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version <= 5) {
 		m_image_path = attributes.value("image").toString();
-		if (!QFileInfo(Path::image(m_image_path)).exists()) {
+		if (!QFileInfo::exists(Path::image(m_image_path))) {
 			QApplication::restoreOverrideCursor();
 			QMessageBox::warning(this, tr("Error"), tr("Missing image."));
 			cleanup();
