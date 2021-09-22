@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 Tile::Tile(int column, int row)
-	: m_parent(0)
+	: m_parent(nullptr)
 	, m_column(column)
 	, m_row(row)
 	, m_pos(column * size, row * size)

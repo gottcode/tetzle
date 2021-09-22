@@ -223,7 +223,7 @@ void TagManager::removeTag()
 	// Remove item
 	QString tag = item->text();
 	delete item;
-	item = 0;
+	item = nullptr;
 	m_remove_action->setEnabled(m_filter->count() > 1);
 
 	// Remove tag
@@ -244,7 +244,7 @@ void TagManager::currentTagChanged(QListWidgetItem* item)
 
 void TagManager::tagChanged(QListWidgetItem* item)
 {
-	if (item == 0) {
+	if (!item) {
 		return;
 	}
 

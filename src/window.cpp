@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------------------
 
 Window::Window(const QStringList& files)
-	: m_board(0)
+	: m_board(nullptr)
 {
 	setAcceptDrops(true);
 	resize(640, 480);

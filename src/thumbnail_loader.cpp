@@ -95,8 +95,8 @@ ThumbnailLoader::~ThumbnailLoader()
 
 QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString& text, QListWidget* list, qreal pixelratio)
 {
-	static ThumbnailLoader* loader = 0;
-	if (loader == 0) {
+	static ThumbnailLoader* loader = nullptr;
+	if (!loader) {
 		qRegisterMetaType<Thumbnail>("Thumbnail");
 		loader = new ThumbnailLoader(QCoreApplication::instance());
 	}

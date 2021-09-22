@@ -37,7 +37,7 @@ private:
 
 Application::Application(int& argc, char** argv)
 	: QApplication(argc, argv)
-	, m_window(0)
+	, m_window(nullptr)
 {
 	setApplicationName("Tetzle");
 	setApplicationVersion(VERSIONSTR);

@@ -17,7 +17,7 @@ class ChooseGameDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ChooseGameDialog(const QStringList& files, int current_id, QWidget* parent = 0);
+	ChooseGameDialog(const QStringList& files, int current_id, QWidget* parent = nullptr);
 
 	static QStringList currentGames();
 

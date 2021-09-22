@@ -19,7 +19,7 @@ class AppearanceDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit AppearanceDialog(QWidget* parent = 0);
+	explicit AppearanceDialog(QWidget* parent = nullptr);
 
 	bool hasBevels() const;
 	bool hasShadows() const;

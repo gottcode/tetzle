@@ -141,7 +141,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	// Load images
 	QSettings details(Path::image("details"), QSettings::IniFormat);
-	QListWidgetItem* item = 0;
+	QListWidgetItem* item = nullptr;
 	for (const QString& image : QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
 		item = createItem(image, details);
 	}
@@ -339,7 +339,7 @@ void NewGameTab::editImageProperties()
 
 void NewGameTab::imageSelected(QListWidgetItem* item)
 {
-	bool enabled = item != 0;
+	bool enabled = item;
 	m_accept_button->setEnabled(enabled);
 	m_tag_action->setEnabled(enabled);
 	m_remove_action->setEnabled(enabled);
@@ -454,7 +454,7 @@ void NewGameTab::addImage(const QString& image)
 	}
 	image_id++;
 
-	QListWidgetItem* item = 0;
+	QListWidgetItem* item = nullptr;
 	if (filename.isEmpty()) {
 		// Find filename
 		QFileInfo info(image);

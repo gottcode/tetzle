@@ -20,7 +20,7 @@ class AddImage
 public:
 	static void dragEnterEvent(QDragEnterEvent* event);
 	static QStringList dropEvent(QDropEvent* event);
-	static QStringList getOpenFileNames(QWidget* parent = 0);
+	static QStringList getOpenFileNames(QWidget* parent = nullptr);
 	static QString supportedFormats();
 };
 

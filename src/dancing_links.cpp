@@ -19,7 +19,7 @@ DLX::Matrix::Matrix(unsigned int max_columns)
 	m_header->column = m_header;
 
 	Node* node = m_header;
-	HeaderNode* column = 0;
+	HeaderNode* column = nullptr;
 	for (unsigned int i = 0; i < m_max_columns; ++i) {
 		column = &m_columns[i];
 		column->id = i;
@@ -106,7 +106,7 @@ void DLX::Matrix::solve(unsigned int k)
 	}
 
 	// Choose column with lowest amount of 1s.
-	HeaderNode* column = 0;
+	HeaderNode* column = nullptr;
 	unsigned int s = 0xFFFFFFFF;
 	for(HeaderNode* i = m_header->right->column; i != m_header; i = i->right->column) {
 		if (i->size < s) {

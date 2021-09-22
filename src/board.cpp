@@ -112,7 +112,7 @@ Board::~Board()
 	delete m_shadow_image;
 	delete m_message;
 	delete graphics_layer;
-	graphics_layer = 0;
+	graphics_layer = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -134,7 +134,7 @@ void Board::removePiece(Piece* piece)
 {
 	m_pieces.removeAll(piece);
 	delete piece;
-	piece = 0;
+	piece = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -982,7 +982,7 @@ void Board::grabPiece()
 	}
 
 	Piece* piece = pieceUnderCursor();
-	if (piece == 0) {
+	if (!piece) {
 		return;
 	}
 	m_active_pieces.append(piece);
@@ -1049,7 +1049,7 @@ void Board::rotatePiece()
 
 	if (m_active_pieces.isEmpty()) {
 		Piece* piece = pieceUnderCursor();
-		if (piece == 0) {
+		if (!piece) {
 			return;
 		}
 		piece->rotate(mapCursorPosition());
@@ -1191,7 +1191,7 @@ void Board::updateCursor()
 {
 	int state = 0;
 	if (!m_finished) {
-		state = (pieceUnderCursor() != 0 || m_selecting) | (!m_active_pieces.isEmpty() * 2);
+		state = (pieceUnderCursor() || m_selecting) | (!m_active_pieces.isEmpty() * 2);
 	}
 
 	switch (state) {

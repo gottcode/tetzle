@@ -20,7 +20,7 @@ class TagManager : public QWidget
 	Q_OBJECT
 
 public:
-	explicit TagManager(QWidget* parent = 0);
+	explicit TagManager(QWidget* parent = nullptr);
 
 	QStringList images(const QString& tag) const;
 	QStringList tags() const;

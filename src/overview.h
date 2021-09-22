@@ -14,7 +14,7 @@ class Overview : public QGraphicsView
 	Q_OBJECT
 
 public:
-	explicit Overview(QWidget* parent = 0);
+	explicit Overview(QWidget* parent = nullptr);
 
 	void load(const QImage& image, qreal pixelratio);
 	void reset();

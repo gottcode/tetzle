@@ -19,7 +19,7 @@ class ImagePropertiesDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ImagePropertiesDialog(const QIcon& icon, const QString& name, TagManager* manager, const QString& image, QWidget* parent = 0);
+	ImagePropertiesDialog(const QIcon& icon, const QString& name, TagManager* manager, const QString& image, QWidget* parent = nullptr);
 
 	QString name() const;
 

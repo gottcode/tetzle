@@ -16,7 +16,7 @@ class OpenGameTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit OpenGameTab(int current_id, QDialog* parent = 0);
+	explicit OpenGameTab(int current_id, QDialog* parent = nullptr);
 
 public slots:
 	void imageRenamed(const QString& image, const QString& name);

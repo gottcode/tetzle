@@ -19,7 +19,7 @@ class ThumbnailLoader : public QThread
 {
 	Q_OBJECT
 
-	explicit ThumbnailLoader(QObject* parent = 0);
+	explicit ThumbnailLoader(QObject* parent = nullptr);
 
 public:
 	~ThumbnailLoader();
