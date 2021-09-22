@@ -23,11 +23,11 @@ signals:
 	void toggled(bool visible);
 
 protected:
-	virtual void hideEvent(QHideEvent* event);
-	virtual void moveEvent(QMoveEvent* event);
-	virtual void resizeEvent(QResizeEvent* event);
-	virtual void showEvent(QShowEvent* event);
-	virtual void wheelEvent(QWheelEvent* event);
+	void hideEvent(QHideEvent* event) override;
+	void moveEvent(QMoveEvent* event) override;
+	void resizeEvent(QResizeEvent* event) override;
+	void showEvent(QShowEvent* event) override;
+	void wheelEvent(QWheelEvent* event) override;
 
 private:
 	void setPixmap(const QPixmap& pixmap);

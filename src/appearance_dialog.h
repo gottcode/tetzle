@@ -28,7 +28,7 @@ public:
 	static void setBevelsEnabled(bool enabled);
 
 public slots:
-	void accept();
+	void accept() override;
 
 private slots:
 	void restoreDefaults();

@@ -26,7 +26,7 @@ public:
 	void createWindow(const QStringList& files);
 
 protected:
-	virtual bool event(QEvent* e);
+	bool event(QEvent* e) override;
 
 private:
 	QStringList m_files;

@@ -26,9 +26,9 @@ signals:
 	void openGame(int id);
 
 protected:
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
-	virtual void hideEvent(QHideEvent* event);
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
+	void hideEvent(QHideEvent* event) override;
 
 private:
 	QTabWidget* m_tabs;

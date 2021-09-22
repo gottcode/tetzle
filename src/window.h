@@ -24,10 +24,10 @@ public:
 	void addImages(const QStringList& files);
 
 protected:
-	virtual void changeEvent(QEvent* event);
-	virtual void closeEvent(QCloseEvent* event);
-	virtual void dragEnterEvent(QDragEnterEvent* event);
-	virtual void dropEvent(QDropEvent* event);
+	void changeEvent(QEvent* event) override;
+	void closeEvent(QCloseEvent* event) override;
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
 
 private slots:
 	void chooseGame(const QStringList& files = QStringList());

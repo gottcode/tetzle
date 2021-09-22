@@ -30,7 +30,7 @@ signals:
 	void loaded(const Thumbnail& details);
 
 protected:
-	virtual void run();
+	void run() override;
 
 private slots:
 	void imageLoaded(const Thumbnail& details);

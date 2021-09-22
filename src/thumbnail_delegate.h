@@ -16,11 +16,11 @@ class ThumbnailDelegate : public QStyledItemDelegate
 public:
 	explicit ThumbnailDelegate(QListWidget* list = nullptr);
 
-	void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+	void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 protected:
-	virtual bool eventFilter(QObject* object, QEvent* event);
+	bool eventFilter(QObject* object, QEvent* event) override;
 
 private:
 	void setFont(const QFont& font);

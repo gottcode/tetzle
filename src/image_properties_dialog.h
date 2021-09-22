@@ -24,10 +24,10 @@ public:
 	QString name() const;
 
 public slots:
-	virtual void accept();
+	void accept() override;
 
 protected:
-	virtual void hideEvent(QHideEvent* event);
+	void hideEvent(QHideEvent* event) override;
 
 private:
 	QString m_image;

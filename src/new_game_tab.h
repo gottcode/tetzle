@@ -33,7 +33,7 @@ signals:
 	void newGame(const QString& image, int difficulty);
 
 protected:
-	virtual void hideEvent(QHideEvent* event);
+	void hideEvent(QHideEvent* event) override;
 
 private slots:
 	void accept();

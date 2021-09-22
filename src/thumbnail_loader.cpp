@@ -47,7 +47,7 @@ class ThumbnailItem : public QListWidgetItem
 public:
 	explicit ThumbnailItem(const QString& text = QString());
 
-	virtual bool operator<(const QListWidgetItem& other) const;
+	bool operator<(const QListWidgetItem& other) const override;
 
 private:
 	enum ItemRoles

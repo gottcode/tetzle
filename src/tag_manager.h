@@ -36,7 +36,7 @@ signals:
 	void tagsChanged();
 
 protected:
-	virtual void changeEvent(QEvent* event);
+	void changeEvent(QEvent* event) override;
 
 private slots:
 	void addTag();

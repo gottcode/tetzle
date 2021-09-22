@@ -109,18 +109,18 @@ public:
 	GraphicsLayer21(QOpenGLVertexArrayObject* vertex_array, const QByteArray& glsl, const QString& shader);
 	~GraphicsLayer21();
 
-	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void clear();
-	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
-	virtual GLint getMaxTextureSize();
-	virtual void setBlended(bool enabled);
-	virtual void setClearColor(const QColor& color);
-	virtual void setColor(const QColor& color);
-	virtual void setModelview(const QMatrix4x4& matrix);
-	virtual void setProjection(const QMatrix4x4& matrix);
-	virtual void setTextureUnits(unsigned int units);
-	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-	virtual void uploadData();
+	void bindTexture(unsigned int unit, GLuint texture) override;
+	void clear() override;
+	void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES) override;
+	GLint getMaxTextureSize() override;
+	void setBlended(bool enabled) override;
+	void setClearColor(const QColor& color) override;
+	void setColor(const QColor& color) override;
+	void setModelview(const QMatrix4x4& matrix) override;
+	void setProjection(const QMatrix4x4& matrix) override;
+	void setTextureUnits(unsigned int units) override;
+	void setViewport(GLint x, GLint y, GLsizei width, GLsizei height) override;
+	void uploadData() override;
 
 private:
 	QOpenGLShaderProgram* loadProgram(unsigned int index, const QByteArray& glsl, const QString& shader);
@@ -154,18 +154,18 @@ class GraphicsLayer11 : public GraphicsLayer, protected QOpenGLFunctions_1_1
 public:
 	explicit GraphicsLayer11();
 
-	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void clear();
-	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
-	virtual GLint getMaxTextureSize();
-	virtual void setBlended(bool enabled);
-	virtual void setClearColor(const QColor& color);
-	virtual void setColor(const QColor& color);
-	virtual void setModelview(const QMatrix4x4& matrix);
-	virtual void setProjection(const QMatrix4x4& matrix);
-	virtual void setTextureUnits(unsigned int units);
-	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-	virtual void uploadData();
+	void bindTexture(unsigned int unit, GLuint texture) override;
+	void clear() override;
+	void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES) override;
+	GLint getMaxTextureSize() override;
+	void setBlended(bool enabled) override;
+	void setClearColor(const QColor& color) override;
+	void setColor(const QColor& color) override;
+	void setModelview(const QMatrix4x4& matrix) override;
+	void setProjection(const QMatrix4x4& matrix) override;
+	void setTextureUnits(unsigned int units) override;
+	void setViewport(GLint x, GLint y, GLsizei width, GLsizei height) override;
+	void uploadData() override;
 };
 
 
@@ -174,18 +174,18 @@ class GraphicsLayer13 : public GraphicsLayer, protected QOpenGLFunctions_1_3
 public:
 	explicit GraphicsLayer13();
 
-	virtual void bindTexture(unsigned int unit, GLuint texture);
-	virtual void clear();
-	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
-	virtual GLint getMaxTextureSize();
-	virtual void setBlended(bool enabled);
-	virtual void setClearColor(const QColor& color);
-	virtual void setColor(const QColor& color);
-	virtual void setModelview(const QMatrix4x4& matrix);
-	virtual void setProjection(const QMatrix4x4& matrix);
-	virtual void setTextureUnits(unsigned int units);
-	virtual void setViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-	virtual void uploadData();
+	void bindTexture(unsigned int unit, GLuint texture) override;
+	void clear() override;
+	void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES) override;
+	GLint getMaxTextureSize() override;
+	void setBlended(bool enabled) override;
+	void setClearColor(const QColor& color) override;
+	void setColor(const QColor& color) override;
+	void setModelview(const QMatrix4x4& matrix) override;
+	void setProjection(const QMatrix4x4& matrix) override;
+	void setTextureUnits(unsigned int units) override;
+	void setViewport(GLint x, GLint y, GLsizei width, GLsizei height) override;
+	void uploadData() override;
 };
 
 
@@ -195,9 +195,9 @@ public:
 	explicit GraphicsLayer15();
 	~GraphicsLayer15();
 
-	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);
-	virtual void setTextureUnits(unsigned int units);
-	virtual void uploadData();
+	void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES) override;
+	void setTextureUnits(unsigned int units) override;
+	void uploadData() override;
 
 private:
 	QOpenGLBuffer* m_vertex_buffer;

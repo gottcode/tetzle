@@ -19,7 +19,7 @@ public:
 	QIcon fetchIcon(const QString& name);
 
 protected:
-	virtual void updateGeometries();
+	void updateGeometries() override;
 
 private:
 	QToolBar* m_toolbar;
