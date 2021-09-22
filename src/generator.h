@@ -7,14 +7,15 @@
 #ifndef TETZLE_GENERATOR_H
 #define TETZLE_GENERATOR_H
 
-#include <QList>
-#include <QPoint>
-#include <QVector>
 namespace DLX
 {
 	struct Node;
 }
 class Tile;
+
+#include <QList>
+#include <QPoint>
+#include <QVector>
 
 #include <random>
 

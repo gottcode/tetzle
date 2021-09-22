@@ -7,11 +7,12 @@
 #ifndef TETZLE_WINDOW_H
 #define TETZLE_WINDOW_H
 
+class Board;
+class ZoomSlider;
+
 #include <QMainWindow>
 class QAction;
 class QProgressBar;
-class Board;
-class ZoomSlider;
 
 class Window : public QMainWindow
 {

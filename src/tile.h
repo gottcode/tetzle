@@ -7,10 +7,11 @@
 #ifndef TETZLE_TILE_H
 #define TETZLE_TILE_H
 
+class Piece;
+
 #include <QPoint>
 #include <QRect>
 #include <QXmlStreamWriter>
-class Piece;
 
 class Tile
 {

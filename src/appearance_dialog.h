@@ -7,11 +7,12 @@
 #ifndef TETZLE_APPEARANCE_DIALOG_H
 #define TETZLE_APPEARANCE_DIALOG_H
 
+class ColorButton;
+
 #include <QDialog>
 class QAbstractButton;
 class QCheckBox;
 class QLabel;
-class ColorButton;
 
 class AppearanceDialog : public QDialog
 {
