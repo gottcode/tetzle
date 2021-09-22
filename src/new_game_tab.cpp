@@ -141,16 +141,15 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	// Load images
 	QSettings details(Path::image("details"), QSettings::IniFormat);
-	QListWidgetItem* item = nullptr;
 	const QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed);
 	for (const QString& image : images) {
-		item = createItem(image, details);
+		createItem(image, details);
 	}
 	m_images->sortItems();
 
 	// Load values
 	QSettings settings;
-	item = m_images->item(0);
+	QListWidgetItem* item = m_images->item(0);
 	QString image = settings.value("NewGame/Image").toString();
 	if (!image.isEmpty()) {
 		for (int i = m_images->count() - 1; i >= 0; --i) {
