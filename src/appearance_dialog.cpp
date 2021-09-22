@@ -102,7 +102,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 
 	// Load settings
 	QSettings settings;
-	m_background->setColor(settings.value("Colors/Background", "#9d8975").value<QColor>());
+	m_background->setColor(settings.value("Colors/Background", QColor(0x9d, 0x89, 0x75)).value<QColor>());
 	m_shadow->setColor(settings.value("Colors/Shadow", QColor(Qt::black)).value<QColor>());
 	m_highlight->setColor(settings.value("Colors/Highlight", QColor(Qt::white)).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
@@ -163,7 +163,7 @@ void AppearanceDialog::accept()
 
 void AppearanceDialog::restoreDefaults()
 {
-	m_background->setColor("#9d8975");
+	m_background->setColor(QColor(0x9d, 0x89, 0x75));
 	m_shadow->setColor(Qt::black);
 	m_highlight->setColor(Qt::white);
 	m_has_bevels->setChecked(true);
