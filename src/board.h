@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -16,9 +16,8 @@ class Tile;
 
 #include <QHash>
 #include <QOpenGLWidget>
+#include <QRandomGenerator>
 class QOpenGLTexture;
-
-#include <random>
 
 class Board : public QOpenGLWidget
 {
@@ -142,7 +141,7 @@ private:
 	int m_action_key;
 	Qt::MouseButton m_action_button;
 
-	std::mt19937 m_random;
+	QRandomGenerator m_random;
 };
 
 
@@ -163,8 +162,7 @@ inline QRect Board::marginRect(const QRect& rect) const
 
 inline int Board::randomInt(int max)
 {
-	std::uniform_int_distribution<int> dis(0, max - 1);
-	return dis(m_random);
+	return m_random.bounded(max);
 }
 
 inline float Board::tileTextureSize() const

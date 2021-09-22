@@ -15,14 +15,13 @@ class Tile;
 
 #include <QList>
 #include <QPoint>
+#include <QRandomGenerator>
 #include <QVector>
-
-#include <random>
 
 class Generator
 {
 public:
-	Generator(int columns, int rows, std::mt19937& random);
+	Generator(int columns, int rows, QRandomGenerator& random);
 
 	QList<QList<Tile*>> pieces() const;
 
@@ -34,7 +33,7 @@ private:
 	int m_columns;
 	int m_rows;
 	QList<QList<Tile*>> m_pieces;
-	std::mt19937& m_random;
+	QRandomGenerator& m_random;
 };
 
 inline QList<QList<Tile*>> Generator::pieces() const

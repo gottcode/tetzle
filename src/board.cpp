@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2020 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -32,11 +32,9 @@
 #include <QXmlStreamWriter>
 
 #include <algorithm>
-#include <random>
 
 #include <cmath>
 #include <cstdlib>
-#include <ctime>
 
 //-----------------------------------------------------------------------------
 
@@ -91,6 +89,7 @@ Board::Board(QWidget* parent)
 	, m_finished(false)
 	, m_action_key(0)
 	, m_action_button(Qt::NoButton)
+	, m_random(QRandomGenerator::securelySeeded())
 {
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
@@ -210,12 +209,6 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate puzzle
 	updateStatusMessage(tr("Generating puzzle..."));
-#ifndef Q_OS_WIN
-	std::random_device rd;
-	m_random.seed(rd());
-#else
-	m_random.seed(time(0));
-#endif
 	Generator generator(m_columns, m_rows, m_random);
 	QList<QList<Tile*>> pieces = generator.pieces();
 	std::shuffle(pieces.begin(), pieces.end(), m_random);

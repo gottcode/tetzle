@@ -43,7 +43,7 @@ Shape::Shape(const QPoint& p1, const QPoint& p2, const QPoint& p3, const QPoint&
 
 //-----------------------------------------------------------------------------
 
-Generator::Generator(int columns, int rows, std::mt19937& random)
+Generator::Generator(int columns, int rows, QRandomGenerator& random)
 	: m_columns(columns)
 	, m_rows(rows)
 	, m_random(random)
