@@ -81,7 +81,7 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachNeighbors()
 {
-	auto neighbors = m_neighbors;
+	const auto neighbors = m_neighbors;
 	for (Piece* piece : neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
@@ -110,9 +110,9 @@ void Piece::attachNeighbors()
 void Piece::findNeighbors(const QList<Piece*>& pieces)
 {
 	// Find neighbor tiles
-	static QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
+	static const QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
 	QList<QPoint> tiles;
-	for (Tile* tile : m_shadow) {
+	for (Tile* tile : qAsConst(m_shadow)) {
 		QPoint pos(tile->column(), tile->row());
 		for (const QPoint& delta : deltas) {
 			QPoint neighbor = pos + delta;
@@ -124,7 +124,7 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 
 	// Find neighbor pieces
 	for (Piece* piece : pieces) {
-		for (const QPoint& tile : tiles) {
+		for (const QPoint& tile : qAsConst(tiles)) {
 			if (piece->containsTile(tile.x(), tile.y())) {
 				m_neighbors.insert(piece);
 				break;
@@ -291,7 +291,7 @@ void Piece::attach(Piece* piece)
 	m_neighbors += piece->m_neighbors;
 	m_neighbors.remove(piece);
 	m_neighbors.remove(this);
-	for (Piece* neighbor : m_neighbors) {
+	for (Piece* neighbor : qAsConst(m_neighbors)) {
 		neighbor->m_neighbors.remove(piece);
 		neighbor->m_neighbors.insert(this);
 	}

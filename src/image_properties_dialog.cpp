@@ -36,7 +36,7 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 	// Add tags
 	m_tags = new QListWidget(this);
 	m_tags->setSortingEnabled(true);
-	QStringList tags = m_manager->tags();
+	const QStringList tags = m_manager->tags();
 	for (const QString& tag : tags) {
 		QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);

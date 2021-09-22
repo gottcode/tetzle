@@ -50,7 +50,7 @@ TagManager::TagManager(QWidget* parent)
 
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
-	QStringList tags = file.childKeys();
+	const QStringList tags = file.childKeys();
 	QStringList images;
 	QDir folder(Path::images(), "*.*");
 	for (const QString& tag : tags) {

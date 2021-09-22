@@ -142,7 +142,8 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Load images
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QListWidgetItem* item = nullptr;
-	for (const QString& image : QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed)) {
+	const QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files, QDir::Time | QDir::Reversed);
+	for (const QString& image : images) {
 		item = createItem(image, details);
 	}
 	m_images->sortItems();
@@ -244,11 +245,12 @@ void NewGameTab::removeImage()
 	}
 	QString current_image = item->data(ImageRole).toString();
 
-	QList<QString> games;
+	QStringList games;
 
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
-	for (const QString& game : QDir(Path::saves(), "*.xml").entryList(QDir::Files)) {
+	const QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files);
+	for (const QString& game : files) {
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
@@ -284,7 +286,7 @@ void NewGameTab::removeImage()
 			dir.remove(thumb);
 		}
 
-		for (const QString& game : games) {
+		for (const QString& game : qAsConst(games)) {
 			QFile::remove(Path::save(game));
 		}
 
@@ -439,7 +441,7 @@ void NewGameTab::addImage(const QString& image)
 	QString image_hash = hash(image);
 
 	QSettings details(Path::image("details"), QSettings::IniFormat);
-	QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files);
+	const QStringList images = QDir(Path::images(), "*.*").entryList(QDir::Files);
 	for (const QString& file : images) {
 		image_id = std::max(image_id, file.section(".", 0, 0).toInt());
 

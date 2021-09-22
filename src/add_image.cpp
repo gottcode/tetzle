@@ -22,7 +22,7 @@ void AddImage::dragEnterEvent(QDragEnterEvent* event)
 {
 	bool accept = false;
 
-	QList<QUrl> urls = event->mimeData()->urls();
+	const QList<QUrl> urls = event->mimeData()->urls();
 	for (const QUrl& url : urls) {
 		if (QDir::match(supportedFormats(), url.toLocalFile())) {
 			accept = true;
@@ -42,7 +42,7 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 	event->setDropAction(Qt::CopyAction);
 
 	QStringList files;
-	QList<QUrl> urls = event->mimeData()->urls();
+	const QList<QUrl> urls = event->mimeData()->urls();
 	for (const QUrl& url : urls) {
 		QString file = url.toLocalFile();
 		if (QDir::match(supportedFormats(), file)) {
@@ -77,7 +77,8 @@ QString AddImage::supportedFormats()
 	static QString string;
 	if (string.isEmpty()) {
 		QStringList formats;
-		for (const QByteArray& type : QImageReader::supportedImageFormats()) {
+		const QList<QByteArray> imageformats = QImageReader::supportedImageFormats();
+		for (const QByteArray& type : imageformats) {
 			formats.append("*." + type);
 		}
 		string = "Images(" + formats.join(" ") + ")";

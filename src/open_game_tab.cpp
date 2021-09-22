@@ -51,7 +51,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	QSettings details(Path::image("details"), QSettings::IniFormat);
 	QXmlStreamReader xml;
 	QXmlStreamAttributes attributes;
-	QStringList files = ChooseGameDialog::currentGames();
+	const QStringList files = ChooseGameDialog::currentGames();
 	for (const QString& game : files) {
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {

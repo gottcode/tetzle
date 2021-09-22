@@ -149,7 +149,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	QPalette palette = dialog.colors();
 	graphics_layer->setClearColor(palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
-	for (Piece* piece : m_pieces) {
+	for (Piece* piece : qAsConst(m_pieces)) {
 		piece->setSelected(piece->isSelected());
 	}
 }
@@ -185,7 +185,8 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate ID
 	m_id = 0;
-	for (const QString& file : QDir(Path::saves()).entryList(QDir::Files)) {
+	const QStringList files = QDir(Path::saves()).entryList(QDir::Files);
+	for (const QString& file : files) {
 		m_id = std::max(m_id, file.section(".", 0, 0).toInt());
 	}
 	m_id++;
@@ -425,13 +426,13 @@ void Board::saveGame()
 		.arg(m_scene.width())
 		.arg(m_scene.height()));
 
-	for (Piece* piece : m_pieces) {
+	for (Piece* piece : qAsConst(m_pieces)) {
 		piece->save(xml);
 	}
-	for (Piece* piece : m_selected_pieces) {
+	for (Piece* piece : qAsConst(m_selected_pieces)) {
 		piece->save(xml);
 	}
-	for (Piece* piece : m_active_pieces) {
+	for (Piece* piece : qAsConst(m_active_pieces)) {
 		piece->save(xml);
 	}
 
@@ -460,7 +461,7 @@ void Board::retrievePieces()
 
 	// Move all pieces to center of view
 	std::shuffle(pieces.begin(), pieces.end(), m_random);
-	for (Piece* piece : pieces) {
+	for (Piece* piece : qAsConst(pieces)) {
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->setSelected(false);
@@ -1270,7 +1271,7 @@ void Board::updateArray(Region& region, const QRect& rect, int z)
 void Board::updateSceneRectangle()
 {
 	m_scene = QRect(0,0,0,0);
-	for (Piece* piece : m_pieces) {
+	for (Piece* piece : qAsConst(m_pieces)) {
 		updateSceneRectangle(piece);
 	}
 }

@@ -56,7 +56,7 @@ QStringList ChooseGameDialog::currentGames()
 {
 	QStringList result;
 
-	QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files, QDir::Time);
+	const QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files, QDir::Time);
 	for (const QString& game : files) {
 		// Load XML file
 		QFile file(Path::save(game));
