@@ -30,7 +30,7 @@ protected:
 	void dropEvent(QDropEvent* event) override;
 
 private slots:
-	void chooseGame(const QStringList& files = QStringList());
+	void chooseGame(const QStringList& files);
 	void gameFinished();
 	void setFullScreen(bool enable);
 	void setLocale();

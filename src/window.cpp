@@ -64,27 +64,27 @@ Window::Window(const QStringList& files)
 	QMenu* menu;
 
 	menu = menuBar()->addMenu(tr("&Game"));
-	QAction* choose_action = menu->addAction(tr("&Choose..."), this, SLOT(chooseGame()));
+	QAction* choose_action = menu->addAction(tr("&Choose..."), this, [this]() { chooseGame(QStringList()); });
 	choose_action->setShortcuts(QList<QKeySequence>() << QKeySequence::New << QKeySequence::Open);
 	menu->addSeparator();
-	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, SLOT(retrievePieces()), tr("Ctrl+R"));
+	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, &Board::retrievePieces, tr("Ctrl+R"));
 	retrieve_pieces_action->setEnabled(false);
 	connect(m_board, &Board::retrievePiecesAvailable, retrieve_pieces_action, &QAction::setEnabled);
 	menu->addSeparator();
-	QAction* quit_action = menu->addAction(tr("&Quit"), this, SLOT(close()), QKeySequence::Quit);
+	QAction* quit_action = menu->addAction(tr("&Quit"), this, &Window::close, QKeySequence::Quit);
 	quit_action->setMenuRole(QAction::QuitRole);
 
 	menu = menuBar()->addMenu(tr("&View"));
-	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, SLOT(zoomIn()), tr("+"));
+	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, &Board::zoomIn, tr("+"));
 	zoom_in_action->setEnabled(false);
 	connect(m_board, &Board::zoomInAvailable, zoom_in_action, &QAction::setEnabled);
-	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, SLOT(zoomOut()), tr("-"));
+	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, &Board::zoomOut, tr("-"));
 	zoom_out_action->setEnabled(false);
 	connect(m_board, &Board::zoomOutAvailable, zoom_out_action, &QAction::setEnabled);
-	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, SLOT(zoomFit()));
+	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, &Board::zoomFit);
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
-	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, SLOT(toggleOverview()), tr("Tab"));
+	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, &Board::toggleOverview, tr("Tab"));
 	m_toggle_overview_action->setCheckable(true);
 	m_toggle_overview_action->setEnabled(false);
 	connect(m_board, &Board::overviewToggled, m_toggle_overview_action, &QAction::setChecked);
@@ -100,15 +100,15 @@ Window::Window(const QStringList& files)
 #endif
 
 	menu = menuBar()->addMenu(tr("&Settings"));
-	menu->addAction(tr("&Appearance..."), this, SLOT(showAppearance()));
-	menu->addAction(tr("&Language..."), this, SLOT(setLocale()));
+	menu->addAction(tr("&Appearance..."), this, &Window::showAppearance);
+	menu->addAction(tr("&Language..."), this, &Window::setLocale);
 
 	menu = menuBar()->addMenu(tr("&Help"));
-	menu->addAction(tr("&Controls"), this, SLOT(showControls()), QKeySequence::HelpContents);
+	menu->addAction(tr("&Controls"), this, &Window::showControls, QKeySequence::HelpContents);
 	menu->addSeparator();
-	QAction* about_action = menu->addAction(tr("&About"), this, SLOT(showAbout()));
+	QAction* about_action = menu->addAction(tr("&About"), this, &Window::showAbout);
 	about_action->setMenuRole(QAction::AboutRole);
-	QAction* about_qt_action = menu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+	QAction* about_qt_action = menu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
 	about_qt_action->setMenuRole(QAction::AboutQtRole);
 
 	// Restore geometry
@@ -256,7 +256,7 @@ void Window::showControls()
 	layout->addWidget(new QLabel(tr("Move mouse or W,A,D,S"), &dialog), 6, 2, Qt::AlignLeft | Qt::AlignVCenter);
 
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, &dialog);
-	connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+	connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 	layout->addWidget(buttons, 8, 0, 1, 3);
 
 	dialog.exec();
