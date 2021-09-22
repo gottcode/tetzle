@@ -82,7 +82,7 @@ public:
 	virtual void uploadData()=0;
 
 protected:
-	GraphicsLayer();
+	explicit GraphicsLayer();
 
 protected:
 	void clearChanged();
@@ -152,7 +152,7 @@ private:
 class GraphicsLayer11 : public GraphicsLayer, protected QOpenGLFunctions_1_1
 {
 public:
-	GraphicsLayer11();
+	explicit GraphicsLayer11();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
 	virtual void clear();
@@ -172,7 +172,7 @@ public:
 class GraphicsLayer13 : public GraphicsLayer, protected QOpenGLFunctions_1_3
 {
 public:
-	GraphicsLayer13();
+	explicit GraphicsLayer13();
 
 	virtual void bindTexture(unsigned int unit, GLuint texture);
 	virtual void clear();
@@ -192,7 +192,7 @@ public:
 class GraphicsLayer15 : public GraphicsLayer13
 {
 public:
-	GraphicsLayer15();
+	explicit GraphicsLayer15();
 	~GraphicsLayer15();
 
 	virtual void draw(const VertexArray& array, GLenum mode = GL_TRIANGLES);

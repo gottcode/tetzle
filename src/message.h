@@ -20,7 +20,7 @@ class Message : public QObject
 	Q_OBJECT
 
 public:
-	Message(QWidget* parent);
+	explicit Message(QWidget* parent);
 	~Message();
 
 	void draw() const;

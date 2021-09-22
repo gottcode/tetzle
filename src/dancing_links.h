@@ -33,7 +33,7 @@ struct HeaderNode;
 struct Node
 {
 	/** Constructs a node with the value of 1. */
-	Node()
+	explicit Node()
 		: left(0)
 		, right(0)
 		, up(0)
@@ -53,7 +53,7 @@ struct Node
 struct HeaderNode : public Node
 {
 	/** Constructs an empty column. */
-	HeaderNode()
+	explicit HeaderNode()
 		: size(0)
 		, id(0)
 	{
@@ -92,7 +92,7 @@ class Matrix
 		 *
 		 * @param f non-member function to use as callback
 		 */
-		GlobalCallback(function f)
+		explicit GlobalCallback(function f)
 			: m_function(f)
 		{
 		}
@@ -139,7 +139,7 @@ class Matrix
 
 public:
 	/** Constructs a matrix with @p max_columns number of columns. */
-	Matrix(unsigned int max_columns);
+	explicit Matrix(unsigned int max_columns);
 
 	/** Clean up matrix. */
 	~Matrix();

@@ -13,7 +13,7 @@ class QToolBar;
 class ToolBarList : public QListWidget
 {
 public:
-	ToolBarList(QWidget* parent = 0);
+	explicit ToolBarList(QWidget* parent = 0);
 
 	void addToolBarAction(QAction* action);
 	QIcon fetchIcon(const QString& name);

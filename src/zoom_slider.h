@@ -16,7 +16,7 @@ class ZoomSlider : public QWidget
 	Q_OBJECT
 
 public:
-	ZoomSlider(QWidget* parent = 0);
+	explicit ZoomSlider(QWidget* parent = 0);
 
 	static float scaleFactor(int level);
 

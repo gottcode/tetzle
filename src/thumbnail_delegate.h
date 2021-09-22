@@ -14,7 +14,7 @@ class QListWidget;
 class ThumbnailDelegate : public QStyledItemDelegate
 {
 public:
-	ThumbnailDelegate(QListWidget* list = 0);
+	explicit ThumbnailDelegate(QListWidget* list = 0);
 
 	void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;

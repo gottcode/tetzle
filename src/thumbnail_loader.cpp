@@ -45,7 +45,7 @@ namespace
 class ThumbnailItem : public QListWidgetItem
 {
 public:
-	ThumbnailItem(const QString& text = QString());
+	explicit ThumbnailItem(const QString& text = QString());
 
 	virtual bool operator<(const QListWidgetItem& other) const;
 

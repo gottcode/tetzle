@@ -24,7 +24,7 @@ class NewGameTab : public QWidget
 	Q_OBJECT
 
 public:
-	NewGameTab(const QStringList& files, QDialog* parent = 0);
+	explicit NewGameTab(const QStringList& files, QDialog* parent = 0);
 
 	void addImages(const QStringList& images);
 

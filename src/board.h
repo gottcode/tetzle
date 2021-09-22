@@ -31,7 +31,7 @@ class Board : public QOpenGLWidget
 	};
 
 public:
-	Board(QWidget* parent = 0);
+	explicit Board(QWidget* parent = 0);
 	~Board();
 
 	Piece* findCollidingPiece(Piece* piece) const;
