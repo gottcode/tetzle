@@ -383,7 +383,7 @@ void Piece::updateVerts()
 		updateCollisionRegions();
 	}
 
-	QVector<Vertex> verts;
+	QList<Vertex> verts;
 	int z = m_depth;
 
 	// Update tile verts

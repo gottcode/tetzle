@@ -16,7 +16,6 @@ class Tile;
 #include <QList>
 #include <QPoint>
 #include <QRandomGenerator>
-#include <QVector>
 
 class Generator
 {

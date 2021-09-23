@@ -7,7 +7,7 @@
 #ifndef TETZLE_DANCING_LINKS_H
 #define TETZLE_DANCING_LINKS_H
 
-#include <QVector>
+#include <QList>
 
 #include <list>
 
@@ -97,7 +97,7 @@ public:
 	 *
 	 * @return last solution found
 	 */
-	QVector<Node*> solution() const
+	QList<Node*> solution() const
 	{
 		return m_solution;
 	}
@@ -129,11 +129,11 @@ private:
 	unsigned int m_max_columns; /**< amount of constraints */
 
 	HeaderNode* m_header; /**< root element */
-	QVector<HeaderNode> m_columns; /**< constraints */
+	QList<HeaderNode> m_columns; /**< constraints */
 	std::list<HeaderNode> m_rows; /**< rows */
 	std::list<Node> m_nodes; /**< row values */
-	QVector<Node*> m_output; /**< rows where columns do not conflict */
-	QVector<Node*> m_solution; /**< nodes of most recent solution */
+	QList<Node*> m_output; /**< rows where columns do not conflict */
+	QList<Node*> m_solution; /**< nodes of most recent solution */
 
 	unsigned int m_solutions; /**< how many solutions have been found so far */
 	unsigned int m_max_solutions; /**< maximum allowed solutions */

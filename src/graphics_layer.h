@@ -65,7 +65,7 @@ public:
 	static void init();
 	static void setVersion(int version);
 
-	void updateArray(VertexArray& array, const QVector<Vertex>& data);
+	void updateArray(VertexArray& array, const QList<Vertex>& data);
 	void removeArray(VertexArray& array);
 
 	virtual void bindTexture(unsigned int unit, GLuint texture)=0;
@@ -94,7 +94,7 @@ protected:
 	}
 
 private:
-	QVector<Vertex> m_data;
+	QList<Vertex> m_data;
 	QList<VertexArray> m_free_regions;
 	QList<VertexArray> m_changed_regions;
 	bool m_changed;

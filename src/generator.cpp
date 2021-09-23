@@ -123,7 +123,7 @@ void Generator::solve()
 	// Generate solution
 	matrix.search(1, m_columns * m_rows);
 
-	const QVector<DLX::Node*> rows = matrix.solution();
+	const QList<DLX::Node*> rows = matrix.solution();
 	QList<Tile*> piece;
 	for (int i = 0; i < rows.count(); ++i) {
 		piece.clear();

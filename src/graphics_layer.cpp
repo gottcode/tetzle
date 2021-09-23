@@ -164,7 +164,7 @@ GraphicsLayer::~GraphicsLayer()
 
 //-----------------------------------------------------------------------------
 
-void GraphicsLayer::updateArray(VertexArray& array, const QVector<Vertex>& data)
+void GraphicsLayer::updateArray(VertexArray& array, const QList<Vertex>& data)
 {
 	int length = data.count();
 	if (array.length() != length) {
