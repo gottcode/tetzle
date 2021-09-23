@@ -84,6 +84,16 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="2.2.0" date="2021-09-23">
+      <description>
+        <ul>
+          <li>Added support for Qt 6</li>
+          <li>Refactored code</li>
+          <li>Removed XPM icon</li>
+          <li>Translation updates: Dutch, Turkish, Ukrainian, Ukrainian (Ukraine)</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.1.6" date="2020-04-20">
       <description>
         <ul>

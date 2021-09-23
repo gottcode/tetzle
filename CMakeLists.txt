@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 # Configure project
-project(tetzle VERSION 2.1.6 LANGUAGES CXX)
+project(tetzle VERSION 2.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
