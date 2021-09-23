@@ -459,5 +459,9 @@ Hi ha jocs desats que fan servir la imatge que voleu eliminar.</translation>
         <source>version</source>
         <translation>versió</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

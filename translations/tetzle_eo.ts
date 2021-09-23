@@ -459,5 +459,9 @@ Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -459,5 +459,9 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
         <source>version</source>
         <translation>Version</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

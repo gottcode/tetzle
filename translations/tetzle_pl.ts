@@ -459,5 +459,9 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
         <source>version</source>
         <translation>wersja</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

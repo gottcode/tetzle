@@ -12,7 +12,7 @@
     <name>AppearanceDialog</name>
     <message>
         <source>Appearance</source>
-        <translation>Weergave</translation>
+        <translation>Vormgeving</translation>
     </message>
     <message>
         <source>Options</source>
@@ -20,7 +20,7 @@
     </message>
     <message>
         <source>Beveled borders</source>
-        <translation>Afgeschuinde randen</translation>
+        <translation>Schuine randen</translation>
     </message>
     <message>
         <source>Drop shadows</source>
@@ -47,7 +47,7 @@
     <name>Board</name>
     <message>
         <source>Error</source>
-        <translation>Fout</translation>
+        <translation>Foutmelding</translation>
     </message>
     <message>
         <source>Missing image.</source>
@@ -59,19 +59,19 @@
     </message>
     <message>
         <source>Loading image...</source>
-        <translation>Bezig met laden van afbeelding...</translation>
+        <translation>Bezig met laden van afbeelding…</translation>
     </message>
     <message>
         <source>Generating puzzle...</source>
-        <translation>Bezig met genereren van puzzel...</translation>
+        <translation>Bezig met samenstellen van puzzel…</translation>
     </message>
     <message>
         <source>Creating pieces...</source>
-        <translation>Bezig met creëren van stukken...</translation>
+        <translation>Bezig met maken van stukken…</translation>
     </message>
     <message>
         <source>Loading puzzle...</source>
-        <translation>Bezig met laden van puzzel...</translation>
+        <translation>Bezig met laden van puzzel…</translation>
     </message>
     <message>
         <source>Unknown data format</source>
@@ -79,27 +79,27 @@
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Onbekend element &apos;%1&apos;</translation>
+        <translation>Onbekend element: &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Error parsing XML file.
 
 %1</source>
-        <translation>Fout tijdens inlezen van XML-bestand.
+        <translation>Het xml-bestand kan niet worden ingelezen.
 
 %1</translation>
     </message>
     <message>
         <source>Loading pieces...</source>
-        <translation>Bezig met laden van stukken...</translation>
+        <translation>Bezig met laden van stukken…</translation>
     </message>
     <message>
         <source>Retrieving pieces...</source>
-        <translation>Bezig met ophalen van stukken...</translation>
+        <translation>Bezig met ophalen van stukken…</translation>
     </message>
     <message>
         <source>Placing pieces...</source>
-        <translation>Bezig met plaatsen van stukken...</translation>
+        <translation>Bezig met plaatsen van stukken…</translation>
     </message>
     <message>
         <source>Success</source>
@@ -110,7 +110,7 @@
     <name>ChooseGameDialog</name>
     <message>
         <source>Choose Game</source>
-        <translation>Kies spel</translation>
+        <translation>Kies een spel</translation>
     </message>
     <message>
         <source>Current Games</source>
@@ -140,7 +140,7 @@
     <name>LocaleDialog</name>
     <message>
         <source>Select application language:</source>
-        <translation>Selecteer de applicatietaal:</translation>
+        <translation>Kies de programmataal:</translation>
     </message>
     <message>
         <source>&lt;System Language&gt;</source>
@@ -152,7 +152,7 @@
     </message>
     <message>
         <source>Please restart this application for the change in language to take effect.</source>
-        <translation>Herstart de applicatie om de taalwijziging toe te passen.</translation>
+        <translation>Herstart het programma om de taalwijziging toe te passen.</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     </message>
     <message>
         <source>Copying images...</source>
-        <translation>Bezig met kopiëren van afbeeldingen...</translation>
+        <translation>Bezig met kopiëren van afbeeldingen…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -189,9 +189,9 @@
         <source>Remove selected image?
 
 There are saved games using this image that will also be removed.</source>
-        <translation>Geselecteerde afbeelding verwijderen?
+        <translation>Wil je de geselecteerde afbeelding verwijderen?
 
-De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</translation>
+De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.</translation>
     </message>
     <message>
         <source>Untitled</source>
@@ -206,7 +206,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>%L1 pieces %2 %3% complete</source>
-        <translation>%L1 stukken %2 %3% klaar</translation>
+        <translation>%L1 stukken %2 %3% voltooid</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -232,7 +232,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     <name>TagManager</name>
     <message>
         <source>Add Tag</source>
-        <translation>Label toevoegen</translation>
+        <translation>Label toekennen</translation>
     </message>
     <message>
         <source>Remove Tag</source>
@@ -264,7 +264,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>A tag with that name already exists.</source>
-        <translation>Er bestaat al een label met die naam.</translation>
+        <translation>Er is al een label met die naam.</translation>
     </message>
 </context>
 <context>
@@ -291,7 +291,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Choose...</source>
-        <translation>&amp;Kiezen...</translation>
+        <translation>&amp;Kiezen…</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -307,7 +307,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation>&amp;Uitzoomen</translation>
+        <translation>Uitz&amp;oomen</translation>
     </message>
     <message>
         <source>-</source>
@@ -319,7 +319,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Show O&amp;verview</source>
-        <translation>O&amp;verzicht weergeven</translation>
+        <translation>O&amp;verzicht tonen</translation>
     </message>
     <message>
         <source>Tab</source>
@@ -327,7 +327,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>&amp;Volledig scherm</translation>
+        <translation>Beeld&amp;vullend</translation>
     </message>
     <message>
         <source>F11</source>
@@ -343,11 +343,11 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>&amp;Appearance...</source>
-        <translation>Weerg&amp;ave...</translation>
+        <translation>Vormg&amp;eving…</translation>
     </message>
     <message>
         <source>&amp;Language...</source>
-        <translation>Taa&amp;l...</translation>
+        <translation>Taa&amp;l…</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -395,7 +395,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Right Click, Control + Left Click, or R</source>
-        <translation>Rechtermuisklik, Control + linkermuisklik of R</translation>
+        <translation>Rechtermuisklik, Ctrl + linkermuisklik of R</translation>
     </message>
     <message>
         <source>&lt;b&gt;Drag Puzzle:&lt;/b&gt;</source>
@@ -411,7 +411,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Scrollwheel or +/-</source>
-        <translation>Scrolwiel of +/-</translation>
+        <translation>Scrollwiel of +/-</translation>
     </message>
     <message>
         <source>&lt;b&gt;Move Cursor:&lt;/b&gt;</source>
@@ -435,7 +435,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation>Uitgegeven onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;-licentie</translation>
+        <translation>Uitgebracht onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;-licentie</translation>
     </message>
 </context>
 <context>
@@ -453,11 +453,15 @@ De opgeslagen spellen die deze afbeelding gebruiken worden ook verwijderd.</tran
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation>Selecteer OpenGL-versie.</translation>
+        <translation>Kies de OpenGL-versie.</translation>
     </message>
     <message>
         <source>version</source>
         <translation>versie</translation>
+    </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

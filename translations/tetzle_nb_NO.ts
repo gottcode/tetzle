@@ -459,5 +459,9 @@ Lagrede spill som bruker dette bildet vil også bli fjernet.</translation>
         <source>version</source>
         <translation>versjon</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

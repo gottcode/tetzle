@@ -19,6 +19,8 @@
   <name xml:lang="ro">Tetzle</name>
   <name xml:lang="ru">Tetzle</name>
   <name xml:lang="tr">Tetzle</name>
+  <name xml:lang="uk">Tetzle</name>
+  <name xml:lang="uk_UA">Tetzle</name>
   <name xml:lang="zh">Tetzle</name>
   <summary>Jigsaw puzzle with tetromino pieces</summary>
   <summary xml:lang="ca">Trencaclosques Jigsaw amb peces de tetròmino</summary>
@@ -36,6 +38,8 @@
   <summary xml:lang="ro">Joc puzzle cu piese teromino</summary>
   <summary xml:lang="ru">Игра-головоломка с тетрамино</summary>
   <summary xml:lang="tr">Tetris benzeri parçalı bir yap-boz oyunu</summary>
+  <summary xml:lang="uk">Головоломка з шматочками тетраміно </summary>
+  <summary xml:lang="uk_UA">Головоломка з шматочками тетроміно</summary>
 
   <description>
     <p>Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any image can be imported and used to create puzzles with a wide range of sizes. Games are saved automatically, and you can select between currently in progress games.</p>
@@ -45,11 +49,14 @@
     <p xml:lang="lt">Tetzle yra dėlionės žaidimas, kuris naudoja tetromino figūras. Bet kuris paveikslas gali būti importuotas ir naudojamas įvairių dydžių dėlionei sukurti. Žaidimai yra automatiškai įrašomi, ir galima rinktis iš šiuo metu žaidžiamų žaidimų. </p>
     <p xml:lang="ms">Tetzle merupakan permainan teka-teki susun suai gambar yang menggunakan tetromino sebagai cebisannya. Mana-mana imej boleh diimport dan digunakan untuk menghasilkan teka-teki dengan pelbagai julat saiz. Permainan disimpan secara automatik, dan anda boleh pilih permainan yang sedang dimainkan.</p>
     <p xml:lang="nb_NO">Tetzle er et puslespill som bruker tetromino-brukker. Ethvert bilde kan importeres og brukes til å opprette puslespill i mange forskjellige størrelser. Spill lagres automatisk, og du kan velge mellom spill som er underveis.</p>
-    <p xml:lang="nl">Tetzle is een legpuzzel spel met tetromino als stukken. Elke afbeelding kan worden geïmporteerd en gebruikt om puzzels mee te maken in een groot bereik van maten. De spellen worden automatisch opgeslagen en je kunt tussen lopende spellen schakelen.</p>
+    <p xml:lang="nl">Tetzle is een legpuzzel spel met tetromino als stukken. Elke afbeelding kan worden geïmporteerd en gebruikt om puzzels van verschillende maten mee te maken. De spellen worden automatisch opgeslagen en je kunt tussen actieve spellen schakelen.</p>
     <p xml:lang="pl">Tetzle to gra puzzle, która składa się z części o kształcie tetromina. Możesz importować każdy obraz i użyć go do tworzenia puzzli w rożnych rozmiarach. Gry są zapisywane automatycznie i możesz wybrać obecne postępy w grach.</p>
     <p xml:lang="pt">O Tetzle é um jogo de quebra-cabeça que usa tetraminós como peças. Pode ser importada e utilizada qualquer imagem nos quebra-cabeças com uma vasta gama de tamanhos. Os jogos são gravados automaticamente e podem-se selecionar entre vários jogos gravados.</p>
     <p xml:lang="ro">Tetzle este un joc de puzzle care utilizează tetromino pentru piesel. Orice imagine poate fi importată şi utilizată pentru a crea puzzle-uri cu o gamă largă de dimensiuni. Jocurile sînt salvate automat, şi puteţi alege între jocrile curente şi în progres.</p>
     <p xml:lang="ru">Tetzle - игра-головоломка с тетрамино. Любое изображение может быть загружено и разбито на паззлы с различными настройками размера паззла. Игры сохраняются автоматически, и вы можете выбирать между ними.</p>
+    <p xml:lang="tr">Tetzle tetrominoes parçaları kullanan bir bir parçalı bulmaca oyunudur. Herhangi bir görüntü içe aktarılabilir ve çok çeşitli boyutlarda bulmacalar oluşturmak için kullanılabilir. Oyunlar otomatik olarak kaydedilir ve şu anda devam etmekte olan oyunlar arasından seçim yapabilirsiniz.</p>
+    <p xml:lang="uk">Tetzle - це гра-головоломка, яка використовує тетраміно для шматочків. Будь-яке зображення можна імпортувати та використовувати для створення головоломок із широким діапазоном розмірів. Ігри зберігаються автоматично, і ви можете вибирати між іграми, що тривають. </p>
+    <p xml:lang="uk_UA">Tetzle - це гра-головоломка, яка використовує тетроміно для шматочків. Будь-яке зображення можна імпортувати та використовувати для створення головоломок із широким діапазоном розмірів. Ігри зберігаються автоматично, і ви можете вибирати між іграми, які зараз виконуються.</p>
   </description>
 
   <screenshots>
@@ -74,7 +81,7 @@
     <kudo>ModernToolkit</kudo>
   </kudos>
 
-  <content_rating type="oars-1.1" />
+  <content_rating type="oars-1.1"/>
 
   <releases>
     <release version="2.1.6" date="2020-04-20">

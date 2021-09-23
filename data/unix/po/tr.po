@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# abc Def <hdogan1974@gmail.com>, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2018-05-28 19:04+0000\n"
-"Last-Translator: Graeme Gott <graeme@gottcode.org>\n"
+"PO-Revision-Date: 2020-05-04 02:33+0000\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/gottcode/tetzle/language/"
 "tr/)\n"
 "Language: tr\n"
@@ -33,6 +34,10 @@ msgid ""
 "Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
+"Tetzle tetrominoes parçaları kullanan bir bir parçalı bulmaca oyunudur. "
+"Herhangi bir görüntü içe aktarılabilir ve çok çeşitli boyutlarda bulmacalar "
+"oluşturmak için kullanılabilir. Oyunlar otomatik olarak kaydedilir ve şu "
+"anda devam etmekte olan oyunlar arasından seçim yapabilirsiniz."
 
 #: ../tetzle.desktop.in:5
 msgid "Jigsaw Puzzle Game"

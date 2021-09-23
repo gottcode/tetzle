@@ -423,19 +423,19 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <source>About Tetzle</source>
-        <translation type="unfinished"></translation>
+        <translation>Про Tetzle</translation>
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>Головоломка з тетраміно на шматки</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
-        <translation type="unfinished"></translation>
+        <translation>Авторське право &amp; copy; 2008-%1 Ґрем Ґотт </translation>
     </message>
     <message>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation type="unfinished"></translation>
+        <translation>Випущено за ліцензією &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -453,10 +453,14 @@ There are saved games using this image that will also be removed.</source>
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Обрати OpenGL версію.</translation>
     </message>
     <message>
         <source>version</source>
+        <translation>версія</translation>
+    </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

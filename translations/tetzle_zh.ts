@@ -455,5 +455,9 @@ There are saved games using this image that will also be removed.</source>
         <source>version</source>
         <translation>版本</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

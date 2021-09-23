@@ -459,5 +459,9 @@ Yra išsaugotų žaidimų, kurie naudoja šį paveikslą. Šie žaidimai taip pa
         <source>version</source>
         <translation>versija</translation>
     </message>
+    <message>
+        <source>Images to add to the choose game dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
