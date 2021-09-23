@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2013 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -76,9 +76,9 @@ void DLX::Matrix::addElement(unsigned int c)
 
 //-----------------------------------------------------------------------------
 
-unsigned int DLX::Matrix::search(Callback* solution, unsigned int max_solutions, unsigned int max_tries)
+unsigned int DLX::Matrix::search(unsigned int max_solutions, unsigned int max_tries)
 {
-	m_solution = solution;
+	m_solution.clear();
 
 	m_solutions = 0;
 	m_max_solutions = max_solutions;
@@ -97,7 +97,9 @@ void DLX::Matrix::solve(unsigned int k)
 	// If matrix is empty a solution has been found.
 	if (m_header->right == m_header) {
 		++m_solutions;
-		(*m_solution)(m_output, k);
+		if (m_solutions >= m_max_solutions) {
+			m_solution = m_output.mid(0, k);
+		}
 		return;
 	}
 

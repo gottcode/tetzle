@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2013 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -66,77 +66,6 @@ struct HeaderNode : public Node
 /** Sparse matrix class. */
 class Matrix
 {
-	/** Abstract base class for solution callback. */
-	class Callback
-	{
-	public:
-		/** Destroy collback. */
-		virtual ~Callback()
-		{
-		}
-
-		/** Empty function to allow for ignored callbacks. */
-		virtual void operator()(const QVector<Node*>&, unsigned int)
-		{
-		}
-	};
-
-	/** Callback using non-member function. */
-	class GlobalCallback : public Callback
-	{
-	public:
-		typedef void(*function)(const QVector<Node*>&);
-
-		/**
-		 * Constructs callback.
-		 *
-		 * @param f non-member function to use as callback
-		 */
-		explicit GlobalCallback(function f)
-			: m_function(f)
-		{
-		}
-
-		/** Perform callback using non-member function. */
-		void operator()(const QVector<Node*>& rows, unsigned int count)
-		{
-			(*m_function)(rows.mid(0, count));
-		}
-
-	private:
-		function m_function; /**< non-member function to use as callback */
-	};
-
-	/** Callback using member function */
-	template <typename T>
-	class MemberCallback : public Callback
-	{
-	public:
-		typedef void(T::*function)(const QVector<Node*>& rows);
-
-		/**
-		 * Constructs callback.
-		 *
-		 * @param object pointer to object of callback
-		 * @param f member function of @p object to use as callback
-		 */
-		MemberCallback(T* object, function f)
-			: m_object(object)
-			, m_function(f)
-		{
-		}
-
-		/** Perform callback using member function. */
-		void operator()(const QVector<Node*>& rows, unsigned int count)
-		{
-			(*m_object.*m_function)(rows.mid(0, count));
-		}
-
-	private:
-		T* m_object; /**< pointer to object of callback */
-		function m_function; /**< member function of @p object to use as callback */
-	};
-
 public:
 	/** Constructs a matrix with @p max_columns number of columns. */
 	explicit Matrix(unsigned int max_columns);
@@ -157,57 +86,23 @@ public:
 	/**
 	 * Search for solutions.
 	 *
-	 * @param max_solutions maximum allowed solutions
-	 * @param max_tries maximum allowed attempts before stopping search
-	 * @return total count of solutions
-	 */
-	unsigned int search(unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
-	{
-		Callback solution;
-		return search(&solution, max_solutions, max_tries);
-	}
-
-	/**
-	 * Search for solutions.
-	 *
-	 * @param function non-member function called with each solution
 	 * @param max_solutions maximum allowed solutions before stopping search
 	 * @param max_tries maximum allowed attempts before stopping search
 	 * @return total count of solutions
 	 */
-	unsigned int search(void(*function)(const QVector<Node*>& rows), unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
-	{
-		GlobalCallback solution(function);
-		return search(&solution, max_solutions, max_tries);
-	}
+	unsigned int search(unsigned int max_solutions, unsigned int max_tries);
 
 	/**
-	 * Search for solutions.
+	 * Retrieve solution.
 	 *
-	 * @param object pointer to object of callback
-	 * @param function member function of @p object called with each solution
-	 * @param max_solutions maximum allowed solutions before stopping search
-	 * @param max_tries maximum allowed attempts before stopping search
-	 * @return total count of solutions
+	 * @return last solution found
 	 */
-	template <typename T>
-	unsigned int search(T* object, void(T::*function)(const QVector<Node*>& rows), unsigned int max_solutions = 0xFFFFFFFF, unsigned int max_tries = 0xFFFFFFFF)
+	QVector<Node*> solution() const
 	{
-		MemberCallback<T> solution(object, function);
-		return search(&solution, max_solutions, max_tries);
+		return m_solution;
 	}
 
 private:
-	/**
-	 * Performs the search for solutions.
-	 *
-	 * @param solution function called with each solution
-	 * @param max_solutions maximum allowed solutions before stopping search
-	 * @param max_tries maximum allowed attempts before stopping search
-	 * @return total count of solutions
-	 */
-	unsigned int search(Callback* solution, unsigned int max_solutions, unsigned int max_tries);
-
 	/**
 	 * Run Algorithm X at depth @p k.
 	 *
@@ -238,8 +133,8 @@ private:
 	std::list<HeaderNode> m_rows; /**< rows */
 	std::list<Node> m_nodes; /**< row values */
 	QVector<Node*> m_output; /**< rows where columns do not conflict */
+	QVector<Node*> m_solution; /**< nodes of most recent solution */
 
-	Callback* m_solution; /**< function to call when a solution is found */
 	unsigned int m_solutions; /**< how many solutions have been found so far */
 	unsigned int m_max_solutions; /**< maximum allowed solutions */
 	unsigned int m_tries; /**< how many attempts have been made so far */

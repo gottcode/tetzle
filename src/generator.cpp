@@ -121,13 +121,9 @@ void Generator::solve()
 	}
 
 	// Generate solution
-	matrix.search(this, &Generator::solution, 1, m_columns * m_rows);
-}
+	matrix.search(1, m_columns * m_rows);
 
-//-----------------------------------------------------------------------------
-
-void Generator::solution(const QVector<DLX::Node*>& rows)
-{
+	const QVector<DLX::Node*> rows = matrix.solution();
 	QList<Tile*> piece;
 	for (int i = 0; i < rows.count(); ++i) {
 		piece.clear();

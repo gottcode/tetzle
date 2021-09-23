@@ -27,7 +27,6 @@ public:
 
 private:
 	void solve();
-	void solution(const QVector<DLX::Node*>& rows);
 
 private:
 	int m_columns;
