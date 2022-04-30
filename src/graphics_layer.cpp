@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2011-2018 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2011-2022 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -256,7 +256,7 @@ void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 	const int vertex_size = sizeof(Vertex);
 	if (!m_changed_regions.isEmpty()) {
 		for (const VertexArray& region : qAsConst(m_changed_regions)) {
-			vertex_buffer->write(region.start * vertex_size, m_data.constBegin() + region.start, region.length() * vertex_size);
+			vertex_buffer->write(region.start * vertex_size, &m_data.constBegin()[region.start], region.length() * vertex_size);
 		}
 		m_changed_regions.clear();
 	} else if (m_changed) {
