@@ -461,7 +461,7 @@ De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.<
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>De aan het spelkeuzescherm toe te voegen afbeeldingen.</translation>
     </message>
 </context>
 </TS>

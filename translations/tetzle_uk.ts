@@ -461,7 +461,7 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати зображення до діалогового вікна вибору гри.</translation>
     </message>
 </context>
 </TS>

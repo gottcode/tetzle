@@ -461,7 +461,7 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilder zum Hinzufügen zum Spiel-auswählen-Dialog.</translation>
     </message>
 </context>
 </TS>

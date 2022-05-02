@@ -461,7 +461,7 @@ Yra išsaugotų žaidimų, kurie naudoja šį paveikslą. Šie žaidimai taip pa
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Paveikslai, kuriuos pridėti į žaidimo pasirinkimo dialogą.</translation>
     </message>
 </context>
 </TS>
