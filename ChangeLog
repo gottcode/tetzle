@@ -1,3 +1,8 @@
+2.2.1
+-----
+* Switched to Qt 6.
+* Translation updates: Dutch, German, Lithuanian, Ukrainian, Ukrainian (Ukraine).
+
 2.2.0
 -----
 * Added support for Qt 6.

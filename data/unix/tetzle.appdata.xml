@@ -84,6 +84,14 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="2.2.1" date="2022-05-03">
+      <description>
+        <ul>
+          <li>Switched to Qt 6</li>
+          <li>Translation updates: Dutch, German, Lithuanian, Ukrainian, Ukrainian (Ukraine)</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.2.0" date="2021-09-23">
       <description>
         <ul>
