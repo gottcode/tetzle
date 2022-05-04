@@ -76,6 +76,7 @@
   <provides>
     <binary>tetzle</binary>
   </provides>
+  <launchable type="desktop-id">tetzle.desktop</launchable>
 
   <kudos>
     <kudo>ModernToolkit</kudo>
