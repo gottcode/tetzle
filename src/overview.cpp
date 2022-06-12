@@ -113,7 +113,7 @@ void Overview::moveEvent(QMoveEvent* event)
 
 void Overview::hideEvent(QHideEvent* event)
 {
-	emit toggled(false);
+	Q_EMIT toggled(false);
 	QGraphicsView::hideEvent(event);
 }
 
@@ -132,7 +132,7 @@ void Overview::resizeEvent(QResizeEvent* event)
 
 void Overview::showEvent(QShowEvent* event)
 {
-	emit toggled(true);
+	Q_EMIT toggled(true);
 	QGraphicsView::showEvent(event);
 }
 

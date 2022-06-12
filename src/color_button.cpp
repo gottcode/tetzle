@@ -40,7 +40,7 @@ void ColorButton::setColor(const QColor& color)
 	setIconSize(swatch.size());
 	setIcon(swatch);
 
-	emit changed(m_color);
+	Q_EMIT changed(m_color);
 }
 
 //-----------------------------------------------------------------------------

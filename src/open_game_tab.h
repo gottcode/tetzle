@@ -18,13 +18,13 @@ class OpenGameTab : public QWidget
 public:
 	explicit OpenGameTab(int current_id, QDialog* parent = nullptr);
 
-public slots:
+public Q_SLOTS:
 	void imageRenamed(const QString& image, const QString& name);
 
-signals:
+Q_SIGNALS:
 	void openGame(int id);
 
-private slots:
+private Q_SLOTS:
 	void accept();
 	void deleteGame();
 

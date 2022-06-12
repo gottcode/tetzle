@@ -23,7 +23,7 @@ public:
 
 	QString name() const;
 
-public slots:
+public Q_SLOTS:
 	void accept() override;
 
 protected:

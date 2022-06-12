@@ -27,10 +27,10 @@ public:
 
 	static void setBevelsEnabled(bool enabled);
 
-public slots:
+public Q_SLOTS:
 	void accept() override;
 
-private slots:
+private Q_SLOTS:
 	void restoreDefaults();
 	void updatePreview();
 

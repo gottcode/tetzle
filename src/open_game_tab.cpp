@@ -122,7 +122,7 @@ void OpenGameTab::accept()
 {
 	QListWidgetItem* item = m_games->currentItem();
 	if (item) {
-		emit openGame(item->data(GameRole).toInt());
+		Q_EMIT openGame(item->data(GameRole).toInt());
 	}
 }
 

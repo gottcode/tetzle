@@ -224,7 +224,7 @@ void NewGameTab::accept()
 	settings.setValue("NewGame/Pieces", m_slider->value());
 	settings.setValue("NewGame/Image", image);
 
-	emit newGame(image, m_slider->value());
+	Q_EMIT newGame(image, m_slider->value());
 }
 
 //-----------------------------------------------------------------------------
@@ -323,7 +323,7 @@ void NewGameTab::editImageProperties()
 
 			QSettings details(Path::image("details"), QSettings::IniFormat);
 			details.setValue(filename + "/Name", item->text());
-			emit imageRenamed(filename, item->text());
+			Q_EMIT imageRenamed(filename, item->text());
 
 			m_images->sortItems();
 			m_images->scrollToItem(item);

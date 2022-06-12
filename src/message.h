@@ -28,7 +28,7 @@ public:
 	void setViewport(const QSize& size);
 	void setVisible(bool visible, bool stay = true);
 
-public slots:
+public Q_SLOTS:
 	void hide();
 	void show();
 
@@ -36,7 +36,7 @@ private:
 	void cleanup();
 	void updateVerts();
 
-private slots:
+private Q_SLOTS:
 	void fade(int frame);
 
 private:

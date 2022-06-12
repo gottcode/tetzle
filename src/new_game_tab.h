@@ -28,14 +28,14 @@ public:
 
 	void addImages(const QStringList& images);
 
-signals:
+Q_SIGNALS:
 	void imageRenamed(const QString& image, const QString& name);
 	void newGame(const QString& image, int difficulty);
 
 protected:
 	void hideEvent(QHideEvent* event) override;
 
-private slots:
+private Q_SLOTS:
 	void accept();
 	void addImageClicked();
 	void removeImage();

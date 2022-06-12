@@ -26,13 +26,13 @@ public:
 
 	static QListWidgetItem* createItem(const QString& image, const QString& text, QListWidget* list, qreal pixelratio);
 
-signals:
+Q_SIGNALS:
 	void loaded(const Thumbnail& details);
 
 protected:
 	void run() override;
 
-private slots:
+private Q_SLOTS:
 	void imageLoaded(const Thumbnail& details);
 
 private:

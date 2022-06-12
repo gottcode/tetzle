@@ -126,7 +126,7 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 
 void ThumbnailLoader::run()
 {
-	forever {
+	Q_FOREVER {
 		// Fetch next thumbnail to process
 		m_mutex.lock();
 		if (m_done || m_details.isEmpty()) {
@@ -140,7 +140,7 @@ void ThumbnailLoader::run()
 		if (!QFile::exists(details.image)) {
 			continue;
 		} else if (QFile::exists(details.thumbnail)) {
-			emit loaded(details);
+			Q_EMIT loaded(details);
 			continue;
 		}
 
@@ -181,7 +181,7 @@ void ThumbnailLoader::run()
 		}
 		thumbnail.save(details.thumbnail, 0, 0);
 
-		emit loaded(details);
+		Q_EMIT loaded(details);
 	}
 }
 

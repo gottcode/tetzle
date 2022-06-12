@@ -19,7 +19,7 @@ public:
 	void load(const QImage& image, qreal pixelratio);
 	void reset();
 
-signals:
+Q_SIGNALS:
 	void toggled(bool visible);
 
 protected:

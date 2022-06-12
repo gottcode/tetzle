@@ -268,7 +268,7 @@ void TagManager::tagChanged(QListWidgetItem* item)
 			m_filter->sortItems();
 			m_filter->insertItem(0, m_all_images_item);
 
-			emit tagsChanged();
+			Q_EMIT tagsChanged();
 		}
 	}
 	m_filter->blockSignals(false);
@@ -296,7 +296,7 @@ void TagManager::updateFilter()
 	} else if (item) {
 		filter = images(item->text());
 	}
-	emit filterChanged(filter);
+	Q_EMIT filterChanged(filter);
 }
 
 //-----------------------------------------------------------------------------

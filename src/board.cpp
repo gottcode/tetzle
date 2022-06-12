@@ -177,7 +177,7 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 
 	// Update player about status
-	emit completionChanged(0);
+	Q_EMIT completionChanged(0);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
@@ -234,14 +234,14 @@ void Board::newGame(const QString& image, int difficulty)
 	for (int i = 0; i < count; ++i) {
 		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
-	emit clearMessage();
+	Q_EMIT clearMessage();
 
 	// Draw tiles
 	m_message->setVisible(false);
 	zoomFit();
 	QApplication::restoreOverrideCursor();
 	updateCompleted();
-	emit retrievePiecesAvailable(true);
+	Q_EMIT retrievePiecesAvailable(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -252,7 +252,7 @@ void Board::openGame(int id)
 	cleanup();
 
 	// Update player about status
-	emit completionChanged(0);
+	Q_EMIT completionChanged(0);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
@@ -366,7 +366,7 @@ void Board::openGame(int id)
 	for (int i = 0; i < count; ++i) {
 		m_pieces.at(i)->findNeighbors(m_pieces);
 	}
-	emit clearMessage();
+	Q_EMIT clearMessage();
 
 	// Load scene rectangle
 	updateSceneRectangle();
@@ -385,7 +385,7 @@ void Board::openGame(int id)
 	}
 	QApplication::restoreOverrideCursor();
 	updateCompleted();
-	emit retrievePiecesAvailable(true);
+	Q_EMIT retrievePiecesAvailable(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ void Board::retrievePieces()
 	zoomFit();
 
 	// Clear message and cursor
-	emit clearMessage();
+	Q_EMIT clearMessage();
 	QApplication::restoreOverrideCursor();
 }
 
@@ -533,9 +533,9 @@ void Board::zoom(int level)
 
 	// Update scene
 	update();
-	emit zoomChanged(m_scale_level, m_scale);
-	emit zoomOutAvailable(m_scale_level > 0);
-	emit zoomInAvailable(m_scale_level < 9);
+	Q_EMIT zoomChanged(m_scale_level, m_scale);
+	Q_EMIT zoomOutAvailable(m_scale_level > 0);
+	Q_EMIT zoomInAvailable(m_scale_level < 9);
 }
 
 //-----------------------------------------------------------------------------
@@ -1022,7 +1022,7 @@ void Board::releasePieces()
 	updateCompleted();
 
 	// Clear message and cursor
-	emit clearMessage();
+	Q_EMIT clearMessage();
 	QApplication::restoreOverrideCursor();
 
 	// Check if game is over
@@ -1228,7 +1228,7 @@ void Board::updateCompleted()
 	int t = 100 * (pieceCount() - 1);
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
-	emit completionChanged(m_completed);
+	Q_EMIT completionChanged(m_completed);
 }
 
 //-----------------------------------------------------------------------------
@@ -1273,7 +1273,7 @@ void Board::updateSceneRectangle()
 
 void Board::updateStatusMessage(const QString& message)
 {
-	emit showMessage(message);
+	Q_EMIT showMessage(message);
 }
 
 //-----------------------------------------------------------------------------
@@ -1326,13 +1326,13 @@ void Board::finishGame()
 	m_overview->hide();
 	unsetCursor();
 	zoomFit();
-	emit retrievePiecesAvailable(false);
+	Q_EMIT retrievePiecesAvailable(false);
 
 	QFile::remove(Path::save(m_id));
 	QSettings().remove("OpenGame");
 	m_id = 0;
 
-	emit finished();
+	Q_EMIT finished();
 
 	m_message->setText(tr("Success"));
 	m_message->setVisible(true, false);
@@ -1345,7 +1345,7 @@ void Board::cleanup()
 	delete m_image;
 	m_image = nullptr;
 
-	emit clearMessage();
+	Q_EMIT clearMessage();
 	m_overview->reset();
 	m_message->setVisible(false);
 	m_active_pieces.clear();

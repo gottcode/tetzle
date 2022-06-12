@@ -31,14 +31,14 @@ public:
 	void removeImage(const QString& image);
 	void setImageTags(const QString& image, const QStringList& tags);
 
-signals:
+Q_SIGNALS:
 	void filterChanged(const QStringList& images);
 	void tagsChanged();
 
 protected:
 	void changeEvent(QEvent* event) override;
 
-private slots:
+private Q_SLOTS:
 	void addTag();
 	void removeTag();
 	void currentTagChanged(QListWidgetItem* item);

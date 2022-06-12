@@ -20,10 +20,10 @@ public:
 
 	static float scaleFactor(int level);
 
-signals:
+Q_SIGNALS:
 	void valueChanged(int);
 
-public slots:
+public Q_SLOTS:
 	void setValue(int level, float factor);
 
 private:

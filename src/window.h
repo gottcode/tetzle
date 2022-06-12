@@ -29,7 +29,7 @@ protected:
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* event) override;
 
-private slots:
+private Q_SLOTS:
 	void chooseGame(const QStringList& files);
 	void gameFinished();
 	void setFullScreen(bool enable);

@@ -45,7 +45,7 @@ public:
 	void setAppearance(const AppearanceDialog& dialog);
 	void updateSceneRectangle(Piece* piece);
 
-public slots:
+public Q_SLOTS:
 	void newGame(const QString& image, int difficulty);
 	void openGame(int id);
 	void saveGame();
@@ -56,7 +56,7 @@ public slots:
 	void zoom(int level);
 	void toggleOverview();
 
-signals:
+Q_SIGNALS:
 	void completionChanged(int value);
 	void overviewToggled(bool visible);
 	void retrievePiecesAvailable(bool available);

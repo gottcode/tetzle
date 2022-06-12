@@ -20,13 +20,13 @@ public:
 	QColor color() const;
 	QString toString() const;
 
-public slots:
+public Q_SLOTS:
 	void setColor(const QColor& color);
 
-signals:
+Q_SIGNALS:
 	void changed(const QColor& color);
 
-private slots:
+private Q_SLOTS:
 	void chooseColor();
 
 private:

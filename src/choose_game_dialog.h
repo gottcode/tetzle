@@ -21,7 +21,7 @@ public:
 
 	static QStringList currentGames();
 
-signals:
+Q_SIGNALS:
 	void newGame(const QString& image, int difficulty);
 	void openGame(int id);
 

@@ -165,7 +165,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		QRect united = source_rect.united(target->boundingRect());
 		float min = 0.0f;
 		float max = united.width() * united.height();
-		while (true) {
+		Q_FOREVER {
 			float test = (min + max) / 2.0f;
 			target->m_pos = orig + (test * direction).toPoint();
 			if (source->collidesWith(target)) {
