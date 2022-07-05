@@ -4,17 +4,16 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#include <QApplication>
-#include <QCommandLineParser>
-#include <QDir>
-#include <QFileOpenEvent>
-#include <QLabel>
-#include <QSettings>
-
-#include "board.h"
+#include "graphics_layer.h"
 #include "locale_dialog.h"
 #include "path.h"
 #include "window.h"
+
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QFileInfo>
+#include <QFileOpenEvent>
+#include <QSettings>
 
 //-----------------------------------------------------------------------------
 
@@ -84,6 +83,7 @@ int main(int argc, char** argv)
 {
 	Application app(argc, argv);
 
+	// Load application data
 	const QString appdir = app.applicationDirPath();
 	const QStringList datadirs{
 #if defined(Q_OS_MAC)
@@ -95,6 +95,19 @@ int main(int argc, char** argv)
 		appdir
 #endif
 	};
+
+	// Handle portability
+	QString userdir;
+#ifdef Q_OS_MAC
+	const QFileInfo portable(appdir + "/../../../Data");
+#else
+	const QFileInfo portable(appdir + "/Data");
+#endif
+	if (portable.exists() && portable.isWritable()) {
+		userdir = portable.absoluteFilePath();
+		QSettings::setDefaultFormat(QSettings::IniFormat);
+		QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, userdir + "/Settings");
+	}
 
 	// Load application language
 	LocaleDialog::loadTranslator("tetzle_", datadirs);
@@ -122,72 +135,7 @@ int main(int argc, char** argv)
 	GraphicsLayer::setVersion(requested.toInt());
 
 	// Create data location
-	QString path = Path::datapath();
-	if (!QFile::exists(path)) {
-		QDir dir(path);
-		dir.mkpath(dir.absolutePath());
-
-		// Migrate data from old location
-		QString oldpath = Path::oldDataPath();
-		if (QFile::exists(oldpath)) {
-			QStringList old_dirs = QStringList() << "";
-
-			QDir olddir(oldpath);
-			for (int i = 0; i < old_dirs.count(); ++i) {
-				QString subpath = old_dirs.at(i);
-				dir.mkpath(path + "/" + subpath);
-				olddir.setPath(oldpath + "/" + subpath);
-
-				const QStringList subdirs = olddir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-				for (const QString& subdir : subdirs) {
-					old_dirs.append(subpath + "/" + subdir);
-				}
-
-				const QStringList files = olddir.entryList(QDir::Files);
-				for (const QString& file : files) {
-					QFile::rename(olddir.absoluteFilePath(file), path + "/" + subpath + "/" + file);
-				}
-			}
-
-			olddir.setPath(oldpath);
-			for (int i = old_dirs.count() - 1; i >= 0; --i) {
-				olddir.rmdir(oldpath + "/" + old_dirs.at(i));
-			}
-		}
-	}
-	QDir dir(path);
-	dir.mkpath(path + "/saves/");
-
-	// Update thumbnails
-	if (dir.exists("previews")) {
-		QLabel label(Board::tr("Please Wait"), 0, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
-		label.setWindowTitle(Window::tr("Tetzle"));
-		label.setAlignment(Qt::AlignCenter);
-		label.setContentsMargins(10, 10, 10, 10);
-		label.setFixedSize(label.sizeHint());
-		label.show();
-		app.processEvents();
-
-		QStringList old_dirs;
-		old_dirs += (path + "/previews/");
-		old_dirs += (path + "/images/thumbnails/");
-		old_dirs += (path + "/images/thumbnails/large/");
-		old_dirs += (path + "/images/thumbnails/small/");
-		for (int i = 0; i < old_dirs.count(); ++i) {
-			dir.setPath(old_dirs.at(i));
-			const QStringList entries = dir.entryList(QDir::Files);
-			for (const QString& info : entries) {
-				dir.remove(info);
-			}
-		}
-
-		dir.setPath(path);
-		while (!old_dirs.isEmpty()) {
-			dir.rmpath(old_dirs.takeLast());
-		}
-	}
-	dir.mkpath(path + "/images/");
-	dir.mkpath(path + "/images/thumbnails/");
+	Path::load(userdir);
 
 	// Update settings layout
 	if (settings.value("Version", 0).toInt() < 2) {
