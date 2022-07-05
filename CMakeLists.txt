@@ -97,6 +97,8 @@ endif()
 
 # Install
 if(UNIX AND NOT APPLE)
+	target_compile_definitions(tetzle PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATADIR}/tetzle")
+
 	target_sources(tetzle PRIVATE icons/icon.qrc)
 
 	install(TARGETS tetzle RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

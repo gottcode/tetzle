@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2022 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -84,8 +84,20 @@ int main(int argc, char** argv)
 {
 	Application app(argc, argv);
 
+	const QString appdir = app.applicationDirPath();
+	const QStringList datadirs{
+#if defined(Q_OS_MAC)
+		appdir + "/../Resources"
+#elif defined(Q_OS_UNIX)
+		DATADIR,
+		appdir + "/../share/tetzle"
+#else
+		appdir
+#endif
+	};
+
 	// Load application language
-	LocaleDialog::loadTranslator("tetzle_");
+	LocaleDialog::loadTranslator("tetzle_", datadirs);
 
 	// Load command-line settings
 	QSettings settings;
