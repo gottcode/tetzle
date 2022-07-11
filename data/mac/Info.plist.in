@@ -4,22 +4,35 @@
 <dict>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleIconFile</key>
-	<string>@ICON@</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleExecutable</key>
-	<string>@EXECUTABLE@</string>
-	<key>CFBundleIdentifier</key>
-	<string>org.gottcode.Tetzle</string>
-	<key>CFBundleShortVersionString</key>
-	<string>@SHORT_VERSION@</string>
-	<key>CFBundleVersion</key>
-	<string>@SHORT_VERSION@</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+
 	<key>CFBundleName</key>
 	<string>Tetzle</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.gottcode.Tetzle</string>
+	<key>CFBundleIconFile</key>
+	<string>tetzle.icns</string>
+	<key>CFBundleExecutable</key>
+	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
+
+	<key>CFBundleVersion</key>
+	<string>${PROJECT_VERSION}</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${PROJECT_VERSION}</string>
+
+	<key>NSHumanReadableCopyright</key>
+	<string>© ${project_copyright}</string>
+
+	<key>LSMinimumSystemVersion</key>
+	<string>${CMAKE_OSX_DEPLOYMENT_TARGET}</string>
+
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
 
 	<key>CFBundleDocumentTypes</key>
 	<array>
