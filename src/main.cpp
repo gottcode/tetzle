@@ -11,6 +11,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDir>
 #include <QFileInfo>
 #include <QFileOpenEvent>
 #include <QSettings>
@@ -85,16 +86,7 @@ int main(int argc, char** argv)
 
 	// Load application data
 	const QString appdir = app.applicationDirPath();
-	const QStringList datadirs{
-#if defined(Q_OS_MAC)
-		appdir + "/../Resources"
-#elif defined(Q_OS_UNIX)
-		DATADIR,
-		appdir + "/../share/tetzle"
-#else
-		appdir
-#endif
-	};
+	const QString datadir = QDir::cleanPath(appdir + "/" + TETZLE_DATADIR);
 
 	// Handle portability
 	QString userdir;
@@ -110,7 +102,7 @@ int main(int argc, char** argv)
 	}
 
 	// Load application language
-	LocaleDialog::loadTranslator("tetzle_", datadirs);
+	LocaleDialog::loadTranslator("tetzle_", datadir);
 
 	// Load command-line settings
 	QSettings settings;

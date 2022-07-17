@@ -97,7 +97,7 @@ endif()
 
 # Install
 if(UNIX AND NOT APPLE)
-	target_compile_definitions(tetzle PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATADIR}/tetzle")
+	file(RELATIVE_PATH datadir ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATADIR}/tetzle)
 
 	target_sources(tetzle PRIVATE icons/icon.qrc)
 
@@ -108,6 +108,8 @@ if(UNIX AND NOT APPLE)
 	install(FILES data/unix/tetzle.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
 	install(FILES data/unix/tetzle.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 elseif(WIN32)
+	set(datadir ".")
+
 	# Use Qt6 macro until CMake provides something
 	# https://bugreports.qt.io/browse/QTBUG-87618
 	set_target_properties(tetzle PROPERTIES
@@ -121,3 +123,5 @@ elseif(WIN32)
 	)
 	_qt_internal_generate_win32_rc_file(tetzle)
 endif()
+
+set_property(SOURCE src/main.cpp APPEND PROPERTY COMPILE_DEFINITIONS TETZLE_DATADIR="${datadir}")
