@@ -67,24 +67,29 @@ Window::Window(const QStringList& files)
 	QAction* choose_action = menu->addAction(tr("&Choose..."), this, [this]() { chooseGame(QStringList()); });
 	choose_action->setShortcuts(QList<QKeySequence>() << QKeySequence::New << QKeySequence::Open);
 	menu->addSeparator();
-	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, &Board::retrievePieces, tr("Ctrl+R"));
+	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, &Board::retrievePieces);
+	retrieve_pieces_action->setShortcut(tr("Ctrl+R"));
 	retrieve_pieces_action->setEnabled(false);
 	connect(m_board, &Board::retrievePiecesAvailable, retrieve_pieces_action, &QAction::setEnabled);
 	menu->addSeparator();
-	QAction* quit_action = menu->addAction(tr("&Quit"), this, &Window::close, QKeySequence::Quit);
+	QAction* quit_action = menu->addAction(tr("&Quit"), this, &Window::close);
+	quit_action->setShortcut(QKeySequence::Quit);
 	quit_action->setMenuRole(QAction::QuitRole);
 
 	menu = menuBar()->addMenu(tr("&View"));
-	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, &Board::zoomIn, tr("+"));
+	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, &Board::zoomIn);
+	zoom_in_action->setShortcut(tr("+"));
 	zoom_in_action->setEnabled(false);
 	connect(m_board, &Board::zoomInAvailable, zoom_in_action, &QAction::setEnabled);
-	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, &Board::zoomOut, tr("-"));
+	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, &Board::zoomOut);
+	zoom_out_action->setShortcut(tr("-"));
 	zoom_out_action->setEnabled(false);
 	connect(m_board, &Board::zoomOutAvailable, zoom_out_action, &QAction::setEnabled);
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, &Board::zoomFit);
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
-	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, &Board::toggleOverview, tr("Tab"));
+	m_toggle_overview_action = menu->addAction(tr("Show O&verview"), m_board, &Board::toggleOverview);
+	m_toggle_overview_action->setShortcut(tr("Tab"));
 	m_toggle_overview_action->setCheckable(true);
 	m_toggle_overview_action->setEnabled(false);
 	connect(m_board, &Board::overviewToggled, m_toggle_overview_action, &QAction::setChecked);
@@ -104,7 +109,8 @@ Window::Window(const QStringList& files)
 	menu->addAction(tr("&Language..."), this, &Window::setLocale);
 
 	menu = menuBar()->addMenu(tr("&Help"));
-	menu->addAction(tr("&Controls"), this, &Window::showControls, QKeySequence::HelpContents);
+	QAction* help_action = menu->addAction(tr("&Controls"), this, &Window::showControls);
+	help_action->setShortcut(QKeySequence::HelpContents);
 	menu->addSeparator();
 	QAction* about_action = menu->addAction(tr("&About"), this, &Window::showAbout);
 	about_action->setMenuRole(QAction::AboutRole);
