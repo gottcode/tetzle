@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2022 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2023 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -275,7 +275,7 @@ void Window::showAbout()
 	QMessageBox::about(this, tr("About Tetzle"), QString("<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("Tetzle"), QCoreApplication::applicationVersion(),
 			tr("A jigsaw puzzle with tetrominoes for pieces"),
-			tr("Copyright &copy; 2008-%1 Graeme Gott").arg("2022"),
+			tr("Copyright &copy; 2008-%1 Graeme Gott").arg("2023"),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""))
 	);
 }
