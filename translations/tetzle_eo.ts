@@ -20,11 +20,11 @@
     </message>
     <message>
         <source>Beveled borders</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevelaj borderoj</translation>
     </message>
     <message>
         <source>Drop shadows</source>
-        <translation type="unfinished"></translation>
+        <translation>Ĵetitaj ombroj</translation>
     </message>
     <message>
         <source>Colors</source>
@@ -427,7 +427,7 @@ Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</
     </message>
     <message>
         <source>A jigsaw puzzle with tetrominoes for pieces</source>
-        <translation type="unfinished"></translation>
+        <translation>Puzlo kun 4-kvadratoj por eroj</translation>
     </message>
     <message>
         <source>Copyright &amp;copy; 2008-%1 Graeme Gott</source>
@@ -453,11 +453,11 @@ Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elektu OpenGL-an version.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation type="unfinished"></translation>
+        <translation>versio</translation>
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>

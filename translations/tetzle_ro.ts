@@ -461,7 +461,7 @@ Există jocuri salvate care folosesc această imagine, care vor fi, de asemenea,
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagini de adăugat la dialogul de alegere a jocului.</translation>
     </message>
 </context>
 </TS>
