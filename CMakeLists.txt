@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Configure project
-project(tetzle VERSION 2.2.1 LANGUAGES CXX)
+project(tetzle VERSION 2.2.2 LANGUAGES CXX)
 
 set(project_copyright "2008-2023 Graeme Gott")
 

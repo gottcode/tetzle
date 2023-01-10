@@ -1,3 +1,10 @@
+2.2.2
+-----
+* Added portable mode.
+* Improved Linux deployment.
+* Replaced deprecated code.
+* Translation updates: Esperanto, Romanian.
+
 2.2.1
 -----
 * Switched to Qt 6.
