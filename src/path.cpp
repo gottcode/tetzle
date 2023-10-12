@@ -152,7 +152,7 @@ QString Path::oldDataPath()
 
 	// Check if an old data location exists
 	oldpath.clear();
-	for (const QString& testpath : qAsConst(oldpaths)) {
+	for (const QString& testpath : std::as_const(oldpaths)) {
 		if (QFileInfo::exists(testpath)) {
 			oldpath = testpath;
 			break;

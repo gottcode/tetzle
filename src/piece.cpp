@@ -112,7 +112,7 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 	// Find neighbor tiles
 	static const QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
 	QList<QPoint> tiles;
-	for (Tile* tile : qAsConst(m_shadow)) {
+	for (Tile* tile : std::as_const(m_shadow)) {
 		QPoint pos(tile->column(), tile->row());
 		for (const QPoint& delta : deltas) {
 			QPoint neighbor = pos + delta;
@@ -124,7 +124,7 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 
 	// Find neighbor pieces
 	for (Piece* piece : pieces) {
-		for (const QPoint& tile : qAsConst(tiles)) {
+		for (const QPoint& tile : std::as_const(tiles)) {
 			if (piece->containsTile(tile.x(), tile.y())) {
 				m_neighbors.insert(piece);
 				break;
@@ -291,7 +291,7 @@ void Piece::attach(Piece* piece)
 	m_neighbors += piece->m_neighbors;
 	m_neighbors.remove(piece);
 	m_neighbors.remove(this);
-	for (Piece* neighbor : qAsConst(m_neighbors)) {
+	for (Piece* neighbor : std::as_const(m_neighbors)) {
 		neighbor->m_neighbors.remove(piece);
 		neighbor->m_neighbors.insert(this);
 	}

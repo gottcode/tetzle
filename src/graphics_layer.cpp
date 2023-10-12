@@ -255,7 +255,7 @@ void GraphicsLayer::uploadChanged(QOpenGLBuffer* vertex_buffer)
 {
 	const int vertex_size = sizeof(Vertex);
 	if (!m_changed_regions.isEmpty()) {
-		for (const VertexArray& region : qAsConst(m_changed_regions)) {
+		for (const VertexArray& region : std::as_const(m_changed_regions)) {
 			vertex_buffer->write(region.start * vertex_size, &m_data.constBegin()[region.start], region.length() * vertex_size);
 		}
 		m_changed_regions.clear();

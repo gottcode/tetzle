@@ -285,7 +285,7 @@ void NewGameTab::removeImage()
 			dir.remove(thumb);
 		}
 
-		for (const QString& game : qAsConst(games)) {
+		for (const QString& game : std::as_const(games)) {
 			QFile::remove(Path::save(game));
 		}
 
