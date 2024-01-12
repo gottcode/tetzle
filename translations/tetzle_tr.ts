@@ -449,15 +449,15 @@ There are saved games using this image that will also be removed.</source>
     <name>main</name>
     <message>
         <source>Select OpenGL version.</source>
-        <translation>OpenGL uyarlamasını seçin.</translation>
+        <translation>OpenGL sürümünü seçin.</translation>
     </message>
     <message>
         <source>version</source>
-        <translation>uyarlama</translation>
+        <translation>sürüm</translation>
     </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Oyun seç iletişim kutusuna eklenecek resimler.</translation>
     </message>
 </context>
 </TS>
