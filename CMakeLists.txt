@@ -5,9 +5,9 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Configure project
-project(tetzle VERSION 2.2.2 LANGUAGES CXX)
+project(tetzle VERSION 2.2.3 LANGUAGES CXX)
 
-set(project_copyright "2008-2023 Graeme Gott")
+set(project_copyright "2008-2024 Graeme Gott")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

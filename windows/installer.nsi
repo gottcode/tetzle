@@ -4,7 +4,7 @@
 !define APPNAME "Tetzle"
 !define VERSIONMAJOR 2
 !define VERSIONMINOR 2
-!define VERSIONPATCH 2
+!define VERSIONPATCH 3
 !define APPVERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}"
 !define ABOUTURL "https://gottcode.org/tetzle/"
 
