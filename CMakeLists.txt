@@ -29,18 +29,8 @@ add_compile_definitions(
 include(cmake/AddVersionCompileDefinition.cmake)
 add_version_compile_definition(src/main.cpp VERSIONSTR)
 
-# Create translations
-file(GLOB translations_SRCS translations/*.ts)
-qt6_add_translation(translations_QM ${translations_SRCS})
-
-add_custom_target(update_translations
-	COMMAND Qt6::lupdate -no-obsolete -locations none src -ts ${translations_SRCS}
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	VERBATIM
-)
-
 # Create program
-qt6_add_executable(tetzle
+qt_add_executable(tetzle
 	src/add_image.cpp
 	src/appearance_dialog.cpp
 	src/board.cpp
@@ -75,6 +65,14 @@ target_link_libraries(tetzle PRIVATE
 	Qt6::OpenGL
 	Qt6::OpenGLWidgets
 	Qt6::Widgets
+)
+
+# Create translations
+file(GLOB translations_SRCS translations/*.ts)
+qt_add_translations(tetzle
+	TS_FILES ${translations_SRCS}
+	QM_FILES_OUTPUT_VARIABLE translations_QM
+	LUPDATE_OPTIONS -no-obsolete -locations none
 )
 
 # Optimize build
