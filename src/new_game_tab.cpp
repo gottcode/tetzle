@@ -99,7 +99,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->addToolBarAction(m_remove_action);
 	connect(m_remove_action, &QAction::triggered, this, &NewGameTab::removeImage);
 
-	m_tag_action = new QAction(m_images->fetchIcon("image-x-generic"), tr("Image Properties"), this);
+	m_tag_action = new QAction(m_images->fetchIcon("document-properties"), tr("Image Properties"), this);
 	m_images->addToolBarAction(m_tag_action);
 	connect(m_tag_action, &QAction::triggered, this, &NewGameTab::editImageProperties);
 
