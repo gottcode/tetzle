@@ -591,6 +591,9 @@ void Board::resizeGL(int w, int h)
 
 void Board::paintGL()
 {
+	QPainter painter(this);
+	painter.beginNativePainting();
+
 	graphics_layer->clear();
 
 	graphics_layer->uploadData();
@@ -685,10 +688,12 @@ void Board::paintGL()
 		fill.setAlpha(48);
 		drawArray(m_selection_array, fill, border);
 	}
+	graphics_layer->setBlended(false);
+
+	painter.endNativePainting();
 
 	// Draw message
-	m_message->draw();
-	graphics_layer->setBlended(false);
+	m_message->draw(painter);
 }
 
 //-----------------------------------------------------------------------------

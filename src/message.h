@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2010-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2010-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -23,7 +23,7 @@ public:
 	explicit Message(QWidget* parent);
 	~Message();
 
-	void draw() const;
+	void draw(QPainter& painter) const;
 	void setText(const QString& text);
 	void setViewport(const QSize& size);
 	void setVisible(bool visible, bool stay = true);

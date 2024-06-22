@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2020 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -49,14 +49,34 @@ Message::~Message()
 
 //-----------------------------------------------------------------------------
 
-void Message::draw() const
+void Message::draw(QPainter& painter) const
 {
-	if (m_image && (m_visible || (m_fade_timer->state() == QTimeLine::Running))) {
-		graphics_layer->setColor(m_color);
-		graphics_layer->bindTexture(0, m_image->textureId());
-		graphics_layer->draw(m_array);
-		graphics_layer->setColor(Qt::white);
+	if (!m_visible && (m_fade_timer->state() == QTimeLine::NotRunning)) {
+		return;
 	}
+
+	// Find message size
+	const QFont font("Sans", 24);
+	const QFontMetrics metrics(font);
+	const int width = metrics.boundingRect(m_text).width();
+	const int height = metrics.height();
+
+	painter.save();
+	painter.translate(m_parent->rect().center() - QRect(0, 0, width + height, height * 2).center());
+
+	// Draw black background
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(QColor(0, 0, 0, 200));
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.drawRoundedRect(0, 0, width + height, height * 2, 10, 10);
+
+	// Draw message
+	painter.setFont(font);
+	painter.setPen(Qt::white);
+	painter.setRenderHint(QPainter::TextAntialiasing, true);
+	painter.drawText(height / 2, height / 2 + metrics.ascent(), m_text);
+
+	painter.restore();
 }
 
 //-----------------------------------------------------------------------------
