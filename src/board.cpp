@@ -94,12 +94,18 @@ Board::Board(QWidget* parent)
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 	setMouseTracking(true);
+	setAutoFillBackground(true);
 
 	m_message = new Message(this);
 
 	// Create overview dialog
 	m_overview = new Overview(parent);
 	connect(m_overview, &Overview::toggled, this, &Board::overviewToggled);
+
+	// Load colors
+	AppearanceDialog dialog;
+	dialog.accept();
+	setAppearance(dialog);
 }
 
 //-----------------------------------------------------------------------------
@@ -146,7 +152,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	m_has_shadows = dialog.hasShadows();
 
 	QPalette palette = dialog.colors();
-	graphics_layer->setClearColor(palette.color(QPalette::Base).darker(150));
+	palette.setColor(backgroundRole(), palette.color(QPalette::Base).darker(150));
 	setPalette(palette);
 	for (Piece* piece : std::as_const(m_pieces)) {
 		piece->setSelected(piece->isSelected());
@@ -565,11 +571,6 @@ void Board::initializeGL()
 	m_shadow_image = new QOpenGLTexture(QImage(":/shadow.png"));
 	m_shadow_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 	m_shadow_image->setMagnificationFilter(QOpenGLTexture::Linear);
-
-	// Load colors
-	AppearanceDialog dialog;
-	dialog.accept();
-	setAppearance(dialog);
 }
 
 //-----------------------------------------------------------------------------
@@ -611,7 +612,9 @@ void Board::paintGL()
 	QColor fill = palette().color(QPalette::Base);
 	QColor border = fill.lighter(125);
 	if (m_scene.isValid()) {
-		drawArray(m_scene_array, fill, border);
+		painter.endNativePainting();
+		drawRect(painter, m_scene, fill, border);
+		painter.beginNativePainting();
 	}
 
 	// Draw pieces
@@ -686,7 +689,9 @@ void Board::paintGL()
 	if (m_selecting) {
 		fill = border = palette().color(QPalette::Highlight);
 		fill.setAlpha(48);
-		drawArray(m_selection_array, fill, border);
+		painter.endNativePainting();
+		drawRect(painter, m_selection, fill, border);
+		painter.beginNativePainting();
 	}
 	graphics_layer->setBlended(false);
 
@@ -1095,19 +1100,15 @@ void Board::selectPieces()
 
 //-----------------------------------------------------------------------------
 
-void Board::drawArray(const Region& region, const QColor& fill, const QColor& border)
+void Board::drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border)
 {
-	graphics_layer->setTextureUnits(0);
+	painter.save();
 
-	graphics_layer->setColor(fill);
-	graphics_layer->draw(region.fill);
+	painter.setPen(QPen(border, 0));
+	painter.setBrush(fill);
+	painter.drawRect(rect);
 
-	graphics_layer->setColor(border);
-	graphics_layer->draw(region.border, GL_LINE_LOOP);
-
-	graphics_layer->setColor(Qt::white);
-
-	graphics_layer->setTextureUnits(1);
+	painter.restore();
 }
 
 //-----------------------------------------------------------------------------
