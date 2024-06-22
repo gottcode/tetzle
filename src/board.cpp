@@ -37,18 +37,6 @@
 
 //-----------------------------------------------------------------------------
 
-int powerOfTwo(int value)
-{
-	value--;
-	value |= value >> 1;
-	value |= value >> 2;
-	value |= value >> 4;
-	value |= value >> 8;
-	value |= value >> 16;
-	value++;
-	return value;
-}
-
 namespace
 {
 
@@ -1061,31 +1049,20 @@ void Board::loadImage()
 	}
 	QImageReader source(Path::image(m_image_path));
 
-	// Find image size
-	QSize size = source.size();
-
 	// Create puzzle texture
-	int tile_size = Tile::size;
-	if (m_columns > m_rows) {
-		tile_size = std::min(tile_size, size.width() / m_columns);
-	} else {
-		tile_size = std::min(tile_size, size.height() / m_rows);
-	}
-	QSize scaled_size = size;
-	size = QSize(m_columns * tile_size, m_rows * tile_size);
+	const QSize size(m_columns * Tile::size, m_rows * Tile::size);
+	QSize scaled_size = source.size();
 	scaled_size.scale(size, Qt::KeepAspectRatioByExpanding);
 	source.setScaledSize(scaled_size);
 	source.setScaledClipRect(QRect((scaled_size.width() - size.width()) / 2, (scaled_size.height() - size.height()) / 2, size.width(), size.height()));
-	QImage image = source.read();
+	const QImage image = source.read();
 
-	const int image_texture_size = powerOfTwo(std::max(size.width(), size.height()));
-	QImage texture(image_texture_size, image_texture_size, QImage::Format_ARGB32);
-	texture.fill(QColor(Qt::darkGray).rgba());
+	m_pixmap = QPixmap(image.width(), image.height());
+	m_pixmap.fill(Qt::darkGray);
 	{
-		QPainter painter(&texture);
+		QPainter painter(&m_pixmap);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	m_pixmap = QPixmap::fromImage(texture);
 
 	// Create overview
 	m_overview->load(image, devicePixelRatioF());
