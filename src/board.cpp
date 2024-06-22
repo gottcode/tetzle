@@ -70,11 +70,12 @@ struct PieceDetails
 //-----------------------------------------------------------------------------
 
 Board::Board(QWidget* parent)
-	: QOpenGLWidget(parent)
+	: QWidget(parent)
 	, m_id(0)
 	, m_load_bevels(true)
 	, m_has_bevels(true)
 	, m_has_shadows(true)
+	, m_bevel_pixmap(":/bumpmap.png")
 	, m_image(nullptr)
 	, m_image_ts(0)
 	, m_columns(0)
@@ -146,8 +147,6 @@ void Board::removePiece(Piece* piece)
 
 void Board::setAppearance(const AppearanceDialog& dialog)
 {
-	makeCurrent();
-
 	m_has_bevels = dialog.hasBevels();
 	m_has_shadows = dialog.hasShadows();
 
@@ -157,6 +156,9 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 	for (Piece* piece : std::as_const(m_pieces)) {
 		piece->setSelected(piece->isSelected());
 	}
+
+	m_shadow_pixmap = dialog.shadow();
+	m_selected_shadow_pixmap = dialog.shadowSelected();
 }
 
 //-----------------------------------------------------------------------------
@@ -558,144 +560,86 @@ void Board::toggleOverview()
 
 //-----------------------------------------------------------------------------
 
-void Board::initializeGL()
-{
-	// Configure OpenGL
-	GraphicsLayer::init();
-
-	// Load static images
-	m_bumpmap_image = new QOpenGLTexture(QImage(":/bumpmap.png"));
-	m_bumpmap_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-	m_bumpmap_image->setMagnificationFilter(QOpenGLTexture::Linear);
-
-	m_shadow_image = new QOpenGLTexture(QImage(":/shadow.png"));
-	m_shadow_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-	m_shadow_image->setMagnificationFilter(QOpenGLTexture::Linear);
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::resizeGL(int w, int h)
-{
-	const qreal pixelratio = devicePixelRatioF();
-
-	graphics_layer->setViewport(0, 0, w * pixelratio, h * pixelratio);
-
-	QMatrix4x4 matrix;
-	matrix.ortho(0, w * pixelratio, h * pixelratio, 0, -4000, 3);
-	graphics_layer->setProjection(matrix);
-
-	m_message->setViewport(size());
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::paintGL()
+void Board::paintEvent(QPaintEvent*)
 {
 	QPainter painter(this);
-	painter.beginNativePainting();
-
-	graphics_layer->clear();
-
-	graphics_layer->uploadData();
 
 	// Transform viewport
+	painter.save();
 	const qreal pixelratio = devicePixelRatioF();
 	QRect viewport = rect();
 	viewport.setSize(viewport.size() * pixelratio);
 	QMatrix4x4 matrix;
 	matrix.scale(m_scale * pixelratio, m_scale * pixelratio);
 	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
-	graphics_layer->setModelview(matrix);
+	painter.setTransform(matrix.toTransform());
 
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
 	QColor border = fill.lighter(125);
 	if (m_scene.isValid()) {
-		painter.endNativePainting();
 		drawRect(painter, m_scene, fill, border);
-		painter.beginNativePainting();
 	}
 
 	// Draw pieces
-	if (m_image) {
-		graphics_layer->bindTexture(0, m_image->textureId());
-		if (m_has_bevels && m_load_bevels) {
-			graphics_layer->setTextureUnits(2);
-			graphics_layer->bindTexture(1, m_bumpmap_image->textureId());
-		}
-
-		int count = m_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
+	if (!m_pixmap.isNull()) {
+		FragmentList bevel;
+		FragmentList shadow;
+		FragmentList tiles;
+		const int total_tiles = m_columns * m_rows;
+		bevel.reserve(total_tiles);
+		shadow.reserve(total_tiles);
+		tiles.reserve(total_tiles);
+		for (Piece* piece : std::as_const(m_pieces)) {
+			QRect r = matrix.mapRect(piece->boundingRect());
 			if (viewport.intersects(r)) {
-				m_pieces.at(i)->drawTiles();
+				if (m_has_shadows) {
+					shadow.append(piece->shadow());
+				}
+				tiles.append(piece->tiles());
+				if (m_has_bevels) {
+					bevel.append(piece->bevel());
+				}
 			}
 		}
-
-		count = m_selected_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_selected_pieces.at(i)->drawTiles();
+		if (m_has_shadows) {
+			shadow.draw(painter, m_shadow_pixmap);
 		}
-
-		count = m_active_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_active_pieces.at(i)->drawTiles();
-		}
-
+		tiles.draw(painter, m_pixmap, QPainter::OpaqueHint);
 		if (m_has_bevels) {
-			graphics_layer->setTextureUnits(1);
+			bevel.draw(painter, m_bevel_pixmap);
 		}
-	}
 
-	// Draw shadows
-	graphics_layer->setBlended(true);
-	if (m_image && m_has_shadows) {
-		graphics_layer->bindTexture(0, m_shadow_image->textureId());
-
-		graphics_layer->setColor(palette().color(QPalette::Text));
-		int count = m_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			QRect r = matrix.mapRect(m_pieces.at(i)->boundingRect());
-			if (viewport.intersects(r)) {
-				m_pieces.at(i)->drawShadow();
+		for (Piece* piece : std::as_const(m_selected_pieces)) {
+			if (m_has_shadows) {
+				piece->shadow().draw(painter, m_selected_shadow_pixmap);
+			}
+			piece->tiles().draw(painter, m_pixmap, QPainter::OpaqueHint);
+			if (m_has_bevels) {
+				piece->bevel().draw(painter, m_bevel_pixmap);
 			}
 		}
 
-		graphics_layer->setColor(palette().color(QPalette::Highlight));
-		count = m_selected_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_selected_pieces.at(i)->drawShadow();
+		for (Piece* piece : m_active_pieces) {
+			if (m_has_shadows) {
+				piece->shadow().draw(painter, m_selected_shadow_pixmap);
+			}
+			piece->tiles().draw(painter, m_pixmap, QPainter::OpaqueHint);
+			if (m_has_bevels) {
+				piece->bevel().draw(painter, m_bevel_pixmap);
+			}
 		}
-
-		count = m_active_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_active_pieces.at(i)->drawShadow();
-		}
-
-		graphics_layer->setColor(Qt::white);
 	}
 
 	// Untransform viewport
-	if (qFuzzyCompare(pixelratio, 1.0)) {
-		graphics_layer->setModelview(QMatrix4x4());
-	} else {
-		QMatrix4x4 matrix;
-		matrix.scale(pixelratio, pixelratio);
-		graphics_layer->setModelview(matrix);
-	}
+	painter.restore();
 
 	// Draw selection rectangle
 	if (m_selecting) {
 		fill = border = palette().color(QPalette::Highlight);
 		fill.setAlpha(48);
-		painter.endNativePainting();
 		drawRect(painter, m_selection, fill, border);
-		painter.beginNativePainting();
 	}
-	graphics_layer->setBlended(false);
-
-	painter.endNativePainting();
 
 	// Draw message
 	m_message->draw(painter);
@@ -770,7 +714,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 			m_action_key = event->key();
 		}
 	}
-	QOpenGLWidget::keyPressEvent(event);
+	QWidget::keyPressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -780,7 +724,7 @@ void Board::keyReleaseEvent(QKeyEvent* event)
 	if (!event->isAutoRepeat()) {
 		m_action_key = 0;
 	}
-	QOpenGLWidget::keyReleaseEvent(event);
+	QWidget::keyReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -798,7 +742,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 		m_select_pos = event->pos();
 	}
 
-	QOpenGLWidget::mousePressEvent(event);
+	QWidget::mousePressEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -827,7 +771,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	}
 	m_action_button = Qt::NoButton;
 
-	QOpenGLWidget::mouseReleaseEvent(event);
+	QWidget::mouseReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -907,7 +851,7 @@ void Board::wheelEvent(QWheelEvent* event)
 		zoomOut();
 	}
 
-	QOpenGLWidget::wheelEvent(event);
+	QWidget::wheelEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1160,6 +1104,8 @@ void Board::loadImage()
 	m_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 	m_image->setMagnificationFilter(QOpenGLTexture::Linear);
 	m_image->setWrapMode(QOpenGLTexture::ClampToEdge);
+
+	m_pixmap = QPixmap::fromImage(texture);
 
 	// Create corners
 	m_corners[0][0] = QPointF(0,0);

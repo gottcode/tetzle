@@ -15,11 +15,11 @@ class Piece;
 class Tile;
 
 #include <QHash>
-#include <QOpenGLWidget>
+#include <QWidget>
 #include <QRandomGenerator>
 class QOpenGLTexture;
 
-class Board : public QOpenGLWidget
+class Board : public QWidget
 {
 	Q_OBJECT
 
@@ -68,9 +68,7 @@ Q_SIGNALS:
 	void finished();
 
 protected:
-	void initializeGL() override;
-	void resizeGL(int w, int h) override;
-	void paintGL() override;
+	void paintEvent(QPaintEvent*) override;
 	void keyPressEvent(QKeyEvent* event) override;
 	void keyReleaseEvent(QKeyEvent* event) override;
 	void mousePressEvent(QMouseEvent* event) override;
@@ -111,6 +109,11 @@ private:
 	Message* m_message;
 	bool m_has_bevels;
 	bool m_has_shadows;
+
+	QPixmap m_pixmap;
+	QPixmap m_bevel_pixmap;
+	QPixmap m_shadow_pixmap;
+	QPixmap m_selected_shadow_pixmap;
 
 	QOpenGLTexture* m_image;
 	QOpenGLTexture* m_bumpmap_image;
