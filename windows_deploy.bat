@@ -18,7 +18,7 @@ COPY *.qm %TRANSLATIONS% >nul
 CD %SRCDIR%
 
 ECHO Copying Qt
-%QTDIR%\bin\windeployqt.exe --verbose 0 %APP%\%APP%.exe
+%QTDIR%\bin\windeployqt.exe --verbose 0 --no-opengl-sw --no-system-d3d-compiler %APP%\%APP%.exe
 RMDIR /S /Q %APP%\iconengines
 
 ECHO Creating ReadMe
