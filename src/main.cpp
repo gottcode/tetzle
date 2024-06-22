@@ -4,7 +4,6 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#include "graphics_layer.h"
 #include "locale_dialog.h"
 #include "path.h"
 #include "window.h"
@@ -110,21 +109,8 @@ int main(int argc, char** argv)
 	parser.setApplicationDescription(QCoreApplication::translate("Window", "A jigsaw puzzle with tetrominoes for pieces"));
 	parser.addHelpOption();
 	parser.addVersionOption();
-	parser.addOption(QCommandLineOption(QStringList() << "G" << "graphics-layer",
-		QCoreApplication::translate("main", "Select OpenGL version."),
-		QCoreApplication::translate("main", "version")));
 	parser.addPositionalArgument("files", QCoreApplication::translate("main", "Images to add to the choose game dialog."), "[files]");
 	parser.process(app);
-
-	// Set OpenGL version
-	QString requested = settings.value("GraphicsLayer").toString();
-	if (parser.isSet("graphics-layer")) {
-		requested = parser.value("graphics-layer");
-	}
-	requested = requested.remove('.');
-	requested = requested.split(' ').first();
-
-	GraphicsLayer::setVersion(requested.toInt());
 
 	// Create data location
 	Path::load(userdir);

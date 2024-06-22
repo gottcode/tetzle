@@ -52,9 +52,6 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 
 Piece::~Piece()
 {
-	graphics_layer->removeArray(m_tile_array);
-	graphics_layer->removeArray(m_shadow_array);
-
 	qDeleteAll(m_tiles);
 }
 
@@ -383,59 +380,8 @@ void Piece::updateVerts()
 		updateCollisionRegions();
 	}
 
-	QList<Vertex> verts;
-	int z = m_depth;
-
-	// Update tile verts
-	verts.reserve(m_tiles.count() * 6);
-	for (int i = 0; i < m_tiles.count(); ++i) {
-		Tile* tile = m_tiles.at(i);
-
-		QPoint pos = tile->scenePos();
-		int x1 = pos.x();
-		int y1 = pos.y();
-		int x2 = x1 + Tile::size;
-		int y2 = y1 + Tile::size;
-
-		const QPointF* corners = m_board->corners(rotation());
-		float tx = tile->column() * m_board->tileTextureSize();
-		float ty = tile->row() * m_board->tileTextureSize();
-
-		float bx1 = tile->bevel().x();
-		float by1 = tile->bevel().y();
-		float bx2 = bx1 + 0.125;
-		float by2 = by1 + 0.125;
-
-		verts.append( Vertex::init(x1,y1,z, tx + corners[0].x(),ty + corners[0].y(), bx1,by1) );
-		verts.append( Vertex::init(x1,y2,z, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
-		verts.append( Vertex::init(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
-		verts.append( Vertex::init(x2,y1,z, tx + corners[3].x(),ty + corners[3].y(), bx2,by1) );
-		verts.append( Vertex::init(x1,y2,z, tx + corners[1].x(),ty + corners[1].y(), bx1,by2) );
-		verts.append( Vertex::init(x2,y2,z, tx + corners[2].x(),ty + corners[2].y(), bx2,by2) );
-	}
-	graphics_layer->updateArray(m_tile_array, verts);
-
-	// Update shadow verts
-	z--;
 	static const int offset = Tile::size / 2;
 	static const int size = Tile::size * 2;
-	verts.clear();
-	verts.reserve(m_shadow.count() * 6);
-	for (int i = 0; i < m_shadow.count(); ++i) {
-		QPoint pos = m_shadow.at(i)->scenePos();
-		int x1 = pos.x() - offset;
-		int y1 = pos.y() - offset;
-		int x2 = x1 + size;
-		int y2 = y1 + size;
-
-		verts.append( Vertex::init(x1,y1,z, 0,0) );
-		verts.append( Vertex::init(x1,y2,z, 0,1) );
-		verts.append( Vertex::init(x2,y1,z, 1,0) );
-		verts.append( Vertex::init(x2,y1,z, 1,0) );
-		verts.append( Vertex::init(x1,y2,z, 0,1) );
-		verts.append( Vertex::init(x2,y2,z, 1,1) );
-	}
-	graphics_layer->updateArray(m_shadow_array, verts);
 
 	// Update tile and bevel fragments
 	m_tiles_list.clear();

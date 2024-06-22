@@ -23,7 +23,6 @@
 #include <QMatrix4x4>
 #include <QMessageBox>
 #include <QMouseEvent>
-#include <QOpenGLTexture>
 #include <QPainter>
 #include <QSettings>
 #include <QWheelEvent>
@@ -76,8 +75,6 @@ Board::Board(QWidget* parent)
 	, m_has_bevels(true)
 	, m_has_shadows(true)
 	, m_bevel_pixmap(":/bumpmap.png")
-	, m_image(nullptr)
-	, m_image_ts(0)
 	, m_columns(0)
 	, m_rows(0)
 	, m_total_pieces(0)
@@ -114,11 +111,7 @@ Board::Board(QWidget* parent)
 Board::~Board()
 {
 	cleanup();
-	delete m_bumpmap_image;
-	delete m_shadow_image;
 	delete m_message;
-	delete graphics_layer;
-	graphics_layer = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -167,7 +160,6 @@ void Board::updateSceneRectangle(Piece* piece)
 {
 	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
-	updateArray(m_scene_array, m_scene, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -380,7 +372,6 @@ void Board::openGame(int id)
 	updateSceneRectangle();
 	if (rect.contains(m_scene)) {
 		m_scene = rect;
-		updateArray(m_scene_array, m_scene, 0);
 	}
 
 	// Draw tiles
@@ -829,7 +820,6 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		}
 
 		m_selection = QRect(event->pos(), m_select_pos).normalized();
-		updateArray(m_selection_array, QRect(event->pos(), m_select_pos).normalized(), 3000);
 	}
 
 	update();
@@ -1073,10 +1063,6 @@ void Board::loadImage()
 
 	// Find image size
 	QSize size = source.size();
-	const GLint max_size = graphics_layer->getMaxTextureSize() / 2;
-	if (max_size < std::max(size.width(), size.height())) {
-		size.scale(max_size, max_size, Qt::KeepAspectRatio);
-	}
 
 	// Create puzzle texture
 	int tile_size = Tile::size;
@@ -1092,41 +1078,14 @@ void Board::loadImage()
 	source.setScaledClipRect(QRect((scaled_size.width() - size.width()) / 2, (scaled_size.height() - size.height()) / 2, size.width(), size.height()));
 	QImage image = source.read();
 
-	int image_texture_size = powerOfTwo(std::max(size.width(), size.height()));
-	m_image_ts = static_cast<float>(tile_size) / static_cast<float>(image_texture_size);
+	const int image_texture_size = powerOfTwo(std::max(size.width(), size.height()));
 	QImage texture(image_texture_size, image_texture_size, QImage::Format_ARGB32);
 	texture.fill(QColor(Qt::darkGray).rgba());
 	{
 		QPainter painter(&texture);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
-	m_image = new QOpenGLTexture(texture);
-	m_image->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-	m_image->setMagnificationFilter(QOpenGLTexture::Linear);
-	m_image->setWrapMode(QOpenGLTexture::ClampToEdge);
-
 	m_pixmap = QPixmap::fromImage(texture);
-
-	// Create corners
-	m_corners[0][0] = QPointF(0,0);
-	m_corners[0][1] = QPointF(0,m_image_ts);
-	m_corners[0][2] = QPointF(m_image_ts,m_image_ts);
-	m_corners[0][3] = QPointF(m_image_ts,0);
-
-	m_corners[1][0] = m_corners[0][1];
-	m_corners[1][1] = m_corners[0][2];
-	m_corners[1][2] = m_corners[0][3];
-	m_corners[1][3] = m_corners[0][0];
-
-	m_corners[2][0] = m_corners[0][2];
-	m_corners[2][1] = m_corners[0][3];
-	m_corners[2][2] = m_corners[0][0];
-	m_corners[2][3] = m_corners[0][1];
-
-	m_corners[3][0] = m_corners[0][3];
-	m_corners[3][1] = m_corners[0][0];
-	m_corners[3][2] = m_corners[0][1];
-	m_corners[3][3] = m_corners[0][2];
 
 	// Create overview
 	m_overview->load(image, devicePixelRatioF());
@@ -1182,34 +1141,6 @@ void Board::updateCompleted()
 	int T = m_total_pieces - 1;
 	m_completed = 100 - (t / T);
 	Q_EMIT completionChanged(m_completed);
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::updateArray(Region& region, const QRect& rect, int z)
-{
-	int x1 = rect.x();
-	int y1 = rect.y();
-	int x2 = x1 + rect.width();
-	int y2 = y1 + rect.height();
-
-	graphics_layer->updateArray(region.fill,
-	{
-		Vertex::init(x1,y1,z),
-		Vertex::init(x1,y2,z),
-		Vertex::init(x2,y1,z),
-		Vertex::init(x2,y1,z),
-		Vertex::init(x1,y2,z),
-		Vertex::init(x2,y2,z)
-	});
-
-	graphics_layer->updateArray(region.border,
-	{
-		Vertex::init(x1,y1,z),
-		Vertex::init(x1,y2,z),
-		Vertex::init(x2,y2,z),
-		Vertex::init(x2,y1,z)
-	});
 }
 
 //-----------------------------------------------------------------------------
@@ -1274,7 +1205,6 @@ void Board::finishGame()
 
 	// Hide scene rectangle
 	m_scene = piece->boundingRect().adjusted(1,1,-2,-2);
-	updateArray(m_scene_array, m_scene, 0);
 
 	m_overview->hide();
 	unsetCursor();
@@ -1295,9 +1225,6 @@ void Board::finishGame()
 
 void Board::cleanup()
 {
-	delete m_image;
-	m_image = nullptr;
-
 	Q_EMIT clearMessage();
 	m_overview->reset();
 	m_message->setVisible(false);
@@ -1311,7 +1238,6 @@ void Board::cleanup()
 	m_rows = 0;
 
 	m_scene = QRect(0,0,0,0);
-	updateArray(m_scene_array, m_scene, 0);
 	m_scrolling = false;
 	m_pos = QPoint(0, 0);
 	m_finished = false;

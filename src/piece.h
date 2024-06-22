@@ -8,7 +8,6 @@
 #define TETZLE_PIECE_H
 
 #include "fragment_list.h"
-#include "graphics_layer.h"
 class Board;
 class Tile;
 
@@ -48,8 +47,6 @@ public:
 	void setPosition(const QPoint& pos);
 	void setSelected(bool selected);
 
-	void drawTiles() const;
-	void drawShadow() const;
 	void save(QXmlStreamWriter& xml) const;
 
 private:
@@ -73,9 +70,6 @@ private:
 	int m_rotation;
 	int m_depth;
 	bool m_selected;
-
-	VertexArray m_tile_array;
-	VertexArray m_shadow_array;
 
 	bool m_changed;
 	QRegion m_collision_region;
@@ -133,16 +127,6 @@ inline void Piece::setPosition(const QPoint& pos)
 {
 	m_pos = pos;
 	updateVerts();
-}
-
-inline void Piece::drawTiles() const
-{
-	graphics_layer->draw(m_tile_array);
-}
-
-inline void Piece::drawShadow() const
-{
-	graphics_layer->draw(m_shadow_array);
 }
 
 #endif // TETZLE_PIECE_H

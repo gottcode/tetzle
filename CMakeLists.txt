@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui LinguistTools OpenGL OpenGLWidgets Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui LinguistTools Widgets)
 include(GNUInstallDirs)
 
 add_compile_definitions(
@@ -38,7 +38,6 @@ qt_add_executable(tetzle
 	src/color_button.cpp
 	src/dancing_links.cpp
 	src/generator.cpp
-	src/graphics_layer.cpp
 	src/image_properties_dialog.cpp
 	src/locale_dialog.cpp
 	src/main.cpp
@@ -62,8 +61,6 @@ qt_add_executable(tetzle
 target_link_libraries(tetzle PRIVATE
 	Qt6::Core
 	Qt6::Gui
-	Qt6::OpenGL
-	Qt6::OpenGLWidgets
 	Qt6::Widgets
 )
 

@@ -7,7 +7,6 @@
 #ifndef TETZLE_BOARD_H
 #define TETZLE_BOARD_H
 
-#include "graphics_layer.h"
 class AppearanceDialog;
 class Message;
 class Overview;
@@ -23,12 +22,6 @@ class Board : public QWidget
 {
 	Q_OBJECT
 
-	struct Region
-	{
-		VertexArray fill;
-		VertexArray border;
-	};
-
 public:
 	explicit Board(QWidget* parent = nullptr);
 	~Board();
@@ -40,8 +33,6 @@ public:
 	int margin() const;
 	QRect marginRect(const QRect& rect) const;
 	int randomInt(int max);
-	float tileTextureSize() const;
-	const QPointF* corners(int rotation) const;
 	void setAppearance(const AppearanceDialog& dialog);
 	void updateSceneRectangle(Piece* piece);
 
@@ -93,7 +84,6 @@ private:
 	QPoint mapCursorPosition() const;
 	QPoint mapPosition(const QPoint& position) const;
 	void updateCompleted();
-	void updateArray(Region& region, const QRect& rect, int z);
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	Piece* pieceUnderCursor();
@@ -114,14 +104,6 @@ private:
 	QPixmap m_bevel_pixmap;
 	QPixmap m_shadow_pixmap;
 	QPixmap m_selected_shadow_pixmap;
-
-	QOpenGLTexture* m_image;
-	QOpenGLTexture* m_bumpmap_image;
-	QOpenGLTexture* m_shadow_image;
-	float m_image_ts;
-	QPointF m_corners[4][4];
-	Region m_scene_array;
-	Region m_selection_array;
 
 	int m_columns;
 	int m_rows;
@@ -167,16 +149,6 @@ inline QRect Board::marginRect(const QRect& rect) const
 inline int Board::randomInt(int max)
 {
 	return m_random.bounded(max);
-}
-
-inline float Board::tileTextureSize() const
-{
-	return m_image_ts;
-}
-
-inline const QPointF* Board::corners(int rotation) const
-{
-	return m_corners[rotation];
 }
 
 #endif // TETZLE_BOARD_H
