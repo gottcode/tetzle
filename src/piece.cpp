@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -436,6 +436,37 @@ void Piece::updateVerts()
 		verts.append( Vertex::init(x2,y2,z, 1,1) );
 	}
 	graphics_layer->updateArray(m_shadow_array, verts);
+
+	// Update tile and bevel fragments
+	m_tiles_list.clear();
+	m_tiles_list.reserve(m_tiles.size());
+	m_bevel_list.clear();
+	m_bevel_list.reserve(m_tiles.size());
+	for (const Tile* tile : std::as_const(m_tiles)) {
+		const QPoint pos = tile->scenePos();
+
+		const int x1 = pos.x() + offset;
+		const int y1 = pos.y() + offset;
+		m_tiles_list.append(QPointF(x1, y1),
+				QRectF(tile->column() * Tile::size, tile->row() * Tile::size, Tile::size, Tile::size),
+				rotation() * 90);
+
+		const int bx1 = tile->bevel().x() * 512;
+		const int by1 = tile->bevel().y() * 512;
+		m_bevel_list.append(QPointF(x1, y1),
+				QRectF(bx1, by1, Tile::size, Tile::size));
+	}
+
+	// Update shadow fragments
+	m_shadow_list.clear();
+	m_shadow_list.reserve(m_shadow.size());
+	for (const Tile* tile : std::as_const(m_shadow)) {
+		const QPoint pos = tile->scenePos();
+
+		const int x1 = pos.x() + offset;
+		const int y1 = pos.y() + offset;
+		m_shadow_list.append(QPointF(x1, y1), QRectF(0, 0, size, size));
+	}
 
 	// Update scene rectangle
 	m_board->updateSceneRectangle(this);

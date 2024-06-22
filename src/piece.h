@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -7,6 +7,7 @@
 #ifndef TETZLE_PIECE_H
 #define TETZLE_PIECE_H
 
+#include "fragment_list.h"
 #include "graphics_layer.h"
 class Board;
 class Tile;
@@ -32,6 +33,10 @@ public:
 	QPoint randomPoint() const;
 	int rotation() const;
 	QPoint scenePos() const;
+
+	FragmentList bevel() const;
+	FragmentList shadow() const;
+	FragmentList tiles() const;
 
 	void attachNeighbors();
 	void findNeighbors(const QList<Piece*>& pieces);
@@ -59,6 +64,9 @@ private:
 	Board* m_board;
 	QPoint m_pos;
 	QRect m_rect;
+	FragmentList m_tiles_list;
+	FragmentList m_bevel_list;
+	FragmentList m_shadow_list;
 	QList<Tile*> m_tiles;
 	QList<Tile*> m_shadow;
 	QSet<Piece*> m_neighbors;
@@ -98,6 +106,21 @@ inline int Piece::rotation() const
 inline QPoint Piece::scenePos() const
 {
 	return m_pos;
+}
+
+inline FragmentList Piece::bevel() const
+{
+	return m_bevel_list;
+}
+
+inline FragmentList Piece::shadow() const
+{
+	return m_shadow_list;
+}
+
+inline FragmentList Piece::tiles() const
+{
+	return m_tiles_list;
 }
 
 inline void Piece::moveBy(const QPoint& delta)
