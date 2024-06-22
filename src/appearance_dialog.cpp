@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2010-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2010-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -137,6 +137,20 @@ QPalette AppearanceDialog::colors() const
 	palette.setColor(QPalette::Text, m_shadow->color());
 	palette.setColor(QPalette::Highlight, m_highlight->color());
 	return palette;
+}
+
+//-----------------------------------------------------------------------------
+
+QPixmap AppearanceDialog::shadow() const
+{
+	return coloredShadow(m_shadow->color());
+}
+
+//-----------------------------------------------------------------------------
+
+QPixmap AppearanceDialog::shadowSelected() const
+{
+	return coloredShadow(m_highlight->color());
 }
 
 //-----------------------------------------------------------------------------

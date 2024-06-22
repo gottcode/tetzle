@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2010 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2010-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -24,6 +24,8 @@ public:
 	bool hasBevels() const;
 	bool hasShadows() const;
 	QPalette colors() const;
+	QPixmap shadow() const;
+	QPixmap shadowSelected() const;
 
 	static void setBevelsEnabled(bool enabled);
 
