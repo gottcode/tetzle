@@ -189,12 +189,11 @@ void AppearanceDialog::restoreDefaults()
 
 void AppearanceDialog::updatePreview()
 {
-	QPixmap bumpmap;
+	QPixmap bumpmap(512, 512);
+	bumpmap.fill(QColor(128, 128, 128));
 	if (m_has_bevels->isChecked()) {
-		bumpmap.load(":/bumpmap.png");
-	} else {
-		bumpmap = QPixmap(512, 512);
-		bumpmap.fill(QColor(128, 128, 128));
+		QPainter painter(&bumpmap);
+		painter.drawPixmap(0, 0, QPixmap(":/bumpmap.png"));
 	}
 
 	QPixmap pixmap(352, 256);
