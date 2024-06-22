@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -874,6 +874,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			}
 		}
 
+		m_selection = QRect(event->pos(), m_select_pos).normalized();
 		updateArray(m_selection_array, QRect(event->pos(), m_select_pos).normalized(), 3000);
 	}
 

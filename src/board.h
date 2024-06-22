@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2021 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -126,6 +126,7 @@ private:
 	QList<Piece*> m_active_pieces;
 	QList<Piece*> m_selected_pieces;
 	QRect m_scene;
+	QRect m_selection;
 	int m_total_pieces;
 	int m_completed;
 
