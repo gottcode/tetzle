@@ -9,6 +9,7 @@
 
 #include <QWidget>
 class QSlider;
+class QToolButton;
 
 class ZoomSlider : public QWidget
 {
@@ -21,6 +22,8 @@ public:
 
 Q_SIGNALS:
 	void valueChanged(int);
+	void zoomIn();
+	void zoomOut();
 	void zoomInAvailable(bool available);
 	void zoomOutAvailable(bool available);
 
@@ -29,6 +32,8 @@ public Q_SLOTS:
 
 private:
 	QSlider* m_slider;
+	QToolButton* m_zoom_in;
+	QToolButton* m_zoom_out;
 };
 
 #endif // TETZLE_ZOOM_SLIDER_H
