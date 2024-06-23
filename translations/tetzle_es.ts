@@ -437,28 +437,20 @@ Hay juegos guardados que usan esta imagen que será eliminada.</translation>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Publicado bajo la licencia &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
+    <message>
+        <source>%p% complete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
-        <source>??%</source>
-        <translation>??&#xa0;%</translation>
-    </message>
-    <message>
-        <source>%1%</source>
-        <translation>%1&#xa0;%</translation>
+        <source>Zoom: %1%</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>Select OpenGL version.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
         <translation type="unfinished"></translation>

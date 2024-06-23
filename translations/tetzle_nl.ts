@@ -437,28 +437,20 @@ De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.<
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Uitgebracht onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;-licentie</translation>
     </message>
+    <message>
+        <source>%p% complete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
-        <source>??%</source>
-        <translation>??%</translation>
-    </message>
-    <message>
-        <source>%1%</source>
-        <translation>%1%</translation>
+        <source>Zoom: %1%</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>Select OpenGL version.</source>
-        <translation>Kies de OpenGL-versie.</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>versie</translation>
-    </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
         <translation>De aan het spelkeuzescherm toe te voegen afbeeldingen.</translation>

@@ -437,28 +437,20 @@ There are saved games using this image that will also be removed.</source>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Випущено за ліцензією &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
+    <message>
+        <source>%p% complete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
-        <source>??%</source>
-        <translation>??%</translation>
-    </message>
-    <message>
-        <source>%1%</source>
-        <translation>%1%</translation>
+        <source>Zoom: %1%</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>Select OpenGL version.</source>
-        <translation>Обрати OpenGL версію.</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>версія</translation>
-    </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
         <translation>Додати зображення до діалогового вікна вибору гри.</translation>

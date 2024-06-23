@@ -437,28 +437,20 @@ Există jocuri salvate care folosesc această imagine, care vor fi, de asemenea,
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Lansat sub licenţă &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
+    <message>
+        <source>%p% complete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
-        <source>??%</source>
-        <translation>??%</translation>
-    </message>
-    <message>
-        <source>%1%</source>
-        <translation>%1%</translation>
+        <source>Zoom: %1%</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>Select OpenGL version.</source>
-        <translation>Selectaţi versiunea OpenGL.</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>versiunea</translation>
-    </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
         <translation>Imagini de adăugat la dialogul de alegere a jocului.</translation>

@@ -437,28 +437,20 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Wydano na licencji &lt;a href=%1&gt;GPL 3&lt;/a&gt;</translation>
     </message>
+    <message>
+        <source>%p% complete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
-        <source>??%</source>
-        <translation>??%</translation>
-    </message>
-    <message>
-        <source>%1%</source>
-        <translation>%1%</translation>
+        <source>Zoom: %1%</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>Select OpenGL version.</source>
-        <translation>Wybierz wersję OpenGL.</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>wersja</translation>
-    </message>
     <message>
         <source>Images to add to the choose game dialog.</source>
         <translation type="unfinished"></translation>
