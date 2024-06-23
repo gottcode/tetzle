@@ -7,6 +7,7 @@
 #ifndef TETZLE_EDGE_SCROLLER_H
 #define TETZLE_EDGE_SCROLLER_H
 
+#include <QPolygon>
 #include <QWidget>
 class QTimer;
 
@@ -27,6 +28,7 @@ protected:
 
 private:
 	QTimer* m_timer;
+	QPolygon m_arrow;
 	const int m_horizontal;
 	const int m_vertical;
 	bool m_hovered;

@@ -25,6 +25,20 @@ EdgeScroller::EdgeScroller(int horizontal, int vertical, QWidget* parent)
 	});
 
 	setCursor(horizontal ? Qt::SizeHorCursor : Qt::SizeVerCursor);
+
+	if (horizontal > 0) {
+		// Left
+		m_arrow << QPoint(0, 10) << QPoint(10, 0) << QPoint(10, 20);
+	} else if (horizontal < 0) {
+		// Right
+		m_arrow << QPoint(0, 0) << QPoint(10, 10) << QPoint(0, 20);
+	} else if (vertical > 0 ) {
+		// Up
+		m_arrow << QPoint(0, 10) << QPoint(10, 0) << QPoint(20, 10);
+	} else {
+		// Down
+		m_arrow << QPoint(0, 0) << QPoint(20, 0) << QPoint(10, 10);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -60,6 +74,11 @@ void EdgeScroller::paintEvent(QPaintEvent*)
 		painter.setBrush(color);
 		painter.drawRoundedRect(rect(), 3, 3);
 	}
+
+	color.setAlpha(m_hovered ? 255 : 96);
+	painter.setBrush(color);
+	painter.translate(rect().center() - m_arrow.boundingRect().center() + QPoint(1,1));
+	painter.drawPolygon(m_arrow);
 }
 
 //-----------------------------------------------------------------------------
