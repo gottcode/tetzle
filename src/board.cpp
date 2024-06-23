@@ -7,6 +7,7 @@
 #include "board.h"
 
 #include "appearance_dialog.h"
+#include "edge_scroller.h"
 #include "generator.h"
 #include "message.h"
 #include "overview.h"
@@ -19,6 +20,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QGridLayout>
 #include <QImageReader>
 #include <QMatrix4x4>
 #include <QMessageBox>
@@ -83,6 +85,37 @@ Board::Board(QWidget* parent)
 	setAutoFillBackground(true);
 
 	m_message = new Message(this);
+
+	// Create edge scrollers
+	m_scroll_left = new EdgeScroller(1, 0, this);
+	connect(m_scroll_left, &EdgeScroller::scroll, this, &Board::edgeScroll);
+
+	m_scroll_right = new EdgeScroller(-1, 0, this);
+	connect(m_scroll_right, &EdgeScroller::scroll, this, &Board::edgeScroll);
+
+	m_scroll_up = new EdgeScroller(0, 1, this);
+	connect(m_scroll_up, &EdgeScroller::scroll, this, &Board::edgeScroll);
+
+	m_scroll_down = new EdgeScroller(0, -1, this);
+	connect(m_scroll_down, &EdgeScroller::scroll, this, &Board::edgeScroll);
+
+	QGridLayout* layout = new QGridLayout(this);
+
+	layout->setColumnMinimumWidth(0, 16);
+	layout->setColumnStretch(1, 1);
+	layout->setColumnMinimumWidth(2, 16);
+
+	layout->setRowMinimumHeight(0, 16);
+	layout->setRowStretch(1, 1);
+	layout->setRowMinimumHeight(2, 16);
+
+	layout->setSpacing(0);
+	layout->setContentsMargins(0, 0, 0, 0);
+
+	layout->addWidget(m_scroll_left, 1, 0);
+	layout->addWidget(m_scroll_right, 1, 2);
+	layout->addWidget(m_scroll_up, 0, 1);
+	layout->addWidget(m_scroll_down, 2, 1);
 
 	// Create overview dialog
 	m_overview = new Overview(parent);
@@ -844,6 +877,14 @@ void Board::wheelEvent(QWheelEvent* event)
 	}
 
 	QWidget::wheelEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::edgeScroll(int horizontal, int vertical)
+{
+	scroll(QPoint((5 * horizontal) / m_scale, (5 * vertical) / m_scale));
+	update();
 }
 
 //-----------------------------------------------------------------------------

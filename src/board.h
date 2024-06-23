@@ -8,6 +8,7 @@
 #define TETZLE_BOARD_H
 
 class AppearanceDialog;
+class EdgeScroller;
 class Message;
 class Overview;
 class Piece;
@@ -66,6 +67,9 @@ protected:
 	void mouseReleaseEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void wheelEvent(QWheelEvent* event) override;
+
+private Q_SLOTS:
+	void edgeScroll(int horizontal, int vertical);
 
 private:
 	void startScrolling();
@@ -128,6 +132,11 @@ private:
 	Qt::MouseButton m_action_button;
 
 	QRandomGenerator m_random;
+
+	EdgeScroller* m_scroll_left;
+	EdgeScroller* m_scroll_right;
+	EdgeScroller* m_scroll_up;
+	EdgeScroller* m_scroll_down;
 };
 
 
