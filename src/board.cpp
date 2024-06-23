@@ -88,15 +88,19 @@ Board::Board(QWidget* parent)
 
 	// Create edge scrollers
 	m_scroll_left = new EdgeScroller(1, 0, this);
+	m_scroll_left->hide();
 	connect(m_scroll_left, &EdgeScroller::scroll, this, &Board::edgeScroll);
 
 	m_scroll_right = new EdgeScroller(-1, 0, this);
+	m_scroll_right->hide();
 	connect(m_scroll_right, &EdgeScroller::scroll, this, &Board::edgeScroll);
 
 	m_scroll_up = new EdgeScroller(0, 1, this);
+	m_scroll_up->hide();
 	connect(m_scroll_up, &EdgeScroller::scroll, this, &Board::edgeScroll);
 
 	m_scroll_down = new EdgeScroller(0, -1, this);
+	m_scroll_down->hide();
 	connect(m_scroll_down, &EdgeScroller::scroll, this, &Board::edgeScroll);
 
 	QGridLayout* layout = new QGridLayout(this);
@@ -182,6 +186,7 @@ void Board::updateSceneRectangle(Piece* piece)
 {
 	int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
+	updateViewport();
 }
 
 //-----------------------------------------------------------------------------
@@ -397,6 +402,7 @@ void Board::openGame(int id)
 	if (rect.contains(m_scene)) {
 		m_scene = rect;
 	}
+	updateViewport();
 
 	// Draw tiles
 	m_message->setVisible(false);
@@ -556,6 +562,7 @@ void Board::zoom(int level)
 	updateCursor();
 
 	// Update scene
+	updateViewport();
 	update();
 	Q_EMIT zoomChanged(m_scale_level, m_scale);
 }
@@ -594,11 +601,7 @@ void Board::paintEvent(QPaintEvent*)
 
 	// Transform viewport
 	painter.save();
-	const QRect viewport = rect();
-	QTransform matrix;
-	matrix.scale(m_scale, m_scale);
-	matrix.translate(std::lround((width() / (2 * m_scale)) - m_pos.x()), std::lround((height() / (2 * m_scale)) - m_pos.y()));
-	painter.setTransform(matrix);
+	painter.setTransform(m_viewport_transform);
 
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
@@ -617,8 +620,8 @@ void Board::paintEvent(QPaintEvent*)
 		shadow.reserve(total_tiles);
 		tiles.reserve(total_tiles);
 		for (Piece* piece : std::as_const(m_pieces)) {
-			QRect r = matrix.mapRect(piece->boundingRect());
-			if (viewport.intersects(r)) {
+			const QRect r = m_viewport_transform.mapRect(piece->boundingRect());
+			if (m_viewport.intersects(r)) {
 				if (m_has_shadows) {
 					shadow.append(piece->shadow());
 				}
@@ -868,6 +871,14 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 //-----------------------------------------------------------------------------
 
+void Board::resizeEvent(QResizeEvent* event)
+{
+	updateViewport();
+	QWidget::resizeEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
 void Board::wheelEvent(QWheelEvent* event)
 {
 	if (event->angleDelta().y() > 0) {
@@ -912,6 +923,7 @@ void Board::scroll(const QPoint& delta)
 	for (int i = 0; i < count; ++i) {
 		m_active_pieces.at(i)->moveBy(-delta);
 	}
+	updateViewport();
 }
 
 //-----------------------------------------------------------------------------
@@ -1206,6 +1218,23 @@ void Board::updateStatusMessage(const QString& message)
 
 //-----------------------------------------------------------------------------
 
+void Board::updateViewport()
+{
+	m_viewport = rect();
+
+	m_viewport_transform.reset();
+	m_viewport_transform.scale(m_scale, m_scale);
+	m_viewport_transform.translate(std::lround((width() / (2 * m_scale)) - m_pos.x()), std::lround((height() / (2 * m_scale)) - m_pos.y()));
+
+	const QRect scene = m_scene.width() ? m_viewport_transform.mapRect(m_scene) : m_viewport.adjusted(2, 2, -4, -4);
+	m_scroll_left->setVisible((scene.left() - 2) < m_viewport.left());
+	m_scroll_right->setVisible((scene.right() + 2) > m_viewport.right());
+	m_scroll_up->setVisible((scene.top() - 2) < m_viewport.top());
+	m_scroll_down->setVisible((scene.bottom() + 2) > m_viewport.bottom());
+}
+
+//-----------------------------------------------------------------------------
+
 Piece* Board::pieceUnderCursor()
 {
 	QPoint pos = mapCursorPosition();
@@ -1287,6 +1316,11 @@ void Board::cleanup()
 	m_finished = false;
 
 	QSettings().remove("OpenGame");
+
+	m_scroll_left->hide();
+	m_scroll_right->hide();
+	m_scroll_up->hide();
+	m_scroll_down->hide();
 }
 
 //-----------------------------------------------------------------------------

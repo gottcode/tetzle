@@ -66,6 +66,7 @@ protected:
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
+	void resizeEvent(QResizeEvent* event) override;
 	void wheelEvent(QWheelEvent* event) override;
 
 private Q_SLOTS:
@@ -90,6 +91,7 @@ private:
 	void updateCompleted();
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
+	void updateViewport();
 	Piece* pieceUnderCursor();
 	int pieceCount();
 	void finishGame();
@@ -132,6 +134,9 @@ private:
 	Qt::MouseButton m_action_button;
 
 	QRandomGenerator m_random;
+
+	QRect m_viewport;
+	QTransform m_viewport_transform;
 
 	EdgeScroller* m_scroll_left;
 	EdgeScroller* m_scroll_right;
