@@ -22,6 +22,7 @@ public:
 
 Q_SIGNALS:
 	void valueChanged(int);
+	void zoomFit();
 	void zoomIn();
 	void zoomOut();
 	void zoomInAvailable(bool available);

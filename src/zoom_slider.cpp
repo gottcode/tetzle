@@ -32,6 +32,12 @@ namespace
 ZoomSlider::ZoomSlider(QWidget* parent)
 	: QWidget(parent)
 {
+	QToolButton* zoom_fit = new QToolButton(this);
+	zoom_fit->setAutoRaise(true);
+	zoom_fit->setIcon(QIcon::fromTheme("zoom-fit-best"));
+	zoom_fit->setToolTip(windowString("Best &Fit"));
+	connect(zoom_fit, &QToolButton::clicked, this, &ZoomSlider::zoomFit);
+
 	m_zoom_out = new QToolButton(this);
 	m_zoom_out->setAutoRaise(true);
 	m_zoom_out->setIcon(QIcon::fromTheme("zoom-out"));
@@ -56,6 +62,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	QHBoxLayout* layout = new QHBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
+	layout->addWidget(zoom_fit);
 	layout->addWidget(m_zoom_out);
 	layout->addWidget(m_slider);
 	layout->addWidget(m_zoom_in);
