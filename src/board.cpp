@@ -521,8 +521,6 @@ void Board::zoom(int level)
 	// Update scene
 	update();
 	Q_EMIT zoomChanged(m_scale_level, m_scale);
-	Q_EMIT zoomOutAvailable(m_scale_level > 0);
-	Q_EMIT zoomInAvailable(m_scale_level < 9);
 }
 
 //-----------------------------------------------------------------------------

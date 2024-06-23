@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2011 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -22,6 +22,8 @@ public:
 
 Q_SIGNALS:
 	void valueChanged(int);
+	void zoomInAvailable(bool available);
+	void zoomOutAvailable(bool available);
 
 public Q_SLOTS:
 	void setValue(int level, float factor);

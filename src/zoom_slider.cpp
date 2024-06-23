@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2014 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -50,6 +50,9 @@ void ZoomSlider::setValue(int level, float factor)
 {
 	m_slider->setValue(level);
 	m_label->setText(tr("%1%").arg(std::lround(factor * 100)));
+
+	Q_EMIT zoomOutAvailable(level > 0);
+	Q_EMIT zoomInAvailable(level < 9);
 }
 
 //-----------------------------------------------------------------------------

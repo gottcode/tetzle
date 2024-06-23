@@ -53,8 +53,6 @@ Q_SIGNALS:
 	void retrievePiecesAvailable(bool available);
 	void showMessage(const QString& message, int timeout = 0);
 	void clearMessage();
-	void zoomInAvailable(bool available);
-	void zoomOutAvailable(bool available);
 	void zoomChanged(int level, float factor);
 	void finished();
 

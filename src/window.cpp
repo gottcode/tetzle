@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2023 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -80,11 +80,11 @@ Window::Window(const QStringList& files)
 	QAction* zoom_in_action = menu->addAction(tr("Zoom &In"), m_board, &Board::zoomIn);
 	zoom_in_action->setShortcut(tr("+"));
 	zoom_in_action->setEnabled(false);
-	connect(m_board, &Board::zoomInAvailable, zoom_in_action, &QAction::setEnabled);
+	connect(m_slider, &ZoomSlider::zoomInAvailable, zoom_in_action, &QAction::setEnabled);
 	QAction* zoom_out_action = menu->addAction(tr("Zoom &Out"), m_board, &Board::zoomOut);
 	zoom_out_action->setShortcut(tr("-"));
 	zoom_out_action->setEnabled(false);
-	connect(m_board, &Board::zoomOutAvailable, zoom_out_action, &QAction::setEnabled);
+	connect(m_slider, &ZoomSlider::zoomOutAvailable, zoom_out_action, &QAction::setEnabled);
 	m_zoom_fit_action = menu->addAction(tr("Best &Fit"), m_board, &Board::zoomFit);
 	m_zoom_fit_action->setEnabled(false);
 	menu->addSeparator();
