@@ -8,7 +8,6 @@
 #define TETZLE_ZOOM_SLIDER_H
 
 #include <QWidget>
-class QLabel;
 class QSlider;
 
 class ZoomSlider : public QWidget
@@ -29,7 +28,6 @@ public Q_SLOTS:
 	void setValue(int level, float factor);
 
 private:
-	QLabel* m_label;
 	QSlider* m_slider;
 };
 

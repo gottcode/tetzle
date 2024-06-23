@@ -7,7 +7,6 @@
 #include "zoom_slider.h"
 
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QSlider>
 
 #include <cmath>
@@ -24,7 +23,6 @@ namespace
 ZoomSlider::ZoomSlider(QWidget* parent)
 	: QWidget(parent)
 {
-	m_label = new QLabel(tr("??%"), this);
 	m_slider = new QSlider(Qt::Horizontal, this);
 	m_slider->setRange(0, 9);
 	m_slider->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
@@ -33,7 +31,6 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	QHBoxLayout* layout = new QHBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
-	layout->addWidget(m_label);
 	layout->addWidget(m_slider);
 }
 
@@ -49,7 +46,7 @@ float ZoomSlider::scaleFactor(int level)
 void ZoomSlider::setValue(int level, float factor)
 {
 	m_slider->setValue(level);
-	m_label->setText(tr("%1%").arg(std::lround(factor * 100)));
+	m_slider->setToolTip(tr("Zoom: %1%").arg(std::lround(factor * 100)));
 
 	Q_EMIT zoomOutAvailable(level > 0);
 	Q_EMIT zoomInAvailable(level < 9);
