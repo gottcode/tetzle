@@ -169,6 +169,7 @@ void Board::newGame(const QString& image, int difficulty)
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
+	QCoreApplication::processEvents();
 
 	// Generate ID
 	m_id = 0;
@@ -244,6 +245,7 @@ void Board::openGame(int id)
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	m_message->setText(tr("Please Wait"));
 	m_message->setVisible(true);
+	QCoreApplication::processEvents();
 
 	// Open saved game file
 	QFile file(Path::save(id));
@@ -428,6 +430,7 @@ void Board::retrievePieces()
 	// Inform user this will take awhile
 	updateStatusMessage(tr("Retrieving pieces..."));
 	QApplication::setOverrideCursor(Qt::WaitCursor);
+	QCoreApplication::processEvents();
 
 	// Make sure all pieces are free
 	QList<Piece*> pieces = m_pieces + m_active_pieces + m_selected_pieces;
@@ -930,6 +933,7 @@ void Board::releasePieces()
 	// Inform user this may take awhile
 	updateStatusMessage(tr("Placing pieces..."));
 	QApplication::setOverrideCursor(Qt::WaitCursor);
+	QCoreApplication::processEvents();
 
 	// Attach to closest piece
 	int count = m_active_pieces.count();
@@ -1133,6 +1137,7 @@ void Board::updateSceneRectangle()
 void Board::updateStatusMessage(const QString& message)
 {
 	Q_EMIT showMessage(message);
+	QCoreApplication::processEvents();
 }
 
 //-----------------------------------------------------------------------------

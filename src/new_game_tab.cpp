@@ -184,6 +184,7 @@ void NewGameTab::addImages(const QStringList& images)
 	progress.setWindowModality(Qt::WindowModal);
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
+	QCoreApplication::processEvents();
 
 	m_image_tags->clearFilter();
 	for (int i = 0; i < count; i++) {
