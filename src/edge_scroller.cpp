@@ -23,6 +23,8 @@ EdgeScroller::EdgeScroller(int horizontal, int vertical, QWidget* parent)
 	connect(m_timer, &QTimer::timeout, this, [this]() {
 		Q_EMIT scroll(m_horizontal, m_vertical);
 	});
+
+	setCursor(horizontal ? Qt::SizeHorCursor : Qt::SizeVerCursor);
 }
 
 //-----------------------------------------------------------------------------
