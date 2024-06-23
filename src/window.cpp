@@ -38,13 +38,14 @@ Window::Window(const QStringList& files)
 	resize(640, 480);
 
 	// Add statusbar
+	m_completed = new QProgressBar(this);
+	m_completed->setFormat(tr("%p% complete"));
+	m_completed->setRange(0, 100);
+	m_completed->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+	statusBar()->addPermanentWidget(m_completed);
+
 	m_slider = new ZoomSlider(this);
 	statusBar()->addPermanentWidget(m_slider);
-
-	m_completed = new QProgressBar(this);
-	m_completed->setRange(0, 100);
-	m_completed->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-	statusBar()->addPermanentWidget(m_completed);
 
 	statusBar()->setMinimumHeight(statusBar()->sizeHint().height());
 	m_slider->hide();
