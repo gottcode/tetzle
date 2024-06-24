@@ -19,11 +19,18 @@ EdgeScroller::EdgeScroller(int horizontal, int vertical, QWidget* parent)
 	, m_speed(1)
 	, m_hovered(false)
 {
-	m_timer = new QTimer(this);
-	m_timer->setInterval(20);
-	m_timer->setSingleShot(false);
-	connect(m_timer, &QTimer::timeout, this, [this]() {
+	m_scroll_timer = new QTimer(this);
+	m_scroll_timer->setInterval(20);
+	m_scroll_timer->setSingleShot(false);
+	connect(m_scroll_timer, &QTimer::timeout, this, [this]() {
 		Q_EMIT scroll(m_horizontal * m_speed, m_vertical * m_speed);
+	});
+
+	m_start_timer = new QTimer(this);
+	m_start_timer->setInterval(200);
+	m_start_timer->setSingleShot(true);
+	connect(m_start_timer, &QTimer::timeout, this, [this]() {
+		m_scroll_timer->start();
 	});
 
 	setCursor(horizontal ? Qt::SizeHorCursor : Qt::SizeVerCursor);
@@ -49,7 +56,8 @@ void EdgeScroller::enterEvent(QEnterEvent*)
 {
 	m_hovered = true;
 	m_speed = 1;
-	m_timer->start();
+	m_scroll_timer->stop();
+	m_start_timer->start();
 	update();
 }
 
@@ -58,7 +66,8 @@ void EdgeScroller::enterEvent(QEnterEvent*)
 void EdgeScroller::leaveEvent(QEvent*)
 {
 	m_hovered = false;
-	m_timer->stop();
+	m_start_timer->stop();
+	m_scroll_timer->stop();
 	update();
 }
 
@@ -67,6 +76,8 @@ void EdgeScroller::leaveEvent(QEvent*)
 void EdgeScroller::mousePressEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton) {
+		m_start_timer->stop();
+		m_scroll_timer->start();
 		m_speed = 5;
 	}
 	event->accept();
@@ -76,6 +87,8 @@ void EdgeScroller::mousePressEvent(QMouseEvent* event)
 
 void EdgeScroller::mouseReleaseEvent(QMouseEvent* event) {
 	if (event->button() == Qt::LeftButton) {
+		m_scroll_timer->stop();
+		m_start_timer->start();
 		m_speed = 1;
 	}
 	event->accept();

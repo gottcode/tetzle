@@ -29,7 +29,8 @@ protected:
 	void paintEvent(QPaintEvent*) override;
 
 private:
-	QTimer* m_timer;
+	QTimer* m_scroll_timer;
+	QTimer* m_start_timer;
 	QPolygon m_arrow;
 	const int m_horizontal;
 	const int m_vertical;
