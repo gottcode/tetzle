@@ -24,6 +24,8 @@ Q_SIGNALS:
 protected:
 	void enterEvent(QEnterEvent*) override;
 	void leaveEvent(QEvent*) override;
+	void mousePressEvent(QMouseEvent* event) override;
+	void mouseReleaseEvent(QMouseEvent* event) override;
 	void paintEvent(QPaintEvent*) override;
 
 private:
@@ -31,6 +33,7 @@ private:
 	QPolygon m_arrow;
 	const int m_horizontal;
 	const int m_vertical;
+	int m_speed;
 	bool m_hovered;
 };
 
