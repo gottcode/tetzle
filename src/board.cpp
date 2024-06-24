@@ -543,16 +543,17 @@ void Board::toggleOverview()
 void Board::paintEvent(QPaintEvent*)
 {
 	QPainter painter(this);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
 	// Transform viewport
 	painter.save();
 	const qreal pixelratio = devicePixelRatioF();
 	QRect viewport = rect();
 	viewport.setSize(viewport.size() * pixelratio);
-	QMatrix4x4 matrix;
+	QTransform matrix;
 	matrix.scale(m_scale * pixelratio, m_scale * pixelratio);
-	matrix.translate((width() / (2 * m_scale)) - m_pos.x(), (height() / (2 * m_scale)) - m_pos.y());
-	painter.setTransform(matrix.toTransform());
+	matrix.translate(std::lround((width() / (2 * m_scale)) - m_pos.x()), std::lround((height() / (2 * m_scale)) - m_pos.y()));
+	painter.setTransform(matrix);
 
 	// Draw scene rectangle
 	QColor fill = palette().color(QPalette::Base);
