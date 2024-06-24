@@ -20,7 +20,6 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 	, m_tiles(tiles)
 	, m_shadow(tiles)
 	, m_rotation(0)
-	, m_depth(2)
 	, m_selected(true)
 	, m_changed(false)
 {
@@ -222,14 +221,6 @@ void Piece::rotate(const QPoint& origin)
 		m_rotation = 0;
 	}
 
-	updateVerts();
-}
-
-//-----------------------------------------------------------------------------
-
-void Piece::setDepth(int depth)
-{
-	m_depth = (depth + 1) * 2;
 	updateVerts();
 }
 

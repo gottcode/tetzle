@@ -43,7 +43,6 @@ public:
 	void pushNeighbors(const QPointF& inertia = QPointF());
 	void rotate(int rotations);
 	void rotate(const QPoint& origin = QPoint());
-	void setDepth(int depth);
 	void setPosition(const QPoint& pos);
 	void setSelected(bool selected);
 
@@ -68,7 +67,6 @@ private:
 	QList<Tile*> m_shadow;
 	QSet<Piece*> m_neighbors;
 	int m_rotation;
-	int m_depth;
 	bool m_selected;
 
 	bool m_changed;

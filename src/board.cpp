@@ -915,7 +915,6 @@ void Board::grabPiece()
 	}
 	m_active_pieces.append(piece);
 	m_pieces.removeAll(piece);
-	piece->setDepth(m_active_pieces.count() + 1);
 	piece->setSelected(true);
 	updateCursor();
 
@@ -947,7 +946,6 @@ void Board::releasePieces()
 	for (int i = 0; i < count; ++i) {
 		piece = m_active_pieces.at(i);
 		m_pieces.append(piece);
-		piece->setDepth(0);
 		piece->setSelected(false);
 		piece->pushNeighbors();
 	}
@@ -1006,11 +1004,9 @@ void Board::selectPieces()
 	m_selecting = false;
 
 	QPoint cursor = mapCursorPosition();
-	int depth = m_active_pieces.count() + 1;
 	int count = m_selected_pieces.count();
 	for (int i = 0; i < count; ++i) {
 		Piece* piece = m_selected_pieces.at(i);
-		piece->setDepth(depth + i);
 		if (!piece->contains(cursor)) {
 			piece->moveBy(cursor - piece->randomPoint());
 		}
