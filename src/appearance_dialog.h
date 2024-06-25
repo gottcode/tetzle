@@ -24,8 +24,8 @@ public:
 	bool hasBevels() const;
 	bool hasShadows() const;
 	QPalette colors() const;
-	QPixmap shadow() const;
-	QPixmap shadowSelected() const;
+	static QPixmap shadow(qreal pixelratio);
+	static QPixmap shadowSelected(qreal pixelratio);
 
 	static void setBevelsEnabled(bool enabled);
 

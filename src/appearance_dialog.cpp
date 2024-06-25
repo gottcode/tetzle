@@ -23,7 +23,7 @@
 namespace
 {
 
-QPixmap coloredShadow(const QColor& color)
+QPixmap coloredShadow(const QColor& color, qreal pixelratio)
 {
 	QPixmap source(":/shadow.png");
 	QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
@@ -33,7 +33,12 @@ QPixmap coloredShadow(const QColor& color)
 	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
 	painter.fillRect(shadow.rect(), color);
 	painter.end();
-	return QPixmap::fromImage(shadow, Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
+
+	QPixmap result = QPixmap::fromImage(shadow.scaled(shadow.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation),
+			Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
+	result.setDevicePixelRatio(pixelratio);
+
+	return result;
 }
 
 }
@@ -141,16 +146,16 @@ QPalette AppearanceDialog::colors() const
 
 //-----------------------------------------------------------------------------
 
-QPixmap AppearanceDialog::shadow() const
+QPixmap AppearanceDialog::shadow(qreal pixelratio)
 {
-	return coloredShadow(m_shadow->color());
+	return coloredShadow(QSettings().value("Colors/Shadow", QColor(Qt::black)).value<QColor>(), pixelratio);
 }
 
 //-----------------------------------------------------------------------------
 
-QPixmap AppearanceDialog::shadowSelected() const
+QPixmap AppearanceDialog::shadowSelected(qreal pixelratio)
 {
-	return coloredShadow(m_highlight->color());
+	return coloredShadow(QSettings().value("Colors/Highlight", QColor(Qt::white)).value<QColor>(), pixelratio);
 }
 
 //-----------------------------------------------------------------------------
@@ -189,45 +194,50 @@ void AppearanceDialog::restoreDefaults()
 
 void AppearanceDialog::updatePreview()
 {
+	const qreal pixelratio = devicePixelRatioF();
+
 	QPixmap bumpmap(512, 512);
 	bumpmap.fill(QColor(128, 128, 128));
 	if (m_has_bevels->isChecked()) {
 		QPainter painter(&bumpmap);
 		painter.drawPixmap(0, 0, QPixmap(":/bumpmap.png"));
 	}
+	bumpmap = bumpmap.scaled(bumpmap.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	bumpmap.setDevicePixelRatio(pixelratio);
 
-	QPixmap pixmap(352, 256);
+	QPixmap pixmap(352 * pixelratio, 256 * pixelratio);
+	pixmap.setDevicePixelRatio(pixelratio);
 	pixmap.fill(m_background->color());
 	{
 		QPainter painter(&pixmap);
 
 		// Draw example piece
 		if (m_has_shadows->isChecked()) {
-			QPixmap shadow = coloredShadow(m_shadow->color());
+			QPixmap shadow = coloredShadow(m_shadow->color(), pixelratio);
 			for (int i = 0; i < 3; ++i) {
 				painter.drawPixmap(0, i * 64, shadow);
 			}
 			painter.drawPixmap(64, 64, shadow);
 		}
-		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
-		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
-		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);
-		painter.drawPixmap(32, 160, bumpmap, 32, 416, 64, 64);
+		painter.drawPixmap(32, 32, bumpmap, 288 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(32, 96, bumpmap, 32 * pixelratio, 32 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(96, 96, bumpmap, 160 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(32, 160, bumpmap, 32 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
 
 		// Draw example highlighted piece
 		painter.translate(160, 0);
 
 		if (m_has_shadows->isChecked()) {
-			QPixmap highlight = coloredShadow(m_highlight->color());
+			QPixmap highlight = coloredShadow(m_highlight->color(), pixelratio);
 			for (int i = 0; i < 3; ++i) {
 				painter.drawPixmap(0, i * 64, highlight);
 			}
 			painter.drawPixmap(64, 64, highlight);
 		}
-		painter.drawPixmap(32, 32, bumpmap, 288, 416, 64, 64);
-		painter.drawPixmap(32, 96, bumpmap, 32, 32, 64, 64);
-		painter.drawPixmap(96, 96, bumpmap, 160, 416, 64, 64);
-		painter.drawPixmap(32, 160, bumpmap, 32, 416, 64, 64);
+		painter.drawPixmap(32, 32, bumpmap, 288 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(32, 96, bumpmap, 32 * pixelratio, 32 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(96, 96, bumpmap, 160 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
+		painter.drawPixmap(32, 160, bumpmap, 32 * pixelratio, 416 * pixelratio, 64 * pixelratio, 64 * pixelratio);
 	}
 
 	QPalette palette = m_preview->palette();

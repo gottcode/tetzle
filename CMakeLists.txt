@@ -37,6 +37,7 @@ qt_add_executable(tetzle
 	src/choose_game_dialog.cpp
 	src/color_button.cpp
 	src/dancing_links.cpp
+	src/fragment_list.cpp
 	src/generator.cpp
 	src/image_properties_dialog.cpp
 	src/locale_dialog.cpp

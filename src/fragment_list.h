@@ -12,9 +12,12 @@
 class FragmentList
 {
 public:
-	void append(const QPointF& pos, const QRectF& source, qreal rotation = 0)
+	void append(const QPointF& pos, const QPointF& source_pos, qreal size, qreal rotation = 0)
 	{
-		m_list.append(QPainter::PixmapFragment::create(pos, source, 1, 1, rotation));
+		m_list.append(QPainter::PixmapFragment::create(pos,
+				QRectF(source_pos * m_pixelratio, QSizeF(size, size) * m_pixelratio),
+				m_scale, m_scale,
+				rotation));
 	}
 
 	void append(const FragmentList& list)
@@ -37,8 +40,16 @@ public:
 		painter.drawPixmapFragments(m_list.constData(), m_list.size(), pixmap, hints);
 	}
 
+	static void setDevicePixelRatio(qreal ratio)
+	{
+		m_pixelratio = ratio;
+		m_scale = 1.0 / ratio;
+	}
+
 private:
 	QList<QPainter::PixmapFragment> m_list;
+	static qreal m_pixelratio;
+	static qreal m_scale;
 };
 
 #endif // TETZLE_FRAGMENT_LIST_H

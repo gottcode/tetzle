@@ -138,8 +138,9 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 		piece->setSelected(piece->isSelected());
 	}
 
-	m_shadow_pixmap = dialog.shadow();
-	m_selected_shadow_pixmap = dialog.shadowSelected();
+	const qreal pixelratio = devicePixelRatioF();
+	m_shadow_pixmap = dialog.shadow(pixelratio);
+	m_selected_shadow_pixmap = dialog.shadowSelected(pixelratio);
 }
 
 //-----------------------------------------------------------------------------
@@ -539,6 +540,19 @@ void Board::toggleOverview()
 }
 
 //-----------------------------------------------------------------------------
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+bool Board::event(QEvent* event)
+{
+	if (event->type() == QEvent::DevicePixelRatioChange) {
+		loadImage();
+		for (Piece* piece : std::as_const(m_pieces)) {
+			piece->setPosition(piece->scenePos());
+		}
+	}
+	return QWidget::event(event);
+}
+#endif
+//-----------------------------------------------------------------------------
 
 void Board::paintEvent(QPaintEvent*)
 {
@@ -547,11 +561,9 @@ void Board::paintEvent(QPaintEvent*)
 
 	// Transform viewport
 	painter.save();
-	const qreal pixelratio = devicePixelRatioF();
-	QRect viewport = rect();
-	viewport.setSize(viewport.size() * pixelratio);
+	const QRect viewport = rect();
 	QTransform matrix;
-	matrix.scale(m_scale * pixelratio, m_scale * pixelratio);
+	matrix.scale(m_scale, m_scale);
 	matrix.translate(std::lround((width() / (2 * m_scale)) - m_pos.x()), std::lround((height() / (2 * m_scale)) - m_pos.y()));
 	painter.setTransform(matrix);
 
@@ -1048,8 +1060,21 @@ void Board::loadImage()
 	}
 	QImageReader source(Path::image(m_image_path));
 
+	// Set pixmap fragments to match device pixel ratio for high DPI rendering
+	const qreal pixelratio = devicePixelRatioF();
+	FragmentList::setDevicePixelRatio(pixelratio);
+
+	// Create bevel texture
+	m_bevel_pixmap = QPixmap(":/bumpmap.png");
+	m_bevel_pixmap = m_bevel_pixmap.scaled(m_bevel_pixmap.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	m_bevel_pixmap.setDevicePixelRatio(pixelratio);
+
+	// Create shadow textures
+	m_shadow_pixmap = AppearanceDialog::shadow(pixelratio);
+	m_selected_shadow_pixmap = AppearanceDialog::shadowSelected(pixelratio);
+
 	// Create puzzle texture
-	const QSize size(m_columns * Tile::size, m_rows * Tile::size);
+	const QSize size(m_columns * Tile::size * pixelratio, m_rows * Tile::size * pixelratio);
 	QSize scaled_size = source.size();
 	scaled_size.scale(size, Qt::KeepAspectRatioByExpanding);
 	source.setScaledSize(scaled_size);
@@ -1062,9 +1087,10 @@ void Board::loadImage()
 		QPainter painter(&m_pixmap);
 		painter.drawImage(0, 0, image, 0, 0, image.width(), image.height(), Qt::AutoColor | Qt::AvoidDither);
 	}
+	m_pixmap.setDevicePixelRatio(pixelratio);
 
 	// Create overview
-	m_overview->load(image, devicePixelRatioF());
+	m_overview->load(image, pixelratio);
 }
 
 //-----------------------------------------------------------------------------

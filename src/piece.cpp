@@ -385,13 +385,13 @@ void Piece::updateVerts()
 		const int x1 = pos.x() + offset;
 		const int y1 = pos.y() + offset;
 		m_tiles_list.append(QPointF(x1, y1),
-				QRectF(tile->column() * Tile::size, tile->row() * Tile::size, Tile::size, Tile::size),
+				QPointF(tile->column() * Tile::size, tile->row() * Tile::size), Tile::size,
 				rotation() * 90);
 
 		const int bx1 = tile->bevel().x() * 512;
 		const int by1 = tile->bevel().y() * 512;
 		m_bevel_list.append(QPointF(x1, y1),
-				QRectF(bx1, by1, Tile::size, Tile::size));
+				QPointF(bx1, by1), Tile::size);
 	}
 
 	// Update shadow fragments
@@ -402,7 +402,7 @@ void Piece::updateVerts()
 
 		const int x1 = pos.x() + offset;
 		const int y1 = pos.y() + offset;
-		m_shadow_list.append(QPointF(x1, y1), QRectF(0, 0, size, size));
+		m_shadow_list.append(QPointF(x1, y1), QPointF(0, 0), size);
 	}
 
 	// Update scene rectangle

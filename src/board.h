@@ -56,6 +56,9 @@ Q_SIGNALS:
 	void finished();
 
 protected:
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+	bool event(QEvent* event) override;
+#endif
 	void paintEvent(QPaintEvent*) override;
 	void keyPressEvent(QKeyEvent* event) override;
 	void keyReleaseEvent(QKeyEvent* event) override;
