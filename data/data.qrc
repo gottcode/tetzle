@@ -3,20 +3,6 @@
 	<file>bumpmap.png</file>
 	<file>shadow.png</file>
 
-	<file>shaders/gl2/textures0.frag</file>
-	<file>shaders/gl2/textures0.vert</file>
-	<file>shaders/gl2/textures1.frag</file>
-	<file>shaders/gl2/textures1.vert</file>
-	<file>shaders/gl2/textures2.frag</file>
-	<file>shaders/gl2/textures2.vert</file>
-
-	<file>shaders/gl3/textures0.frag</file>
-	<file>shaders/gl3/textures0.vert</file>
-	<file>shaders/gl3/textures1.frag</file>
-	<file>shaders/gl3/textures1.vert</file>
-	<file>shaders/gl3/textures2.frag</file>
-	<file>shaders/gl3/textures2.vert</file>
-
 	<file>tango/16x16/document-properties.png</file>
 	<file>tango/16x16/list-add.png</file>
 	<file>tango/16x16/list-remove.png</file>

@@ -16,7 +16,6 @@ class Tile;
 #include <QHash>
 #include <QWidget>
 #include <QRandomGenerator>
-class QOpenGLTexture;
 
 class Board : public QWidget
 {
