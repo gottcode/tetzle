@@ -278,6 +278,10 @@ void NewGameTab::removeImage()
 	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
 		QString image_id = current_image.section(".", 0, 0);
 
+		QSettings details(Path::image("details"), QSettings::IniFormat);
+		details.remove(current_image + "/Name");
+		details.remove(current_image + "/SHA1");
+
 		QFile::remove(Path::image(current_image));
 
 		QDir dir(Path::thumbnails(), image_id + "*");
