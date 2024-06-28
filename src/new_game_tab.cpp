@@ -473,6 +473,16 @@ void NewGameTab::addImage(const QString& image)
 			QImage image = reader.read();
 			image.save(Path::image(filename), "", 100);
 		}
+
+		// Remove old previews if they exist
+		QDir dir(Path::thumbnails());
+		const QStringList thumbnails = dir.entryList({
+				QString("%1.*").arg(image_id),
+				QString("%1@*").arg(image_id)
+			}, QDir::Files);
+		for (const QString& file : thumbnails) {
+			dir.remove(file);
+		}
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {
