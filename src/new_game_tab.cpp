@@ -276,27 +276,28 @@ void NewGameTab::removeImage()
 		message = tr("Remove selected image?\n\nThere are saved games using this image that will also be removed.");
 	}
 	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
-		QString image_id = current_image.section(".", 0, 0);
+		const QString image_id = current_image.section(".", 0, 0);
 
+		// Remove from image details
 		QSettings details(Path::image("details"), QSettings::IniFormat);
 		details.remove(current_image + "/Name");
 		details.remove(current_image + "/SHA1");
 
+		// Delete image
 		QFile::remove(Path::image(current_image));
 
-		QDir dir(Path::thumbnails(), image_id + "*");
-		const QStringList thumbs = dir.entryList();
-		for (const QString& thumb : thumbs) {
-			dir.remove(thumb);
-		}
+		// Delete thumbnail
+		removeThumbnail(image_id);
 
+		// Delete saved games depending on image
 		for (const QString& game : std::as_const(games)) {
 			QFile::remove(Path::save(game));
 		}
 
-		delete item;
-
+		// Remove from tags
 		m_image_tags->removeImage(current_image);
+
+		delete item;
 
 		m_accept_button->setEnabled(m_images->count() > 0);
 		if (!m_accept_button->isEnabled()) {
@@ -478,15 +479,8 @@ void NewGameTab::addImage(const QString& image)
 			image.save(Path::image(filename), "", 100);
 		}
 
-		// Remove old previews if they exist
-		QDir dir(Path::thumbnails());
-		const QStringList thumbnails = dir.entryList({
-				QString("%1.*").arg(image_id),
-				QString("%1@*").arg(image_id)
-			}, QDir::Files);
-		for (const QString& file : thumbnails) {
-			dir.remove(file);
-		}
+		// Remove old thumbnail if it exists
+		removeThumbnail(QString::number(image_id));
 	} else {
 		// Find in list of images
 		for (int i = 0; i < m_images->count(); ++i) {
@@ -519,6 +513,17 @@ QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& d
 	item->setData(TagsRole, m_image_tags->tags(image));
 	updateToolTip(item);
 	return item;
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::removeThumbnail(const QString& image_id)
+{
+	QDir dir(Path::thumbnails());
+	const QStringList thumbnails = dir.entryList({ image_id + ".*", image_id + "@*" }, QDir::Files);
+	for (const QString& file : thumbnails) {
+		dir.remove(file);
+	}
 }
 
 //-----------------------------------------------------------------------------

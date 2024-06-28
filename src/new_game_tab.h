@@ -48,6 +48,7 @@ private Q_SLOTS:
 private:
 	void addImage(const QString& image);
 	QListWidgetItem* createItem(const QString& image, const QSettings& details);
+	void removeThumbnail(const QString& image_id);
 
 private:
 	QSplitter* m_image_contents;
