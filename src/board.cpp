@@ -461,6 +461,8 @@ void Board::saveGame()
 	xml.writeEndElement();
 
 	xml.writeEndDocument();
+
+	QSettings().setValue("Overview/Visible", m_overview->isVisible());
 }
 
 //-----------------------------------------------------------------------------
