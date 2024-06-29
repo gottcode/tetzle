@@ -230,6 +230,7 @@ void TagManager::removeTag()
 	m_remove_tag_button->setEnabled(!m_tags.isEmpty());
 	storeTags();
 	updateFilter();
+	Q_EMIT tagsChanged();
 }
 
 //-----------------------------------------------------------------------------
