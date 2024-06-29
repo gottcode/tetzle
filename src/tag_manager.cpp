@@ -147,11 +147,19 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 		m_untagged.append(image);
 	}
 
+	// Add new tags
+	for (const QString& tag: tags) {
+		if (!m_tags.contains(tag)) {
+			createTag(tag);
+		}
+	}
+
+	// Add or remove image from tags
 	bool changed = false;
 	QMutableHashIterator<QString, QStringList> i(m_tags);
 	while (i.hasNext()) {
 		i.next();
-		bool tagged = tags.contains(i.key());
+		const bool tagged = tags.contains(i.key());
 		QStringList& tag = i.value();
 		if (tag.contains(image)) {
 			if (!tagged) {
@@ -187,8 +195,6 @@ void TagManager::changeEvent(QEvent* event)
 
 void TagManager::addTag()
 {
-	m_remove_action->setEnabled(true);
-
 	// Find first unused tag
 	int new_tag = 0;
 	QString tag;
@@ -197,14 +203,7 @@ void TagManager::addTag()
 	} while(m_tags.contains(tag));
 
 	// Add tag
-	m_tags.insert(tag, QStringList());
-	storeTags();
-
-	// Add tag item
-	QListWidgetItem* item = new QListWidgetItem(tag);
-	item->setData(Qt::UserRole, item->text());
-	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
-	m_filter->addItem(item);
+	QListWidgetItem* item = createTag(tag);
 	m_filter->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
 	m_filter->editItem(item);
 }
@@ -301,6 +300,29 @@ void TagManager::updateFilter()
 		filter = images(item->text());
 	}
 	Q_EMIT filterChanged(filter);
+}
+
+//-----------------------------------------------------------------------------
+
+QListWidgetItem* TagManager::createTag(const QString& tag)
+{
+	m_remove_action->setEnabled(true);
+
+	// Add tag
+	m_tags.insert(tag, QStringList());
+	storeTags();
+
+	// Add tag item
+	QListWidgetItem* item = new QListWidgetItem(tag);
+	item->setData(Qt::UserRole, tag);
+	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+	m_filter->addItem(item);
+
+	// Update list of tags
+	m_filter->sortItems();
+	updateFilter();
+
+	return item;
 }
 
 //-----------------------------------------------------------------------------

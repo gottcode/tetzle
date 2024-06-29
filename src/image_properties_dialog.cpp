@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2014 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -10,11 +10,12 @@
 
 #include <QDialogButtonBox>
 #include <QFormLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
-#include <QPushButton>
 #include <QSettings>
+#include <QToolButton>
 
 //-----------------------------------------------------------------------------
 
@@ -48,6 +49,27 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 		m_tags->setCurrentItem(item);
 	}
 
+	m_add_tag_name = new QLineEdit(this);
+	m_add_tag_name->setPlaceholderText(tr("New tag name"));
+	connect(m_add_tag_name, &QLineEdit::textChanged, this, [this](const QString& tag) {
+		m_add_tag_button->setEnabled(!m_manager->hasTag(tag.trimmed()));
+	});
+
+	m_add_tag_button = new QToolButton(this);
+	m_add_tag_button->setEnabled(false);
+	m_add_tag_button->setIcon(QIcon::fromTheme("list-add"));
+	m_add_tag_button->setText(TagManager::tr("Add Tag"));
+	m_add_tag_button->setToolTip(TagManager::tr("Add Tag"));
+	connect(m_add_tag_button, &QToolButton::clicked, this, &ImagePropertiesDialog::addTag);
+
+	QGridLayout* tags_layout = new QGridLayout;
+	tags_layout->setContentsMargins(0, 0, 0, 0);
+	tags_layout->setColumnStretch(0, 1);
+	tags_layout->setRowStretch(0, 1);
+	tags_layout->addWidget(m_tags, 0, 0, 1, 2);
+	tags_layout->addWidget(m_add_tag_name, 1, 0);
+	tags_layout->addWidget(m_add_tag_button, 1, 1);
+
 	// Add dialog buttons
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	connect(buttons, &QDialogButtonBox::accepted, this, &ImagePropertiesDialog::accept);
@@ -57,7 +79,9 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 	QFormLayout* layout = new QFormLayout(this);
 	layout->addRow(preview);
 	layout->addRow(tr("Name:"), m_name);
-	layout->addRow(tr("Tags:"), m_tags);
+	layout->addItem(new QSpacerItem(6, 6));
+	layout->addRow(tr("Tags:"), tags_layout);
+	layout->addItem(new QSpacerItem(6, 6));
 	layout->addRow(buttons);
 
 	// Resize dialog
@@ -92,6 +116,25 @@ void ImagePropertiesDialog::hideEvent(QHideEvent* event)
 {
 	QSettings().setValue("ImageProperties/Size", size());
 	QDialog::hideEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void ImagePropertiesDialog::addTag()
+{
+	// Fetch new tag name
+	const QString tag = m_add_tag_name->text().trimmed();
+	if (m_manager->hasTag(tag)) {
+		return;
+	}
+	m_add_tag_name->clear();
+
+	// Create new tag item
+	QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
+	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+	item->setCheckState(Qt::Checked);
+	m_tags->sortItems();
+	m_tags->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
 }
 
 //-----------------------------------------------------------------------------

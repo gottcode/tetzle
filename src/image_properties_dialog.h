@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2011 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -12,7 +12,7 @@ class TagManager;
 #include <QDialog>
 class QLineEdit;
 class QListWidget;
-class QPushButton;
+class QToolButton;
 
 class ImagePropertiesDialog : public QDialog
 {
@@ -29,11 +29,16 @@ public Q_SLOTS:
 protected:
 	void hideEvent(QHideEvent* event) override;
 
+private Q_SLOTS:
+	void addTag();
+
 private:
 	QString m_image;
 	TagManager* m_manager;
 	QLineEdit* m_name;
 	QListWidget* m_tags;
+	QLineEdit* m_add_tag_name;
+	QToolButton* m_add_tag_button;
 };
 
 #endif // TETZLE_IMAGE_PROPERTIES_DIALOG_H

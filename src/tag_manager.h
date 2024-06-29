@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2011 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -22,6 +22,7 @@ class TagManager : public QWidget
 public:
 	explicit TagManager(QWidget* parent = nullptr);
 
+	bool hasTag(const QString& tag) const;
 	QStringList images(const QString& tag) const;
 	QStringList tags() const;
 	QString tags(const QString& image) const;
@@ -46,6 +47,7 @@ private Q_SLOTS:
 	void updateFilter();
 
 private:
+	QListWidgetItem* createTag(const QString& tag);
 	void storeTags();
 
 private:
@@ -56,5 +58,10 @@ private:
 	QListWidgetItem* m_untagged_item;
 	QAction* m_remove_action;
 };
+
+inline bool TagManager::hasTag(const QString& tag) const
+{
+	return tag.isEmpty() || m_tags.contains(tag);
+}
 
 #endif // TETZLE_TAG_MANAGER_H
