@@ -9,10 +9,13 @@
 #include "path.h"
 #include "toolbar_list.h"
 
-#include <QAction>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QDir>
 #include <QEvent>
+#include <QHBoxLayout>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -22,25 +25,41 @@ TagManager::TagManager(QWidget* parent)
 	: QWidget(parent)
 	, m_all_images_item(0)
 {
+	// Create manage dialog
+	m_manage_dialog = new QDialog(this);
+	QString title = tr("Manage Tags...");
+	title.remove("...");
+	m_manage_dialog->setWindowTitle(title);
+
+	QPushButton* add_tag_button = new QPushButton(QIcon::fromTheme("list-add"), tr("Add Tag"), m_manage_dialog);
+	connect(add_tag_button, &QPushButton::clicked, this, &TagManager::addTag);
+
+	m_remove_tag_button = new QPushButton(QIcon::fromTheme("list-remove"), tr("Remove Tag"), m_manage_dialog);
+	connect(m_remove_tag_button, &QPushButton::clicked, this, &TagManager::removeTag);
+
+	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, m_manage_dialog);
+	buttons->addButton(add_tag_button, QDialogButtonBox::ActionRole);
+	buttons->addButton(m_remove_tag_button, QDialogButtonBox::ActionRole);
+	connect(buttons, &QDialogButtonBox::rejected, m_manage_dialog, &QDialog::reject);
+
+	// Create button to show manage dialog
+	QPushButton* manage = new QPushButton(tr("Manage Tags..."), this);
+	connect(manage, &QPushButton::clicked, m_manage_dialog, &QDialog::exec);
+
+	QHBoxLayout* layout = new QHBoxLayout(this);
+	layout->addWidget(manage);
+
 	// Add filter
-	m_filter = new ToolBarList(this);
+	m_filter = new ToolBarList(m_manage_dialog);
 	m_filter->setSelectionBehavior(QAbstractItemView::SelectItems);
 	m_filter->setSelectionMode(QAbstractItemView::SingleSelection);
 	connect(m_filter, &ToolBarList::currentItemChanged, this, &TagManager::currentTagChanged);
 	connect(m_filter, &ToolBarList::itemChanged, this, &TagManager::tagChanged);
 
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->setContentsMargins(0, 0, 0, 0);
-	layout->addWidget(m_filter);
-
-	// Add filter actions
-	QAction* add_action = new QAction(QIcon::fromTheme("list-add"), tr("Add Tag"), this);
-	m_filter->addToolBarAction(add_action);
-	connect(add_action, &QAction::triggered, this, &TagManager::addTag);
-
-	m_remove_action = new QAction(QIcon::fromTheme("list-remove"), tr("Remove Tag"), this);
-	m_filter->addToolBarAction(m_remove_action);
-	connect(m_remove_action, &QAction::triggered, this, &TagManager::removeTag);
+	QVBoxLayout* manage_layout = new QVBoxLayout(m_manage_dialog);
+	manage_layout->addWidget(m_filter);
+	manage_layout->addSpacing(12);
+	manage_layout->addWidget(buttons);
 
 	// Add tags
 	m_untagged_item = new QListWidgetItem(tr("Untagged"));
@@ -71,6 +90,7 @@ TagManager::TagManager(QWidget* parent)
 		m_filter->addItem(item);
 	}
 	m_filter->sortItems();
+	m_remove_tag_button->setEnabled(!m_tags.isEmpty());
 
 	m_all_images_item = new QListWidgetItem(tr("All Images"));
 	m_all_images_item->setData(Qt::UserRole, m_all_images_item->text());
@@ -227,10 +247,10 @@ void TagManager::removeTag()
 	QString tag = item->text();
 	delete item;
 	item = nullptr;
-	m_remove_action->setEnabled(m_filter->count() > 1);
 
 	// Remove tag
 	m_tags.remove(tag);
+	m_remove_tag_button->setEnabled(!m_tags.isEmpty());
 	storeTags();
 	updateFilter();
 }
@@ -239,7 +259,7 @@ void TagManager::removeTag()
 
 void TagManager::currentTagChanged(QListWidgetItem* item)
 {
-	m_remove_action->setEnabled((item != m_all_images_item) && (item != m_untagged_item));
+	m_remove_tag_button->setEnabled((item != m_all_images_item) && (item != m_untagged_item));
 	updateFilter();
 }
 
@@ -306,7 +326,7 @@ void TagManager::updateFilter()
 
 QListWidgetItem* TagManager::createTag(const QString& tag)
 {
-	m_remove_action->setEnabled(true);
+	m_remove_tag_button->setEnabled(true);
 
 	// Add tag
 	m_tags.insert(tag, QStringList());

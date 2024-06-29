@@ -12,8 +12,9 @@ class ToolBarList;
 #include <QHash>
 #include <QStringList>
 #include <QWidget>
-class QAction;
+class QDialog;
 class QListWidgetItem;
+class QPushButton;
 
 class TagManager : public QWidget
 {
@@ -53,10 +54,12 @@ private:
 private:
 	QHash<QString, QStringList> m_tags;
 	QStringList m_untagged;
+
+	QDialog* m_manage_dialog;
 	ToolBarList* m_filter;
 	QListWidgetItem* m_all_images_item;
 	QListWidgetItem* m_untagged_item;
-	QAction* m_remove_action;
+	QPushButton* m_remove_tag_button;
 };
 
 inline bool TagManager::hasTag(const QString& tag) const
