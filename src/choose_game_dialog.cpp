@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2011-2014 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2011-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -13,6 +13,7 @@
 
 #include <QDir>
 #include <QSettings>
+#include <QTabBar>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
@@ -26,9 +27,12 @@ ChooseGameDialog::ChooseGameDialog(const QStringList& files, int current_id, QWi
 	setAcceptDrops(true);
 
 	m_tabs = new QTabWidget(this);
+	m_tabs->setDocumentMode(true);
+	m_tabs->tabBar()->setExpanding(true);
 
 	// Layout dialog
 	QVBoxLayout* layout = new QVBoxLayout(this);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(m_tabs);
 	resize(QSettings().value("ChooseGame/Size", QSize(800, 600)).toSize());
 
