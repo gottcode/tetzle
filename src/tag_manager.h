@@ -7,16 +7,15 @@
 #ifndef TETZLE_TAG_MANAGER_H
 #define TETZLE_TAG_MANAGER_H
 
-class ToolBarList;
-
+#include <QComboBox>
 #include <QHash>
 #include <QStringList>
-#include <QWidget>
 class QDialog;
+class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 
-class TagManager : public QWidget
+class TagManager : public QComboBox
 {
 	Q_OBJECT
 
@@ -37,13 +36,10 @@ Q_SIGNALS:
 	void filterChanged(const QStringList& images);
 	void tagsChanged();
 
-protected:
-	void changeEvent(QEvent* event) override;
-
 private Q_SLOTS:
 	void addTag();
 	void removeTag();
-	void currentTagChanged(QListWidgetItem* item);
+	void currentTagChanged(int index);
 	void tagChanged(QListWidgetItem* item);
 	void updateFilter();
 
@@ -56,9 +52,7 @@ private:
 	QStringList m_untagged;
 
 	QDialog* m_manage_dialog;
-	ToolBarList* m_filter;
-	QListWidgetItem* m_all_images_item;
-	QListWidgetItem* m_untagged_item;
+	QListWidget* m_tags_list;
 	QPushButton* m_remove_tag_button;
 };
 

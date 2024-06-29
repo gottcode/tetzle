@@ -7,14 +7,13 @@
 #include "tag_manager.h"
 
 #include "path.h"
-#include "toolbar_list.h"
 
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QEvent>
-#include <QHBoxLayout>
 #include <QMessageBox>
+#include <QListWidget>
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -22,9 +21,10 @@
 //-----------------------------------------------------------------------------
 
 TagManager::TagManager(QWidget* parent)
-	: QWidget(parent)
-	, m_all_images_item(0)
+	: QComboBox(parent)
 {
+	connect(this, &QComboBox::currentIndexChanged, this, &TagManager::currentTagChanged);
+
 	// Create manage dialog
 	m_manage_dialog = new QDialog(this);
 	QString title = tr("Manage Tags...");
@@ -42,29 +42,24 @@ TagManager::TagManager(QWidget* parent)
 	buttons->addButton(m_remove_tag_button, QDialogButtonBox::ActionRole);
 	connect(buttons, &QDialogButtonBox::rejected, m_manage_dialog, &QDialog::reject);
 
-	// Create button to show manage dialog
-	QPushButton* manage = new QPushButton(tr("Manage Tags..."), this);
-	connect(manage, &QPushButton::clicked, m_manage_dialog, &QDialog::exec);
-
-	QHBoxLayout* layout = new QHBoxLayout(this);
-	layout->addWidget(manage);
-
 	// Add filter
-	m_filter = new ToolBarList(m_manage_dialog);
-	m_filter->setSelectionBehavior(QAbstractItemView::SelectItems);
-	m_filter->setSelectionMode(QAbstractItemView::SingleSelection);
-	connect(m_filter, &ToolBarList::currentItemChanged, this, &TagManager::currentTagChanged);
-	connect(m_filter, &ToolBarList::itemChanged, this, &TagManager::tagChanged);
+	m_tags_list = new QListWidget(m_manage_dialog);
+	m_tags_list->setMovement(QListView::Static);
+	m_tags_list->setResizeMode(QListView::Adjust);
+	m_tags_list->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	m_tags_list->setSelectionBehavior(QAbstractItemView::SelectItems);
+	m_tags_list->setSelectionMode(QAbstractItemView::SingleSelection);
+	connect(m_tags_list, &QListWidget::currentItemChanged, this, [this](QListWidgetItem* item) {
+		m_remove_tag_button->setEnabled(item);
+	});
+	connect(m_tags_list, &QListWidget::itemChanged, this, &TagManager::tagChanged);
 
 	QVBoxLayout* manage_layout = new QVBoxLayout(m_manage_dialog);
-	manage_layout->addWidget(m_filter);
+	manage_layout->addWidget(m_tags_list);
 	manage_layout->addSpacing(12);
 	manage_layout->addWidget(buttons);
 
 	// Add tags
-	m_untagged_item = new QListWidgetItem(tr("Untagged"));
-	m_untagged_item->setData(Qt::UserRole, m_untagged_item->text());
-	m_filter->addItem(m_untagged_item);
 	m_untagged = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
 
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
@@ -87,18 +82,13 @@ TagManager::TagManager(QWidget* parent)
 		QListWidgetItem* item = new QListWidgetItem(tag);
 		item->setData(Qt::UserRole, item->text());
 		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
-		m_filter->addItem(item);
+		m_tags_list->addItem(item);
 	}
-	m_filter->sortItems();
+	m_tags_list->sortItems();
 	m_remove_tag_button->setEnabled(!m_tags.isEmpty());
 
-	m_all_images_item = new QListWidgetItem(tr("All Images"));
-	m_all_images_item->setData(Qt::UserRole, m_all_images_item->text());
-	QFont font = m_filter->font();
-	font.setBold(true);
-	m_all_images_item->setFont(font);
-	m_filter->insertItem(0, m_all_images_item);
-	m_filter->setCurrentItem(m_all_images_item, QItemSelectionModel::ClearAndSelect);
+	updateFilter();
+	clearFilter();
 }
 
 //-----------------------------------------------------------------------------
@@ -137,7 +127,7 @@ QString TagManager::tags(const QString& image) const
 
 void TagManager::clearFilter()
 {
-	m_filter->setCurrentItem(m_all_images_item, QItemSelectionModel::ClearAndSelect);
+	setCurrentIndex(0);
 }
 
 //-----------------------------------------------------------------------------
@@ -195,19 +185,6 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 	}
 	if (changed) {
 		storeTags();
-		updateFilter();
-	}
-}
-
-//-----------------------------------------------------------------------------
-
-void TagManager::changeEvent(QEvent* event)
-{
-	QWidget::changeEvent(event);
-	if (event->type() == QEvent::FontChange) {
-		QFont font = m_filter->font();
-		font.setBold(true);
-		m_all_images_item->setFont(font);
 	}
 }
 
@@ -224,8 +201,8 @@ void TagManager::addTag()
 
 	// Add tag
 	QListWidgetItem* item = createTag(tag);
-	m_filter->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
-	m_filter->editItem(item);
+	m_tags_list->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
+	m_tags_list->editItem(item);
 }
 
 //-----------------------------------------------------------------------------
@@ -233,8 +210,8 @@ void TagManager::addTag()
 void TagManager::removeTag()
 {
 	// Find current item
-	QListWidgetItem* item = m_filter->currentItem();
-	if (!item || m_filter->row(item) == 0) {
+	QListWidgetItem* item = m_tags_list->currentItem();
+	if (!item) {
 		return;
 	}
 
@@ -257,10 +234,30 @@ void TagManager::removeTag()
 
 //-----------------------------------------------------------------------------
 
-void TagManager::currentTagChanged(QListWidgetItem* item)
+void TagManager::currentTagChanged(int index)
 {
-	m_remove_tag_button->setEnabled((item != m_all_images_item) && (item != m_untagged_item));
-	updateFilter();
+	const QString action = itemData(index).toString();
+	QStringList filter;
+	if (action == "ALL") {
+		filter = m_untagged;
+		QHashIterator<QString, QStringList> i(m_tags);
+		while (i.hasNext()) {
+			i.next();
+			filter += i.value();
+		}
+		filter.removeDuplicates();
+	} else if (action == "UNTAGGED") {
+		filter = m_untagged;
+	} else if (action == "MANAGE") {
+		clearFilter();
+		m_tags_list->setCurrentRow(0);
+		m_tags_list->scrollToTop();
+		m_manage_dialog->exec();
+		return;
+	} else {
+		filter = images(itemText(index));
+	}
+	Q_EMIT filterChanged(filter);
 }
 
 //-----------------------------------------------------------------------------
@@ -271,55 +268,47 @@ void TagManager::tagChanged(QListWidgetItem* item)
 		return;
 	}
 
-	// Rename tag
-	m_filter->blockSignals(true);
-	QString tag = item->text();
-	QString old_tag = item->data(Qt::UserRole).toString();
+	const QString tag = item->text();
+	const QString old_tag = item->data(Qt::UserRole).toString();
 	if (tag != old_tag) {
+		m_tags_list->blockSignals(true);
 		if (tag.isEmpty()) {
+			// Don't allow empty tags
 			item->setText(old_tag);
 		} else if (m_tags.contains(tag)) {
+			// Don't allow duplicate tags
 			item->setText(old_tag);
 			QMessageBox::warning(window(), tr("Sorry"), tr("A tag with that name already exists."));
 		} else {
+			// Rename tag
 			item->setData(Qt::UserRole, tag);
 
 			m_tags.insert(tag, m_tags.take(old_tag));
 			storeTags();
 
-			m_all_images_item = m_filter->takeItem(0);
-			m_filter->sortItems();
-			m_filter->insertItem(0, m_all_images_item);
+			m_tags_list->sortItems();
+			updateFilter();
 
 			Q_EMIT tagsChanged();
 		}
+		m_tags_list->blockSignals(false);
 	}
-	m_filter->blockSignals(false);
-
-	// Update list of images
-	updateFilter();
 }
 
 //-----------------------------------------------------------------------------
 
 void TagManager::updateFilter()
 {
-	QListWidgetItem* item = m_filter->currentItem();
-	QStringList filter;
-	if (item == m_all_images_item) {
-		filter = m_untagged;
-		QHashIterator<QString, QStringList> i(m_tags);
-		while (i.hasNext()) {
-			i.next();
-			filter += i.value();
-		}
-		filter.removeDuplicates();
-	} else if (item == m_untagged_item) {
-		filter = m_untagged;
-	} else if (item) {
-		filter = images(item->text());
+	blockSignals(true);
+	clear();
+	addItem(tr("All Images"), "ALL");
+	for (int i = 0, count = m_tags_list->count(); i < count; ++i) {
+		addItem(m_tags_list->item(i)->text());
 	}
-	Q_EMIT filterChanged(filter);
+	addItem(tr("Untagged"), "UNTAGGED");
+	insertSeparator(count());
+	addItem(tr("Manage Tags..."), "MANAGE");
+	blockSignals(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -336,10 +325,10 @@ QListWidgetItem* TagManager::createTag(const QString& tag)
 	QListWidgetItem* item = new QListWidgetItem(tag);
 	item->setData(Qt::UserRole, tag);
 	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
-	m_filter->addItem(item);
+	m_tags_list->addItem(item);
 
 	// Update list of tags
-	m_filter->sortItems();
+	m_tags_list->sortItems();
 	updateFilter();
 
 	return item;
