@@ -189,10 +189,14 @@ void TagManager::addTag()
 {
 	m_remove_action->setEnabled(true);
 
+	// Find first unused tag
+	int new_tag = 0;
+	QString tag;
+	do {
+		tag = tr("Untitled %1").arg(++new_tag);
+	} while(m_tags.contains(tag));
+
 	// Add tag
-	static int new_tags = 0;
-	new_tags++;
-	QString tag = tr("Untitled %1").arg(new_tags);
 	m_tags.insert(tag, QStringList());
 	storeTags();
 
