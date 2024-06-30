@@ -49,7 +49,7 @@ private:
 
 private:
 	QHash<QString, QStringList> m_tags;
-	QStringList m_untagged;
+	QStringList m_all;
 
 	QDialog* m_manage_dialog;
 	QListWidget* m_tags_list;

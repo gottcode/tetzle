@@ -60,7 +60,7 @@ TagManager::TagManager(QWidget* parent)
 	manage_layout->addWidget(buttons);
 
 	// Add tags
-	m_untagged = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
+	m_all = QDir(Path::images(), "*.*", QDir::Name | QDir::LocaleAware, QDir::Files).entryList();
 
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
@@ -75,7 +75,6 @@ TagManager::TagManager(QWidget* parent)
 			if (!folder.exists(i.value())) {
 				i.remove();
 			}
-			m_untagged.removeAll(i.value());
 		}
 		m_tags[tag] = images;
 
@@ -134,7 +133,7 @@ void TagManager::clearFilter()
 
 void TagManager::addImage(const QString& image)
 {
-	m_untagged.append(image);
+	m_all.append(image);
 	updateFilter();
 }
 
@@ -143,7 +142,7 @@ void TagManager::addImage(const QString& image)
 void TagManager::removeImage(const QString& image)
 {
 	setImageTags(image, QStringList());
-	m_untagged.removeAll(image);
+	m_all.removeOne(image);
 	updateFilter();
 }
 
@@ -151,12 +150,6 @@ void TagManager::removeImage(const QString& image)
 
 void TagManager::setImageTags(const QString& image, const QStringList& tags)
 {
-	if (!tags.isEmpty()) {
-		m_untagged.removeAll(image);
-	} else {
-		m_untagged.append(image);
-	}
-
 	// Add new tags
 	for (const QString& tag: tags) {
 		if (!m_tags.contains(tag)) {
@@ -174,7 +167,7 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 		if (tag.contains(image)) {
 			if (!tagged) {
 				changed = true;
-				tag.removeAll(image);
+				tag.removeOne(image);
 			}
 		} else {
 			if (tagged) {
@@ -240,15 +233,16 @@ void TagManager::currentTagChanged(int index)
 	const QString action = itemData(index).toString();
 	QStringList filter;
 	if (action == "ALL") {
-		filter = m_untagged;
+		filter = m_all;
+	} else if (action == "UNTAGGED") {
+		filter = m_all;
 		QHashIterator<QString, QStringList> i(m_tags);
 		while (i.hasNext()) {
 			i.next();
-			filter += i.value();
+			for (const QString& image : i.value()) {
+				filter.removeOne(image);
+			}
 		}
-		filter.removeDuplicates();
-	} else if (action == "UNTAGGED") {
-		filter = m_untagged;
 	} else if (action == "MANAGE") {
 		clearFilter();
 		m_tags_list->setCurrentRow(0);
