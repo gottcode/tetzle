@@ -17,7 +17,6 @@ class QListWidgetItem;
 class QPushButton;
 class QSettings;
 class QSlider;
-class QSplitter;
 
 class NewGameTab : public QWidget
 {
@@ -31,9 +30,6 @@ public:
 Q_SIGNALS:
 	void imageRenamed(const QString& image, const QString& name);
 	void newGame(const QString& image, int difficulty);
-
-protected:
-	void hideEvent(QHideEvent* event) override;
 
 private Q_SLOTS:
 	void accept();
@@ -51,7 +47,6 @@ private:
 	void removeThumbnail(const QString& image_id);
 
 private:
-	QSplitter* m_image_contents;
 	TagManager* m_image_tags;
 	ToolBarList* m_images;
 	QAction* m_remove_action;

@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2011-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2011-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -33,6 +33,17 @@ void ToolBarList::addToolBarAction(QAction* action)
 	if (action) {
 		addAction(action);
 		m_toolbar->addAction(action);
+		m_toolbar->show();
+		updateGeometries();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void ToolBarList::addToolBarWidget(QWidget* widget)
+{
+	if (widget) {
+		m_toolbar->addWidget(widget);
 		m_toolbar->show();
 		updateGeometries();
 	}

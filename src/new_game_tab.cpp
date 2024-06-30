@@ -33,7 +33,6 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QSlider>
-#include <QSplitter>
 #include <QXmlStreamReader>
 
 #include <algorithm>
@@ -77,11 +76,6 @@ void updateToolTip(QListWidgetItem* item)
 NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	: QWidget(parent)
 {
-	// Add image filter
-	m_image_tags = new TagManager(this);
-	connect(m_image_tags, &TagManager::filterChanged, this, &NewGameTab::filterImages);
-	connect(m_image_tags, &TagManager::tagsChanged, this, &NewGameTab::updateTagsStrings);
-
 	// Add image selector
 	m_images = new ToolBarList(this);
 	m_images->setViewMode(QListView::IconMode);
@@ -105,13 +99,15 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->addToolBarAction(m_tag_action);
 	connect(m_tag_action, &QAction::triggered, this, &NewGameTab::editImageProperties);
 
-	// Add image splitter
-	m_image_contents = new QSplitter(this);
-	m_image_contents->addWidget(m_image_tags);
-	m_image_contents->addWidget(m_images);
-	m_image_contents->setStretchFactor(0, 0);
-	m_image_contents->setStretchFactor(1, 1);
-	m_image_contents->setSizes(QList<int>() << 130 << m_images->minimumWidth());
+	// Add image filter
+	QWidget* spacer = new QWidget(this);
+	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+	m_images->addToolBarWidget(spacer);
+
+	m_image_tags = new TagManager(this);
+	connect(m_image_tags, &TagManager::filterChanged, this, &NewGameTab::filterImages);
+	connect(m_image_tags, &TagManager::tagsChanged, this, &NewGameTab::updateTagsStrings);
+	m_images->addToolBarWidget(m_image_tags);
 
 	// Add pieces slider
 	m_slider = new QSlider(Qt::Horizontal, this);
@@ -135,7 +131,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	QGridLayout* layout = new QGridLayout(this);
 	layout->setColumnStretch(1, 1);
 	layout->setRowStretch(0, 1);
-	layout->addWidget(m_image_contents, 0, 0, 1, 2);
+	layout->addWidget(m_images, 0, 0, 1, 2);
 	layout->setRowMinimumHeight(1, 12);
 	layout->addWidget(m_count, 2, 0);
 	layout->addWidget(m_slider, 2, 1);
@@ -168,9 +164,6 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 	// Add new images
 	addImages(files);
-
-	// Resize contents
-	m_image_contents->restoreState(settings.value("NewGame/SplitterSizes").toByteArray());
 }
 
 //-----------------------------------------------------------------------------
@@ -205,14 +198,6 @@ void NewGameTab::addImages(const QStringList& images)
 	progress.setValue(count);
 
 	QApplication::restoreOverrideCursor();
-}
-
-//-----------------------------------------------------------------------------
-
-void NewGameTab::hideEvent(QHideEvent* event)
-{
-	QSettings().setValue("NewGame/SplitterSizes", m_image_contents->saveState());
-	QWidget::hideEvent(event);
 }
 
 //-----------------------------------------------------------------------------

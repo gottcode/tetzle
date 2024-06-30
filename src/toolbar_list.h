@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2011-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2011-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -16,6 +16,7 @@ public:
 	explicit ToolBarList(QWidget* parent = nullptr);
 
 	void addToolBarAction(QAction* action);
+	void addToolBarWidget(QWidget* widget);
 
 protected:
 	void updateGeometries() override;
