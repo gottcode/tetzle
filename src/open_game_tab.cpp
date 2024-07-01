@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -85,11 +85,12 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setCurrentRow(0);
 
 	// Create buttons
-	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Open | QDialogButtonBox::Cancel, Qt::Horizontal, this);
+	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	connect(buttons, &QDialogButtonBox::accepted, this, &OpenGameTab::accept);
 	connect(buttons, &QDialogButtonBox::rejected, parent, &QDialog::reject);
 
-	m_accept_button = buttons->button(QDialogButtonBox::Open);
+	m_accept_button = buttons->button(QDialogButtonBox::Ok);
+	m_accept_button->setText(ChooseGameDialog::tr("Play Game"));
 	m_accept_button->setEnabled(m_games->count() > 0);
 
 	QPushButton* delete_button = buttons->addButton(tr("Delete"), QDialogButtonBox::ActionRole);

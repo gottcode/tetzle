@@ -7,6 +7,7 @@
 #include "new_game_tab.h"
 
 #include "add_image.h"
+#include "choose_game_dialog.h"
 #include "image_properties_dialog.h"
 #include "path.h"
 #include "tag_manager.h"
@@ -127,6 +128,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	connect(buttons, &QDialogButtonBox::rejected, parent, &QDialog::reject);
 
 	m_accept_button = buttons->button(QDialogButtonBox::Ok);
+	m_accept_button->setText(ChooseGameDialog::tr("Play Game"));
 	m_accept_button->setEnabled(false);
 
 	// Arrange widgets
