@@ -94,6 +94,9 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_accept_button->setEnabled(m_games->count() > 0);
 
 	QPushButton* delete_button = buttons->addButton(tr("Delete"), QDialogButtonBox::ActionRole);
+	if (delete_button->style()->styleHint(QStyle::SH_DialogButtonBox_ButtonsHaveIcons)) {
+		delete_button->setIcon(QIcon::fromTheme("edit-delete"));
+	}
 	delete_button->setEnabled(m_accept_button->isEnabled());
 	connect(delete_button, &QPushButton::clicked, this, &OpenGameTab::deleteGame);
 
