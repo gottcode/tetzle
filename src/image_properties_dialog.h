@@ -23,6 +23,8 @@ public:
 
 	QString name() const;
 
+	bool eventFilter(QObject* watched, QEvent* event) override;
+
 public Q_SLOTS:
 	void accept() override;
 

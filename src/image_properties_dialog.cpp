@@ -9,8 +9,10 @@
 #include "tag_manager.h"
 
 #include <QDialogButtonBox>
+#include <QEvent>
 #include <QFormLayout>
 #include <QGridLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
@@ -54,6 +56,7 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 	connect(m_add_tag_name, &QLineEdit::textChanged, this, [this](const QString& tag) {
 		m_add_tag_button->setEnabled(!m_manager->hasTag(tag.trimmed()));
 	});
+	m_add_tag_name->installEventFilter(this);
 
 	m_add_tag_button = new QToolButton(this);
 	m_add_tag_button->setEnabled(false);
@@ -93,6 +96,21 @@ ImagePropertiesDialog::ImagePropertiesDialog(const QIcon& icon, const QString& n
 QString ImagePropertiesDialog::name() const
 {
 	return m_name->text();
+}
+
+//-----------------------------------------------------------------------------
+
+bool ImagePropertiesDialog::eventFilter(QObject* watched, QEvent* event)
+{
+	if ((watched == m_add_tag_name) && (event->type() == QEvent::KeyPress)) {
+		QKeyEvent* key_event = static_cast<QKeyEvent*>(event);
+		if ((key_event->key() == Qt::Key_Return) || (key_event->key() == Qt::Key_Enter)) {
+			addTag();
+			return true;
+		}
+	}
+
+	return QDialog::eventFilter(watched, event);
 }
 
 //-----------------------------------------------------------------------------
