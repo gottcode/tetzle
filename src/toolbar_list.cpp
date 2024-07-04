@@ -16,7 +16,7 @@ ToolBarList::ToolBarList(QWidget* parent)
 	m_toolbar = new QToolBar(this);
 	m_toolbar->setFloatable(false);
 	m_toolbar->setMovable(false);
-	m_toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	m_toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	m_toolbar->setStyleSheet("QToolBar { border-top: 1px solid palette(mid); }");
 	m_toolbar->hide();
 
