@@ -84,7 +84,6 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setItemDelegate(new ThumbnailDelegate(m_images));
 	connect(m_images, &ToolBarList::itemSelectionChanged, this, &NewGameTab::imageSelected);
-	connect(m_images, &ToolBarList::itemActivated, this, &NewGameTab::editImageProperties);
 
 	// Add image actions
 	QAction* add_action = new QAction(QIcon::fromTheme("list-add"), tr("Add Image"), this);
@@ -443,6 +442,22 @@ void NewGameTab::updateTagsStrings()
 		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
 		updateToolTip(item);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::hideEvent(QHideEvent* event)
+{
+	m_accept_button->setDefault(false);
+	QWidget::hideEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void NewGameTab::showEvent(QShowEvent* event)
+{
+	m_accept_button->setDefault(true);
+	QWidget::showEvent(event);
 }
 
 //-----------------------------------------------------------------------------

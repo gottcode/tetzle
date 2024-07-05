@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2011 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -23,6 +23,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	void openGame(int id);
+
+protected:
+	void hideEvent(QHideEvent* event) override;
+	void showEvent(QShowEvent* event) override;
 
 private Q_SLOTS:
 	void accept();

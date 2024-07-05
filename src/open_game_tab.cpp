@@ -122,6 +122,22 @@ void OpenGameTab::imageRenamed(const QString& image, const QString& name)
 
 //-----------------------------------------------------------------------------
 
+void OpenGameTab::hideEvent(QHideEvent* event)
+{
+	m_accept_button->setDefault(false);
+	QWidget::hideEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
+void OpenGameTab::showEvent(QShowEvent* event)
+{
+	m_accept_button->setDefault(true);
+	QWidget::showEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
 void OpenGameTab::accept()
 {
 	QListWidgetItem* item = m_games->currentItem();

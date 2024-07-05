@@ -41,6 +41,10 @@ private Q_SLOTS:
 	void filterImages(const QStringList& filter);
 	void updateTagsStrings();
 
+protected:
+	void hideEvent(QHideEvent* event) override;
+	void showEvent(QShowEvent* event) override;
+
 private:
 	void addImage(const QString& image);
 	QListWidgetItem* createItem(const QString& image, const QSettings& details);
