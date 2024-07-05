@@ -84,10 +84,11 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	// Add image selector
 	m_images = new ToolBarList(this);
 	m_images->setViewMode(QListView::IconMode);
+	m_images->setSelectionMode(QListWidget::ExtendedSelection);
 	m_images->setIconSize(QSize(74, 74));
 	m_images->setMinimumSize(460 + m_images->verticalScrollBar()->sizeHint().width(), 230);
 	m_images->setItemDelegate(new ThumbnailDelegate(m_images));
-	connect(m_images, &ToolBarList::currentItemChanged, this, &NewGameTab::imageSelected);
+	connect(m_images, &ToolBarList::itemSelectionChanged, this, &NewGameTab::imageSelected);
 	connect(m_images, &ToolBarList::itemActivated, this, &NewGameTab::editImageProperties);
 
 	// Add image actions
@@ -179,6 +180,8 @@ void NewGameTab::addImages(const QStringList& images)
 		return;
 	}
 
+	m_images->clearSelection();
+
 	QProgressDialog progress(tr("Copying images..."), tr("Cancel"), 0, count, this);
 	progress.setMinimumDuration(500);
 	progress.setWindowModality(Qt::WindowModal);
@@ -239,12 +242,17 @@ void NewGameTab::addImageClicked()
 
 void NewGameTab::removeImage()
 {
-	QListWidgetItem* item = m_images->currentItem();
-	if (!item) {
+	// Find selected images
+	const QList<QListWidgetItem*> items = m_images->selectedItems();
+	if (items.isEmpty()) {
 		return;
 	}
-	QString current_image = item->data(ImageRole).toString();
+	QStringList selected_images;
+	for (QListWidgetItem* item : items) {
+		selected_images.append(item->data(ImageRole).toString());
+	}
 
+	// Find games that would be affected
 	QStringList games;
 
 	QXmlStreamReader xml;
@@ -263,50 +271,65 @@ void NewGameTab::removeImage()
 		}
 		attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 5) {
-			if (attributes.value("image").toString() == current_image) {
+			if (selected_images.contains(attributes.value("image").toString())) {
 				games.append(game);
 			}
 		}
 	}
 
-	QString message;
-	if (games.isEmpty()) {
-		message = tr("Remove selected image?");
-	} else {
-		message = tr("Remove selected image?\n\nThere are saved games using this image that will also be removed.");
+	// Prompt about image removal
+	const int plural = selected_images.size();
+	QMessageBox mbox(this);
+	mbox.setIcon(QMessageBox::Question);
+	mbox.setWindowTitle(tr("Remove Image"));
+	mbox.setText(tr("Remove %n selected image(s)?", nullptr, plural));
+	if (!games.isEmpty()) {
+		mbox.setIcon(QMessageBox::Warning);
+		mbox.setInformativeText(tr("Saved games using these image(s) will be deleted.", nullptr, plural));
 	}
-	if (QMessageBox::question(this, tr("Remove Image"), message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
-		const QString image_id = current_image.section(".", 0, 0);
+	mbox.setStandardButtons(QMessageBox::Cancel);
+	mbox.addButton(tr("Remove"), QMessageBox::AcceptRole);
+	mbox.setDefaultButton(QMessageBox::Cancel);
+	if (mbox.exec() == QMessageBox::Cancel) {
+		return;
+	}
 
+	// Remove images
+	QSettings details(Path::image("details"), QSettings::IniFormat);
+	for (const QString& current_image : std::as_const(selected_images)) {
 		// Remove from image details
-		QSettings details(Path::image("details"), QSettings::IniFormat);
-		details.remove(current_image + "/Name");
-		details.remove(current_image + "/SHA1");
+		details.remove(current_image);
 
 		// Delete image
 		QFile::remove(Path::image(current_image));
 
 		// Delete thumbnail
-		removeThumbnail(image_id);
-
-		// Delete saved games depending on image
-		for (const QString& game : std::as_const(games)) {
-			QFile::remove(Path::save(game));
-		}
+		removeThumbnail(current_image.section(".", 0, 0));
 
 		// Remove from tags
 		m_image_tags->removeImage(current_image);
+	}
 
+	// Remove saved games depending on images
+	for (const QString& game : std::as_const(games)) {
+		QFile::remove(Path::save(game));
+	}
+
+	// Remove listwidget items
+	for (QListWidgetItem* item : items) {
 		delete item;
+	}
 
-		m_accept_button->setEnabled(m_images->count() > 0);
-		if (!m_accept_button->isEnabled()) {
-			m_slider->setMaximum(-1);
-			m_count->clear();
-			QSettings settings;
-			settings.remove("NewGame/Image");
-			settings.remove("NewGame/Pieces");
-		}
+	// Handle all images being removed
+	if (m_images->count() == 0) {
+		m_accept_button->setEnabled(false);
+
+		m_slider->setMaximum(-1);
+		m_count->clear();
+
+		QSettings settings;
+		settings.remove("NewGame/Image");
+		settings.remove("NewGame/Pieces");
 	}
 }
 
@@ -344,18 +367,22 @@ void NewGameTab::editImageProperties()
 
 //-----------------------------------------------------------------------------
 
-void NewGameTab::imageSelected(QListWidgetItem* item)
+void NewGameTab::imageSelected()
 {
-	bool enabled = item;
-	m_accept_button->setEnabled(enabled);
-	m_tag_action->setEnabled(enabled);
-	m_remove_action->setEnabled(enabled);
-	if (!enabled) {
+	const qsizetype size = m_images->selectedItems().size();
+	if (size == 0) {
+		m_accept_button->setEnabled(false);
+		m_tag_action->setEnabled(false);
+		m_remove_action->setEnabled(false);
 		return;
 	}
 
+	const bool enabled = size == 1;
+	m_accept_button->setEnabled(enabled);
+	m_tag_action->setEnabled(enabled);
+
 	// Prevent removing the image of the game currently open
-	QString image = item->data(ImageRole).toString();
+	const QString image = m_images->currentItem()->data(ImageRole).toString();
 	m_remove_action->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader(Path::image(image)).size();

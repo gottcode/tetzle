@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2014 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -40,7 +40,7 @@ private Q_SLOTS:
 	void addImageClicked();
 	void removeImage();
 	void editImageProperties();
-	void imageSelected(QListWidgetItem* item);
+	void imageSelected();
 	void pieceCountChanged(int value);
 	void filterImages(const QStringList& filter);
 	void updateTagsStrings();
