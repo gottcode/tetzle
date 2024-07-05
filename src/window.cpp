@@ -69,7 +69,7 @@ Window::Window(const QStringList& files)
 
 	menu = menuBar()->addMenu(tr("&Game"));
 	QAction* choose_action = menu->addAction(tr("&Choose..."), this, [this]() { chooseGame(QStringList()); });
-	choose_action->setShortcuts(QList<QKeySequence>() << QKeySequence::New << QKeySequence::Open);
+	choose_action->setShortcuts({ QKeySequence::New, QKeySequence::Open});
 	menu->addSeparator();
 	QAction* retrieve_pieces_action = menu->addAction(tr("&Retrieve Pieces"), m_board, &Board::retrievePieces);
 	retrieve_pieces_action->setShortcut(tr("Ctrl+R"));

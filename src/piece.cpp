@@ -106,7 +106,7 @@ void Piece::attachNeighbors()
 void Piece::findNeighbors(const QList<Piece*>& pieces)
 {
 	// Find neighbor tiles
-	static const QList<QPoint> deltas = QList<QPoint>() << QPoint(-1,0) << QPoint(1,0) << QPoint(0,-1) << QPoint(0,1);
+	static const QList<QPoint> deltas{ QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
 	QList<QPoint> tiles;
 	for (Tile* tile : std::as_const(m_shadow)) {
 		QPoint pos(tile->column(), tile->row());

@@ -37,16 +37,16 @@ EdgeScroller::EdgeScroller(int horizontal, int vertical, QWidget* parent)
 
 	if (horizontal > 0) {
 		// Left
-		m_arrow << QPoint(0, 10) << QPoint(10, 0) << QPoint(10, 20);
+		m_arrow = { QPoint(0, 10), QPoint(10, 0), QPoint(10, 20) };
 	} else if (horizontal < 0) {
 		// Right
-		m_arrow << QPoint(0, 0) << QPoint(10, 10) << QPoint(0, 20);
+		m_arrow = { QPoint(0, 0), QPoint(10, 10), QPoint(0, 20) };
 	} else if (vertical > 0 ) {
 		// Up
-		m_arrow << QPoint(0, 10) << QPoint(10, 0) << QPoint(20, 10);
+		m_arrow = { QPoint(0, 10), QPoint(10, 0), QPoint(20, 10) };
 	} else {
 		// Down
-		m_arrow << QPoint(0, 0) << QPoint(20, 0) << QPoint(10, 10);
+		m_arrow = { QPoint(0, 0), QPoint(20, 0), QPoint(10, 10) };
 	}
 }
 
