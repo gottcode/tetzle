@@ -40,19 +40,6 @@ void ToolBarList::addToolBarAction(QAction* action)
 
 //-----------------------------------------------------------------------------
 
-QIcon ToolBarList::fetchIcon(const QString& name)
-{
-	QIcon icon(QString(":/tango/64x64/%1.png").arg(name));
-	icon.addFile(QString(":/tango/48x48/%1.png").arg(name));
-	icon.addFile(QString(":/tango/32x32/%1.png").arg(name));
-	icon.addFile(QString(":/tango/24x24/%1.png").arg(name));
-	icon.addFile(QString(":/tango/22x22/%1.png").arg(name));
-	icon.addFile(QString(":/tango/16x16/%1.png").arg(name));
-	return QIcon::fromTheme(name, icon);
-}
-
-//-----------------------------------------------------------------------------
-
 void ToolBarList::updateGeometries()
 {
 	// Resize viewport margins

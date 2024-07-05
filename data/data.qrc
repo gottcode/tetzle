@@ -2,27 +2,5 @@
 <qresource>
 	<file>bumpmap.png</file>
 	<file>shadow.png</file>
-
-	<file>tango/16x16/document-properties.png</file>
-	<file>tango/16x16/list-add.png</file>
-	<file>tango/16x16/list-remove.png</file>
-	<file>tango/22x22/document-properties.png</file>
-	<file>tango/22x22/list-add.png</file>
-	<file>tango/22x22/list-remove.png</file>
-	<file>tango/24x24/document-properties.png</file>
-	<file>tango/24x24/list-add.png</file>
-	<file>tango/24x24/list-remove.png</file>
-	<file>tango/32x32/document-properties.png</file>
-	<file>tango/32x32/list-add.png</file>
-	<file>tango/32x32/list-remove.png</file>
-	<file>tango/48x48/document-properties.png</file>
-	<file>tango/48x48/list-add.png</file>
-	<file>tango/48x48/list-remove.png</file>
-	<file>tango/64x64/document-properties.png</file>
-	<file>tango/64x64/list-add.png</file>
-	<file>tango/64x64/list-remove.png</file>
-	<file>tango/image-loading.png</file>
-	<file>tango/image-loading@2x.png</file>
-	<file>tango/image-loading@3x.png</file>
 </qresource>
 </RCC>

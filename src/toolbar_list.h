@@ -16,7 +16,6 @@ public:
 	explicit ToolBarList(QWidget* parent = nullptr);
 
 	void addToolBarAction(QAction* action);
-	QIcon fetchIcon(const QString& name);
 
 protected:
 	void updateGeometries() override;

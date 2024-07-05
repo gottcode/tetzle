@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2016 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -34,11 +34,11 @@ TagManager::TagManager(QWidget* parent)
 	layout->addWidget(m_filter);
 
 	// Add filter actions
-	QAction* add_action = new QAction(m_filter->fetchIcon("list-add"), tr("Add Tag"), this);
+	QAction* add_action = new QAction(QIcon::fromTheme("list-add"), tr("Add Tag"), this);
 	m_filter->addToolBarAction(add_action);
 	connect(add_action, &QAction::triggered, this, &TagManager::addTag);
 
-	m_remove_action = new QAction(m_filter->fetchIcon("list-remove"), tr("Remove Tag"), this);
+	m_remove_action = new QAction(QIcon::fromTheme("list-remove"), tr("Remove Tag"), this);
 	m_filter->addToolBarAction(m_remove_action);
 	connect(m_remove_action, &QAction::triggered, this, &TagManager::removeTag);
 

@@ -57,7 +57,7 @@ private:
 };
 
 ThumbnailItem::ThumbnailItem(const QString& text)
-	: QListWidgetItem(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")), text)
+	: QListWidgetItem(QIcon::fromTheme("image-loading"), text)
 {
 }
 

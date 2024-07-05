@@ -98,7 +98,7 @@ void Overview::reset()
 	zoom(m_min_scale_level);
 
 	// Show loading icon
-	setPixmap(QIcon::fromTheme("image-loading", QIcon(":/tango/image-loading.png")).pixmap(128,128));
+	setPixmap(QIcon::fromTheme("image-loading").pixmap(128,128));
 }
 
 //-----------------------------------------------------------------------------
