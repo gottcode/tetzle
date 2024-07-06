@@ -34,6 +34,7 @@ void ToolBarList::addToolBarAction(QAction* action)
 		addAction(action);
 		m_toolbar->addAction(action);
 		m_toolbar->show();
+		m_toolbar->widgetForAction(action)->setFocusPolicy(Qt::TabFocus);
 		updateGeometries();
 	}
 }
