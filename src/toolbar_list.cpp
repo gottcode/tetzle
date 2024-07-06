@@ -17,7 +17,7 @@ ToolBarList::ToolBarList(QWidget* parent)
 	m_toolbar->setFloatable(false);
 	m_toolbar->setMovable(false);
 	m_toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	m_toolbar->setStyleSheet("QToolBar { border-top: 1px solid palette(mid); }");
+	m_toolbar->setStyleSheet("QToolBar { border-bottom: 1px solid palette(mid); }");
 	m_toolbar->hide();
 
 	setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -55,11 +55,11 @@ void ToolBarList::updateGeometries()
 {
 	// Resize viewport margins
 	QSize hint = m_toolbar->isHidden() ? QSize(0,0) : m_toolbar->sizeHint();
-	setViewportMargins(0, 0, 0, hint.height());
+	setViewportMargins(0, hint.height(), 0, 0);
 
 	// Resize toolbar
 	QRect rect = viewport()->geometry();
-	QRect geometry(rect.left(), rect.top() + rect.height(), rect.width(), hint.height());
+	QRect geometry(rect.left(), rect.top() - hint.height(), rect.width(), hint.height());
 	m_toolbar->setGeometry(geometry);
 
 	QListWidget::updateGeometries();
