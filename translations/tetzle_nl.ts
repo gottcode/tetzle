@@ -439,14 +439,14 @@ De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.<
     </message>
     <message>
         <source>%p% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>%p% voltooid</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>Zoom: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoomniveau: %1%</translation>
     </message>
 </context>
 <context>

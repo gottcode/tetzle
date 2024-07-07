@@ -439,14 +439,14 @@ Există jocuri salvate care folosesc această imagine, care vor fi, de asemenea,
     </message>
     <message>
         <source>%p% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>%p% complet</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>Zoom: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom: %1%</translation>
     </message>
 </context>
 <context>

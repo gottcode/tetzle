@@ -439,14 +439,14 @@ Yra išsaugotų žaidimų, kurie naudoja šį paveikslą. Šie žaidimai taip pa
     </message>
     <message>
         <source>%p% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>%p% užbaigta</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>Zoom: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Mastelis: %1%</translation>
     </message>
 </context>
 <context>

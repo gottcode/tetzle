@@ -439,14 +439,14 @@ Es existieren gespeicherte Spiele, die dieses Bild benutzen und die ebenfalls ge
     </message>
     <message>
         <source>%p% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Fortschritt %p%</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>Zoom: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Vergrößerung: %1%</translation>
     </message>
 </context>
 <context>
