@@ -20,6 +20,39 @@
 
 //-----------------------------------------------------------------------------
 
+namespace
+{
+
+class TagItem : public QListWidgetItem
+{
+public:
+	explicit TagItem(const QString& tag = QString());
+
+	static bool compare(const QString& a, const QString& b);
+	bool operator<(const QListWidgetItem& other) const override;
+};
+
+TagItem::TagItem(const QString& tag)
+	: QListWidgetItem(tag)
+{
+	setData(Qt::UserRole, tag);
+	setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+}
+
+inline bool TagItem::compare(const QString& a, const QString& b)
+{
+	return a.localeAwareCompare(b) < 0;
+}
+
+inline bool TagItem::operator<(const QListWidgetItem& other) const
+{
+	return compare(text(), other.text());
+}
+
+}
+
+//-----------------------------------------------------------------------------
+
 TagManager::TagManager(QWidget* parent)
 	: QComboBox(parent)
 {
@@ -102,7 +135,7 @@ QStringList TagManager::images(const QString& tag) const
 QStringList TagManager::tags() const
 {
 	QStringList tags = m_tags.keys();
-	tags.sort();
+	std::sort(tags.begin(), tags.end(), &TagItem::compare);
 	return tags;
 }
 
@@ -118,7 +151,7 @@ QString TagManager::tags(const QString& image) const
 			tags.append(i.key());
 		}
 	}
-	tags.sort();
+	std::sort(tags.begin(), tags.end(), &TagItem::compare);
 	return tags.join(", ");
 }
 
@@ -317,9 +350,7 @@ QListWidgetItem* TagManager::createTag(const QString& tag)
 	storeTags();
 
 	// Add tag item
-	QListWidgetItem* item = new QListWidgetItem(tag);
-	item->setData(Qt::UserRole, tag);
-	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
+	QListWidgetItem* item = new TagItem(tag);
 	m_tags_list->addItem(item);
 
 	// Update list of tags
