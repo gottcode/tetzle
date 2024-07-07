@@ -527,7 +527,7 @@ void NewGameTab::addImage(const QString& image)
 		m_images->blockSignals(true);
 		item = createItem(filename, details);
 		m_images->blockSignals(false);
-		m_images->setCurrentItem(item);
+		m_images->sortItems();
 	}
 	m_images->setCurrentItem(item);
 	m_images->scrollToItem(item, QAbstractItemView::PositionAtTop);
