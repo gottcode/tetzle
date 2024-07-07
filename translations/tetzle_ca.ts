@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Joc nou</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Etiquetes:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,26 @@
         <translation>Cancel·lar</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Voleu eliminar la imatge seleccionada?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Eliminar la imatge seleccionada?
-
-Hi ha jocs desats que fan servir la imatge que voleu eliminar.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Sense títol</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +279,10 @@ Hi ha jocs desats que fan servir la imatge que voleu eliminar.</translation>
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Ja existeix una etiqueta amb aquest nom.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

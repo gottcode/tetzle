@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Nieuw spel</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Labels:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,26 @@
         <translation>Annuleren</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Geselecteerde afbeelding verwijderen?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Wil je de geselecteerde afbeelding verwijderen?
-
-De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Naamloos</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +279,10 @@ De opgeslagen spellen die deze afbeelding gebruiken worden eveneens verwijderd.<
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Er is al een label met die naam.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

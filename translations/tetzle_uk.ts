@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Нова гра</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Мітки:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,28 @@
         <translation>Скасувати</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Вилучити вибране зображення?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Вилучити вибране зображення?
-
-Є збережені ігри з таким зображенням, що також будуть вилучені.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Без назви</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +281,10 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Мітка з такою назвою вже є.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

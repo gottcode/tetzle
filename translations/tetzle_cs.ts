@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Nová hra</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Štítky:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,28 @@
         <translation>Zrušit</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Odstranit vybraný obrázek?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Odstranit vybraný obrázek?
-
-Některé z rozehraných her používají tento obrázek, odstraníte-li jej, budou taktéž odstraněny.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Nepojmenovaný</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +281,10 @@ Některé z rozehraných her používají tento obrázek, odstraníte-li jej, bu
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Štítek s tímto jménem již existuje.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

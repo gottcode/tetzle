@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Καινούργιο παιχνίδι</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Κατηγορία:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,26 @@
         <translation>Ακύρωση</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Αφαίρεση της επιλεγμένης εικόνας;</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Αφαίρεση της επιλεγμένης εικόνας;
-
-Εκεί αποθηκεύονται τα παιχνίδια που χρησιμοποιούν αυτή την εικόνα που θα πρέπει επίσης να αφαιρεθεί.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Χωρίς τίτλο</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +279,10 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Μια κατηγορία με αυτό το όνομα υπάρχει ήδη.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

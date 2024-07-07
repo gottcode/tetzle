@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Nowa gra</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Tagi</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,28 @@
         <translation>Anuluj</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Usunąć wybrany obraz?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Usunąć wybrany obraz?
-
-Istniejące zapisane gry, które używają tego obrazu, zostaną również usunięte.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Bez tytułu</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +281,10 @@ Istniejące zapisane gry, które używają tego obrazu, zostaną również usuni
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Tag o takiej nazwie już istnieje.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

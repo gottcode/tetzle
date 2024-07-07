@@ -118,6 +118,10 @@
         <source>New Game</source>
         <translation>Yeni Oyun</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -132,6 +136,10 @@
     <message>
         <source>Tags:</source>
         <translation>Etiketler:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -180,18 +188,24 @@
         <translation>İptal Et</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Seçilmiş resim kaldırılsın mı?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Seçilmiş resim kaldırılsın mı?⏎ ⏎ Bu resmi kullanan kayıtlı oyunlar da kaldırılacaktır.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Başlıksız</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -261,6 +275,10 @@ There are saved games using this image that will also be removed.</source>
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Bu adda bir etiket zaten var.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

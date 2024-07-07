@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="en">
 <context>
     <name>AddImage</name>
     <message>
@@ -118,6 +118,10 @@
         <source>New Game</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -131,6 +135,10 @@
     </message>
     <message>
         <source>Tags:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New tag name</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -180,17 +188,25 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Untitled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation>
+            <numerusform>Remove selected image?</numerusform>
+            <numerusform>Remove %n selected images?</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation>
+            <numerusform>Saved games using this image will be deleted.</numerusform>
+            <numerusform>Saved games using these images will be deleted.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -260,6 +276,10 @@ There are saved games using this image that will also be removed.</source>
     </message>
     <message>
         <source>A tag with that name already exists.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

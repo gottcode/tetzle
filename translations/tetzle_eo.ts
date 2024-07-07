@@ -120,6 +120,10 @@
         <source>New Game</source>
         <translation>Nova ludo</translation>
     </message>
+    <message>
+        <source>Play Game</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImagePropertiesDialog</name>
@@ -134,6 +138,10 @@
     <message>
         <source>Tags:</source>
         <translation>Etkedoj:</translation>
+    </message>
+    <message>
+        <source>New tag name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -182,20 +190,26 @@
         <translation>Nuligi</translation>
     </message>
     <message>
-        <source>Remove selected image?</source>
-        <translation>Ĉu forigi elektitan bildon?</translation>
-    </message>
-    <message>
-        <source>Remove selected image?
-
-There are saved games using this image that will also be removed.</source>
-        <translation>Ĉu forigi elektitan bildon?
-
-Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</translation>
-    </message>
-    <message>
         <source>Untitled</source>
         <translation>Sentitola</translation>
+    </message>
+    <message numerus="yes">
+        <source>Remove %n selected image(s)?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Saved games using these image(s) will be deleted.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -265,6 +279,10 @@ Estas konservataj ludoj, uzantaj ĉi tiun bildon, kiuj estas ankaŭ forigotaj.</
     <message>
         <source>A tag with that name already exists.</source>
         <translation>Samnoma etikedo jam ekzistas.</translation>
+    </message>
+    <message>
+        <source>Manage Tags...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
