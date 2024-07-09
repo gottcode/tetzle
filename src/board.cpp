@@ -541,6 +541,7 @@ void Board::zoomFit()
 
 	m_pos = m_scene.center();
 	if (m_scale_level == level) {
+		updateViewport();
 		update();
 		return;
 	}
