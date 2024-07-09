@@ -27,6 +27,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSettings>
+#include <QTimeLine>
 #include <QWheelEvent>
 #include <QVector2D>
 #include <QXmlStreamReader>
@@ -85,6 +86,13 @@ Board::Board(QWidget* parent)
 	setAutoFillBackground(true);
 
 	m_message = new Message(this);
+
+	// Animate zooming to best fit
+	m_zoom_timer = new QTimeLine(250, this);
+	m_zoom_timer->setEasingCurve(QEasingCurve::Linear);
+	m_zoom_timer->setFrameRange(0, 10);
+	m_zoom_timer->setUpdateInterval(25);
+	connect(m_zoom_timer, &QTimeLine::frameChanged, this, &Board::zoom);
 
 	// Create edge scrollers
 	m_scroll_left = new EdgeScroller(1, 0, this);
@@ -538,11 +546,16 @@ void Board::zoomFit()
 	}
 
 	// Animate zoom
-	int delta = (level > m_scale_level) ? 1 : -1;
-	int count = abs(level - m_scale_level);
-	for (int i = 0; i < count; ++i) {
-		zoom(m_scale_level + delta);
+	const int count = abs(level - m_scale_level);
+	if (level > m_scale_level) {
+		m_zoom_timer->setDirection(QTimeLine::Forward);
+		m_zoom_timer->setFrameRange(m_scale_level, level);
+	} else {
+		m_zoom_timer->setDirection(QTimeLine::Backward);
+		m_zoom_timer->setFrameRange(level, m_scale_level);
 	}
+	m_zoom_timer->setDuration(count * m_zoom_timer->updateInterval());
+	m_zoom_timer->start();
 }
 
 //-----------------------------------------------------------------------------

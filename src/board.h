@@ -17,6 +17,7 @@ class Tile;
 #include <QHash>
 #include <QWidget>
 #include <QRandomGenerator>
+class QTimeLine;
 
 class Board : public QWidget
 {
@@ -142,6 +143,8 @@ private:
 	EdgeScroller* m_scroll_right;
 	EdgeScroller* m_scroll_up;
 	EdgeScroller* m_scroll_down;
+
+	QTimeLine* m_zoom_timer;
 };
 
 
