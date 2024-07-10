@@ -71,7 +71,7 @@ Board::Board(QWidget* parent)
 	, m_total_pieces(0)
 	, m_completed(0)
 	, m_pos(0, 0)
-	, m_scale_level(9)
+	, m_scale_level(ZoomSlider::maxScaleLevel())
 	, m_scale(0)
 	, m_scrolling(false)
 	, m_selecting(false)
@@ -532,7 +532,7 @@ void Board::zoomFit()
 	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
 	float factor = qBound(0.0f, std::min(sx, sy), 1.0f);
 	int level = 0;
-	for (int i = 9; i >= 0; --i) {
+	for (int i = ZoomSlider::maxScaleLevel(); i >= 0; --i) {
 		if (ZoomSlider::scaleFactor(i) <= factor) {
 			level = i;
 			break;
@@ -563,7 +563,7 @@ void Board::zoomFit()
 
 void Board::zoom(int level, bool on_cursor)
 {
-	level = qBound(0, level, 9);
+	level = qBound(0, level, ZoomSlider::maxScaleLevel());
 	if (level == m_scale_level) {
 		return;
 	}

@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2019 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -58,11 +58,11 @@ Overview::Overview(QWidget* parent)
 void Overview::load(const QImage& image, qreal pixelratio)
 {
 	// Find minimum scale
-	m_min_scale_level = 9;
+	m_min_scale_level = ZoomSlider::maxScaleLevel();
 	int side_max = std::max(image.width(), image.height()) * 0.9;
 	int side = 400;
 	if (side_max > side) {
-		for (int i = 9; i >= 0; --i) {
+		for (int i = ZoomSlider::maxScaleLevel(); i >= 0; --i) {
 			int side_test = std::floor(400.0 / ZoomSlider::scaleFactor(i));
 			if (side_test > side_max) {
 				break;
@@ -94,7 +94,7 @@ void Overview::load(const QImage& image, qreal pixelratio)
 void Overview::reset()
 {
 	// Prevent zooming
-	m_min_scale_level = 9;
+	m_min_scale_level = ZoomSlider::maxScaleLevel();
 	zoom(m_min_scale_level);
 
 	// Show loading icon
@@ -175,7 +175,7 @@ void Overview::zoomOut()
 
 void Overview::zoom(int level)
 {
-	m_scale_level = qBound(m_min_scale_level, level, 9);
+	m_scale_level = qBound(m_min_scale_level, level, ZoomSlider::maxScaleLevel());
 	float s = ZoomSlider::scaleFactor(m_scale_level);
 	resetTransform();
 	scale(s, s);

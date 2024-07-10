@@ -18,6 +18,7 @@ class ZoomSlider : public QWidget
 public:
 	explicit ZoomSlider(QWidget* parent = nullptr);
 
+	static int maxScaleLevel();
 	static float scaleFactor(int level);
 
 Q_SIGNALS:
@@ -36,5 +37,11 @@ private:
 	QToolButton* m_zoom_in;
 	QToolButton* m_zoom_out;
 };
+
+
+inline int ZoomSlider::maxScaleLevel()
+{
+	return 9;
+}
 
 #endif // TETZLE_ZOOM_SLIDER_H

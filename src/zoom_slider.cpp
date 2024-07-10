@@ -47,7 +47,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 	connect(this, &ZoomSlider::zoomOutAvailable, m_zoom_out, &QToolButton::setEnabled);
 
 	m_slider = new QSlider(Qt::Horizontal, this);
-	m_slider->setRange(0, 9);
+	m_slider->setRange(0, maxScaleLevel());
 	m_slider->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 	connect(m_slider, &QSlider::valueChanged, this, &ZoomSlider::valueChanged);
 
@@ -72,7 +72,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 
 float ZoomSlider::scaleFactor(int level)
 {
-	return scale_levels[qBound(0, level, 9)];
+	return scale_levels[qBound(0, level, maxScaleLevel())];
 }
 
 //-----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ void ZoomSlider::setValue(int level, float factor)
 	m_slider->setToolTip(tr("Zoom: %1%").arg(std::lround(factor * 100)));
 
 	Q_EMIT zoomOutAvailable(level > 0);
-	Q_EMIT zoomInAvailable(level < 9);
+	Q_EMIT zoomInAvailable(level < maxScaleLevel());
 }
 
 //-----------------------------------------------------------------------------
