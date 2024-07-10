@@ -58,7 +58,9 @@ Window::Window(const QStringList& files)
 	connect(m_board, &Board::clearMessage, statusBar(), &QStatusBar::clearMessage);
 	connect(m_board, &Board::showMessage, statusBar(), &QStatusBar::showMessage);
 	connect(m_board, &Board::zoomChanged, m_slider, &ZoomSlider::setValue);
-	connect(m_slider, &ZoomSlider::valueChanged, m_board, &Board::zoom);
+	connect(m_slider, &ZoomSlider::valueChanged, this, [this](int value) {
+		m_board->zoom(value, true);
+	});
 	connect(m_slider, &ZoomSlider::zoomFit, m_board, &Board::zoomFit);
 	connect(m_slider, &ZoomSlider::zoomIn, m_board, &Board::zoomIn);
 	connect(m_slider, &ZoomSlider::zoomOut, m_board, &Board::zoomOut);

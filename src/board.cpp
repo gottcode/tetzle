@@ -92,7 +92,9 @@ Board::Board(QWidget* parent)
 	m_zoom_timer->setEasingCurve(QEasingCurve::Linear);
 	m_zoom_timer->setFrameRange(0, 10);
 	m_zoom_timer->setUpdateInterval(25);
-	connect(m_zoom_timer, &QTimeLine::frameChanged, this, &Board::zoom);
+	connect(m_zoom_timer, &QTimeLine::frameChanged, this, [this](int value) {
+		zoom(value, false);
+	});
 
 	// Create edge scrollers
 	m_scroll_left = new EdgeScroller(1, 0, this);
@@ -203,7 +205,7 @@ void Board::newGame(const QString& image, int difficulty)
 {
 	// Remove any previous textures and tiles
 	cleanup();
-	zoom(0);
+	zoom(0, false);
 
 	// Prevent starting a game with a missing image
 	if (!QFileInfo::exists(Path::image(image))) {
@@ -415,9 +417,9 @@ void Board::openGame(int id)
 	// Draw tiles
 	m_message->setVisible(false);
 	if (version > 3) {
-		zoom(board_zoom);
+		zoom(board_zoom, false);
 	} else {
-		zoom(0);
+		zoom(0, false);
 		retrievePieces();
 	}
 	QApplication::restoreOverrideCursor();
@@ -513,14 +515,14 @@ void Board::retrievePieces()
 
 void Board::zoomIn()
 {
-	zoom(m_scale_level + 1);
+	zoom(m_scale_level + 1, true);
 }
 
 //-----------------------------------------------------------------------------
 
 void Board::zoomOut()
 {
-	zoom(m_scale_level - 1);
+	zoom(m_scale_level - 1, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -561,25 +563,30 @@ void Board::zoomFit()
 
 //-----------------------------------------------------------------------------
 
-void Board::zoom(int level)
+void Board::zoom(int level, bool on_cursor)
 {
-	QPoint old_pos = mapCursorPosition();
+	level = qBound(0, level, 9);
+	if (level == m_scale_level) {
+		return;
+	}
+
+	// Find cursor position
+	const QPoint cursor_pos = mapFromGlobal(QCursor::pos());
+	const QPoint old_pos = mapPosition(cursor_pos);
 
 	// Calculate new scale value
-	m_scale_level = qBound(0, level, 9);
+	m_scale_level = level;
 	m_scale = ZoomSlider::scaleFactor(m_scale_level);
 
-	// Update mouse cursor position
-	QPoint new_pos = mapCursorPosition();
-	int count = m_active_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		m_active_pieces.at(i)->moveBy(new_pos - old_pos);
+	// Center zoom on cursor
+	if (on_cursor && rect().contains(cursor_pos)) {
+		m_pos += old_pos - mapPosition(cursor_pos);
 	}
-	updateCursor();
 
 	// Update scene
 	updateViewport();
 	update();
+	updateCursor();
 	Q_EMIT zoomChanged(m_scale_level, m_scale);
 }
 

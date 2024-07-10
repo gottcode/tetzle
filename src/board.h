@@ -45,7 +45,7 @@ public Q_SLOTS:
 	void zoomIn();
 	void zoomOut();
 	void zoomFit();
-	void zoom(int level);
+	void zoom(int level, bool on_cursor);
 	void toggleOverview();
 
 Q_SIGNALS:
