@@ -159,7 +159,7 @@ Piece* Board::findCollidingPiece(Piece* piece) const
 			return other;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -1260,7 +1260,7 @@ Piece* Board::pieceUnderCursor()
 			return piece;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------------
