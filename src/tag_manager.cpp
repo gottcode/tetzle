@@ -184,7 +184,7 @@ void TagManager::removeImage(const QString& image)
 void TagManager::setImageTags(const QString& image, const QStringList& tags)
 {
 	// Add new tags
-	for (const QString& tag: tags) {
+	for (const QString& tag : tags) {
 		if (!m_tags.contains(tag)) {
 			createTag(tag);
 		}

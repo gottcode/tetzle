@@ -28,9 +28,7 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 
 	// Add bevels to tiles
 	if (m_tiles.first()->bevel().y() == -1) {
-		int count = m_tiles.count();
-		for (int i = 0; i < count; ++i) {
-			Tile* tile = m_tiles.at(i);
+		for (Tile* tile : std::as_const(m_tiles)) {
 			int sides = 0;
 			sides |= containsTile(tile->column() - 1, tile->row());
 			sides |= containsTile(tile->column() + 1, tile->row()) << 1;
@@ -77,8 +75,7 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachNeighbors()
 {
-	const auto neighbors = m_neighbors;
-	for (Piece* piece : neighbors) {
+	for (Piece* piece : std::as_const(m_neighbors)) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
@@ -210,9 +207,8 @@ void Piece::rotate(const QPoint& origin)
 	m_rect.setRect(0, 0, m_rect.height(), m_rect.width());
 
 	// Rotate tiles 90 degrees counter-clockwise
-	int count = m_tiles.count();
-	for (int i = 0; i < count; ++i) {
-		m_tiles.at(i)->rotate();
+	for (Tile* tile : std::as_const(m_tiles)) {
+		tile->rotate();
 	}
 
 	// Track how many rotations have occured
@@ -243,8 +239,8 @@ void Piece::save(QXmlStreamWriter& xml) const
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 	xml.writeAttribute("rotation", QString::number(m_rotation));
 
-	for (int i = 0; i < m_tiles.count(); ++i) {
-		m_tiles.at(i)->save(xml);
+	for (Tile* tile : std::as_const(m_tiles)) {
+		tile->save(xml);
 	}
 
 	xml.writeEndElement();
@@ -293,8 +289,7 @@ void Piece::attach(Piece* piece)
 bool Piece::containsTile(int column, int row)
 {
 	bool result = false;
-	for (int i = 0; i < m_tiles.count(); ++i) {
-		const Tile* tile = m_tiles.at(i);
+	for (Tile* tile : std::as_const(m_tiles)) {
 		if (tile->column() == column && tile->row() == row) {
 			result = true;
 			break;
@@ -311,8 +306,8 @@ void Piece::updateCollisionRegions()
 	m_collision_region = QRegion();
 	m_collision_region_expanded = QRegion();
 	QRect rect(0,0, Tile::size, Tile::size);
-	for (int i = 0; i < m_tiles.count(); ++i) {
-		rect.moveTo(m_tiles.at(i)->scenePos());
+	for (Tile* tile : std::as_const(m_tiles)) {
+		rect.moveTo(tile->scenePos());
 		m_collision_region += rect;
 		m_collision_region_expanded += m_board->marginRect(rect);
 	}
@@ -338,14 +333,12 @@ void Piece::updateShadow()
 
 void Piece::updateTiles()
 {
-	int count = m_tiles.count();
-
 	// Find bounding rectangle
 	QPoint top_left = m_tiles.first()->gridPos();
 	QPoint bottom_right = top_left + QPoint(Tile::size, Tile::size);
 	QPoint pos;
-	for (int i = 0; i < count; ++i) {
-		pos = m_tiles.at(i)->gridPos();
+	for (Tile* tile : std::as_const(m_tiles)) {
+		pos = tile->gridPos();
 		top_left.setX( std::min(pos.x(), top_left.x()) );
 		top_left.setY( std::min(pos.y(), top_left.y()) );
 		bottom_right.setX( std::max(pos.x() + Tile::size, bottom_right.x()) );
@@ -354,9 +347,7 @@ void Piece::updateTiles()
 	m_rect.setRect(0, 0, bottom_right.x() - top_left.x(), bottom_right.y() - top_left.y());
 
 	// Shift tiles to be inside rectangle
-	Tile* tile;
-	for (int i = 0; i < count; ++i) {
-		tile = m_tiles.at(i);
+	for (Tile* tile : std::as_const(m_tiles)) {
 		tile->setParent(this);
 		tile->setPos(tile->gridPos() - top_left);
 	}

@@ -269,8 +269,8 @@ void Board::newGame(const QString& image, int difficulty)
 		}
 	}
 
-	for (int i = 0; i < count; ++i) {
-		m_pieces.at(i)->findNeighbors(m_pieces);
+	for (Piece* piece : std::as_const(m_pieces)) {
+		piece->findNeighbors(m_pieces);
 	}
 	Q_EMIT clearMessage();
 
@@ -397,13 +397,11 @@ void Board::openGame(int id)
 
 	// Load pieces
 	updateStatusMessage(tr("Loading pieces..."));
-	int count = pieces.count();
-	for (int i = 0; i < count; ++i) {
-		const PieceDetails& details = pieces.at(i);
+	for (const PieceDetails& details : std::as_const(pieces)) {
 		m_pieces.append( new Piece(details.pos, details.rotation, details.tiles, this) );
 	}
-	for (int i = 0; i < count; ++i) {
-		m_pieces.at(i)->findNeighbors(m_pieces);
+	for (Piece* piece : std::as_const(m_pieces)) {
+		piece->findNeighbors(m_pieces);
 	}
 	Q_EMIT clearMessage();
 
@@ -672,7 +670,7 @@ void Board::paintEvent(QPaintEvent*)
 			}
 		}
 
-		for (Piece* piece : m_active_pieces) {
+		for (Piece* piece : std::as_const(m_active_pieces)) {
 			if (m_has_shadows) {
 				piece->shadow().draw(painter, m_selected_shadow_pixmap);
 			}
@@ -837,9 +835,9 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 	}
 
 	if (!m_active_pieces.isEmpty()) {
-		int count = m_active_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_active_pieces.at(i)->moveBy(delta);
+		// Move active pieces
+		for (Piece* piece : std::as_const(m_active_pieces)) {
+			piece->moveBy(delta);
 		}
 
 		// Attach neighbors if only one piece is active
@@ -942,9 +940,8 @@ void Board::stopScrolling()
 void Board::scroll(const QPoint& delta)
 {
 	m_pos -= delta;
-	int count = m_active_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		m_active_pieces.at(i)->moveBy(-delta);
+	for (Piece* piece : std::as_const(m_active_pieces)) {
+		piece->moveBy(-delta);
 	}
 	updateViewport();
 }
@@ -1031,9 +1028,7 @@ void Board::releasePieces()
 	}
 
 	// Place pieces
-	Piece* piece;
-	for (int i = 0; i < count; ++i) {
-		piece = m_active_pieces.at(i);
+	for (Piece* piece : std::as_const(m_active_pieces)) {
 		m_pieces.append(piece);
 		piece->setSelected(false);
 		piece->pushNeighbors();
@@ -1072,9 +1067,8 @@ void Board::rotatePiece()
 		piece->attachNeighbors();
 		piece->pushNeighbors();
 	} else {
-		int count = m_active_pieces.count();
-		for (int i = 0; i < count; ++i) {
-			m_active_pieces.at(i)->rotate(mapCursorPosition());
+		for (Piece* piece : std::as_const(m_active_pieces)) {
+			piece->rotate(mapCursorPosition());
 		}
 	}
 	updateCompleted();
@@ -1093,9 +1087,7 @@ void Board::selectPieces()
 	m_selecting = false;
 
 	QPoint cursor = mapCursorPosition();
-	int count = m_selected_pieces.count();
-	for (int i = 0; i < count; ++i) {
-		Piece* piece = m_selected_pieces.at(i);
+	for (Piece* piece : std::as_const(m_selected_pieces)) {
 		if (!piece->contains(cursor)) {
 			piece->moveBy(cursor - piece->randomPoint());
 		}
