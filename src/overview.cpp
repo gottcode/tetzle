@@ -42,7 +42,7 @@ Overview::Overview(QWidget* parent)
 	reset();
 
 	// Restore geometry
-	QSettings settings;
+	const QSettings settings;
 	if (settings.contains("Overview/Geometry")) {
 		restoreGeometry(settings.value("Overview/Geometry").toByteArray());
 		setMinimumSize(size());
@@ -59,11 +59,11 @@ void Overview::load(const QImage& image, qreal pixelratio)
 {
 	// Find minimum scale
 	m_min_scale_level = ZoomSlider::maxScaleLevel();
-	int side_max = std::max(image.width(), image.height()) * 0.9;
+	const int side_max = std::max(image.width(), image.height()) * 0.9;
 	int side = 400;
 	if (side_max > side) {
 		for (int i = ZoomSlider::maxScaleLevel(); i >= 0; --i) {
-			int side_test = std::floor(400.0 / ZoomSlider::scaleFactor(i));
+			const int side_test = std::floor(400.0 / ZoomSlider::scaleFactor(i));
 			if (side_test > side_max) {
 				break;
 			}
@@ -78,9 +78,8 @@ void Overview::load(const QImage& image, qreal pixelratio)
 	zoom(m_min_scale_level);
 
 	// Resize window
-	bool default_size = m_default;
-	QSize size = transform().mapRect(QRect(QPoint(0,0), pixmap.size() / pixelratio)).size();
-	setMinimumSize(size);
+	const bool default_size = m_default;
+	setMinimumSize(transform().mapRect(QRect(QPoint(0,0), pixmap.size() / pixelratio)).size());
 	if (default_size) {
 		resize(minimumSize());
 	}
@@ -176,11 +175,11 @@ void Overview::zoomOut()
 void Overview::zoom(int level)
 {
 	m_scale_level = qBound(m_min_scale_level, level, ZoomSlider::maxScaleLevel());
-	float s = ZoomSlider::scaleFactor(m_scale_level);
+	const float s = ZoomSlider::scaleFactor(m_scale_level);
 	resetTransform();
 	scale(s, s);
 
-	Qt::ScrollBarPolicy policy = (m_scale_level > m_min_scale_level) ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff;
+	const Qt::ScrollBarPolicy policy = (m_scale_level > m_min_scale_level) ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff;
 	setHorizontalScrollBarPolicy(policy);
 	setVerticalScrollBarPolicy(policy);
 }
