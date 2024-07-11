@@ -44,7 +44,7 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 	QStringList files;
 	const QList<QUrl> urls = event->mimeData()->urls();
 	for (const QUrl& url : urls) {
-		QString file = url.toLocalFile();
+		const QString file = url.toLocalFile();
 		if (QDir::match(supportedFormats(), file)) {
 			files.append(file);
 		}
@@ -61,11 +61,13 @@ QStringList AddImage::dropEvent(QDropEvent* event)
 
 QStringList AddImage::getOpenFileNames(QWidget* parent)
 {
-	QString dir = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-	dir = QSettings().value("AddImage/Path", dir).toString();
-	QStringList images = QFileDialog::getOpenFileNames(parent, tr("Open Image"), dir, supportedFormats());
+	QSettings settings;
+	const QStringList images = QFileDialog::getOpenFileNames(parent,
+			tr("Open Image"),
+			settings.value("AddImage/Path", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)).toString(),
+			supportedFormats());
 	if (!images.isEmpty()) {
-		QSettings().setValue("AddImage/Path", QFileInfo(images.last()).absolutePath());
+		settings.setValue("AddImage/Path", QFileInfo(images.last()).absolutePath());
 	}
 	return images;
 }
