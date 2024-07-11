@@ -194,7 +194,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 
 void Board::updateSceneRectangle(Piece* piece)
 {
-	int size = Tile::size / 2;
+	const int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
 	updateViewport();
 }
@@ -229,7 +229,7 @@ void Board::newGame(const QString& image, int difficulty)
 	m_id++;
 
 	// Find puzzle dimensions
-	QSizeF size = QImageReader(Path::image(image)).size();
+	const QSizeF size = QImageReader(Path::image(image)).size();
 	if (size.width() > size.height()) {
 		m_columns = 4 * difficulty;
 		m_rows = std::max(std::lround(m_columns * size.height() / size.width()), 1L);
@@ -247,13 +247,13 @@ void Board::newGame(const QString& image, int difficulty)
 
 	// Generate puzzle
 	updateStatusMessage(tr("Generating puzzle..."));
-	Generator generator(m_columns, m_rows, m_random);
+	const Generator generator(m_columns, m_rows, m_random);
 	QList<QList<Tile*>> pieces = generator.pieces();
 	std::shuffle(pieces.begin(), pieces.end(), m_random);
 
 	updateStatusMessage(tr("Creating pieces..."));
-	int count = pieces.count();
-	int step = (count > 25) ? (count / 25) : 1;
+	const int count = pieces.count();
+	const int step = (count > 25) ? (count / 25) : 1;
 	for (int i = 0; i < count; ++i) {
 		// Create piece
 		Piece* piece = new Piece(QPoint(0, 0), randomInt(4), pieces.at(i), this);
@@ -312,7 +312,7 @@ void Board::openGame(int id)
 	QXmlStreamAttributes attributes = xml.attributes();
 	int board_zoom = 0;
 	QRect rect;
-	unsigned int version = attributes.value("version").toUInt();
+	const unsigned int version = attributes.value("version").toUInt();
 	if (xml.name() == QLatin1String("tetzle") && version <= 5) {
 		m_image_path = attributes.value("image").toString();
 		if (!QFileInfo::exists(Path::image(m_image_path))) {
@@ -324,7 +324,7 @@ void Board::openGame(int id)
 		board_zoom = attributes.value("zoom").toInt();
 		m_pos.setX(attributes.value("x").toInt());
 		m_pos.setY(attributes.value("y").toInt());
-		QStringList values = attributes.value("rect").toString().split(",");
+		const QStringList values = attributes.value("rect").toString().split(",");
 		rect.setRect(values.value(0).toInt(),
 			values.value(1). toInt(),
 			values.value(2).toInt(),
@@ -358,11 +358,11 @@ void Board::openGame(int id)
 				pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
 				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toInt();
 			}
-			int column = attributes.value("column").toInt();
+			const int column = attributes.value("column").toInt();
 			m_columns = std::max(m_columns, column);
-			int row = attributes.value("row").toInt();
+			const int row = attributes.value("row").toInt();
 			m_rows = std::max(m_rows, row);
-			int bevel = attributes.value("bevel").toInt();
+			const int bevel = attributes.value("bevel").toInt();
 			if (bevel) {
 				m_load_bevels = true;
 			}
@@ -376,7 +376,7 @@ void Board::openGame(int id)
 			tiles.clear();
 		} else if (xml.name() == QLatin1String("group")) {
 			piece = false;
-			auto r = xml.attributes().value("rotation");
+			const QStringView r = xml.attributes().value("rotation");
 			rotation = !r.isEmpty() ? r.toInt() : -1;
 			tiles.clear();
 		} else if (xml.name() != QLatin1String("overview")) {
@@ -528,9 +528,9 @@ void Board::zoomOut()
 void Board::zoomFit()
 {
 	// Find new scale level
-	float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
-	float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
-	float factor = qBound(0.0f, std::min(sx, sy), 1.0f);
+	const float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
+	const float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
+	const float factor = qBound(0.0f, std::min(sx, sy), 1.0f);
 	int level = 0;
 	for (int i = ZoomSlider::maxScaleLevel(); i >= 0; --i) {
 		if (ZoomSlider::scaleFactor(i) <= factor) {
@@ -592,7 +592,7 @@ void Board::zoom(int level, bool on_cursor)
 
 void Board::toggleOverview()
 {
-	bool visible = !m_overview->isVisible();
+	const bool visible = !m_overview->isVisible();
 	m_overview->setVisible(visible);
 	if (visible) {
 		activateWindow();
@@ -699,7 +699,7 @@ void Board::paintEvent(QPaintEvent*)
 
 void Board::keyPressEvent(QKeyEvent* event)
 {
-	int offset = (event->modifiers() & Qt::ControlModifier) ? 1 : 10;
+	const int offset = (event->modifiers() & Qt::ControlModifier) ? 1 : 10;
 	switch (event->key()) {
 	// Scroll left
 	case Qt::Key_Left:
@@ -828,7 +828,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
-	QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
+	const QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
 
 	if (m_scrolling) {
 		scroll(delta);
@@ -856,7 +856,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
 	}
 	if (m_selecting) {
-		QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
+		const QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
 
 		// Check for pieces that are now selected
 		for (int i = 0; i < m_pieces.count(); ++i) {
@@ -1021,8 +1021,7 @@ void Board::releasePieces()
 	QCoreApplication::processEvents();
 
 	// Attach to closest piece
-	int count = m_active_pieces.count();
-	if (count == 1) {
+	if (m_active_pieces.count() == 1) {
 		m_active_pieces.first()->attachNeighbors();
 		updateCompleted();
 	}
@@ -1086,7 +1085,7 @@ void Board::selectPieces()
 {
 	m_selecting = false;
 
-	QPoint cursor = mapCursorPosition();
+	const QPoint cursor = mapCursorPosition();
 	for (Piece* piece : std::as_const(m_selected_pieces)) {
 		if (!piece->contains(cursor)) {
 			piece->moveBy(cursor - piece->randomPoint());
@@ -1101,7 +1100,7 @@ void Board::selectPieces()
 
 //-----------------------------------------------------------------------------
 
-void Board::drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border)
+void Board::drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border) const
 {
 	painter.save();
 
@@ -1207,9 +1206,9 @@ QPoint Board::mapPosition(const QPoint& position) const
 
 void Board::updateCompleted()
 {
-	int t = 100 * (pieceCount() - 1);
-	int T = m_total_pieces - 1;
-	m_completed = 100 - (t / T);
+	const int pieces = 100 * (pieceCount() - 1);
+	const int total = m_total_pieces - 1;
+	m_completed = 100 - (pieces / total);
 	Q_EMIT completionChanged(m_completed);
 }
 
@@ -1250,12 +1249,11 @@ void Board::updateViewport()
 
 //-----------------------------------------------------------------------------
 
-Piece* Board::pieceUnderCursor()
+Piece* Board::pieceUnderCursor() const
 {
-	QPoint pos = mapCursorPosition();
-	Piece* piece;
+	const QPoint pos = mapCursorPosition();
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
-		piece = m_pieces.at(i);
+		Piece* piece = m_pieces.at(i);
 		if (piece->contains(pos)) {
 			return piece;
 		}
@@ -1265,7 +1263,7 @@ Piece* Board::pieceUnderCursor()
 
 //-----------------------------------------------------------------------------
 
-int Board::pieceCount()
+int Board::pieceCount() const
 {
 	return m_pieces.count() + m_active_pieces.count() + m_selected_pieces.count();
 }

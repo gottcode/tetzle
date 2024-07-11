@@ -84,7 +84,7 @@ private:
 	void rotatePiece();
 	void selectPieces();
 
-	void drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border);
+	void drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border) const;
 	void loadImage();
 	void updateCursor();
 	QPoint mapCursorPosition() const;
@@ -93,8 +93,8 @@ private:
 	void updateSceneRectangle();
 	void updateStatusMessage(const QString& message);
 	void updateViewport();
-	Piece* pieceUnderCursor();
-	int pieceCount();
+	Piece* pieceUnderCursor() const;
+	int pieceCount() const;
 	void finishGame();
 	void cleanup();
 
