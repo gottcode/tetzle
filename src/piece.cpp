@@ -128,7 +128,7 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 
 //-----------------------------------------------------------------------------
 
-void Piece::pushNeighbors(const QPointF& inertia)
+void Piece::pushCollidingPieces(const QPointF& inertia)
 {
 	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
 		// Determine which piece to move
@@ -176,7 +176,7 @@ void Piece::pushNeighbors(const QPointF& inertia)
 		Q_ASSERT(!source->collidesWith(target));
 
 		// Recurse, and keep inertia for stability.
-		target->pushNeighbors(vector);
+		target->pushCollidingPieces(vector);
 	}
 }
 

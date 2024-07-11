@@ -259,7 +259,7 @@ void Board::newGame(const QString& image, int difficulty)
 		Piece* piece = new Piece(QPoint(0, 0), randomInt(4), pieces.at(i), this);
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
-		piece->pushNeighbors();
+		piece->pushCollidingPieces();
 
 		// Show pieces
 		if ((i % step) == 0) {
@@ -498,7 +498,7 @@ void Board::retrievePieces()
 		m_pieces.append(piece);
 		piece->setPosition(m_pos - QRect(QPoint(0,0), piece->boundingRect().size()).center());
 		piece->setSelected(false);
-		piece->pushNeighbors();
+		piece->pushCollidingPieces();
 	}
 
 	// Update view
@@ -1031,7 +1031,7 @@ void Board::releasePieces()
 	for (Piece* piece : std::as_const(m_active_pieces)) {
 		m_pieces.append(piece);
 		piece->setSelected(false);
-		piece->pushNeighbors();
+		piece->pushCollidingPieces();
 	}
 	m_active_pieces.clear();
 
@@ -1065,7 +1065,7 @@ void Board::rotatePiece()
 		}
 		piece->rotate(mapCursorPosition());
 		piece->attachNeighbors();
-		piece->pushNeighbors();
+		piece->pushCollidingPieces();
 	} else {
 		for (Piece* piece : std::as_const(m_active_pieces)) {
 			piece->rotate(mapCursorPosition());
