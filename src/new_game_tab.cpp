@@ -62,9 +62,9 @@ enum ItemRoles
 void updateToolTip(QListWidgetItem* item)
 {
 	QString tip = item->text();
-	QString tags = item->data(TagsRole).toString();
+	const QString tags = item->data(TagsRole).toString();
 	if (!tags.isEmpty()) {
-		tip += "<br><small><i>" + item->data(TagsRole).toString() + "</i></small>";
+		tip += "<br><small><i>" + tags + "</i></small>";
 	}
 	item->setToolTip(tip);
 }
@@ -148,9 +148,9 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	m_images->sortItems();
 
 	// Load values
-	QSettings settings;
+	const QSettings settings;
 	QListWidgetItem* item = m_images->item(0);
-	QString image = settings.value("NewGame/Image").toString();
+	const QString image = settings.value("NewGame/Image").toString();
 	if (!image.isEmpty()) {
 		for (int i = m_images->count() - 1; i >= 0; --i) {
 			item = m_images->item(i);
@@ -171,7 +171,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 
 void NewGameTab::addImages(const QStringList& images)
 {
-	int count = images.count();
+	const int count = images.count();
 	if (count == 0) {
 		return;
 	}
@@ -244,7 +244,6 @@ void NewGameTab::removeImage()
 	QStringList games;
 
 	QXmlStreamReader xml;
-	QXmlStreamAttributes attributes;
 	const QStringList files = QDir(Path::saves(), "*.xml").entryList(QDir::Files);
 	for (const QString& game : files) {
 		QFile file(Path::save(game));
@@ -257,7 +256,7 @@ void NewGameTab::removeImage()
 		while (!xml.isStartElement()) {
 			xml.readNext();
 		}
-		attributes = xml.attributes();
+		const QXmlStreamAttributes attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 5) {
 			if (selected_images.contains(attributes.value("image").toString())) {
 				games.append(game);
@@ -330,7 +329,7 @@ void NewGameTab::editImageProperties()
 		return;
 	}
 
-	QString filename = item->data(ImageRole).toString();
+	const QString filename = item->data(ImageRole).toString();
 	ImagePropertiesDialog dialog(item->icon(), item->text(), m_image_tags, filename, window());
 	if (dialog.exec() == QDialog::Accepted) {
 		// Update name
@@ -380,8 +379,8 @@ void NewGameTab::imageSelected()
 		m_ratio = static_cast<float>(m_image_size.width()) / static_cast<float>(m_image_size.height());
 	}
 
-	int max = std::lround(std::sqrt(250.0f / m_ratio));
-	int min = std::lround(std::sqrt(2.5f / m_ratio));
+	const int max = std::lround(std::sqrt(250.0f / m_ratio));
+	const int min = std::lround(std::sqrt(2.5f / m_ratio));
 	int value = min;
 	if (m_images->count() > 1) {
 		value = std::lround(static_cast<float>(max * m_slider->value()) / static_cast<float>(m_slider->maximum()));
@@ -396,8 +395,8 @@ void NewGameTab::imageSelected()
 void NewGameTab::pieceCountChanged(int value)
 {
 	if (m_image_size.isValid()) {
-		int side1 = 4 * value;
-		int side2 = std::max(std::lround(side1 * m_ratio), 1L);
+		const int side1 = 4 * value;
+		const int side2 = std::max(std::lround(side1 * m_ratio), 1L);
 		m_count->setText(tr("%L1 pieces").arg(side1 * side2 / 4));
 	}
 }
@@ -408,7 +407,7 @@ void NewGameTab::filterImages(const QStringList& filter)
 {
 	// Filter items
 	QListWidgetItem* item;
-	int count = m_images->count();
+	const int count = m_images->count();
 	for (int i = 0; i < count; ++i) {
 		item = m_images->item(i);
 		item->setHidden(!filter.contains(item->data(ImageRole).toString()));
@@ -417,7 +416,6 @@ void NewGameTab::filterImages(const QStringList& filter)
 	// Select next item if current item was hidden
 	item = m_images->currentItem();
 	if (!item || item->isHidden()) {
-		int count = m_images->count();
 		for (int i = 0; i < count; ++i) {
 			item = m_images->item(i);
 			if (!item->isHidden()) {
@@ -493,7 +491,7 @@ void NewGameTab::addImage(const QString& image)
 	QListWidgetItem* item = nullptr;
 	if (filename.isEmpty()) {
 		// Find filename
-		QFileInfo info(image);
+		const QFileInfo info(image);
 		filename = QString("%1.%2").arg(image_id).arg(info.suffix().toLower());
 		details.setValue(filename + "/SHA1", image_hash);
 		details.setValue(filename + "/Name", info.completeBaseName());
@@ -504,8 +502,7 @@ void NewGameTab::addImage(const QString& image)
 		if (reader.transformation() == QImageIOHandler::TransformationNone) {
 			QFile::copy(image, Path::image(filename));
 		} else {
-			QImage image = reader.read();
-			image.save(Path::image(filename), "", 100);
+			reader.read().save(Path::image(filename), "", 100);
 		}
 
 		// Remove old thumbnail if it exists
