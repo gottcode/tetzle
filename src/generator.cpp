@@ -88,19 +88,18 @@ void Generator::solve()
 	shapes.append(Shape(QPoint(0,0), QPoint(0,1), QPoint(0,2), QPoint(0,3)));
 
 	// Create matrix
-	DLX::Matrix matrix(m_columns * m_rows);
+	const int total_cells = m_columns * m_rows;
+	DLX::Matrix matrix(total_cells);
 
 	QList<int> cells;
-	for (int i = 0; i < m_columns * m_rows; ++i) {
+	for (int i = 0; i < total_cells; ++i) {
 		cells.append(i);
 	}
 	std::shuffle(cells.begin(), cells.end(), m_random);
 
-	int cell, col, row;
-	for (int i = 0; i < m_columns * m_rows; ++i) {
-		cell = cells.at(i);
-		row = cell / m_columns;
-		col = cell - (row * m_columns);
+	for (const int cell : std::as_const(cells)) {
+		const int row = cell / m_columns;
+		const int col = cell - (row * m_columns);
 
 		std::shuffle(shapes.begin(), shapes.end(), m_random);
 		for (const Shape& shape : std::as_const(shapes)) {
@@ -114,19 +113,19 @@ void Generator::solve()
 	}
 
 	// Generate solution
-	matrix.search(1, m_columns * m_rows);
+	matrix.search(1, total_cells);
 
 	const QList<DLX::Node*> rows = matrix.solution();
 	QList<Tile*> piece;
-	for (int i = 0; i < rows.count(); ++i) {
+	for (DLX::Node* row : rows) {
 		piece.clear();
-		DLX::Node* j = rows[i];
+		DLX::Node* node = row;
 		do {
-			unsigned int r = j->column->id / m_columns;
-			unsigned int c = j->column->id - (r * m_columns);
+			const unsigned int r = node->column->id / m_columns;
+			const unsigned int c = node->column->id - (r * m_columns);
 			piece.append(new Tile(c, r));
-			j = j->right;
-		} while (j != rows[i]);
+			node = node->right;
+		} while (node != row);
 		m_pieces.append(piece);
 	}
 }
