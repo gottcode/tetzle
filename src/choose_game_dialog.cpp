@@ -73,7 +73,7 @@ QStringList ChooseGameDialog::currentGames()
 		while (!xml.isStartElement()) {
 			xml.readNext();
 		}
-		QXmlStreamAttributes attributes = xml.attributes();
+		const QXmlStreamAttributes attributes = xml.attributes();
 		if (xml.name() == QLatin1String("tetzle") && attributes.value("version").toString().toUInt() <= 5) {
 			if (QFile::exists(Path::image(attributes.value("image").toString()))) {
 				result.append(game);
