@@ -84,12 +84,12 @@ void Piece::attachNeighbors()
 		Tile* piece_tile = piece->m_tiles.first();
 		QPoint grid_delta = piece_tile->gridPos() - tile->gridPos();
 		for (int i = 0; i < m_rotation; ++i) {
-			QPoint pos = grid_delta;
+			const QPoint pos = grid_delta;
 			grid_delta.setX( -pos.y() );
 			grid_delta.setY( pos.x() );
 		}
-		QPoint top_left = tile->scenePos() + grid_delta;
-		QPoint delta = top_left - piece_tile->scenePos();
+		const QPoint top_left = tile->scenePos() + grid_delta;
+		const QPoint delta = top_left - piece_tile->scenePos();
 
 		if (delta.manhattanLength() <= m_board->margin()) {
 			piece->moveBy(delta);
@@ -106,9 +106,9 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 	static const QList<QPoint> deltas{ QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
 	QList<QPoint> tiles;
 	for (Tile* tile : std::as_const(m_shadow)) {
-		QPoint pos(tile->column(), tile->row());
+		const QPoint pos(tile->column(), tile->row());
 		for (const QPoint& delta : deltas) {
-			QPoint neighbor = pos + delta;
+			const QPoint neighbor = pos + delta;
 			if (!containsTile(neighbor.x(), neighbor.y()) && !tiles.contains(neighbor)) {
 				tiles.append(neighbor);
 			}
@@ -136,7 +136,7 @@ void Piece::pushCollidingPieces(const QPointF& inertia)
 		if (m_tiles.count() < target->m_tiles.count()) {
 			std::swap(source, target);
 		}
-		QRect source_rect = m_board->marginRect(source->boundingRect());
+		const QRect source_rect = m_board->marginRect(source->boundingRect());
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
@@ -146,16 +146,16 @@ void Piece::pushCollidingPieces(const QPointF& inertia)
 		}
 
 		// Scale movement vector so that the largest dimension is 1
-		QPointF direction = vector / std::max(fabs(vector.x()), fabs(vector.y()));
+		const QPointF direction = vector / std::max(fabs(vector.x()), fabs(vector.y()));
 
 		// Push target until it is clear from current source
 		// We use a binary-search, pushing away if collision, retracting otherwise
-		QPoint orig = target->m_pos;
-		QRect united = source_rect.united(target->boundingRect());
+		const QPoint orig = target->m_pos;
+		const QRect united = source_rect.united(target->boundingRect());
 		float min = 0.0f;
 		float max = united.width() * united.height();
 		Q_FOREVER {
-			float test = (min + max) / 2.0f;
+			const float test = (min + max) / 2.0f;
 			target->m_pos = orig + (test * direction).toPoint();
 			if (source->collidesWith(target)) {
 				min = test;
@@ -257,7 +257,7 @@ void Piece::attach(Piece* piece)
 	updateShadow();
 
 	// Update position of attached tiles
-	int rotation = m_rotation;
+	const int rotation = m_rotation;
 	for (int i = rotation; i < 4; ++i) {
 		rotate();
 		piece->rotate();
@@ -332,9 +332,8 @@ void Piece::updateTiles()
 	// Find bounding rectangle
 	QPoint top_left = m_tiles.first()->gridPos();
 	QPoint bottom_right = top_left + QPoint(Tile::size, Tile::size);
-	QPoint pos;
 	for (Tile* tile : std::as_const(m_tiles)) {
-		pos = tile->gridPos();
+		const QPoint pos = tile->gridPos();
 		top_left.setX( std::min(pos.x(), top_left.x()) );
 		top_left.setY( std::min(pos.y(), top_left.y()) );
 		bottom_right.setX( std::max(pos.x() + Tile::size, bottom_right.x()) );
