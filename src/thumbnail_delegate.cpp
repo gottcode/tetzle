@@ -48,9 +48,9 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 	// Find colors
 	QIcon::Mode mode = QIcon::Normal;
 #ifndef Q_OS_MAC
-	QPalette::ColorGroup cg = option.widget->hasFocus() ? QPalette::Normal : QPalette::Inactive;
+	const QPalette::ColorGroup cg = option.widget->hasFocus() ? QPalette::Normal : QPalette::Inactive;
 #else
-	QPalette::ColorGroup cg = QApplication::focusWidget() ? QPalette::Normal : QPalette::Inactive;
+	const QPalette::ColorGroup cg = QApplication::focusWidget() ? QPalette::Normal : QPalette::Inactive;
 #endif
 	QColor color = option.palette.color(cg, QPalette::Text);
 	QColor background_color;
@@ -62,30 +62,30 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Calculate element locations
 	Qt::Alignment alignment = Qt::AlignVCenter;
-	int line_height = option.fontMetrics.lineSpacing();
-	int small_line_height = m_small_font_metrics.lineSpacing();
+	const int line_height = option.fontMetrics.lineSpacing();
+	const int small_line_height = m_small_font_metrics.lineSpacing();
 	QRect thumbnail_rect, text_rect, small_text_rect;
 	if (option.decorationPosition == QStyleOptionViewItem::Top) {
 		// Centered text with icon on top
 		alignment |= Qt::AlignHCenter;
 		thumbnail_rect.setRect(option.rect.left() + 2 + (option.rect.width() - 74) / 2, option.rect.top() + 2, 74, 74);
-		int text_width = option.rect.width() - 4;
+		const int text_width = option.rect.width() - 4;
 		text_rect.setRect(option.rect.left() + 2, thumbnail_rect.bottom() + 1, text_width, line_height);
 		small_text_rect.setRect(text_rect.left(), text_rect.bottom() + 1, text_width, small_line_height);
 	} else if (option.direction == Qt::LeftToRight) {
 		// Left aligned
 		alignment |= Qt::AlignLeft;
 		thumbnail_rect.setRect(option.rect.left() + 5, option.rect.top() + 2 + (option.rect.height() - 74) / 2, 74, 74);
-		int text_height = line_height + small_line_height;
-		int text_width = option.rect.width() - 4 - thumbnail_rect.width();
+		const int text_height = line_height + small_line_height;
+		const int text_width = option.rect.width() - 4 - thumbnail_rect.width();
 		text_rect.setRect(thumbnail_rect.right() + 7, option.rect.top() + 2 + (option.rect.height() - text_height) / 2, text_width, line_height);
 		small_text_rect.setRect(text_rect.left(), text_rect.bottom() + 1, text_width, small_line_height);
 	} else {
 		// Right aligned
 		alignment |= Qt::AlignRight;
 		thumbnail_rect.setRect(option.rect.right() - 80, option.rect.top() + 2 + (option.rect.height() - 74) / 2, 74, 74);
-		int text_height = line_height + small_line_height;
-		int text_width = thumbnail_rect.left() - 6;
+		const int text_height = line_height + small_line_height;
+		const int text_width = thumbnail_rect.left() - 6;
 		text_rect.setRect(2, option.rect.top() + 2 + (option.rect.height() - text_height) / 2, text_width, line_height);
 		small_text_rect.setRect(2, text_rect.bottom() + 1, text_width, small_line_height);
 	}
@@ -122,7 +122,7 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 QSize ThumbnailDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
 	Q_UNUSED(index);
-	int text_height = option.fontMetrics.lineSpacing() + m_small_font_metrics.lineSpacing();
+	const int text_height = option.fontMetrics.lineSpacing() + m_small_font_metrics.lineSpacing();
 	if (option.decorationPosition == QStyleOptionViewItem::Top) {
 		return QSize(150, 78 + text_height);
 	} else {
@@ -148,7 +148,7 @@ bool ThumbnailDelegate::eventFilter(QObject* object, QEvent* event)
 
 void ThumbnailDelegate::setFont(const QFont& font)
 {
-	QFontInfo info(font);
+	const QFontInfo info(font);
 	m_small_font = QFont(info.family(), info.pointSize() - 2);
 	m_small_font.setItalic(true);
 	m_small_font_metrics = QFontMetrics(m_small_font);
