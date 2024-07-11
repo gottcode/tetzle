@@ -111,8 +111,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 
 void OpenGameTab::imageRenamed(const QString& image, const QString& name)
 {
-	int count = m_games->count();
-	for (int i = 0; i < count; ++i) {
+	for (int i = 0, count = m_games->count(); i < count; ++i) {
 		QListWidgetItem* item = m_games->item(i);
 		if (item->data(ImageRole).toString() == image) {
 			item->setText(name);

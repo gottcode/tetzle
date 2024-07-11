@@ -437,10 +437,8 @@ void NewGameTab::filterImages(const QStringList& filter)
 
 void NewGameTab::updateTagsStrings()
 {
-	QListWidgetItem* item;
-	int count = m_images->count();
-	for (int i = 0; i < count; ++i) {
-		item = m_images->item(i);
+	for (int i = 0, count = m_images->count(); i < count; ++i) {
+		QListWidgetItem* item = m_images->item(i);
 		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
 		updateToolTip(item);
 	}
@@ -514,7 +512,7 @@ void NewGameTab::addImage(const QString& image)
 		removeThumbnail(QString::number(image_id));
 	} else {
 		// Find in list of images
-		for (int i = 0; i < m_images->count(); ++i) {
+		for (int i = 0, count = m_images->count(); i < count; ++i) {
 			if (m_images->item(i)->data(ImageRole).toString() == filename) {
 				item = m_images->item(i);
 				break;

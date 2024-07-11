@@ -118,8 +118,7 @@ bool ImagePropertiesDialog::eventFilter(QObject* watched, QEvent* event)
 void ImagePropertiesDialog::accept()
 {
 	QStringList tags;
-	int count = m_tags->count();
-	for (int i = 0; i < count; ++i) {
+	for (int i = 0, count = m_tags->count(); i < count; ++i) {
 		if (m_tags->item(i)->checkState() == Qt::Checked) {
 			tags.append(m_tags->item(i)->text());
 		}
