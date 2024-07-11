@@ -530,7 +530,7 @@ void Board::zoomFit()
 	// Find new scale level
 	const float sx = static_cast<float>(width()) / static_cast<float>(m_scene.width());
 	const float sy = static_cast<float>(height()) / static_cast<float>(m_scene.height());
-	const float factor = qBound(0.0f, std::min(sx, sy), 1.0f);
+	const float factor = std::clamp(std::min(sx, sy), 0.0f, 1.0f);
 	int level = 0;
 	for (int i = ZoomSlider::maxScaleLevel(); i >= 0; --i) {
 		if (ZoomSlider::scaleFactor(i) <= factor) {
@@ -563,7 +563,7 @@ void Board::zoomFit()
 
 void Board::zoom(int level, bool on_cursor)
 {
-	level = qBound(0, level, ZoomSlider::maxScaleLevel());
+	level = std::clamp(level, 0, ZoomSlider::maxScaleLevel());
 	if (level == m_scale_level) {
 		return;
 	}

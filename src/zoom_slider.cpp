@@ -11,6 +11,7 @@
 #include <QSlider>
 #include <QToolButton>
 
+#include <algorithm>
 #include <cmath>
 
 //-----------------------------------------------------------------------------
@@ -72,7 +73,7 @@ ZoomSlider::ZoomSlider(QWidget* parent)
 
 float ZoomSlider::scaleFactor(int level)
 {
-	return scale_levels[qBound(0, level, maxScaleLevel())];
+	return scale_levels[std::clamp(level, 0, maxScaleLevel())];
 }
 
 //-----------------------------------------------------------------------------

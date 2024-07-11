@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2011 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -8,6 +8,8 @@
 
 #include "board.h"
 #include "piece.h"
+
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 
@@ -32,7 +34,7 @@ QPoint Tile::scenePos() const
 
 void Tile::rotate()
 {
-	qSwap(m_pos.rx(), m_pos.ry());
+	std::swap(m_pos.rx(), m_pos.ry());
 	m_pos.setX(-m_pos.x() + m_parent->boundingRect().width() - Tile::size);
 	m_bevel_coords.setX( (m_bevel_coords.x() > 0.1) ? (m_bevel_coords.x() - 0.25) : 0.8125 );
 }
@@ -41,7 +43,7 @@ void Tile::rotate()
 
 void Tile::setBevel(int bevel)
 {
-	m_bevel = qBound(0, bevel, 15);
+	m_bevel = std::clamp(bevel, 0, 15);
 	const int col = m_bevel % 4;
 	const int row = m_bevel / 4;
 	m_bevel_coords = QPointF(col * 0.25 + 0.0625, row * 0.25 + 0.0625);

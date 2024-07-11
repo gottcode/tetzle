@@ -174,7 +174,7 @@ void Overview::zoomOut()
 
 void Overview::zoom(int level)
 {
-	m_scale_level = qBound(m_min_scale_level, level, ZoomSlider::maxScaleLevel());
+	m_scale_level = std::clamp(level, m_min_scale_level, ZoomSlider::maxScaleLevel());
 	const float s = ZoomSlider::scaleFactor(m_scale_level);
 	resetTransform();
 	scale(s, s);
