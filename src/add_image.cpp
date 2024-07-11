@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2010-2014 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2010-2024 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -81,7 +81,7 @@ QString AddImage::supportedFormats()
 		for (const QByteArray& type : imageformats) {
 			formats.append("*." + type);
 		}
-		string = "Images(" + formats.join(" ") + ")";
+		string = tr("Images") + " (" + formats.join(" ") + ")";
 	}
 	return string;
 }
