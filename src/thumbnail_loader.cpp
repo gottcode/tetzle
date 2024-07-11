@@ -104,9 +104,9 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 	QListWidgetItem* item = new ThumbnailItem(text);
 	list->addItem(item);
 
-	QFileInfo image_info(image);
-	QFileInfo thumb_info(Path::thumbnail(image_info.baseName(), pixelratio));
-	Thumbnail details = { list, list->model()->index(list->row(item), 0), image, thumb_info.filePath(), pixelratio };
+	const QFileInfo image_info(image);
+	const QFileInfo thumb_info(Path::thumbnail(image_info.baseName(), pixelratio));
+	const Thumbnail details{ list, list->model()->index(list->row(item), 0), image, thumb_info.filePath(), pixelratio };
 
 	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {
 		loader->m_mutex.lock();
@@ -133,7 +133,7 @@ void ThumbnailLoader::run()
 			m_mutex.unlock();
 			break;
 		}
-		Thumbnail details = m_details.takeFirst();
+		const Thumbnail details = m_details.takeFirst();
 		m_mutex.unlock();
 
 		// Skip already generated thumbnails
