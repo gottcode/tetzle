@@ -34,11 +34,11 @@ struct Node
 {
 	/** Constructs a node with the value of 1. */
 	explicit Node()
-		: left(0)
-		, right(0)
-		, up(0)
-		, down(0)
-		, column(0)
+		: left(nullptr)
+		, right(nullptr)
+		, up(nullptr)
+		, down(nullptr)
+		, column(nullptr)
 	{
 	}
 
