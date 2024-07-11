@@ -80,6 +80,7 @@ QString AddImage::supportedFormats()
 		const QList<QByteArray> imageformats = QImageReader::supportedImageFormats();
 		for (const QByteArray& type : imageformats) {
 			formats.append("*." + type);
+			formats.append("*." + type.toUpper());
 		}
 		string = tr("Images") + " (" + formats.join(" ") + ")";
 	}
