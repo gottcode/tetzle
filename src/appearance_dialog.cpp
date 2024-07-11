@@ -25,7 +25,7 @@ namespace
 
 QPixmap coloredShadow(const QColor& color, qreal pixelratio)
 {
-	QPixmap source(":/shadow.png");
+	const QPixmap source(":/shadow.png");
 	QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
 	QPainter painter(&shadow);
 	painter.setCompositionMode(QPainter::CompositionMode_Source);
@@ -106,7 +106,7 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	layout->addWidget(buttons, 4, 0, 1, 2);
 
 	// Load settings
-	QSettings settings;
+	const QSettings settings;
 	m_background->setColor(settings.value("Colors/Background", QColor(0x9d, 0x89, 0x75)).value<QColor>());
 	m_shadow->setColor(settings.value("Colors/Shadow", QColor(Qt::black)).value<QColor>());
 	m_highlight->setColor(settings.value("Colors/Highlight", QColor(Qt::white)).value<QColor>());
