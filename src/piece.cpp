@@ -130,15 +130,11 @@ void Piece::findNeighbors(const QList<Piece*>& pieces)
 
 void Piece::pushCollidingPieces(const QPointF& inertia)
 {
-	while (Piece* neighbor = m_board->findCollidingPiece(this)) {
+	while (Piece* target = m_board->findCollidingPiece(this)) {
 		// Determine which piece to move
-		Piece *source, *target;
-		if (m_tiles.count() >= neighbor->m_tiles.count()) {
-			source = this;
-			target = neighbor;
-		} else {
-			source = neighbor;
-			target = this;
+		Piece* source = this;
+		if (m_tiles.count() < target->m_tiles.count()) {
+			std::swap(source, target);
 		}
 		QRect source_rect = m_board->marginRect(source->boundingRect());
 
