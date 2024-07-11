@@ -118,7 +118,7 @@ void DLX::Matrix::solve(unsigned int k)
 	}
 	cover(column);
 
-	unsigned int next_k = k + 1;
+	const unsigned int next_k = k + 1;
 
 	for(Node* row = column->down; row != column; row = row->down) {
 		m_output[k] = row;
