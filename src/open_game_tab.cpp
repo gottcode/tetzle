@@ -48,35 +48,35 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setItemDelegate(new ThumbnailDelegate(m_games));
 
 	const qreal pixelratio = devicePixelRatioF();
-	QSettings details(Path::image("details"), QSettings::IniFormat);
-	QXmlStreamReader xml;
-	QXmlStreamAttributes attributes;
+	const QSettings details(Path::image("details"), QSettings::IniFormat);
 	const QStringList files = ChooseGameDialog::currentGames();
 	for (const QString& game : files) {
+		// Skip currently opened game
+		const int id = game.section(".", 0, 0).toInt();
+		if (current_id == id) {
+			continue;
+		}
+
+		// Open saved game file
 		QFile file(Path::save(game));
 		if (!file.open(QIODevice::ReadOnly)) {
 			continue;
 		}
-		xml.setDevice(&file);
-
-		int id = game.section(".", 0, 0).toInt();
-		if (current_id == id) {
-			continue;
-		}
+		QXmlStreamReader xml(&file);
 
 		// Load details
 		while (!xml.isStartElement()) {
 			xml.readNext();
 		}
-		attributes = xml.attributes();
-		QString image = attributes.value("image").toString();
+		const QXmlStreamAttributes attributes = xml.attributes();
+		const QString image = attributes.value("image").toString();
 		if (!QFile::exists(Path::image(image))) {
 			continue;
 		}
-		QString image_name = details.value(image + "/Name", tr("Untitled")).toString();
-		QString pieces = attributes.value("pieces").toString();
-		QString complete = attributes.value("complete").toString();
-		QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
+		const QString image_name = details.value(image + "/Name", tr("Untitled")).toString();
+		const QString pieces = attributes.value("pieces").toString();
+		const QString complete = attributes.value("complete").toString();
+		const QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
 		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name, m_games, pixelratio);
 		item->setData(GameRole, id);
 		item->setData(ImageRole, image);
