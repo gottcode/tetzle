@@ -42,8 +42,8 @@ void Tile::rotate()
 void Tile::setBevel(int bevel)
 {
 	m_bevel = qBound(0, bevel, 15);
-	int col = m_bevel % 4;
-	int row = m_bevel / 4;
+	const int col = m_bevel % 4;
+	const int row = m_bevel / 4;
 	m_bevel_coords = QPointF(col * 0.25 + 0.0625, row * 0.25 + 0.0625);
 }
 
