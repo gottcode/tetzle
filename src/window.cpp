@@ -181,7 +181,7 @@ void Window::dragEnterEvent(QDragEnterEvent* event)
 
 void Window::dropEvent(QDropEvent* event)
 {
-	QStringList files = AddImage::dropEvent(event);
+	const QStringList files = AddImage::dropEvent(event);
 	if (!files.isEmpty()) {
 		chooseGame(files);
 	}
