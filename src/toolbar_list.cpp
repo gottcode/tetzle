@@ -55,13 +55,12 @@ void ToolBarList::addToolBarWidget(QWidget* widget)
 void ToolBarList::updateGeometries()
 {
 	// Resize viewport margins
-	QSize hint = m_toolbar->isHidden() ? QSize(0,0) : m_toolbar->sizeHint();
+	const QSize hint = m_toolbar->isHidden() ? QSize(0,0) : m_toolbar->sizeHint();
 	setViewportMargins(0, hint.height(), 0, 0);
 
 	// Resize toolbar
-	QRect rect = viewport()->geometry();
-	QRect geometry(rect.left(), rect.top() - hint.height(), rect.width(), hint.height());
-	m_toolbar->setGeometry(geometry);
+	const QRect rect = viewport()->geometry();
+	m_toolbar->setGeometry(rect.left(), rect.top() - hint.height(), rect.width(), hint.height());
 
 	QListWidget::updateGeometries();
 }
