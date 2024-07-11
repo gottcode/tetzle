@@ -99,7 +99,7 @@ TagManager::TagManager(QWidget* parent)
 	file.beginGroup("Tags");
 	const QStringList tags = file.childKeys();
 	QStringList images;
-	QDir folder(Path::images(), "*.*");
+	const QDir folder(Path::images(), "*.*");
 	for (const QString& tag : tags) {
 		images = file.value(tag).toStringList();
 		QMutableStringListIterator i(images);
@@ -247,7 +247,7 @@ void TagManager::removeTag()
 	}
 
 	// Remove item
-	QString tag = item->text();
+	const QString tag = item->text();
 	delete item;
 	item = nullptr;
 
