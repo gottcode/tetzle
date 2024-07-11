@@ -90,12 +90,6 @@ void Generator::solve()
 	// Create matrix
 	DLX::Matrix matrix(m_columns * m_rows);
 
-	int size = shapes.size();
-	QList<int> ids;
-	for (int i = 0; i < size; ++i) {
-		ids.append(i);
-	}
-
 	QList<int> cells;
 	for (int i = 0; i < m_columns * m_rows; ++i) {
 		cells.append(i);
@@ -108,9 +102,8 @@ void Generator::solve()
 		row = cell / m_columns;
 		col = cell - (row * m_columns);
 
-		std::shuffle(ids.begin(), ids.end(), m_random);
-		for (int i = 0; i < size; ++i) {
-			const Shape& shape = shapes.at(ids.at(i));
+		std::shuffle(shapes.begin(), shapes.end(), m_random);
+		for (const Shape& shape : std::as_const(shapes)) {
 			if (shape.width + col < m_columns && shape.height + row < m_rows) {
 				matrix.addRow();
 				for (int i = 0; i < 4; ++i) {
