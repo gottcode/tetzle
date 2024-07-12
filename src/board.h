@@ -40,7 +40,7 @@ public:
 public Q_SLOTS:
 	void newGame(const QString& image, int difficulty);
 	void openGame(int id);
-	void saveGame();
+	void saveGame() const;
 	void retrievePieces();
 	void zoomIn();
 	void zoomOut();

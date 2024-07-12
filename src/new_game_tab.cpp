@@ -543,7 +543,7 @@ QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& d
 
 //-----------------------------------------------------------------------------
 
-void NewGameTab::removeThumbnail(const QString& image_id)
+void NewGameTab::removeThumbnail(const QString& image_id) const
 {
 	QDir dir(Path::thumbnails());
 	const QStringList thumbnails = dir.entryList({ image_id + ".*", image_id + "@*" }, QDir::Files);

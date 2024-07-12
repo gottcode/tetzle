@@ -45,7 +45,7 @@ private Q_SLOTS:
 
 private:
 	QListWidgetItem* createTag(const QString& tag);
-	void storeTags();
+	void storeTags() const;
 
 private:
 	QHash<QString, QStringList> m_tags;

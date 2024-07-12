@@ -362,7 +362,7 @@ QListWidgetItem* TagManager::createTag(const QString& tag)
 
 //-----------------------------------------------------------------------------
 
-void TagManager::storeTags()
+void TagManager::storeTags() const
 {
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.clear();

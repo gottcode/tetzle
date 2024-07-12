@@ -48,7 +48,7 @@ protected:
 private:
 	void addImage(const QString& image);
 	QListWidgetItem* createItem(const QString& image, const QSettings& details);
-	void removeThumbnail(const QString& image_id);
+	void removeThumbnail(const QString& image_id) const;
 
 private:
 	TagManager* m_image_tags;

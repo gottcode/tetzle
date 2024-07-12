@@ -427,7 +427,7 @@ void Board::openGame(int id)
 
 //-----------------------------------------------------------------------------
 
-void Board::saveGame()
+void Board::saveGame() const
 {
 	if (pieceCount() <= 1) {
 		return;
