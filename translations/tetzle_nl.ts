@@ -7,6 +7,10 @@
         <source>Open Image</source>
         <translation>Afbeelding openen</translation>
     </message>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
@@ -79,7 +83,7 @@
     </message>
     <message>
         <source>Unknown element &apos;%1&apos;</source>
-        <translation>Onbekend element: &apos;%1&apos;</translation>
+        <translation>Onbekend element: ‘%1’</translation>
     </message>
     <message>
         <source>Error parsing XML file.
@@ -122,7 +126,7 @@
     </message>
     <message>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spel spelen</translation>
     </message>
 </context>
 <context>
@@ -141,7 +145,7 @@
     </message>
     <message>
         <source>New tag name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe labelnaam</translation>
     </message>
 </context>
 <context>
@@ -195,21 +199,21 @@
     </message>
     <message numerus="yes">
         <source>Remove %n selected image(s)?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Wil je de geselecteerde afbeelding verwijderen?</numerusform>
+            <numerusform>Wil je %n geselecteerde afbeeldingen verwijderen?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Saved games using these image(s) will be deleted.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Bewaarde spellen met deze afbeelding worden verwijderd.</numerusform>
+            <numerusform>Bewaarde spellen met deze afbeeldingen worden verwijderd.</numerusform>
         </translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwijderen</translation>
     </message>
 </context>
 <context>
@@ -232,7 +236,7 @@
     </message>
     <message>
         <source>Delete selected game?</source>
-        <translation>Geselecteerd spel verwijderen?</translation>
+        <translation>Wil je het gekozen spel verwijderen?</translation>
     </message>
 </context>
 <context>
@@ -270,7 +274,7 @@
     </message>
     <message>
         <source>Remove selected tag?</source>
-        <translation>Geselecteerd label verwijderen?</translation>
+        <translation>Wil je het gekozen label verwijderen?</translation>
     </message>
     <message>
         <source>Sorry</source>
@@ -282,7 +286,7 @@
     </message>
     <message>
         <source>Manage Tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Labels beheren…</translation>
     </message>
 </context>
 <context>
@@ -345,7 +349,7 @@
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>Beeld&amp;vullend</translation>
+        <translation>Scherm&amp;vullend</translation>
     </message>
     <message>
         <source>F11</source>

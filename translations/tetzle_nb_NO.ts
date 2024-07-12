@@ -7,6 +7,10 @@
         <source>Open Image</source>
         <translation>Åpne bilde</translation>
     </message>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppearanceDialog</name>

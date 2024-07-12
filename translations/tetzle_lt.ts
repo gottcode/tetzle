@@ -7,6 +7,10 @@
         <source>Open Image</source>
         <translation>Atverti paveikslą</translation>
     </message>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
@@ -122,7 +126,7 @@
     </message>
     <message>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Žaisti žaidimą</translation>
     </message>
 </context>
 <context>
@@ -141,7 +145,7 @@
     </message>
     <message>
         <source>New tag name</source>
-        <translation type="unfinished"></translation>
+        <translation>Naujos žymės pavadinimas</translation>
     </message>
 </context>
 <context>
@@ -195,23 +199,23 @@
     </message>
     <message numerus="yes">
         <source>Remove %n selected image(s)?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Šalinti pasirinktą paveikslą?</numerusform>
+            <numerusform>Šalinti %n pasirinktus paveikslus?</numerusform>
+            <numerusform>Šalinti %n pasirinktų paveikslų?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Saved games using these image(s) will be deleted.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Įrašytas žaidimas, naudojantis šį paveikslą, bus ištrintas.</numerusform>
+            <numerusform>Įrašyti žaidimai, naudojantis šiuos paveikslus, bus ištrinti.</numerusform>
+            <numerusform>Įrašyti žaidimai, naudojantis šiuos paveikslus, bus ištrinti.</numerusform>
         </translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Šalinti</translation>
     </message>
 </context>
 <context>
@@ -284,7 +288,7 @@
     </message>
     <message>
         <source>Manage Tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Tvarkyti žymes...</translation>
     </message>
 </context>
 <context>

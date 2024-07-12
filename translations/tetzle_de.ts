@@ -7,6 +7,10 @@
         <source>Open Image</source>
         <translation>Bild auswählen</translation>
     </message>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppearanceDialog</name>
@@ -122,7 +126,7 @@
     </message>
     <message>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Spielen</translation>
     </message>
 </context>
 <context>
@@ -141,7 +145,7 @@
     </message>
     <message>
         <source>New tag name</source>
-        <translation type="unfinished"></translation>
+        <translation>Neues Tag</translation>
     </message>
 </context>
 <context>
@@ -195,21 +199,21 @@
     </message>
     <message numerus="yes">
         <source>Remove %n selected image(s)?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n ausgewähltes Bild entfernen?</numerusform>
+            <numerusform>%n ausgewählte Bilder entfernen?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Saved games using these image(s) will be deleted.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Gespeicherte Spiele mit diesem Bild werden gelöscht.</numerusform>
+            <numerusform>Gespeicherte Spiele mit diesen Bildern werden gelöscht.</numerusform>
         </translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Entfernen</translation>
     </message>
 </context>
 <context>
@@ -282,7 +286,7 @@
     </message>
     <message>
         <source>Manage Tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Tags verwalten ...</translation>
     </message>
 </context>
 <context>
