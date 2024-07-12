@@ -23,7 +23,7 @@ EdgeScroller::EdgeScroller(int horizontal, int vertical, QWidget* parent)
 	m_scroll_timer->setInterval(20);
 	m_scroll_timer->setSingleShot(false);
 	connect(m_scroll_timer, &QTimer::timeout, this, [this]() {
-		Q_EMIT scroll(m_horizontal * m_speed, m_vertical * m_speed);
+		Q_EMIT edgeScroll(m_horizontal * m_speed, m_vertical * m_speed);
 	});
 
 	m_start_timer = new QTimer(this);

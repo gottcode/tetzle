@@ -99,19 +99,19 @@ Board::Board(QWidget* parent)
 	// Create edge scrollers
 	m_scroll_left = new EdgeScroller(1, 0, this);
 	m_scroll_left->hide();
-	connect(m_scroll_left, &EdgeScroller::scroll, this, &Board::edgeScroll);
+	connect(m_scroll_left, &EdgeScroller::edgeScroll, this, &Board::edgeScroll);
 
 	m_scroll_right = new EdgeScroller(-1, 0, this);
 	m_scroll_right->hide();
-	connect(m_scroll_right, &EdgeScroller::scroll, this, &Board::edgeScroll);
+	connect(m_scroll_right, &EdgeScroller::edgeScroll, this, &Board::edgeScroll);
 
 	m_scroll_up = new EdgeScroller(0, 1, this);
 	m_scroll_up->hide();
-	connect(m_scroll_up, &EdgeScroller::scroll, this, &Board::edgeScroll);
+	connect(m_scroll_up, &EdgeScroller::edgeScroll, this, &Board::edgeScroll);
 
 	m_scroll_down = new EdgeScroller(0, -1, this);
 	m_scroll_down->hide();
-	connect(m_scroll_down, &EdgeScroller::scroll, this, &Board::edgeScroll);
+	connect(m_scroll_down, &EdgeScroller::edgeScroll, this, &Board::edgeScroll);
 
 	QGridLayout* layout = new QGridLayout(this);
 

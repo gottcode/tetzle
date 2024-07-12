@@ -19,7 +19,7 @@ public:
 	explicit EdgeScroller(int horizontal, int vertical, QWidget* parent = nullptr);
 
 Q_SIGNALS:
-	void scroll(int horizontal, int vertical);
+	void edgeScroll(int horizontal, int vertical);
 
 protected:
 	void enterEvent(QEnterEvent*) override;
