@@ -265,7 +265,7 @@ void NewGameTab::removeImage()
 	}
 
 	// Prompt about image removal
-	const int plural = selected_images.size();
+	const int plural = selected_images.count();
 	QMessageBox mbox(this);
 	mbox.setIcon(QMessageBox::Question);
 	mbox.setWindowTitle(tr("Remove Image"));

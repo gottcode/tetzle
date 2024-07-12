@@ -362,9 +362,9 @@ void Piece::updateVerts()
 
 	// Update tile and bevel fragments
 	m_tiles_list.clear();
-	m_tiles_list.reserve(m_tiles.size());
+	m_tiles_list.reserve(m_tiles.count());
 	m_bevel_list.clear();
-	m_bevel_list.reserve(m_tiles.size());
+	m_bevel_list.reserve(m_tiles.count());
 	for (const Tile* tile : std::as_const(m_tiles)) {
 		const QPoint pos = tile->scenePos();
 
@@ -382,7 +382,7 @@ void Piece::updateVerts()
 
 	// Update shadow fragments
 	m_shadow_list.clear();
-	m_shadow_list.reserve(m_shadow.size());
+	m_shadow_list.reserve(m_shadow.count());
 	for (const Tile* tile : std::as_const(m_shadow)) {
 		const QPoint pos = tile->scenePos();
 
