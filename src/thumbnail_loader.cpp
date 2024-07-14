@@ -10,7 +10,6 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
-#include <QFile>
 #include <QFileInfo>
 #include <QImage>
 #include <QImageReader>
@@ -137,9 +136,9 @@ void ThumbnailLoader::run()
 		m_mutex.unlock();
 
 		// Skip already generated thumbnails
-		if (!QFile::exists(details.image)) {
+		if (!QFileInfo::exists(details.image)) {
 			continue;
-		} else if (QFile::exists(details.thumbnail)) {
+		} else if (QFileInfo::exists(details.thumbnail)) {
 			Q_EMIT loaded(details);
 			continue;
 		}

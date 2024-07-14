@@ -22,21 +22,18 @@
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QImageReader>
-#include <QMatrix4x4>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSettings>
 #include <QTimeLine>
-#include <QWheelEvent>
 #include <QVector2D>
+#include <QWheelEvent>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
 #include <algorithm>
-
 #include <cmath>
-#include <cstdlib>
 
 //-----------------------------------------------------------------------------
 

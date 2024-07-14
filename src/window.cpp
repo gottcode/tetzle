@@ -18,7 +18,6 @@
 #include <QCloseEvent>
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QFileInfo>
 #include <QGridLayout>
 #include <QLabel>
 #include <QMenu>

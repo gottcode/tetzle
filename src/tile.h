@@ -10,7 +10,6 @@
 class Piece;
 
 #include <QPoint>
-#include <QRect>
 #include <QXmlStreamWriter>
 
 class Tile

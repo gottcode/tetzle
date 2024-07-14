@@ -14,7 +14,6 @@ namespace DLX
 class Tile;
 
 #include <QList>
-#include <QPoint>
 #include <QRandomGenerator>
 
 class Generator

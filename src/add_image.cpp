@@ -14,7 +14,6 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QUrl>
-#include <QWidget>
 
 //-----------------------------------------------------------------------------
 

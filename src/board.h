@@ -15,8 +15,8 @@ class Piece;
 class Tile;
 
 #include <QHash>
-#include <QWidget>
 #include <QRandomGenerator>
+#include <QWidget>
 class QTimeLine;
 
 class Board : public QWidget

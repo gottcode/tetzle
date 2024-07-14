@@ -11,7 +11,6 @@
 class Board;
 class Tile;
 
-#include <QColor>
 #include <QList>
 #include <QPoint>
 #include <QRect>

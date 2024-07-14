@@ -22,7 +22,6 @@
 #include <QDialog>
 #include <QDir>
 #include <QFile>
-#include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QImageReader>

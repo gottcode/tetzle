@@ -7,7 +7,6 @@
 #include "thumbnail_delegate.h"
 
 #include <QApplication>
-#include <QLineEdit>
 #include <QListWidget>
 #include <QPainter>
 
