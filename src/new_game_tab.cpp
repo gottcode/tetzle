@@ -356,21 +356,32 @@ void NewGameTab::editImageProperties()
 
 void NewGameTab::imageSelected()
 {
-	const qsizetype size = m_images->selectedItems().size();
-	if (size == 0) {
+	const QList<QListWidgetItem*> images = m_images->selectedItems();
+
+	// Disable actions if no images are selected
+	if (images.isEmpty()) {
 		m_accept_button->setEnabled(false);
 		m_tag_action->setEnabled(false);
 		m_remove_action->setEnabled(false);
 		return;
 	}
 
-	const bool enabled = size == 1;
+	// Enable playing game or editing image properties if only 1 image is selected
+	const bool enabled = images.count() == 1;
 	m_accept_button->setEnabled(enabled);
 	m_tag_action->setEnabled(enabled);
 
 	// Prevent removing the image of the game currently open
+	m_remove_action->setEnabled(true);
+	const QString current_image = QSettings().value("OpenGame/Image").toString();
+	for (QListWidgetItem* item : images) {
+		if (item->data(ImageRole).toString() == current_image) {
+			m_remove_action->setEnabled(false);
+			break;
+		}
+	}
+
 	const QString image = m_images->currentItem()->data(ImageRole).toString();
-	m_remove_action->setEnabled(QSettings().value("OpenGame/Image").toString() != image);
 
 	m_image_size = QImageReader(Path::image(image)).size();
 	if (m_image_size.width() > m_image_size.height()) {
