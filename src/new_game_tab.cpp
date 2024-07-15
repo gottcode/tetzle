@@ -204,12 +204,12 @@ void NewGameTab::addImages(const QStringList& images)
 
 void NewGameTab::accept()
 {
-	QListWidgetItem* item = m_images->currentItem();
-	if (!item) {
+	const QList<QListWidgetItem*> items = m_images->selectedItems();
+	if (items.count() != 1) {
 		return;
 	}
 
-	QString image = item->data(ImageRole).toString();
+	const QString image = items.first()->data(ImageRole).toString();
 
 	QSettings settings;
 	settings.setValue("NewGame/Pieces", m_slider->value());
@@ -323,10 +323,11 @@ void NewGameTab::removeImage()
 
 void NewGameTab::editImageProperties()
 {
-	QListWidgetItem* item = m_images->currentItem();
-	if (!item || item->isHidden()) {
+	const QList<QListWidgetItem*> items = m_images->selectedItems();
+	if (items.count() != 1) {
 		return;
 	}
+	QListWidgetItem* item = items.first();
 
 	const QString filename = item->data(ImageRole).toString();
 	ImagePropertiesDialog dialog(item->icon(), item->text(), m_image_tags, filename, window());
@@ -380,7 +381,7 @@ void NewGameTab::imageSelected()
 		}
 	}
 
-	const QString image = m_images->currentItem()->data(ImageRole).toString();
+	const QString image = images.last()->data(ImageRole).toString();
 
 	m_image_size = QImageReader(Path::image(image)).size();
 	if (m_image_size.width() > m_image_size.height()) {
@@ -416,29 +417,21 @@ void NewGameTab::pieceCountChanged(int value)
 void NewGameTab::filterImages(const QStringList& filter)
 {
 	// Filter items
-	QListWidgetItem* item;
-	const int count = m_images->count();
-	for (int i = 0; i < count; ++i) {
-		item = m_images->item(i);
-		item->setHidden(!filter.contains(item->data(ImageRole).toString()));
-	}
+	m_images->blockSignals(true);
+	for (int i = 0, count = m_images->count(); i < count; ++i) {
+		QListWidgetItem* item = m_images->item(i);
 
-	// Select next item if current item was hidden
-	item = m_images->currentItem();
-	if (!item || item->isHidden()) {
-		for (int i = 0; i < count; ++i) {
-			item = m_images->item(i);
-			if (!item->isHidden()) {
-				item->setSelected(true);
-				m_images->setCurrentItem(item);
-				break;
-			}
+		if (filter.contains(item->data(ImageRole).toString())) {
+			item->setHidden(false);
+		} else {
+			item->setHidden(true);
+			item->setSelected(false);
 		}
 	}
+	m_images->blockSignals(false);
 
 	// Disable tag button if no images are visible
-	item = m_images->currentItem();
-	m_tag_action->setEnabled(item && !item->isHidden());
+	imageSelected();
 }
 
 //-----------------------------------------------------------------------------
