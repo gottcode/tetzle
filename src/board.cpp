@@ -68,7 +68,7 @@ Board::Board(QWidget* parent)
 	, m_total_pieces(0)
 	, m_completed(0)
 	, m_pos(0, 0)
-	, m_scale_level(ZoomSlider::maxScaleLevel())
+	, m_scale_level(-1)
 	, m_scale(0)
 	, m_scrolling(false)
 	, m_selecting(false)
@@ -1319,6 +1319,7 @@ void Board::cleanup()
 	m_id = 0;
 	m_columns = 0;
 	m_rows = 0;
+	m_scale_level = -1;
 
 	m_scene = QRect(0,0,0,0);
 	m_scrolling = false;
