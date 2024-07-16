@@ -267,7 +267,7 @@ void Board::newGame(const QString& image, int difficulty)
 	}
 
 	for (Piece* piece : std::as_const(m_pieces)) {
-		piece->findNeighbors(m_pieces);
+		piece->findSolutionNeighbors(m_pieces);
 	}
 	Q_EMIT clearMessage();
 
@@ -398,7 +398,7 @@ void Board::openGame(int id)
 		m_pieces.append( new Piece(details.pos, details.rotation, details.tiles, this) );
 	}
 	for (Piece* piece : std::as_const(m_pieces)) {
-		piece->findNeighbors(m_pieces);
+		piece->findSolutionNeighbors(m_pieces);
 	}
 	Q_EMIT clearMessage();
 
@@ -839,7 +839,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 		// Attach neighbors if only one piece is active
 		if (m_active_pieces.count() == 1) {
-			m_active_pieces.first()->attachNeighbors();
+			m_active_pieces.first()->attachSolutionNeighbors();
 			updateCompleted();
 		}
 
@@ -1019,7 +1019,7 @@ void Board::releasePieces()
 
 	// Attach to closest piece
 	if (m_active_pieces.count() == 1) {
-		m_active_pieces.first()->attachNeighbors();
+		m_active_pieces.first()->attachSolutionNeighbors();
 		updateCompleted();
 	}
 
@@ -1060,7 +1060,7 @@ void Board::rotatePiece()
 			return;
 		}
 		piece->rotate(mapCursorPosition());
-		piece->attachNeighbors();
+		piece->attachSolutionNeighbors();
 		piece->pushCollidingPieces();
 	} else {
 		for (Piece* piece : std::as_const(m_active_pieces)) {

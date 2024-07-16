@@ -36,8 +36,8 @@ public:
 	FragmentList shadow() const;
 	FragmentList tiles() const;
 
-	void attachNeighbors();
-	void findNeighbors(const QList<Piece*>& pieces);
+	void attachSolutionNeighbors();
+	void findSolutionNeighbors(const QList<Piece*>& pieces);
 	void moveBy(const QPoint& delta);
 	void pushCollidingPieces(const QPointF& inertia = QPointF());
 	void rotate(int rotations);

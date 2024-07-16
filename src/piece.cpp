@@ -73,7 +73,7 @@ QPoint Piece::randomPoint() const
 
 //-----------------------------------------------------------------------------
 
-void Piece::attachNeighbors()
+void Piece::attachSolutionNeighbors()
 {
 	for (Piece* piece : std::as_const(m_neighbors)) {
 		if (piece->m_rotation != m_rotation) {
@@ -100,7 +100,7 @@ void Piece::attachNeighbors()
 
 //-----------------------------------------------------------------------------
 
-void Piece::findNeighbors(const QList<Piece*>& pieces)
+void Piece::findSolutionNeighbors(const QList<Piece*>& pieces)
 {
 	// Find neighbor tiles
 	static const QList<QPoint> deltas{ QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
