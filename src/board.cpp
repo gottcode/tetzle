@@ -148,7 +148,7 @@ Board::~Board()
 
 //-----------------------------------------------------------------------------
 
-Piece* Board::findCollidingPiece(Piece* piece) const
+Piece* Board::findCollidingPiece(const Piece* piece) const
 {
 	for (int i = m_pieces.count() - 1; i >= 0; --i) {
 		Piece* other = m_pieces.at(i);
@@ -189,7 +189,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 
 //-----------------------------------------------------------------------------
 
-void Board::updateSceneRectangle(Piece* piece)
+void Board::updateSceneRectangle(const Piece* piece)
 {
 	const int size = Tile::size / 2;
 	m_scene = m_scene.united(piece->boundingRect().adjusted(-size, -size, size, size));
@@ -453,13 +453,13 @@ void Board::saveGame() const
 		.arg(m_scene.width())
 		.arg(m_scene.height()));
 
-	for (Piece* piece : std::as_const(m_pieces)) {
+	for (const Piece* piece : std::as_const(m_pieces)) {
 		piece->save(xml);
 	}
-	for (Piece* piece : std::as_const(m_selected_pieces)) {
+	for (const Piece* piece : std::as_const(m_selected_pieces)) {
 		piece->save(xml);
 	}
-	for (Piece* piece : std::as_const(m_active_pieces)) {
+	for (const Piece* piece : std::as_const(m_active_pieces)) {
 		piece->save(xml);
 	}
 
@@ -637,7 +637,7 @@ void Board::paintEvent(QPaintEvent*)
 		bevel.reserve(total_tiles);
 		shadow.reserve(total_tiles);
 		tiles.reserve(total_tiles);
-		for (Piece* piece : std::as_const(m_pieces)) {
+		for (const Piece* piece : std::as_const(m_pieces)) {
 			const QRect r = m_viewport_transform.mapRect(piece->boundingRect());
 			if (m_viewport.intersects(r)) {
 				if (m_has_shadows) {
@@ -657,7 +657,7 @@ void Board::paintEvent(QPaintEvent*)
 			bevel.draw(painter, m_bevel_pixmap);
 		}
 
-		for (Piece* piece : std::as_const(m_selected_pieces)) {
+		for (const Piece* piece : std::as_const(m_selected_pieces)) {
 			if (m_has_shadows) {
 				piece->shadow().draw(painter, m_selected_shadow_pixmap);
 			}
@@ -667,7 +667,7 @@ void Board::paintEvent(QPaintEvent*)
 			}
 		}
 
-		for (Piece* piece : std::as_const(m_active_pieces)) {
+		for (const Piece* piece : std::as_const(m_active_pieces)) {
 			if (m_has_shadows) {
 				piece->shadow().draw(painter, m_selected_shadow_pixmap);
 			}
@@ -1214,7 +1214,7 @@ void Board::updateCompleted()
 void Board::updateSceneRectangle()
 {
 	m_scene = QRect(0,0,0,0);
-	for (Piece* piece : std::as_const(m_pieces)) {
+	for (const Piece* piece : std::as_const(m_pieces)) {
 		updateSceneRectangle(piece);
 	}
 }

@@ -27,7 +27,7 @@ public:
 	explicit Board(QWidget* parent = nullptr);
 	~Board();
 
-	Piece* findCollidingPiece(Piece* piece) const;
+	Piece* findCollidingPiece(const Piece* piece) const;
 	void removePiece(Piece* piece);
 
 	int id() const;
@@ -35,7 +35,7 @@ public:
 	QRect marginRect(const QRect& rect) const;
 	int randomInt(int max);
 	void setAppearance(const AppearanceDialog& dialog);
-	void updateSceneRectangle(Piece* piece);
+	void updateSceneRectangle(const Piece* piece);
 
 public Q_SLOTS:
 	void newGame(const QString& image, int difficulty);

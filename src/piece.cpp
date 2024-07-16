@@ -67,7 +67,7 @@ bool Piece::collidesWith(const Piece* other) const
 
 QPoint Piece::randomPoint() const
 {
-	Tile* tile = m_tiles.at(m_board->randomInt(m_tiles.count()));
+	const Tile* tile = m_tiles.at(m_board->randomInt(m_tiles.count()));
 	return tile->scenePos() + QPoint(m_board->randomInt(Tile::size), m_board->randomInt(Tile::size));
 }
 
@@ -80,8 +80,8 @@ void Piece::attachSolutionNeighbors()
 			continue;
 		}
 
-		Tile* tile = m_tiles.first();
-		Tile* piece_tile = piece->m_tiles.first();
+		const Tile* tile = m_tiles.first();
+		const Tile* piece_tile = piece->m_tiles.first();
 		QPoint grid_delta = piece_tile->gridPos() - tile->gridPos();
 		for (int i = 0; i < m_rotation; ++i) {
 			const QPoint pos = grid_delta;
@@ -105,7 +105,7 @@ void Piece::findSolutionNeighbors(const QList<Piece*>& pieces)
 	// Find neighbor tiles
 	static const QList<QPoint> deltas{ QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
 	QList<QPoint> tiles;
-	for (Tile* tile : std::as_const(m_shadow)) {
+	for (const Tile* tile : std::as_const(m_shadow)) {
 		const QPoint pos(tile->column(), tile->row());
 		for (const QPoint& delta : deltas) {
 			const QPoint neighbor = pos + delta;
@@ -235,7 +235,7 @@ void Piece::save(QXmlStreamWriter& xml) const
 	xml.writeAttribute("y", QString::number(m_pos.y()));
 	xml.writeAttribute("rotation", QString::number(m_rotation));
 
-	for (Tile* tile : std::as_const(m_tiles)) {
+	for (const Tile* tile : std::as_const(m_tiles)) {
 		tile->save(xml);
 	}
 
@@ -285,7 +285,7 @@ void Piece::attach(Piece* piece)
 bool Piece::containsTile(int column, int row)
 {
 	bool result = false;
-	for (Tile* tile : std::as_const(m_tiles)) {
+	for (const Tile* tile : std::as_const(m_tiles)) {
 		if (tile->column() == column && tile->row() == row) {
 			result = true;
 			break;
@@ -302,7 +302,7 @@ void Piece::updateCollisionRegions()
 	m_collision_region = QRegion();
 	m_collision_region_expanded = QRegion();
 	QRect rect(0,0, Tile::size, Tile::size);
-	for (Tile* tile : std::as_const(m_tiles)) {
+	for (const Tile* tile : std::as_const(m_tiles)) {
 		rect.moveTo(tile->scenePos());
 		m_collision_region += rect;
 		m_collision_region_expanded += m_board->marginRect(rect);
@@ -315,7 +315,7 @@ void Piece::updateShadow()
 {
 	QMutableListIterator<Tile*> i(m_shadow);
 	while (i.hasNext()) {
-		Tile* tile = i.next();
+		const Tile* tile = i.next();
 		if ( containsTile(tile->column() - 1, tile->row())
 			&& containsTile(tile->column() + 1, tile->row())
 			&& containsTile(tile->column(), tile->row() - 1)
@@ -332,7 +332,7 @@ void Piece::updateTiles()
 	// Find bounding rectangle
 	QPoint top_left = m_tiles.first()->gridPos();
 	QPoint bottom_right = top_left + QPoint(Tile::size, Tile::size);
-	for (Tile* tile : std::as_const(m_tiles)) {
+	for (const Tile* tile : std::as_const(m_tiles)) {
 		const QPoint pos = tile->gridPos();
 		top_left.setX( std::min(pos.x(), top_left.x()) );
 		top_left.setY( std::min(pos.y(), top_left.y()) );

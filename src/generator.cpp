@@ -117,9 +117,9 @@ void Generator::solve()
 
 	const QList<DLX::Node*> rows = matrix.solution();
 	QList<Tile*> piece;
-	for (DLX::Node* row : rows) {
+	for (const DLX::Node* row : rows) {
 		piece.clear();
-		DLX::Node* node = row;
+		const DLX::Node* node = row;
 		do {
 			const unsigned int r = node->column->id / m_columns;
 			const unsigned int c = node->column->id - (r * m_columns);

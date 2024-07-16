@@ -235,7 +235,7 @@ void NewGameTab::removeImage()
 		return;
 	}
 	QStringList selected_images;
-	for (QListWidgetItem* item : items) {
+	for (const QListWidgetItem* item : items) {
 		selected_images.append(item->data(ImageRole).toString());
 	}
 
@@ -302,7 +302,7 @@ void NewGameTab::removeImage()
 	}
 
 	// Remove listwidget items
-	for (QListWidgetItem* item : items) {
+	for (const QListWidgetItem* item : items) {
 		delete item;
 	}
 
@@ -374,7 +374,7 @@ void NewGameTab::imageSelected()
 	// Prevent removing the image of the game currently open
 	m_remove_action->setEnabled(true);
 	const QString current_image = QSettings().value("OpenGame/Image").toString();
-	for (QListWidgetItem* item : images) {
+	for (const QListWidgetItem* item : images) {
 		if (item->data(ImageRole).toString() == current_image) {
 			m_remove_action->setEnabled(false);
 			break;
@@ -480,7 +480,7 @@ void NewGameTab::addImage(const QString& image)
 	for (const QString& file : images) {
 		image_id = std::max(image_id, file.section(".", 0, 0).toInt());
 
-		QString key = file + "/SHA1";
+		const QString key = file + "/SHA1";
 		if (!details.contains(key)) {
 			details.setValue(key, hash(Path::image(file)));
 		}

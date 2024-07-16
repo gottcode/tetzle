@@ -139,7 +139,7 @@ void OpenGameTab::showEvent(QShowEvent* event)
 
 void OpenGameTab::accept()
 {
-	QListWidgetItem* item = m_games->currentItem();
+	const QListWidgetItem* item = m_games->currentItem();
 	if (item) {
 		Q_EMIT openGame(item->data(GameRole).toInt());
 	}
@@ -149,7 +149,7 @@ void OpenGameTab::accept()
 
 void OpenGameTab::deleteGame()
 {
-	QListWidgetItem* item = m_games->currentItem();
+	const QListWidgetItem* item = m_games->currentItem();
 	if (!item) {
 		return;
 	}

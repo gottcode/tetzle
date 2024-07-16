@@ -123,7 +123,7 @@ void DLX::Matrix::solve(unsigned int k)
 	for(Node* row = column->down; row != column; row = row->down) {
 		m_output[k] = row;
 
-		for(Node* j = row->right; j != row; j = j->right) {
+		for(const Node* j = row->right; j != row; j = j->right) {
 			cover(j->column);
 		}
 
@@ -132,7 +132,7 @@ void DLX::Matrix::solve(unsigned int k)
 		row = m_output[k];
 		column = row->column;
 
-		for(Node* j = row->left; j != row; j = j->left) {
+		for(const Node* j = row->left; j != row; j = j->left) {
 			uncover(j->column);
 		}
 	}
@@ -147,7 +147,7 @@ void DLX::Matrix::cover(HeaderNode* node)
 	node->right->left = node->left;
 	node->left->right = node->right;
 
-	for (Node* i = node->down; i != node; i = i->down) {
+	for (const Node* i = node->down; i != node; i = i->down) {
 		for (Node* j = i->right; j != i; j = j->right) {
 			j->down->up = j->up;
 			j->up->down = j->down;
@@ -160,7 +160,7 @@ void DLX::Matrix::cover(HeaderNode* node)
 
 void DLX::Matrix::uncover(HeaderNode* node)
 {
-	for (Node* i = node->up; i != node; i = i->up) {
+	for (const Node* i = node->up; i != node; i = i->up) {
 		for (Node* j = i->left; j != i; j = j->left) {
 			j->column->size++;
 			j->down->up = j;

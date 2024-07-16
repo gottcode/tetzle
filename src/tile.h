@@ -20,7 +20,6 @@ public:
 	QPointF bevel() const;
 	int column() const;
 	int row() const;
-	Piece* parent() const;
 	QPoint pos() const;
 	QPoint gridPos() const;
 	QPoint scenePos() const;
@@ -28,14 +27,14 @@ public:
 	void rotate();
 	void setBevel(int bevel);
 	void setPos(const QPoint& pos);
-	void setParent(Piece* parent);
+	void setParent(const Piece* parent);
 
 	static const int size = 64;
 
 	void save(QXmlStreamWriter& xml) const;
 
 private:
-	Piece* m_parent;
+	const Piece* m_parent;
 	int m_column;
 	int m_row;
 	QPoint m_pos;
@@ -59,11 +58,6 @@ inline int Tile::row() const
 	return m_row;
 }
 
-inline Piece* Tile::parent() const
-{
-	return m_parent;
-}
-
 inline QPoint Tile::pos() const
 {
 	return m_pos;
@@ -79,7 +73,7 @@ inline void Tile::setPos(const QPoint& pos)
 	m_pos = pos;
 }
 
-inline void Tile::setParent(Piece* parent)
+inline void Tile::setParent(const Piece* parent)
 {
 	m_parent = parent;
 }

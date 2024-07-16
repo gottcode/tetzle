@@ -236,7 +236,7 @@ void TagManager::addTag()
 void TagManager::removeTag()
 {
 	// Find current item
-	QListWidgetItem* item = m_tags_list->currentItem();
+	const QListWidgetItem* item = m_tags_list->currentItem();
 	if (!item) {
 		return;
 	}

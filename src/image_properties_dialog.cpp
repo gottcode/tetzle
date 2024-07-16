@@ -103,7 +103,7 @@ QString ImagePropertiesDialog::name() const
 bool ImagePropertiesDialog::eventFilter(QObject* watched, QEvent* event)
 {
 	if ((watched == m_add_tag_name) && (event->type() == QEvent::KeyPress)) {
-		QKeyEvent* key_event = static_cast<QKeyEvent*>(event);
+		const QKeyEvent* key_event = static_cast<QKeyEvent*>(event);
 		if ((key_event->key() == Qt::Key_Return) || (key_event->key() == Qt::Key_Enter)) {
 			addTag();
 			return true;
