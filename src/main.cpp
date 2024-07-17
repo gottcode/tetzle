@@ -17,19 +17,36 @@
 
 //-----------------------------------------------------------------------------
 
+/**
+ * %Application instance to handle player dropping images on program.
+ */
 class Application : public QApplication
 {
 public:
+	/**
+	 * Construct an application instance.
+	 *
+	 * @param argc amount of arguments
+	 * @param argv array of arguments
+	 */
 	Application(int& argc, char** argv);
 
+	/**
+	 * Create the main window.
+	 *
+	 * @param files list of images to add to new game
+	 */
 	void createWindow(const QStringList& files);
 
 protected:
+	/**
+	 * Handle player dropping images by passing them to main window.
+	 */
 	bool event(QEvent* e) override;
 
 private:
-	QStringList m_files;
-	Window* m_window;
+	QStringList m_files; ///< list of images to pass to main window
+	Window* m_window; ///< main window of game
 };
 
 //-----------------------------------------------------------------------------

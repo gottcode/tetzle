@@ -43,6 +43,13 @@
 namespace
 {
 
+/**
+ * Calculate the hash of a file.
+ *
+ * @param path the file to hash
+ *
+ * @return the hash of the file contents
+ */
 QString hash(const QString& path)
 {
 	QFile file(path);
@@ -52,6 +59,9 @@ QString hash(const QString& path)
 	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
 }
 
+/**
+ * Update the tooltip of a thumbnail item.
+ */
 void updateToolTip(QListWidgetItem* item)
 {
 	QString tip = item->text();

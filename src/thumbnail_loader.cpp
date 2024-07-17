@@ -26,13 +26,16 @@ void qt_blurImage(QPainter* p, QImage& blurImage, qreal radius, bool quality, bo
 
 //-----------------------------------------------------------------------------
 
+/**
+ * Details of thumbnail to generate.
+ */
 struct Thumbnail
 {
-	QListWidget* list;
-	QPersistentModelIndex index;
-	QString image;
-	QString thumbnail;
-	qreal pixelratio;
+	QListWidget* list; ///< listwidget that contains thumbnail item
+	QPersistentModelIndex index; ///< location in listwidget
+	QString image; ///< image to generate thumbnail
+	QString thumbnail; ///< location of generated thumbnail
+	qreal pixelratio; ///< pixel ratio to render at
 };
 
 Q_DECLARE_METATYPE(Thumbnail)

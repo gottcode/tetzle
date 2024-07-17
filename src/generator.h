@@ -16,26 +16,42 @@ class Tile;
 #include <QList>
 #include <QRandomGenerator>
 
+/**
+ * Generator for a puzzle.
+ */
 class Generator
 {
 public:
+	/**
+	 * Construct a new puzzle.
+	 *
+	 * @param columns how many columns in puzzle
+	 * @param rows how many rows in puzzle
+	 * @param random the random number generator
+	 */
 	Generator(int columns, int rows, QRandomGenerator& random);
 
-	QList<QList<Tile*>> pieces() const;
+	/**
+	 * Fetch the tiles which make up the new puzzle, grouped into shapes.
+	 *
+	 * @return the tiles which make up the new puzzle
+	 */
+	QList<QList<Tile*>> pieces() const
+	{
+		return m_pieces;
+	}
 
 private:
+	/**
+	 * Generate a puzzle.
+	 */
 	void solve();
 
 private:
-	int m_columns;
-	int m_rows;
-	QList<QList<Tile*>> m_pieces;
-	QRandomGenerator& m_random;
+	const int m_columns; ///< how many columns in puzzle
+	const int m_rows; ///< how many rows in puzzle
+	QList<QList<Tile*>> m_pieces; ///< tiles that make up puzzle
+	QRandomGenerator& m_random; ///< random number generator
 };
-
-inline QList<QList<Tile*>> Generator::pieces() const
-{
-	return m_pieces;
-}
 
 #endif // TETZLE_GENERATOR_H

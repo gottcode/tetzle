@@ -293,22 +293,6 @@ void TagManager::tagChanged(QListWidgetItem* item)
 
 //-----------------------------------------------------------------------------
 
-void TagManager::updateFilter()
-{
-	blockSignals(true);
-	clear();
-	addItem(tr("All Images"), "ALL");
-	for (int i = 0, count = m_tags_list->count(); i < count; ++i) {
-		addItem(m_tags_list->item(i)->text());
-	}
-	addItem(tr("Untagged"), "UNTAGGED");
-	insertSeparator(count());
-	addItem(tr("Manage Tags..."), "MANAGE");
-	blockSignals(false);
-}
-
-//-----------------------------------------------------------------------------
-
 QListWidgetItem* TagManager::createTag(const QString& tag)
 {
 	m_remove_tag_button->setEnabled(true);
@@ -340,6 +324,22 @@ void TagManager::storeTags() const
 		i.next();
 		file.setValue(i.key(), i.value());
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void TagManager::updateFilter()
+{
+	blockSignals(true);
+	clear();
+	addItem(tr("All Images"), "ALL");
+	for (int i = 0, count = m_tags_list->count(); i < count; ++i) {
+		addItem(m_tags_list->item(i)->text());
+	}
+	addItem(tr("Untagged"), "UNTAGGED");
+	insertSeparator(count());
+	addItem(tr("Manage Tags..."), "MANAGE");
+	blockSignals(false);
 }
 
 //-----------------------------------------------------------------------------

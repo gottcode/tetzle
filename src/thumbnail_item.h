@@ -9,14 +9,27 @@
 
 #include <QListWidgetItem>
 
+/**
+ * Thumbnail listwidget item.
+ */
 class ThumbnailItem : public QListWidgetItem
 {
 public:
+	/**
+	 * Construct a thumbnail item.
+	 *
+	 * @param text the text of the item
+	 */
 	explicit ThumbnailItem(const QString& text = QString())
 		: QListWidgetItem(QIcon::fromTheme("image-loading"), text)
 	{
 	}
 
+	/**
+	 * Compare text and image identifier to another thumbnail item using locale-aware comparison.
+	 *
+	 * @param other thumbnail item to compare with
+	 */
 	bool operator<(const QListWidgetItem& other) const override
 	{
 		int compare = text().localeAwareCompare(other.text());
@@ -26,16 +39,19 @@ public:
 		return compare < 0;
 	}
 
+	/**
+	 * Roles for the thumbnail item data.
+	 */
 	enum ItemRoles
 	{
-		ImageRole = Qt::UserRole,
+		ImageRole = Qt::UserRole, ///< image identifier
 
-		SmallDisplayRole,
-		DetailsRole = SmallDisplayRole,
-		TagsRole = SmallDisplayRole,
+		SmallDisplayRole, ///< secondary text
+		DetailsRole = SmallDisplayRole, ///< details of the game; piece count and completion
+		TagsRole = SmallDisplayRole, ///< list of tags
 
-		GameRole,
-		NameRole
+		GameRole, ///< game identifier
+		NameRole ///< image name
 	};
 };
 

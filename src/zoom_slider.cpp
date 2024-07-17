@@ -19,8 +19,14 @@
 namespace
 {
 
+///< scale factor for each zoom level
 constexpr float scale_levels[10] = { 0.0625, 0.09375, 0.125, 0.171875, 0.234375, 0.3125, 0.40625, 0.546875, 0.75, 1.0 };
 
+/**
+ * Returns translated text with @c & removed.
+ *
+ * @param text the text to translate
+ */
 QString windowString(const char* text)
 {
 	QString result = QCoreApplication::translate("Window", text);

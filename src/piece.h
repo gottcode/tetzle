@@ -18,112 +18,248 @@ class Tile;
 #include <QSet>
 #include <QXmlStreamWriter>
 
+/**
+ * A piece on the board.
+ */
 class Piece
 {
 public:
+	/**
+	 * Construct a piece.
+	 *
+	 * @param pos location in scene
+	 * @param rotation how many times it is rotated 90 degrees
+	 * @param tiles the list of tiles that make up the piece
+	 * @param board the game board
+	 */
 	Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* board);
+
+	/**
+	 * Clean up piece.
+	 */
 	~Piece();
 
+	/**
+	 * Check if piece collides with another piece.
+	 *
+	 * @param other the piece to check for collision
+	 *
+	 * @return @c true if it collides
+	 */
 	bool collidesWith(const Piece* other) const;
-	bool contains(const QPoint& pos) const;
-	QRect boundingRect() const;
-	bool isSelected() const;
+
+	/**
+	 * Check if piece contains a position.
+	 *
+	 * @param pos the position to check
+	 *
+	 * @return @c true if it contains position
+	 */
+	bool contains(const QPoint& pos) const
+	{
+		return m_collision_region.contains(pos);
+	}
+
+	/**
+	 * Fetch bounding rectangle of the piece.
+	 *
+	 * @return bounding rectangle of the piece
+	 */
+	QRect boundingRect() const
+	{
+		return m_rect.translated(m_pos);
+	}
+
+	/**
+	 * Fetch if piece is selected.
+	 *
+	 * @return @c true if piece is selected
+	 */
+	bool isSelected() const
+	{
+		return m_selected;
+	}
+
+	/**
+	 * Fetch random position inside piece.
+	 *
+	 * @return random position inside piece
+	 */
 	QPoint randomPoint() const;
-	int rotation() const;
-	QPoint scenePos() const;
 
-	FragmentList bevel() const;
-	FragmentList shadow() const;
-	FragmentList tiles() const;
+	/**
+	 * Fetch how many times piece is rotated 90 degrees.
+	 *
+	 * @return how many times piece is rotated 90 degrees
+	 */
+	int rotation() const
+	{
+		return m_rotation;
+	}
 
+	/**
+	 * Fetch location of piece in scene.
+	 *
+	 * @return location of piece in scene
+	 */
+	QPoint scenePos() const
+	{
+		return m_pos;
+	}
+
+	/**
+	 * Fetch pixmap fragments for tile bevels.
+	 *
+	 * @return list of pixmap fragments for bevels
+	 */
+	FragmentList bevel() const
+	{
+		return m_bevel_list;
+	}
+
+	/**
+	 * Fetch pixmap fragments for border shadow.
+	 *
+	 * @return list of pixmap fragments for shadow
+	 */
+	FragmentList shadow() const
+	{
+		return m_shadow_list;
+	}
+
+	/**
+	 * Fetch pixmap fragments for tiles.
+	 *
+	 * @return list of pixmap fragments for tiles
+	 */
+	FragmentList tiles() const
+	{
+		return m_tiles_list;
+	}
+
+	/**
+	 * Attempt to attach neighboring pieces in solution.
+	 */
 	void attachSolutionNeighbors();
+
+	/**
+	 * Find neighbors in solution.
+	 *
+	 * @param pieces list of pieces to check for neighbors
+	 */
 	void findSolutionNeighbors(const QList<Piece*>& pieces);
-	void moveBy(const QPoint& delta);
+
+	/**
+	 * Move piece.
+	 *
+	 * @param delta how far to move piece
+	 */
+	void moveBy(const QPoint& delta)
+	{
+		m_pos += delta;
+		updateVerts();
+	}
+
+	/**
+	 * Push colliding pieces.
+	 *
+	 * @param inertia the inertia from a previous push
+	 */
 	void pushCollidingPieces(const QPointF& inertia = QPointF());
+
+	/**
+	 * Rotate piece.
+	 *
+	 * @param rotations how many times to rotate piece 90 degrees
+	 */
 	void rotate(int rotations);
+
+	/**
+	 * Rotate piece 90 degrees.
+	 *
+	 * @param origin center to rotate around
+	 */
 	void rotate(const QPoint& origin = QPoint());
-	void setPosition(const QPoint& pos);
+
+	/**
+	 * Set position of piece in scene.
+	 *
+	 * @param pos scene location of piece
+	 */
+	void setPosition(const QPoint& pos)
+	{
+		m_pos = pos;
+		updateVerts();
+	}
+
+	/**
+	 * Select piece.
+	 *
+	 * @param selected @c true if piece is selected
+	 */
 	void setSelected(bool selected);
 
+	/**
+	 * Save piece details.
+	 *
+	 * @param xml where to save details
+	 */
 	void save(QXmlStreamWriter& xml) const;
 
 private:
+	/**
+	 * Merge another piece into this piece. The other piece will be destroyed.
+	 *
+	 * @param piece the piece to attach
+	 */
 	void attach(Piece* piece);
+
+	/**
+	 * Check if piece contains a tile.
+	 *
+	 * @param column the column of the tile
+	 * @param row the row of the tile
+	 *
+	 * @return @c true if piece contains tile
+	 */
 	bool containsTile(int column, int row) const;
+
+	/**
+	 * Update collision regions to contain all tiles in piece.
+	 */
 	void updateCollisionRegions();
+
+	/**
+	 * Update shadow to be only under edge tiles of piece.
+	 */
 	void updateShadow();
+
+	/**
+	 * Update tiles to belong to piece.
+	 */
 	void updateTiles();
+
+	/**
+	 * Update pixmap fragment lists for drawing.
+	 */
 	void updateVerts();
 
 private:
-	Board* m_board;
-	QPoint m_pos;
-	QRect m_rect;
-	FragmentList m_tiles_list;
-	FragmentList m_bevel_list;
-	FragmentList m_shadow_list;
-	QList<Tile*> m_tiles;
-	QList<Tile*> m_shadow;
-	QSet<Piece*> m_neighbors;
-	int m_rotation;
-	bool m_selected;
+	Board* m_board; ///< game board
+	QPoint m_pos; ///< location in scene
+	QRect m_rect; ///< bounding rectangle
+	FragmentList m_tiles_list; ///< pixmap fragments of tiles
+	FragmentList m_bevel_list; ///< pixmap fragments of bevels
+	FragmentList m_shadow_list; ///< pixmap fragments of shadow
+	QList<Tile*> m_tiles; ///< tiles of piece
+	QList<Tile*> m_shadow; ///< tiles of piece with shadow
+	QSet<Piece*> m_neighbors; ///< neighboring pieces in solution
+	int m_rotation; ///< how many times is the piece rotated 90 degrees
+	bool m_selected; ///< is the piece selected
 
-	bool m_changed;
-	QRegion m_collision_region;
-	QRegion m_collision_region_expanded;
+	bool m_changed; ///< are collision regions out of date
+	QRegion m_collision_region; ///< collision region
+	QRegion m_collision_region_expanded; ///< collision region expanded by attach margin
 };
-
-
-inline QRect Piece::boundingRect() const
-{
-	return m_rect.translated(m_pos);
-}
-
-inline bool Piece::contains(const QPoint& pos) const
-{
-	return m_collision_region.contains(pos);
-}
-
-inline bool Piece::isSelected() const
-{
-	return m_selected;
-}
-
-inline int Piece::rotation() const
-{
-	return m_rotation;
-}
-
-inline QPoint Piece::scenePos() const
-{
-	return m_pos;
-}
-
-inline FragmentList Piece::bevel() const
-{
-	return m_bevel_list;
-}
-
-inline FragmentList Piece::shadow() const
-{
-	return m_shadow_list;
-}
-
-inline FragmentList Piece::tiles() const
-{
-	return m_tiles_list;
-}
-
-inline void Piece::moveBy(const QPoint& delta)
-{
-	m_pos += delta;
-	updateVerts();
-}
-
-inline void Piece::setPosition(const QPoint& pos)
-{
-	m_pos = pos;
-	updateVerts();
-}
 
 #endif // TETZLE_PIECE_H

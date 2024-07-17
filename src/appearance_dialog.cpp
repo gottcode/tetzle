@@ -20,31 +20,6 @@
 
 //-----------------------------------------------------------------------------
 
-namespace
-{
-
-QPixmap coloredShadow(const QColor& color, qreal pixelratio)
-{
-	const QPixmap source(":/shadow.png");
-	QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
-	QPainter painter(&shadow);
-	painter.setCompositionMode(QPainter::CompositionMode_Source);
-	painter.drawPixmap(0, 0, source);
-	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-	painter.fillRect(shadow.rect(), color);
-	painter.end();
-
-	QPixmap result = QPixmap::fromImage(shadow.scaled(shadow.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation),
-			Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
-	result.setDevicePixelRatio(pixelratio);
-
-	return result;
-}
-
-}
-
-//-----------------------------------------------------------------------------
-
 AppearanceDialog::AppearanceDialog(QWidget* parent)
 	: QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
 {
@@ -232,6 +207,26 @@ void AppearanceDialog::updatePreview()
 	m_preview->setPalette(palette);
 
 	m_preview->setPixmap(pixmap);
+}
+
+//-----------------------------------------------------------------------------
+
+QPixmap AppearanceDialog::coloredShadow(const QColor& color, qreal pixelratio)
+{
+	const QPixmap source(":/shadow.png");
+	QImage shadow(source.size(), QImage::Format_ARGB32_Premultiplied);
+	QPainter painter(&shadow);
+	painter.setCompositionMode(QPainter::CompositionMode_Source);
+	painter.drawPixmap(0, 0, source);
+	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+	painter.fillRect(shadow.rect(), color);
+	painter.end();
+
+	QPixmap result = QPixmap::fromImage(shadow.scaled(shadow.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation),
+			Qt::AvoidDither | Qt::AutoColor | Qt::NoOpaqueDetection);
+	result.setDevicePixelRatio(pixelratio);
+
+	return result;
 }
 
 //-----------------------------------------------------------------------------

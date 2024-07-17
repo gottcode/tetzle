@@ -41,12 +41,15 @@ public:
 	 * Fetch native language name for QLocale name.
 	 *
 	 * @param language QLocale name to look up
+	 *
 	 * @return translated language name
 	 */
 	static QString languageName(const QString& language);
 
 public Q_SLOTS:
-	/** Override parent function to store application language. */
+	/**
+	 * Store application language for next launch.
+	 */
 	void accept() override;
 
 private:
@@ -58,11 +61,11 @@ private:
 	static QStringList findTranslations();
 
 private:
-	QComboBox* m_translations; /**< list of found translations */
+	QComboBox* m_translations; ///< list of found translations
 
-	static QString m_current; /**< stored application language */
-	static QString m_path; /**< location of translations; found in loadTranslator() */
-	static QString m_appname; /**< application name passed to loadTranslator() */
+	static QString m_current; ///< stored application language
+	static QString m_path; ///< location of translations; found in loadTranslator()
+	static QString m_appname; ///< application name passed to loadTranslator()
 };
 
 #endif // TETZLE_LOCALE_DIALOG_H
