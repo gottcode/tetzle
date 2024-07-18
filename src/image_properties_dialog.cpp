@@ -6,6 +6,7 @@
 
 #include "image_properties_dialog.h"
 
+#include "tag_item.h"
 #include "tag_manager.h"
 
 #include <QDialogButtonBox>
@@ -147,9 +148,10 @@ void ImagePropertiesDialog::addTag()
 	m_add_tag_name->clear();
 
 	// Create new tag item
-	QListWidgetItem* item = new QListWidgetItem(tag, m_tags);
+	QListWidgetItem* item = new TagItem(tag);
 	item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 	item->setCheckState(Qt::Checked);
+	m_tags->addItem(tag);
 	m_tags->sortItems();
 	m_tags->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
 }

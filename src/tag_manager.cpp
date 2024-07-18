@@ -7,6 +7,7 @@
 #include "tag_manager.h"
 
 #include "path.h"
+#include "tag_item.h"
 
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -17,39 +18,6 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
-
-//-----------------------------------------------------------------------------
-
-namespace
-{
-
-class TagItem : public QListWidgetItem
-{
-public:
-	explicit TagItem(const QString& tag = QString());
-
-	static bool compare(const QString& a, const QString& b);
-	bool operator<(const QListWidgetItem& other) const override;
-};
-
-TagItem::TagItem(const QString& tag)
-	: QListWidgetItem(tag)
-{
-	setData(Qt::UserRole, tag);
-	setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable);
-}
-
-inline bool TagItem::compare(const QString& a, const QString& b)
-{
-	return a.localeAwareCompare(b) < 0;
-}
-
-inline bool TagItem::operator<(const QListWidgetItem& other) const
-{
-	return compare(text(), other.text());
-}
-
-}
 
 //-----------------------------------------------------------------------------
 
