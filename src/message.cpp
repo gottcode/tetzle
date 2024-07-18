@@ -18,7 +18,7 @@ Message::Message(QWidget* parent)
 	: QObject(parent)
 	, m_parent(parent)
 	, m_visible(false)
-	, m_color(Qt::white)
+	, m_opacity(1.0)
 {
 	m_hide_timer = new QTimer(this);
 	m_hide_timer->setInterval(2000);
@@ -48,6 +48,7 @@ void Message::draw(QPainter& painter) const
 	const int height = metrics.height();
 
 	painter.save();
+	painter.setOpacity(m_opacity);
 	painter.translate(m_parent->rect().center() - QRect(0, 0, width + height, height * 2).center());
 
 	// Draw black background
@@ -78,7 +79,7 @@ void Message::setVisible(bool visible, bool stay)
 {
 	m_visible = visible;
 
-	m_color.setAlpha(255);
+	m_opacity = 1.0;
 	if (m_visible) {
 		m_fade_timer->stop();
 	} else {
@@ -112,7 +113,7 @@ void Message::show()
 
 void Message::fade(int frame)
 {
-	m_color.setAlpha(frame * 25);
+	m_opacity = frame / 10.0;
 	m_parent->update();
 }
 

@@ -40,7 +40,7 @@ private:
 	QString m_text;
 	bool m_visible;
 
-	QColor m_color;
+	qreal m_opacity;
 };
 
 #endif // TETZLE_MESSAGE_H
