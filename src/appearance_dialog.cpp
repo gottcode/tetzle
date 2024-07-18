@@ -43,8 +43,6 @@ QPixmap coloredShadow(const QColor& color, qreal pixelratio)
 
 }
 
-bool AppearanceDialog::m_bevels_enabled = true;
-
 //-----------------------------------------------------------------------------
 
 AppearanceDialog::AppearanceDialog(QWidget* parent)
@@ -112,10 +110,6 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	m_highlight->setColor(settings.value("Colors/Highlight", QColor(Qt::white)).value<QColor>());
 	m_has_bevels->setChecked(settings.value("Appearance/Bevels", true).toBool());
 	m_has_shadows->setChecked(settings.value("Appearance/Shadows", true).toBool());
-	if (!m_bevels_enabled) {
-		m_has_bevels->setChecked(false);
-		m_has_bevels->setEnabled(false);
-	}
 	updatePreview();
 }
 
@@ -156,13 +150,6 @@ QPixmap AppearanceDialog::shadow(qreal pixelratio)
 QPixmap AppearanceDialog::shadowSelected(qreal pixelratio)
 {
 	return coloredShadow(QSettings().value("Colors/Highlight", QColor(Qt::white)).value<QColor>(), pixelratio);
-}
-
-//-----------------------------------------------------------------------------
-
-void AppearanceDialog::setBevelsEnabled(bool enabled)
-{
-	m_bevels_enabled = enabled;
 }
 
 //-----------------------------------------------------------------------------

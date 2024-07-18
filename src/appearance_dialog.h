@@ -27,8 +27,6 @@ public:
 	static QPixmap shadow(qreal pixelratio);
 	static QPixmap shadowSelected(qreal pixelratio);
 
-	static void setBevelsEnabled(bool enabled);
-
 public Q_SLOTS:
 	void accept() override;
 
@@ -43,7 +41,6 @@ private:
 	ColorButton* m_shadow;
 	ColorButton* m_highlight;
 	QLabel* m_preview;
-	static bool m_bevels_enabled;
 };
 
 #endif // TETZLE_APPEARANCE_DIALOG_H
