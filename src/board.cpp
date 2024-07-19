@@ -37,25 +37,6 @@
 
 //-----------------------------------------------------------------------------
 
-namespace
-{
-
-struct PieceDetails
-{
-	QPoint pos;
-	int rotation;
-	QList<Tile*> tiles;
-
-	PieceDetails(const QPoint& pos_, int rotation_, const QList<Tile*>& tiles_)
-		: pos(pos_), rotation(rotation_), tiles(tiles_)
-	{
-	}
-};
-
-}
-
-//-----------------------------------------------------------------------------
-
 Board::Board(QWidget* parent)
 	: QWidget(parent)
 	, m_id(0)
@@ -330,8 +311,8 @@ void Board::openGame(int id)
 		xml.raiseError(tr("Unknown data format"));
 	}
 
-	// Load piece details
-	QList<PieceDetails> pieces;
+	// Load pieces
+	updateStatusMessage(tr("Loading pieces..."));
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
@@ -341,7 +322,8 @@ void Board::openGame(int id)
 		xml.readNext();
 
 		if (xml.isEndElement() && (xml.name() == QLatin1String("piece") || xml.name() == QLatin1String("group"))) {
-			pieces.append(PieceDetails(pos, rotation, tiles));
+			m_pieces.append(new Piece(pos, rotation, tiles, this));
+			tiles.clear();
 		}
 		if (!xml.isStartElement()) {
 			continue;
@@ -367,12 +349,10 @@ void Board::openGame(int id)
 			attributes = xml.attributes();
 			pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
 			rotation = attributes.value("rotation").toInt();
-			tiles.clear();
 		} else if (xml.name() == QLatin1String("group")) {
 			piece = false;
 			const QStringView r = xml.attributes().value("rotation");
 			rotation = !r.isEmpty() ? r.toInt() : -1;
-			tiles.clear();
 		} else if (xml.name() != QLatin1String("overview")) {
 			xml.raiseError(tr("Unknown element '%1'").arg(xml.name().toString()));
 		}
@@ -385,18 +365,13 @@ void Board::openGame(int id)
 	}
 	m_total_pieces = (++m_columns * ++m_rows) / 4;
 
-	// Load image
-	updateStatusMessage(tr("Loading image..."));
-	loadImage();
-
-	// Load pieces
-	updateStatusMessage(tr("Loading pieces..."));
-	for (const PieceDetails& details : std::as_const(pieces)) {
-		m_pieces.append( new Piece(details.pos, details.rotation, details.tiles, this) );
-	}
 	for (Piece* piece : std::as_const(m_pieces)) {
 		piece->findSolutionNeighbors(m_pieces);
 	}
+
+	// Load image
+	updateStatusMessage(tr("Loading image..."));
+	loadImage();
 	Q_EMIT clearMessage();
 
 	// Load scene rectangle
