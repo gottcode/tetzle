@@ -41,18 +41,17 @@ Q_DECLARE_METATYPE(Thumbnail)
 namespace
 {
 
+enum ItemRoles
+{
+	ImageRole = Qt::UserRole + 1
+};
+
 class ThumbnailItem : public QListWidgetItem
 {
 public:
 	explicit ThumbnailItem(const QString& text = QString());
 
 	bool operator<(const QListWidgetItem& other) const override;
-
-private:
-	enum ItemRoles
-	{
-		ImageRole = Qt::UserRole + 1
-	};
 };
 
 ThumbnailItem::ThumbnailItem(const QString& text)
@@ -101,11 +100,18 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 	}
 
 	QListWidgetItem* item = new ThumbnailItem(text);
+	item->setData(ImageRole, image);
 	list->addItem(item);
 
-	const QFileInfo image_info(image);
+	const QFileInfo image_info(Path::image(image));
 	const QFileInfo thumb_info(Path::thumbnail(image_info.baseName(), pixelratio));
-	const Thumbnail details{ list, list->model()->index(list->row(item), 0), image, thumb_info.filePath(), pixelratio };
+	const Thumbnail details{
+		list,
+		list->model()->index(list->row(item), 0),
+		image_info.filePath(),
+		thumb_info.filePath(),
+		pixelratio
+	};
 
 	if (!thumb_info.exists() || thumb_info.lastModified() < image_info.lastModified()) {
 		loader->m_mutex.lock();

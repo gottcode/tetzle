@@ -536,8 +536,7 @@ void NewGameTab::addImage(const QString& image)
 QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& details)
 {
 	const qreal pixelratio = devicePixelRatioF();
-	QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), details.value(image + "/Name", tr("Untitled")).toString(), m_images, pixelratio);
-	item->setData(ImageRole, image);
+	QListWidgetItem* item = ThumbnailLoader::createItem(image, details.value(image + "/Name", tr("Untitled")).toString(), m_images, pixelratio);
 	item->setData(NameRole, item->text());
 	item->setData(TagsRole, m_image_tags->tags(image));
 	updateToolTip(item);

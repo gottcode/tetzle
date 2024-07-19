@@ -77,9 +77,8 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		const QString pieces = attributes.value("pieces").toString();
 		const QString complete = attributes.value("complete").toString();
 		const QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
-		QListWidgetItem* item = ThumbnailLoader::createItem(Path::image(image), image_name, m_games, pixelratio);
+		QListWidgetItem* item = ThumbnailLoader::createItem(image, image_name, m_games, pixelratio);
 		item->setData(GameRole, id);
-		item->setData(ImageRole, image);
 		item->setData(DetailsRole, details);
 	}
 	m_games->setCurrentRow(0);
