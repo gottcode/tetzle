@@ -33,7 +33,6 @@ private Q_SLOTS:
 	void deleteGame();
 
 private:
-	QDialog* m_parent;
 	QListWidget* m_games;
 	QPushButton* m_accept_button;
 };

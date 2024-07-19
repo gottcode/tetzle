@@ -20,7 +20,6 @@ public:
 	QPointF bevel() const;
 	int column() const;
 	int row() const;
-	QPoint pos() const;
 	QPoint gridPos() const;
 	QPoint scenePos() const;
 
@@ -56,11 +55,6 @@ inline int Tile::column() const
 inline int Tile::row() const
 {
 	return m_row;
-}
-
-inline QPoint Tile::pos() const
-{
-	return m_pos;
 }
 
 inline QPoint Tile::gridPos() const
