@@ -9,6 +9,7 @@
 #include "choose_game_dialog.h"
 #include "path.h"
 #include "thumbnail_delegate.h"
+#include "thumbnail_item.h"
 #include "thumbnail_loader.h"
 
 #include <QDialogButtonBox>
@@ -19,20 +20,6 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
-
-//-----------------------------------------------------------------------------
-
-namespace
-{
-
-enum ItemRoles
-{
-	DetailsRole = Qt::UserRole,
-	ImageRole,
-	GameRole
-};
-
-}
 
 //-----------------------------------------------------------------------------
 
@@ -78,8 +65,8 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		const QString complete = attributes.value("complete").toString();
 		const QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);
 		QListWidgetItem* item = ThumbnailLoader::createItem(image, image_name, m_games, pixelratio);
-		item->setData(GameRole, id);
-		item->setData(DetailsRole, details);
+		item->setData(ThumbnailItem::GameRole, id);
+		item->setData(ThumbnailItem::DetailsRole, details);
 	}
 	m_games->setCurrentRow(0);
 
@@ -112,7 +99,7 @@ void OpenGameTab::imageRenamed(const QString& image, const QString& name)
 {
 	for (int i = 0, count = m_games->count(); i < count; ++i) {
 		QListWidgetItem* item = m_games->item(i);
-		if (item->data(ImageRole).toString() == image) {
+		if (item->data(ThumbnailItem::ImageRole).toString() == image) {
 			item->setText(name);
 		}
 	}
@@ -140,7 +127,7 @@ void OpenGameTab::accept()
 {
 	const QListWidgetItem* item = m_games->currentItem();
 	if (item) {
-		Q_EMIT openGame(item->data(GameRole).toInt());
+		Q_EMIT openGame(item->data(ThumbnailItem::GameRole).toInt());
 	}
 }
 
@@ -154,7 +141,7 @@ void OpenGameTab::deleteGame()
 	}
 
 	if (QMessageBox::question(this, tr("Delete Game"), tr("Delete selected game?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
-		QFile::remove(Path::save(item->data(GameRole).toInt()));
+		QFile::remove(Path::save(item->data(ThumbnailItem::GameRole).toInt()));
 		delete item;
 		m_accept_button->setEnabled(m_games->count() > 0);
 	};

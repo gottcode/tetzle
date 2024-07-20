@@ -7,6 +7,7 @@
 #include "thumbnail_loader.h"
 
 #include "path.h"
+#include "thumbnail_item.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -38,40 +39,6 @@ Q_DECLARE_METATYPE(Thumbnail)
 
 //-----------------------------------------------------------------------------
 
-namespace
-{
-
-enum ItemRoles
-{
-	ImageRole = Qt::UserRole + 1
-};
-
-class ThumbnailItem : public QListWidgetItem
-{
-public:
-	explicit ThumbnailItem(const QString& text = QString());
-
-	bool operator<(const QListWidgetItem& other) const override;
-};
-
-ThumbnailItem::ThumbnailItem(const QString& text)
-	: QListWidgetItem(QIcon::fromTheme("image-loading"), text)
-{
-}
-
-bool ThumbnailItem::operator<(const QListWidgetItem& other) const
-{
-	int compare = text().localeAwareCompare(other.text());
-	if (compare == 0) {
-		compare = data(ImageRole).toString().localeAwareCompare(other.data(ImageRole).toString());
-	}
-	return compare < 0;
-}
-
-}
-
-//-----------------------------------------------------------------------------
-
 ThumbnailLoader::ThumbnailLoader(QObject* parent)
 	: QThread(parent)
 	, m_done(false)
@@ -100,7 +67,7 @@ QListWidgetItem* ThumbnailLoader::createItem(const QString& image, const QString
 	}
 
 	QListWidgetItem* item = new ThumbnailItem(text);
-	item->setData(ImageRole, image);
+	item->setData(ThumbnailItem::ImageRole, image);
 	list->addItem(item);
 
 	const QFileInfo image_info(Path::image(image));

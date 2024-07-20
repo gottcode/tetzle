@@ -12,6 +12,7 @@
 #include "path.h"
 #include "tag_manager.h"
 #include "thumbnail_delegate.h"
+#include "thumbnail_item.h"
 #include "thumbnail_loader.h"
 #include "toolbar_list.h"
 
@@ -51,17 +52,10 @@ QString hash(const QString& path)
 	return QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha1).toHex();
 }
 
-enum ItemRoles
-{
-	TagsRole = Qt::UserRole,
-	ImageRole,
-	NameRole
-};
-
 void updateToolTip(QListWidgetItem* item)
 {
 	QString tip = item->text();
-	const QString tags = item->data(TagsRole).toString();
+	const QString tags = item->data(ThumbnailItem::TagsRole).toString();
 	if (!tags.isEmpty()) {
 		tip += "<br><small><i>" + tags + "</i></small>";
 	}
@@ -153,7 +147,7 @@ NewGameTab::NewGameTab(const QStringList& files, QDialog* parent)
 	if (!image.isEmpty()) {
 		for (int i = m_images->count() - 1; i >= 0; --i) {
 			item = m_images->item(i);
-			if (item->data(ImageRole) == image) {
+			if (item->data(ThumbnailItem::ImageRole) == image) {
 				break;
 			}
 		}
@@ -209,7 +203,7 @@ void NewGameTab::accept()
 		return;
 	}
 
-	const QString image = items.first()->data(ImageRole).toString();
+	const QString image = items.first()->data(ThumbnailItem::ImageRole).toString();
 
 	QSettings settings;
 	settings.setValue("NewGame/Pieces", m_slider->value());
@@ -236,7 +230,7 @@ void NewGameTab::removeImage()
 	}
 	QStringList selected_images;
 	for (const QListWidgetItem* item : items) {
-		selected_images.append(item->data(ImageRole).toString());
+		selected_images.append(item->data(ThumbnailItem::ImageRole).toString());
 	}
 
 	// Find games that would be affected
@@ -329,13 +323,13 @@ void NewGameTab::editImageProperties()
 	}
 	QListWidgetItem* item = items.first();
 
-	const QString filename = item->data(ImageRole).toString();
+	const QString filename = item->data(ThumbnailItem::ImageRole).toString();
 	ImagePropertiesDialog dialog(item->icon(), item->text(), m_image_tags, filename, window());
 	if (dialog.exec() == QDialog::Accepted) {
 		// Update name
 		item->setText(dialog.name());
-		if (item->text() != item->data(NameRole).toString()) {
-			item->setData(NameRole, item->text());
+		if (item->text() != item->data(ThumbnailItem::NameRole).toString()) {
+			item->setData(ThumbnailItem::NameRole, item->text());
 
 			QSettings details(Path::image("details"), QSettings::IniFormat);
 			details.setValue(filename + "/Name", item->text());
@@ -346,9 +340,8 @@ void NewGameTab::editImageProperties()
 		}
 
 		// Update tags
-		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
+		item->setData(ThumbnailItem::TagsRole, m_image_tags->tags(filename));
 		updateToolTip(item);
-
 	}
 }
 
@@ -375,13 +368,13 @@ void NewGameTab::imageSelected()
 	m_remove_action->setEnabled(true);
 	const QString current_image = QSettings().value("OpenGame/Image").toString();
 	for (const QListWidgetItem* item : images) {
-		if (item->data(ImageRole).toString() == current_image) {
+		if (item->data(ThumbnailItem::ImageRole).toString() == current_image) {
 			m_remove_action->setEnabled(false);
 			break;
 		}
 	}
 
-	const QString image = images.last()->data(ImageRole).toString();
+	const QString image = images.last()->data(ThumbnailItem::ImageRole).toString();
 
 	m_image_size = QImageReader(Path::image(image)).size();
 	if (m_image_size.width() > m_image_size.height()) {
@@ -421,7 +414,7 @@ void NewGameTab::filterImages(const QStringList& filter)
 	for (int i = 0, count = m_images->count(); i < count; ++i) {
 		QListWidgetItem* item = m_images->item(i);
 
-		if (filter.contains(item->data(ImageRole).toString())) {
+		if (filter.contains(item->data(ThumbnailItem::ImageRole).toString())) {
 			item->setHidden(false);
 		} else {
 			item->setHidden(true);
@@ -440,7 +433,7 @@ void NewGameTab::updateTagsStrings()
 {
 	for (int i = 0, count = m_images->count(); i < count; ++i) {
 		QListWidgetItem* item = m_images->item(i);
-		item->setData(TagsRole, m_image_tags->tags(item->data(ImageRole).toString()));
+		item->setData(ThumbnailItem::TagsRole, m_image_tags->tags(item->data(ThumbnailItem::ImageRole).toString()));
 		updateToolTip(item);
 	}
 }
@@ -513,7 +506,7 @@ void NewGameTab::addImage(const QString& image)
 	} else {
 		// Find in list of images
 		for (int i = 0, count = m_images->count(); i < count; ++i) {
-			if (m_images->item(i)->data(ImageRole).toString() == filename) {
+			if (m_images->item(i)->data(ThumbnailItem::ImageRole).toString() == filename) {
 				item = m_images->item(i);
 				break;
 			}
@@ -537,8 +530,8 @@ QListWidgetItem* NewGameTab::createItem(const QString& image, const QSettings& d
 {
 	const qreal pixelratio = devicePixelRatioF();
 	QListWidgetItem* item = ThumbnailLoader::createItem(image, details.value(image + "/Name", tr("Untitled")).toString(), m_images, pixelratio);
-	item->setData(NameRole, item->text());
-	item->setData(TagsRole, m_image_tags->tags(image));
+	item->setData(ThumbnailItem::NameRole, item->text());
+	item->setData(ThumbnailItem::TagsRole, m_image_tags->tags(image));
 	updateToolTip(item);
 	return item;
 }

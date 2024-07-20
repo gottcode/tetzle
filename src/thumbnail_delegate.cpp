@@ -6,23 +6,13 @@
 
 #include "thumbnail_delegate.h"
 
+#include "thumbnail_item.h"
+
 #include <QApplication>
 #include <QListWidget>
 #include <QPainter>
 
 #include <algorithm>
-
-//-----------------------------------------------------------------------------
-
-namespace
-{
-
-enum ItemsRole
-{
-	SmallDisplayRole = Qt::UserRole
-};
-
-}
 
 //-----------------------------------------------------------------------------
 
@@ -108,7 +98,7 @@ void ThumbnailDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 	// Draw small text
 	painter->setFont(m_small_font);
-	text = painter->fontMetrics().elidedText(index.data(SmallDisplayRole).toString(), option.textElideMode, small_text_rect.width(), option.displayAlignment);
+	text = painter->fontMetrics().elidedText(index.data(ThumbnailItem::SmallDisplayRole).toString(), option.textElideMode, small_text_rect.width(), option.displayAlignment);
 	color.setAlphaF(0.6);
 	painter->setPen(color);
 	painter->drawText(small_text_rect, alignment, text);
