@@ -335,8 +335,7 @@ void Board::openGame(int id)
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
-	bool piece = (version > 3);
-	m_load_bevels = false;
+	bool piece = m_load_bevels = (version > 3);
 
 	while (!xml.atEnd()) {
 		xml.readNext();
@@ -355,16 +354,14 @@ void Board::openGame(int id)
 				pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
 				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toInt();
 			}
+
 			const int column = attributes.value("column").toInt();
 			m_columns = std::max(m_columns, column);
 			const int row = attributes.value("row").toInt();
 			m_rows = std::max(m_rows, row);
-			const int bevel = attributes.value("bevel").toInt();
-			if (bevel) {
-				m_load_bevels = true;
-			}
+
 			Tile* tile = new Tile(column, row);
-			tile->setBevel(bevel);
+			tile->setBevel(attributes.value("bevel").toInt());
 			tiles.append(tile);
 		} else if (xml.name() == QLatin1String("piece")) {
 			attributes = xml.attributes();
@@ -640,20 +637,16 @@ void Board::paintEvent(QPaintEvent*)
 		for (const Piece* piece : std::as_const(m_pieces)) {
 			const QRect r = m_viewport_transform.mapRect(piece->boundingRect());
 			if (m_viewport.intersects(r)) {
-				if (m_has_shadows) {
-					shadow.append(piece->shadow());
-				}
+				shadow.append(piece->shadow());
 				tiles.append(piece->tiles());
-				if (m_has_bevels) {
-					bevel.append(piece->bevel());
-				}
+				bevel.append(piece->bevel());
 			}
 		}
 		if (m_has_shadows) {
 			shadow.draw(painter, m_shadow_pixmap);
 		}
 		tiles.draw(painter, m_pixmap, QPainter::OpaqueHint);
-		if (m_has_bevels) {
+		if (m_has_bevels && m_load_bevels) {
 			bevel.draw(painter, m_bevel_pixmap);
 		}
 
@@ -662,7 +655,7 @@ void Board::paintEvent(QPaintEvent*)
 				piece->shadow().draw(painter, m_selected_shadow_pixmap);
 			}
 			piece->tiles().draw(painter, m_pixmap, QPainter::OpaqueHint);
-			if (m_has_bevels) {
+			if (m_has_bevels && m_load_bevels) {
 				piece->bevel().draw(painter, m_bevel_pixmap);
 			}
 		}
@@ -672,7 +665,7 @@ void Board::paintEvent(QPaintEvent*)
 				piece->shadow().draw(painter, m_selected_shadow_pixmap);
 			}
 			piece->tiles().draw(painter, m_pixmap, QPainter::OpaqueHint);
-			if (m_has_bevels) {
+			if (m_has_bevels && m_load_bevels) {
 				piece->bevel().draw(painter, m_bevel_pixmap);
 			}
 		}
