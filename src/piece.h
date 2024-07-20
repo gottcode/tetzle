@@ -49,7 +49,7 @@ public:
 
 private:
 	void attach(Piece* piece);
-	bool containsTile(int column, int row);
+	bool containsTile(int column, int row) const;
 	void updateCollisionRegions();
 	void updateShadow();
 	void updateTiles();

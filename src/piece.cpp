@@ -282,7 +282,7 @@ void Piece::attach(Piece* piece)
 
 //-----------------------------------------------------------------------------
 
-bool Piece::containsTile(int column, int row)
+bool Piece::containsTile(int column, int row) const
 {
 	bool result = false;
 	for (const Tile* tile : std::as_const(m_tiles)) {
