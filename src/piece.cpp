@@ -357,7 +357,7 @@ void Piece::updateVerts()
 		updateCollisionRegions();
 	}
 
-	static const int offset = Tile::size / 2;
+	static const QPoint offset(Tile::size / 2, Tile::size / 2);
 	static const int size = Tile::size * 2;
 
 	// Update tile and bevel fragments
@@ -366,29 +366,16 @@ void Piece::updateVerts()
 	m_bevel_list.clear();
 	m_bevel_list.reserve(m_tiles.count());
 	for (const Tile* tile : std::as_const(m_tiles)) {
-		const QPoint pos = tile->scenePos();
-
-		const int x1 = pos.x() + offset;
-		const int y1 = pos.y() + offset;
-		m_tiles_list.append(QPointF(x1, y1),
-				QPointF(tile->column() * Tile::size, tile->row() * Tile::size), Tile::size,
-				rotation() * 90);
-
-		const int bx1 = tile->bevel().x() * 512;
-		const int by1 = tile->bevel().y() * 512;
-		m_bevel_list.append(QPointF(x1, y1),
-				QPointF(bx1, by1), Tile::size);
+		const QPoint pos = tile->scenePos() + offset;
+		m_tiles_list.append(pos, tile->solutionPos(), Tile::size, rotation() * 90);
+		m_bevel_list.append(pos, tile->bevel() * 512, Tile::size);
 	}
 
 	// Update shadow fragments
 	m_shadow_list.clear();
 	m_shadow_list.reserve(m_shadow.count());
 	for (const Tile* tile : std::as_const(m_shadow)) {
-		const QPoint pos = tile->scenePos();
-
-		const int x1 = pos.x() + offset;
-		const int y1 = pos.y() + offset;
-		m_shadow_list.append(QPointF(x1, y1), QPointF(0, 0), size);
+		m_shadow_list.append(tile->scenePos() + offset, QPointF(0, 0), size);
 	}
 
 	// Update scene rectangle
