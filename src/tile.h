@@ -20,8 +20,8 @@ public:
 	QPointF bevel() const;
 	int column() const;
 	int row() const;
-	QPoint gridPos() const;
 	QPoint scenePos() const;
+	QPoint solutionPos() const;
 
 	void rotate();
 	void setBevel(int bevel);
@@ -57,14 +57,14 @@ inline int Tile::row() const
 	return m_row;
 }
 
-inline QPoint Tile::gridPos() const
-{
-	return QPoint(m_column * size, m_row * size);
-}
-
 inline void Tile::setPos(const QPoint& pos)
 {
 	m_pos = pos;
+}
+
+inline QPoint Tile::solutionPos() const
+{
+	return QPoint(m_column * size, m_row * size);
 }
 
 inline void Tile::setParent(const Piece* parent)

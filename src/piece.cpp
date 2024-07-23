@@ -82,13 +82,13 @@ void Piece::attachSolutionNeighbors()
 
 		const Tile* tile = m_tiles.first();
 		const Tile* piece_tile = piece->m_tiles.first();
-		QPoint grid_delta = piece_tile->gridPos() - tile->gridPos();
+		QPoint solution_delta = piece_tile->solutionPos() - tile->solutionPos();
 		for (int i = 0; i < m_rotation; ++i) {
-			const QPoint pos = grid_delta;
-			grid_delta.setX( -pos.y() );
-			grid_delta.setY( pos.x() );
+			const QPoint pos = solution_delta;
+			solution_delta.setX(-pos.y());
+			solution_delta.setY(pos.x());
 		}
-		const QPoint top_left = tile->scenePos() + grid_delta;
+		const QPoint top_left = tile->scenePos() + solution_delta;
 		const QPoint delta = top_left - piece_tile->scenePos();
 
 		if (delta.manhattanLength() <= m_board->margin()) {
@@ -330,10 +330,10 @@ void Piece::updateShadow()
 void Piece::updateTiles()
 {
 	// Find bounding rectangle
-	QPoint top_left = m_tiles.first()->gridPos();
+	QPoint top_left = m_tiles.first()->solutionPos();
 	QPoint bottom_right = top_left + QPoint(Tile::size, Tile::size);
 	for (const Tile* tile : std::as_const(m_tiles)) {
-		const QPoint pos = tile->gridPos();
+		const QPoint pos = tile->solutionPos();
 		top_left.setX( std::min(pos.x(), top_left.x()) );
 		top_left.setY( std::min(pos.y(), top_left.y()) );
 		bottom_right.setX( std::max(pos.x() + Tile::size, bottom_right.x()) );
@@ -344,7 +344,7 @@ void Piece::updateTiles()
 	// Shift tiles to be inside rectangle
 	for (Tile* tile : std::as_const(m_tiles)) {
 		tile->setParent(this);
-		tile->setPos(tile->gridPos() - top_left);
+		tile->setPos(tile->solutionPos() - top_left);
 	}
 }
 
