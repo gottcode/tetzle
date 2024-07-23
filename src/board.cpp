@@ -316,7 +316,8 @@ void Board::openGame(int id)
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
-	bool piece = m_load_bevels = (version > 3);
+	bool piece = (version > 3);
+	m_load_bevels = false;
 
 	while (!xml.atEnd()) {
 		xml.readNext();
@@ -342,8 +343,14 @@ void Board::openGame(int id)
 			const int row = attributes.value("row").toInt();
 			m_rows = std::max(m_rows, row);
 
+			// Old games converted to new games won't have bevels
+			const int bevel = attributes.value("bevel").toInt();
+			if (bevel) {
+				m_load_bevels = true;
+			}
+
 			Tile* tile = new Tile(column, row);
-			tile->setBevel(attributes.value("bevel").toInt());
+			tile->setBevel(bevel);
 			tiles.append(tile);
 		} else if (xml.name() == QLatin1String("piece")) {
 			attributes = xml.attributes();
