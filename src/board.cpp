@@ -1288,7 +1288,9 @@ void Board::cleanup()
 	Q_EMIT clearMessage();
 	m_overview->reset();
 	m_message->setVisible(false);
+	qDeleteAll(m_active_pieces);
 	m_active_pieces.clear();
+	qDeleteAll(m_selected_pieces);
 	m_selected_pieces.clear();
 	qDeleteAll(m_pieces);
 	m_pieces.clear();
