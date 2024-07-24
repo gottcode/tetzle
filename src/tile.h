@@ -28,7 +28,7 @@ public:
 	void setPos(const QPoint& pos);
 	void setParent(const Piece* parent);
 
-	static const int size = 64;
+	static constexpr int size = 64;
 
 	void save(QXmlStreamWriter& xml) const;
 

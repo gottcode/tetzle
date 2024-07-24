@@ -28,13 +28,13 @@ Piece::Piece(const QPoint& pos, int rotation, const QList<Tile*>& tiles, Board* 
 
 	// Add bevels to tiles
 	if (m_tiles.first()->bevel().y() == -1) {
+		constexpr int bevels[14] = { 13, 15, 11, 12, 5, 4, 1, 14, 6, 7, 3, 8, 2, 0 };
 		for (Tile* tile : std::as_const(m_tiles)) {
 			int sides = 0;
 			sides |= containsTile(tile->column() - 1, tile->row());
 			sides |= containsTile(tile->column() + 1, tile->row()) << 1;
 			sides |= containsTile(tile->column(), tile->row() - 1) << 2;
 			sides |= containsTile(tile->column(), tile->row() + 1) << 3;
-			static const int bevels[14] = {13, 15, 11, 12, 5, 4, 1, 14, 6, 7, 3, 8, 2, 0};
 			tile->setBevel(bevels[sides - 1]);
 		}
 	}
@@ -103,7 +103,7 @@ void Piece::attachSolutionNeighbors()
 void Piece::findSolutionNeighbors(const QList<Piece*>& pieces)
 {
 	// Find neighbor tiles
-	static const QList<QPoint> deltas{ QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
+	constexpr QPoint deltas[4] = { QPoint(-1,0), QPoint(1,0), QPoint(0,-1), QPoint(0,1) };
 	QList<QPoint> tiles;
 	for (const Tile* tile : std::as_const(m_shadow)) {
 		const QPoint pos(tile->column(), tile->row());
@@ -357,8 +357,7 @@ void Piece::updateVerts()
 		updateCollisionRegions();
 	}
 
-	static const QPoint offset(Tile::size / 2, Tile::size / 2);
-	static const int size = Tile::size * 2;
+	constexpr QPoint offset(Tile::size / 2, Tile::size / 2);
 
 	// Update tile and bevel fragments
 	m_tiles_list.clear();
@@ -375,7 +374,7 @@ void Piece::updateVerts()
 	m_shadow_list.clear();
 	m_shadow_list.reserve(m_shadow.count());
 	for (const Tile* tile : std::as_const(m_shadow)) {
-		m_shadow_list.append(tile->scenePos() + offset, QPointF(0, 0), size);
+		m_shadow_list.append(tile->scenePos() + offset, QPointF(0, 0), Tile::size * 2);
 	}
 
 	// Update scene rectangle
