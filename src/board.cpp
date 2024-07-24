@@ -1283,6 +1283,8 @@ void Board::finishGame()
 
 void Board::cleanup()
 {
+	m_pixmap = QPixmap();
+
 	Q_EMIT clearMessage();
 	m_overview->reset();
 	m_message->setVisible(false);
