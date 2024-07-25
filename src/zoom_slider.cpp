@@ -80,10 +80,10 @@ float ZoomSlider::scaleFactor(int level)
 
 //-----------------------------------------------------------------------------
 
-void ZoomSlider::setValue(int level, float factor)
+void ZoomSlider::setValue(int level)
 {
 	m_slider->setValue(level);
-	m_slider->setToolTip(tr("Zoom: %1%").arg(std::lround(factor * 100)));
+	m_slider->setToolTip(tr("Zoom: %1%").arg(std::lround(scaleFactor(level) * 100)));
 
 	Q_EMIT zoomOutAvailable(level > 0);
 	Q_EMIT zoomInAvailable(level < maxScaleLevel());

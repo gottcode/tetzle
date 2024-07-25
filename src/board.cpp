@@ -561,7 +561,7 @@ void Board::zoom(int level, bool on_cursor)
 	updateViewport();
 	update();
 	updateCursor();
-	Q_EMIT zoomChanged(m_scale_level, m_scale);
+	Q_EMIT zoomChanged(m_scale_level);
 }
 
 //-----------------------------------------------------------------------------

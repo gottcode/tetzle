@@ -30,7 +30,7 @@ Q_SIGNALS:
 	void zoomOutAvailable(bool available);
 
 public Q_SLOTS:
-	void setValue(int level, float factor);
+	void setValue(int level);
 
 private:
 	QSlider* m_slider;
