@@ -157,7 +157,7 @@ public:
 	void moveBy(const QPoint& delta)
 	{
 		m_pos += delta;
-		updateVerts();
+		updateFragmentLists();
 	}
 
 	/**
@@ -189,7 +189,7 @@ public:
 	void setPosition(const QPoint& pos)
 	{
 		m_pos = pos;
-		updateVerts();
+		updateFragmentLists();
 	}
 
 	/**
@@ -242,6 +242,11 @@ private:
 	void updateCollisionRegions();
 
 	/**
+	 * Update pixmap fragment lists for drawing.
+	 */
+	void updateFragmentLists();
+
+	/**
 	 * Update shadow to be only under edge tiles of piece.
 	 */
 	void updateShadow();
@@ -250,11 +255,6 @@ private:
 	 * Update tiles to belong to piece.
 	 */
 	void updateTiles();
-
-	/**
-	 * Update pixmap fragment lists for drawing.
-	 */
-	void updateVerts();
 
 private:
 	Board* m_board; ///< game board
