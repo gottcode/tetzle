@@ -56,7 +56,7 @@ Piece::~Piece()
 
 bool Piece::collidesWith(const Piece* other) const
 {
-	if (m_board->marginRect(boundingRect()).intersects(other->boundingRect())) {
+	if (marginRect(boundingRect()).intersects(other->boundingRect())) {
 		return m_collision_region_expanded.intersects(other->m_collision_region);
 	} else {
 		return false;
@@ -91,7 +91,7 @@ void Piece::attachSolutionNeighbors()
 		const QPoint top_left = tile->scenePos() + solution_delta;
 		const QPoint delta = top_left - piece_tile->scenePos();
 
-		if (delta.manhattanLength() <= m_board->margin()) {
+		if (delta.manhattanLength() <= m_attach_margin) {
 			piece->moveBy(delta);
 			attach(piece);
 		}
@@ -136,7 +136,7 @@ void Piece::pushCollidingPieces(const QPointF& inertia)
 		if (m_tiles.count() < target->m_tiles.count()) {
 			std::swap(source, target);
 		}
-		const QRect source_rect = m_board->marginRect(source->boundingRect());
+		const QRect source_rect = marginRect(source->boundingRect());
 
 		// Calculate valid movement vector for target; preserve some motion from last move
 		QPointF vector = target->boundingRect().center() - source_rect.center() + inertia;
@@ -305,7 +305,7 @@ void Piece::updateCollisionRegions()
 	for (const Tile* tile : std::as_const(m_tiles)) {
 		rect.moveTo(tile->scenePos());
 		m_collision_region += rect;
-		m_collision_region_expanded += m_board->marginRect(rect);
+		m_collision_region_expanded += marginRect(rect);
 	}
 }
 

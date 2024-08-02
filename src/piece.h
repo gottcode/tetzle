@@ -225,6 +225,18 @@ private:
 	bool containsTile(int column, int row) const;
 
 	/**
+	 * Expand a rectangle by the margin for attaching.
+	 *
+	 * @param rect the rectangle to expand
+	 *
+	 * @return rectangle expanded by attach margin
+	 */
+	QRect marginRect(const QRect& rect) const
+	{
+		return rect.adjusted(-m_attach_margin, -m_attach_margin, m_attach_margin, m_attach_margin);
+	}
+
+	/**
 	 * Update collision regions to contain all tiles in piece.
 	 */
 	void updateCollisionRegions();
@@ -260,6 +272,8 @@ private:
 	bool m_changed; ///< are collision regions out of date
 	QRegion m_collision_region; ///< collision region
 	QRegion m_collision_region_expanded; ///< collision region expanded by attach margin
+
+	static constexpr int m_attach_margin = 16; ///< maximum distance between pieces before they attach
 };
 
 #endif // TETZLE_PIECE_H

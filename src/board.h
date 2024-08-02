@@ -66,28 +66,6 @@ public:
 	}
 
 	/**
-	 * Fetch the maximum distance between pieces before they attach.
-	 *
-	 * @return the maximum distance between pieces before they attach
-	 */
-	int margin() const
-	{
-		return 16;
-	}
-
-	/**
-	 * Expand a rectangle by the margin for attaching.
-	 *
-	 * @param rect the rectangle to expand
-	 *
-	 * @return rectangle expanded by attach margin
-	 */
-	QRect marginRect(const QRect& rect) const
-	{
-		return rect.adjusted(-margin(), -margin(), margin(), margin());
-	}
-
-	/**
 	 * Fetch a random integer.
 	 *
 	 * @param max the first integer outside the range of possible results
