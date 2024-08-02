@@ -349,10 +349,10 @@ void Piece::updateShadow()
 	QMutableListIterator<Tile*> i(m_shadow);
 	while (i.hasNext()) {
 		const Tile* tile = i.next();
-		if ( containsTile(tile->column() - 1, tile->row())
-			&& containsTile(tile->column() + 1, tile->row())
-			&& containsTile(tile->column(), tile->row() - 1)
-			&& containsTile(tile->column(), tile->row() + 1) ) {
+		if (containsTile(tile->column() - 1, tile->row())
+				&& containsTile(tile->column() + 1, tile->row())
+				&& containsTile(tile->column(), tile->row() - 1)
+				&& containsTile(tile->column(), tile->row() + 1)) {
 			i.remove();
 		}
 	}

@@ -299,14 +299,17 @@ void Board::openGame(int id)
 			cleanup();
 			return;
 		}
+
 		board_zoom = attributes.value("zoom").toInt();
+
 		m_pos.setX(attributes.value("x").toInt());
 		m_pos.setY(attributes.value("y").toInt());
+
 		const QStringList values = attributes.value("rect").toString().split(",");
 		rect.setRect(values.value(0).toInt(),
-			values.value(1). toInt(),
-			values.value(2).toInt(),
-			values.value(3).toInt());
+				values.value(1).toInt(),
+				values.value(2).toInt(),
+				values.value(3).toInt());
 	} else {
 		xml.raiseError(tr("Unknown data format"));
 	}
@@ -426,11 +429,11 @@ void Board::saveGame() const
 	xml.writeAttribute("zoom", QString::number(m_scale_level));
 	xml.writeAttribute("x", QString::number(m_pos.x()));
 	xml.writeAttribute("y", QString::number(m_pos.y()));
-	xml.writeAttribute("rect", QString("%1,%2,%3,%4").
-		arg(m_scene.x())
-		.arg(m_scene.y())
-		.arg(m_scene.width())
-		.arg(m_scene.height()));
+	xml.writeAttribute("rect", QString("%1,%2,%3,%4")
+			.arg(m_scene.x())
+			.arg(m_scene.y())
+			.arg(m_scene.width())
+			.arg(m_scene.height()));
 
 	for (const Piece* piece : std::as_const(m_pieces)) {
 		piece->save(xml);
