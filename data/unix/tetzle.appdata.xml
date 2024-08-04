@@ -93,6 +93,25 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="3.0.0" date="2024-08-04">
+      <description>
+        <ul>
+          <li>Added scrolling at window edges</li>
+          <li>Added removing multiple images at once</li>
+          <li>Added centering on cursor when zooming</li>
+          <li>Improved layout of new game tab</li>
+          <li>Improved layout of statusbar</li>
+          <li>Replaced OpenGL rendering with QPainter</li>
+          <li>Refactored code</li>
+          <li>Use native icons in Windows</li>
+          <li>Updated AppData</li>
+          <li>FIXED: Overview did not stay hidden when closed</li>
+          <li>FIXED: Sometimes added image had preview of removed image</li>
+          <li>FIXED: Removing an image did not remove its details</li>
+          <li>Translation updates: Dutch, German, Lithuanian, Romanian</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.2.3" date="2024-01-16">
       <description>
         <ul>

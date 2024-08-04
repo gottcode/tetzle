@@ -1,3 +1,19 @@
+3.0.0
+-----
+* Added scrolling at window edges.
+* Added removing multiple images at once.
+* Added centering on cursor when zooming.
+* Improved layout of new game tab.
+* Improved layout of statusbar.
+* Replaced OpenGL rendering with QPainter.
+* Refactored code.
+* Use native icons in Windows.
+* Updated AppData.
+* FIXED: Overview did not stay hidden when closed.
+* FIXED: Sometimes added image had preview of removed image.
+* FIXED: Removing an image did not remove its details.
+* Translation updates: Dutch, German, Lithuanian, Romanian.
+
 2.2.3
 -----
 * Replaced deprecated code.

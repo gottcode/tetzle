@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2021-2023 Graeme Gott <graeme@gottcode.org>
+# SPDX-FileCopyrightText: 2021-2024 Graeme Gott <graeme@gottcode.org>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.16)
 
 # Configure project
-project(tetzle VERSION 2.2.3 LANGUAGES CXX)
+project(tetzle VERSION 3.0.0 LANGUAGES CXX)
 
 set(project_copyright "2008-2024 Graeme Gott")
 
