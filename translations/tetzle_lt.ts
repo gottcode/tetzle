@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Paveikslai</translation>
     </message>
 </context>
 <context>
