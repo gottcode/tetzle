@@ -35,10 +35,18 @@ AppearanceDialog::AppearanceDialog(QWidget* parent)
 	QGroupBox* options_group = new QGroupBox(tr("Options"), this);
 
 	m_has_bevels = new QCheckBox(tr("Beveled borders"), options_group);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+	connect(m_has_bevels, &QCheckBox::checkStateChanged, this, &AppearanceDialog::updatePreview);
+#else
 	connect(m_has_bevels, &QCheckBox::stateChanged, this, &AppearanceDialog::updatePreview);
+#endif
 
 	m_has_shadows = new QCheckBox(tr("Drop shadows"), options_group);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+	connect(m_has_shadows, &QCheckBox::checkStateChanged, this, &AppearanceDialog::updatePreview);
+#else
 	connect(m_has_shadows, &QCheckBox::stateChanged, this, &AppearanceDialog::updatePreview);
+#endif
 
 	// Create colors widgets
 	QGroupBox* colors_group = new QGroupBox(tr("Colors"), this);
