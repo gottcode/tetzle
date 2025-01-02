@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagini</translation>
     </message>
 </context>
 <context>
@@ -126,7 +126,7 @@
     </message>
     <message>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Joacă jocul</translation>
     </message>
 </context>
 <context>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>New tag name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nume de etichetă nou</translation>
     </message>
 </context>
 <context>
@@ -199,23 +199,23 @@
     </message>
     <message numerus="yes">
         <source>Remove %n selected image(s)?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Eliminați imaginea selectată?</numerusform>
+            <numerusform>Eliminați %n imagini selectate?</numerusform>
+            <numerusform>Eliminați %n imagini selectate?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Saved games using these image(s) will be deleted.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Jocurile salvate folosind această imagine vor fi șterse.</numerusform>
+            <numerusform>Jocurile salvate folosind aceste imagini vor fi șterse.</numerusform>
+            <numerusform>Jocurile salvate folosind aceste imagini vor fi șterse.</numerusform>
         </translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Înlătură</translation>
     </message>
 </context>
 <context>
@@ -288,7 +288,7 @@
     </message>
     <message>
         <source>Manage Tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionați etichetele...</translation>
     </message>
 </context>
 <context>
