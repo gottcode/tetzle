@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2025 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -75,7 +75,8 @@ QPoint Piece::randomPoint() const
 
 void Piece::attachSolutionNeighbors()
 {
-	for (Piece* piece : std::as_const(m_neighbors)) {
+	const QSet<Piece*> neighbors = m_neighbors;
+	for (Piece* piece : neighbors) {
 		if (piece->m_rotation != m_rotation) {
 			continue;
 		}
