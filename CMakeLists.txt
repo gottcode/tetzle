@@ -31,6 +31,33 @@ add_version_compile_definition(src/main.cpp VERSIONSTR)
 
 # Create program
 qt_add_executable(tetzle
+	# Headers
+	src/add_image.h
+	src/appearance_dialog.h
+	src/board.h
+	src/choose_game_dialog.h
+	src/color_button.h
+	src/dancing_links.h
+	src/edge_scroller.h
+	src/fragment_list.h
+	src/generator.h
+	src/image_properties_dialog.h
+	src/locale_dialog.h
+	src/message.h
+	src/new_game_tab.h
+	src/open_game_tab.h
+	src/overview.h
+	src/path.h
+	src/piece.h
+	src/tag_manager.h
+	src/thumbnail_delegate.h
+	src/thumbnail_item.h
+	src/thumbnail_loader.h
+	src/tile.h
+	src/toolbar_list.h
+	src/window.h
+	src/zoom_slider.h
+	# Sources
 	src/add_image.cpp
 	src/appearance_dialog.cpp
 	src/board.cpp
@@ -49,13 +76,14 @@ qt_add_executable(tetzle
 	src/overview.cpp
 	src/path.cpp
 	src/piece.cpp
-	src/tile.cpp
 	src/tag_manager.cpp
 	src/thumbnail_delegate.cpp
 	src/thumbnail_loader.cpp
+	src/tile.cpp
 	src/toolbar_list.cpp
 	src/window.cpp
 	src/zoom_slider.cpp
+	# Resources
 	data/data.qrc
 	${translations_QM}
 )
