@@ -1,44 +1,39 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Graeme Gott
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Allan Nordhøy <epost@anotheragency.no>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2018-03-14 16:02+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/gottcode/"
-"tetzle/language/nb_NO/)\n"
-"Language: nb_NO\n"
+"POT-Creation-Date: 2014-11-14 18:21+0000\n"
+"PO-Revision-Date: 2014-11-14 18:22+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>, 2018\n"
+"Language-Team: Norwegian Bokmål (Norway) (http://app.transifex.com/gottcode/tetzle/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
-msgid "Tetzle"
-msgstr "Tetzle"
-
-#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
+#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr "Puslespill med tetromino-brikker"
 
-#: ../tetzle.appdata.xml.in:10
+#: ../tetzle.appdata.xml.in.h:2
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
-"image can be imported and used to create puzzles with a wide range of sizes. "
-"Games are saved automatically, and you can select between currently in "
+"image can be imported and used to create puzzles with a wide range of sizes."
+" Games are saved automatically, and you can select between currently in "
 "progress games."
-msgstr ""
-"Tetzle er et puslespill som bruker tetromino-brukker. Ethvert bilde kan "
-"importeres og brukes til å opprette puslespill i mange forskjellige "
-"størrelser. Spill lagres automatisk, og du kan velge mellom spill som er "
-"underveis."
+msgstr "Tetzle er et puslespill som bruker tetromino-brukker. Ethvert bilde kan importeres og brukes til å opprette puslespill i mange forskjellige størrelser. Spill lagres automatisk, og du kan velge mellom spill som er underveis."
 
-#: ../tetzle.desktop.in:5
+#: ../tetzle.desktop.in.h:1
+msgid "Tetzle"
+msgstr "Tetzle"
+
+#: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"
 msgstr "Puslespill"

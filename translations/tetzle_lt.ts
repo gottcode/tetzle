@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="lt">
+<TS version="2.1" language="lt" sourcelanguage="en">
 <context>
     <name>AddImage</name>
     <message>

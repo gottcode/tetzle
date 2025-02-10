@@ -1,40 +1,39 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Graeme Gott
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
-# GenghisKhan <genghiskhan@gmx.ca>, 2015
+# gk <genghiskhan@gmx.ca>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2017-09-21 14:00+0000\n"
-"Last-Translator: GenghisKhan <genghiskhan@gmx.ca>\n"
-"Language-Team: Hebrew (http://www.transifex.com/gottcode/tetzle/language/"
-"he/)\n"
-"Language: he\n"
+"POT-Creation-Date: 2014-11-14 18:21+0000\n"
+"PO-Revision-Date: 2014-11-14 18:22+0000\n"
+"Last-Translator: gk <genghiskhan@gmx.ca>, 2015\n"
+"Language-Team: Hebrew (http://app.transifex.com/gottcode/tetzle/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
-#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
-msgid "Tetzle"
-msgstr ""
-
-#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
+#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr ""
 
-#: ../tetzle.appdata.xml.in:10
+#: ../tetzle.appdata.xml.in.h:2
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
-"image can be imported and used to create puzzles with a wide range of sizes. "
-"Games are saved automatically, and you can select between currently in "
+"image can be imported and used to create puzzles with a wide range of sizes."
+" Games are saved automatically, and you can select between currently in "
 "progress games."
 msgstr ""
 
-#: ../tetzle.desktop.in:5
+#: ../tetzle.desktop.in.h:1
+msgid "Tetzle"
+msgstr ""
+
+#: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"
 msgstr "משחק פאזל משונן"

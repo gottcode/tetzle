@@ -1,47 +1,39 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Graeme Gott
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # dsafsadf <heneral@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Tetzle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 20:57+0000\n"
-"PO-Revision-Date: 2021-03-21 17:58+0000\n"
-"Last-Translator: dsafsadf <heneral@gmail.com>\n"
-"Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/gottcode/tetzle/"
-"language/uk_UA/)\n"
-"Language: uk_UA\n"
+"POT-Creation-Date: 2014-11-14 18:21+0000\n"
+"PO-Revision-Date: 2014-11-14 18:22+0000\n"
+"Last-Translator: dsafsadf <heneral@gmail.com>, 2021\n"
+"Language-Team: Ukrainian (Ukraine) (http://app.transifex.com/gottcode/tetzle/language/uk_UA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk_UA\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: ../tetzle.appdata.xml.in:6 ../tetzle.desktop.in:4
-msgid "Tetzle"
-msgstr "Tetzle"
-
-#: ../tetzle.appdata.xml.in:7 ../tetzle.desktop.in:6
+#: ../tetzle.appdata.xml.in.h:1 ../tetzle.desktop.in.h:3
 msgid "Jigsaw puzzle with tetromino pieces"
 msgstr "Головоломка з шматочками тетроміно"
 
-#: ../tetzle.appdata.xml.in:10
+#: ../tetzle.appdata.xml.in.h:2
 msgid ""
 "Tetzle is a jigsaw puzzle game that uses tetrominoes for the pieces. Any "
-"image can be imported and used to create puzzles with a wide range of sizes. "
-"Games are saved automatically, and you can select between currently in "
+"image can be imported and used to create puzzles with a wide range of sizes."
+" Games are saved automatically, and you can select between currently in "
 "progress games."
-msgstr ""
-"Tetzle - це гра-головоломка, яка використовує тетроміно для шматочків. Будь-"
-"яке зображення можна імпортувати та використовувати для створення "
-"головоломок із широким діапазоном розмірів. Ігри зберігаються автоматично, і "
-"ви можете вибирати між іграми, які зараз виконуються."
+msgstr "Tetzle - це гра-головоломка, яка використовує тетроміно для шматочків. Будь-яке зображення можна імпортувати та використовувати для створення головоломок із широким діапазоном розмірів. Ігри зберігаються автоматично, і ви можете вибирати між іграми, які зараз виконуються."
 
-#: ../tetzle.desktop.in:5
+#: ../tetzle.desktop.in.h:1
+msgid "Tetzle"
+msgstr "Tetzle"
+
+#: ../tetzle.desktop.in.h:2
 msgid "Jigsaw Puzzle Game"
 msgstr "Гра-головоломка"

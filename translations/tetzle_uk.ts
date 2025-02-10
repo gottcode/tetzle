@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk">
+<TS version="2.1" language="uk" sourcelanguage="en">
 <context>
     <name>AddImage</name>
     <message>
@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Зображення</translation>
     </message>
 </context>
 <context>
@@ -126,7 +126,7 @@
     </message>
     <message>
         <source>Play Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Грати в гру</translation>
     </message>
 </context>
 <context>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>New tag name</source>
-        <translation type="unfinished"></translation>
+        <translation>Нова назва тегу</translation>
     </message>
 </context>
 <context>
@@ -199,23 +199,23 @@
     </message>
     <message numerus="yes">
         <source>Remove %n selected image(s)?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Видалити вибране зображення?</numerusform>
+            <numerusform>Видалити %n вибрані зображень?</numerusform>
+            <numerusform>Видалити %n вибраних зображень?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Saved games using these image(s) will be deleted.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Збережені ігри з цим зображенням будуть видалені.</numerusform>
+            <numerusform>Збережені ігри, які використовують ці зображення, будуть видалені.</numerusform>
+            <numerusform>Збережені ігри, які використовують ці зображення, будуть видалені.</numerusform>
         </translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
 </context>
 <context>
@@ -288,7 +288,7 @@
     </message>
     <message>
         <source>Manage Tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Керувати тегами...</translation>
     </message>
 </context>
 <context>
@@ -463,14 +463,14 @@
     </message>
     <message>
         <source>%p% complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконано %p%.</translation>
     </message>
 </context>
 <context>
     <name>ZoomSlider</name>
     <message>
         <source>Zoom: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Масштаб: %1%</translation>
     </message>
 </context>
 <context>
