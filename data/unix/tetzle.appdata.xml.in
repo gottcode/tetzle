@@ -30,12 +30,6 @@
     <binary>tetzle</binary>
   </provides>
   <launchable type="desktop-id">tetzle.desktop</launchable>
-  <icon type="stock">tetzle</icon>
-
-  <categories>
-    <category>Game</category>
-    <category>LogicGame</category>
-  </categories>
 
   <kudos>
     <kudo>ModernToolkit</kudo>
