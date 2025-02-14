@@ -1,3 +1,9 @@
+3.0.2
+-----
+* Improved code for building translations.
+* FIXED: Crash when attaching multiple pieces.
+* Translation updates: Ukrainian.
+
 3.0.1
 -----
 * Improved deployment.
