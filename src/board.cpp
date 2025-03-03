@@ -792,6 +792,18 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 {
 	const QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
 
+	if (m_action_button == Qt::LeftButton) {
+		const Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();
+
+		// Scroll board if only shift is pressed
+		if (!m_scrolling && modifiers == Qt::ShiftModifier) {
+			startScrolling();
+		} else if (m_scrolling && modifiers != Qt::ShiftModifier) {
+			stopScrolling();
+			m_select_pos = event->pos();
+		}
+	}
+
 	if (m_scrolling) {
 		scroll(delta);
 	}
