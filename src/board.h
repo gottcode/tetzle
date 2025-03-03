@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2025 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -217,12 +217,6 @@ protected:
 	void keyPressEvent(QKeyEvent* event) override;
 
 	/**
-	 * Handle player input. This stops resizing the selection rectangle,
-	 * now that the player has released a key.
-	 */
-	void keyReleaseEvent(QKeyEvent* event) override;
-
-	/**
 	 * Handle player input. Allows players to move game board,
 	 * as well as select, pick up, drop, or rotate pieces.
 	 */
@@ -431,7 +425,6 @@ private:
 	bool m_selecting; ///< is the player selecting pieces
 	bool m_finished; ///< is the game over
 
-	int m_action_key; ///< the currently pressed key
 	Qt::MouseButton m_action_button; ///< the currently pressed mouse button
 
 	QRandomGenerator m_random; ///< random number generator

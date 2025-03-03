@@ -1,5 +1,5 @@
 /*
-	SPDX-FileCopyrightText: 2008-2024 Graeme Gott <graeme@gottcode.org>
+	SPDX-FileCopyrightText: 2008-2025 Graeme Gott <graeme@gottcode.org>
 
 	SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -54,7 +54,6 @@ Board::Board(QWidget* parent)
 	, m_scrolling(false)
 	, m_selecting(false)
 	, m_finished(false)
-	, m_action_key(0)
 	, m_action_button(Qt::NoButton)
 	, m_random(QRandomGenerator::securelySeeded())
 {
@@ -735,21 +734,9 @@ void Board::keyPressEvent(QKeyEvent* event)
 		break;
 
 	default:
-		if (!event->isAutoRepeat()) {
-			m_action_key = event->key();
-		}
+		break;
 	}
 	QWidget::keyPressEvent(event);
-}
-
-//-----------------------------------------------------------------------------
-
-void Board::keyReleaseEvent(QKeyEvent* event)
-{
-	if (!event->isAutoRepeat()) {
-		m_action_key = 0;
-	}
-	QWidget::keyReleaseEvent(event);
 }
 
 //-----------------------------------------------------------------------------
@@ -761,7 +748,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 	}
 
 	m_action_button = event->button();
-	if (m_action_button == Qt::MiddleButton || (m_action_button == Qt::LeftButton && m_action_key == Qt::Key_Shift)) {
+	if (m_action_button == Qt::MiddleButton || (m_action_button == Qt::LeftButton && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier)) {
 		startScrolling();
 	} else if (m_action_button == Qt::LeftButton) {
 		m_select_pos = event->pos();
@@ -827,7 +814,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		}
 	}
 
-	if (!m_selecting && m_action_button == Qt::LeftButton && m_action_key == 0) {
+	if (!m_selecting && m_action_button == Qt::LeftButton && QGuiApplication::keyboardModifiers() == Qt::NoModifier) {
 		m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
 	}
 	if (m_selecting) {
@@ -924,8 +911,8 @@ void Board::scroll(const QPoint& delta)
 //-----------------------------------------------------------------------------
 
 void Board::togglePiecesUnderCursor() {
-	switch (m_action_key) {
-	case 0:
+	switch (QGuiApplication::keyboardModifiers()) {
+	case Qt::NoModifier:
 		if (!m_selecting) {
 			if (pieceUnderCursor()) {
 				grabPiece();
@@ -937,14 +924,14 @@ void Board::togglePiecesUnderCursor() {
 		}
 		break;
 
-	case Qt::Key_Shift:
+	case Qt::ShiftModifier:
 		stopScrolling();
 		break;
 
 #if !defined(Q_OS_MAC)
-	case Qt::Key_Control:
+	case Qt::ControlModifier:
 #else
-	case Qt::Key_Meta:
+	case Qt::MetaModifier:
 #endif
 		rotatePiece();
 		break;
