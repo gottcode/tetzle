@@ -802,6 +802,18 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			stopScrolling();
 			m_select_pos = event->pos();
 		}
+
+		// Select pieces if no keyboard modifiers are pressed
+		if (!m_selecting && modifiers == Qt::NoModifier) {
+			m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
+		} else if (m_selecting && modifiers != Qt::NoModifier) {
+			m_selecting = false;
+			for (Piece* piece : std::as_const(m_selected_pieces)) {
+				piece->setSelected(false);
+			}
+			m_pieces += m_selected_pieces;
+			m_selected_pieces.clear();
+		}
 	}
 
 	if (m_scrolling) {
@@ -826,9 +838,6 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 		}
 	}
 
-	if (!m_selecting && m_action_button == Qt::LeftButton && QGuiApplication::keyboardModifiers() == Qt::NoModifier) {
-		m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
-	}
 	if (m_selecting) {
 		const QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
 
