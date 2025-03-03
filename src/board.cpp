@@ -871,9 +871,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 
 	m_cursor_pos = event->pos();
 
-	if (!m_scrolling) {
-		updateCursor();
-	}
+	updateCursor();
 }
 
 //-----------------------------------------------------------------------------
@@ -910,7 +908,7 @@ void Board::edgeScroll(int horizontal, int vertical)
 void Board::startScrolling()
 {
 	m_scrolling = true;
-	setCursor(Qt::SizeAllCursor);
+	updateCursor();
 }
 
 //-----------------------------------------------------------------------------
@@ -1146,6 +1144,11 @@ void Board::loadImage()
 
 void Board::updateCursor()
 {
+	if (m_scrolling) {
+		setCursor(Qt::SizeAllCursor);
+		return;
+	}
+
 	int state = 0;
 	if (!m_finished) {
 		state = (pieceUnderCursor() || m_selecting) | (!m_active_pieces.isEmpty() * 2);
