@@ -768,6 +768,9 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 	switch (m_action_button) {
 	case Qt::LeftButton:
 		togglePiecesUnderCursor();
+		if (m_scrolling) {
+			stopScrolling();
+		}
 		break;
 
 	case Qt::RightButton:
@@ -943,10 +946,6 @@ void Board::togglePiecesUnderCursor() {
 		} else {
 			selectPieces();
 		}
-		break;
-
-	case Qt::ShiftModifier:
-		stopScrolling();
 		break;
 
 #if !defined(Q_OS_MAC)
