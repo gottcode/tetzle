@@ -272,6 +272,11 @@ private:
 	void scroll(const QPoint& delta);
 
 	/**
+	 * Attempt to attach active piece to neighboring pieces in solution.
+	 */
+	void attachActivePiece();
+
+	/**
 	 * Handle player interacting with pieces. It grabs, releases, or rotates the pieces.
 	 */
 	void togglePiecesUnderCursor();

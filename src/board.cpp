@@ -678,6 +678,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 	// Scroll left
 	case Qt::Key_Left:
 		scroll(QPoint(2 * offset, 0));
+		attachActivePiece();
 		update();
 		updateCursor();
 		break;
@@ -685,6 +686,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 	// Scroll up
 	case Qt::Key_Up:
 		scroll(QPoint(0, 2 * offset));
+		attachActivePiece();
 		update();
 		updateCursor();
 		break;
@@ -692,6 +694,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 	// Scroll right
 	case Qt::Key_Right:
 		scroll(QPoint(-2 * offset, 0));
+		attachActivePiece();
 		update();
 		updateCursor();
 		break;
@@ -699,6 +702,7 @@ void Board::keyPressEvent(QKeyEvent* event)
 	// Scroll down
 	case Qt::Key_Down:
 		scroll(QPoint(0, -2 * offset));
+		attachActivePiece();
 		update();
 		updateCursor();
 		break;
@@ -830,16 +834,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			piece->moveBy(delta);
 		}
 
-		// Attach neighbors if only one piece is active
-		if (m_active_pieces.count() == 1) {
-			m_active_pieces.first()->attachSolutionNeighbors();
-			updateCompleted();
-		}
-
-		// Handle finishing game
-		if (pieceCount() == 1) {
-			finishGame();
-		}
+		attachActivePiece();
 	}
 
 	if (m_selecting) {
@@ -898,6 +893,7 @@ void Board::wheelEvent(QWheelEvent* event)
 void Board::edgeScroll(int horizontal, int vertical)
 {
 	scroll(QPoint((5 * horizontal) / m_scale, (5 * vertical) / m_scale));
+	attachActivePiece();
 	update();
 }
 
@@ -926,6 +922,22 @@ void Board::scroll(const QPoint& delta)
 		piece->moveBy(-delta);
 	}
 	updateViewport();
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::attachActivePiece()
+{
+	// Attach neighbors if only one piece is active
+	if (m_active_pieces.count() == 1) {
+		m_active_pieces.first()->attachSolutionNeighbors();
+		updateCompleted();
+	}
+
+	// Handle finishing game
+	if (pieceCount() == 1) {
+		finishGame();
+	}
 }
 
 //-----------------------------------------------------------------------------
