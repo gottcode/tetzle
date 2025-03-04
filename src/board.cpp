@@ -794,6 +794,7 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
 	const QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
+	m_cursor_pos = event->pos();
 
 	if (m_action_button == Qt::LeftButton) {
 		const Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();
@@ -803,12 +804,12 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			startScrolling();
 		} else if (m_scrolling && modifiers != Qt::ShiftModifier) {
 			stopScrolling();
-			m_select_pos = event->pos();
+			m_select_pos = m_cursor_pos;
 		}
 
 		// Select pieces if no keyboard modifiers are pressed
 		if (!m_selecting && modifiers == Qt::NoModifier) {
-			m_selecting = QVector2D(event->pos() - m_select_pos).length() >= QApplication::startDragDistance();
+			m_selecting = QVector2D(m_cursor_pos - m_select_pos).length() >= QApplication::startDragDistance();
 		} else if (m_selecting && modifiers != Qt::NoModifier) {
 			m_selecting = false;
 			for (Piece* piece : std::as_const(m_selected_pieces)) {
@@ -842,7 +843,7 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 	}
 
 	if (m_selecting) {
-		const QRect rect = QRect(mapPosition(event->pos()), mapPosition(m_select_pos)).normalized();
+		const QRect rect = QRect(mapPosition(m_cursor_pos), mapPosition(m_select_pos)).normalized();
 
 		// Check for pieces that are now selected
 		for (int i = 0; i < m_pieces.count(); ++i) {
@@ -864,13 +865,10 @@ void Board::mouseMoveEvent(QMouseEvent* event)
 			}
 		}
 
-		m_selection = QRect(event->pos(), m_select_pos).normalized();
+		m_selection = QRect(m_cursor_pos, m_select_pos).normalized();
 	}
 
 	update();
-
-	m_cursor_pos = event->pos();
-
 	updateCursor();
 }
 
