@@ -206,6 +206,12 @@ protected:
 #endif
 
 	/**
+	 * Track cursor position when mouse enters game board,
+	 * allowing for keyboard-only play after that.
+	 */
+	void enterEvent(QEnterEvent* event) override;
+
+	/**
 	 * Draw the game board.
 	 */
 	void paintEvent(QPaintEvent*) override;

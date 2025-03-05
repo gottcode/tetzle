@@ -593,6 +593,15 @@ bool Board::event(QEvent* event)
 #endif
 //-----------------------------------------------------------------------------
 
+void Board::enterEvent(QEnterEvent* event)
+{
+	m_cursor_pos = event->position().toPoint();
+	updateCursor();
+	QWidget::enterEvent(event);
+}
+
+//-----------------------------------------------------------------------------
+
 void Board::paintEvent(QPaintEvent*)
 {
 	QPainter painter(this);
