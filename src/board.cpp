@@ -764,7 +764,7 @@ void Board::mousePressEvent(QMouseEvent* event)
 	if (m_action_button == Qt::MiddleButton || (m_action_button == Qt::LeftButton && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier)) {
 		startScrolling();
 	} else if (m_action_button == Qt::LeftButton) {
-		m_select_pos = event->pos();
+		m_select_pos = event->position().toPoint();
 	}
 
 	QWidget::mousePressEvent(event);
@@ -806,8 +806,8 @@ void Board::mouseReleaseEvent(QMouseEvent* event)
 
 void Board::mouseMoveEvent(QMouseEvent* event)
 {
-	const QPoint delta = (event->pos() / m_scale) - (m_cursor_pos / m_scale);
-	m_cursor_pos = event->pos();
+	const QPoint delta = (event->position().toPoint() / m_scale) - (m_cursor_pos / m_scale);
+	m_cursor_pos = event->position().toPoint();
 
 	if (m_action_button == Qt::LeftButton) {
 		const Qt::KeyboardModifiers modifiers = QGuiApplication::keyboardModifiers();
