@@ -1,3 +1,12 @@
+3.0.3
+-----
+* FIXED: Alt-tab broke interaction with board.
+* FIXED: Did not fetch cursor position for using keyboard.
+* FIXED: Magnetic attaching only happened when moving mouse.
+* FIXED: Scrolling with keyboard and mouse could get stuck.
+* FIXED: Selection rectangle could get stuck.
+* FIXED: Sometimes lost scrolling cursor image.
+
 3.0.2
 -----
 * Improved code for building translations.

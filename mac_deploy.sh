@@ -2,7 +2,7 @@
 
 APP='Tetzle'
 BUNDLE="$APP.app"
-VERSION='3.0.2'
+VERSION='3.0.3'
 
 # Locate deployment script
 BIN_DIR=$(pwd)

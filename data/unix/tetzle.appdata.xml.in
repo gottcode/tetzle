@@ -38,6 +38,18 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="3.0.3" date="2025-03-07">
+      <description>
+        <ul>
+          <li>FIXED: Alt-tab broke interaction with board</li>
+          <li>FIXED: Did not fetch cursor position for using keyboard</li>
+          <li>FIXED: Magnetic attaching only happened when moving mouse</li>
+          <li>FIXED: Scrolling with keyboard and mouse could get stuck</li>
+          <li>FIXED: Selection rectangle could get stuck</li>
+          <li>FIXED: Sometimes lost scrolling cursor image</li>
+        </ul>
+      </description>
+    </release>
     <release version="3.0.2" date="2025-02-14">
       <description>
         <ul>
