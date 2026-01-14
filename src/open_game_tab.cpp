@@ -35,7 +35,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 	m_games->setItemDelegate(new ThumbnailDelegate(m_games));
 
 	const qreal pixelratio = devicePixelRatioF();
-	const QSettings details(Path::image("details"), QSettings::IniFormat);
+	const QSettings image_details(Path::image("details"), QSettings::IniFormat);
 	const QStringList files = ChooseGameDialog::currentGames();
 	for (const QString& game : files) {
 		// Skip currently opened game
@@ -60,7 +60,7 @@ OpenGameTab::OpenGameTab(int current_id, QDialog* parent)
 		if (!QFile::exists(Path::image(image))) {
 			continue;
 		}
-		const QString image_name = details.value(image + "/Name", tr("Untitled")).toString();
+		const QString image_name = image_details.value(image + "/Name", tr("Untitled")).toString();
 		const QString pieces = attributes.value("pieces").toString();
 		const QString complete = attributes.value("complete").toString();
 		const QString details = tr("%L1 pieces %2 %3% complete").arg(pieces, QChar(8226), complete);

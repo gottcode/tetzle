@@ -318,7 +318,7 @@ void Board::openGame(int id)
 	QPoint pos;
 	int rotation = -1;
 	QList<Tile*> tiles;
-	bool piece = (version > 3);
+	bool is_piece = (version > 3);
 	m_load_bevels = false;
 
 	while (!xml.atEnd()) {
@@ -334,8 +334,8 @@ void Board::openGame(int id)
 
 		if (xml.name() == QLatin1String("tile")) {
 			attributes = xml.attributes();
-			if (!piece) {
-				piece = true;
+			if (!is_piece) {
+				is_piece = true;
 				pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
 				rotation = (rotation != -1) ? rotation : attributes.value("rotation").toInt();
 			}
@@ -359,7 +359,7 @@ void Board::openGame(int id)
 			pos = QPoint(attributes.value("x").toInt(), attributes.value("y").toInt());
 			rotation = attributes.value("rotation").toInt();
 		} else if (xml.name() == QLatin1String("group")) {
-			piece = false;
+			is_piece = false;
 			const QStringView r = xml.attributes().value("rotation");
 			rotation = !r.isEmpty() ? r.toInt() : -1;
 		} else if (xml.name() != QLatin1String("overview")) {
