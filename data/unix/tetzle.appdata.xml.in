@@ -38,6 +38,15 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="3.0.4" date="2026-02-10">
+      <description>
+        <ul>
+          <li>FIXED: Crash when starting game</li>
+          <li>Replaced shadowed variable names</li>
+          <li>Updated link to translations</li>
+        </ul>
+      </description>
+    </release>
     <release version="3.0.3" date="2025-03-07">
       <description>
         <ul>

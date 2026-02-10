@@ -1,3 +1,9 @@
+3.0.4
+-----
+* FIXED: Crash when starting game.
+* Replaced shadowed variable names.
+* Updated link to translations.
+
 3.0.3
 -----
 * FIXED: Alt-tab broke interaction with board.

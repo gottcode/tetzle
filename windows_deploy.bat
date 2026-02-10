@@ -4,7 +4,7 @@
 
 SET SRCDIR=..\tetzle
 SET APP=Tetzle
-SET VERSION=3.0.3
+SET VERSION=3.0.4
 
 ECHO Copying executable
 MKDIR %SRCDIR%\%APP%
