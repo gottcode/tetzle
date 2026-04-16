@@ -587,7 +587,9 @@ void Board::toggleOverview()
 bool Board::event(QEvent* event)
 {
 	if (event->type() == QEvent::DevicePixelRatioChange) {
-		loadImage();
+		if (!m_image_path.isEmpty()) {
+			loadImage();
+		}
 		for (Piece* piece : std::as_const(m_pieces)) {
 			piece->setPosition(piece->scenePos());
 		}
