@@ -43,7 +43,6 @@ Board::Board(QWidget* parent)
 	, m_load_bevels(true)
 	, m_has_bevels(true)
 	, m_has_shadows(true)
-	, m_bevel_pixmap(":/bumpmap.png")
 	, m_columns(0)
 	, m_rows(0)
 	, m_total_pieces(0)
@@ -162,9 +161,7 @@ void Board::setAppearance(const AppearanceDialog& dialog)
 		piece->setSelected(piece->isSelected());
 	}
 
-	const qreal pixelratio = devicePixelRatioF();
-	m_shadow_pixmap = dialog.shadow(pixelratio);
-	m_selected_shadow_pixmap = dialog.shadowSelected(pixelratio);
+	loadTextures();
 }
 
 //-----------------------------------------------------------------------------
@@ -220,6 +217,9 @@ void Board::newGame(const QString& image, int difficulty)
 	updateStatusMessage(tr("Loading image..."));
 	m_image_path = image;
 	m_load_bevels = true;
+#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
+	loadTextures();
+#endif
 	loadImage();
 
 	// Generate puzzle
@@ -313,9 +313,10 @@ void Board::openGame(int id)
 		xml.raiseError(tr("Unknown data format"));
 	}
 
-	// Set pixmap fragments to match device pixel ratio for high DPI rendering;
-	// waiting for loadImage() is too late as the pieces use it immediately.
-	FragmentList::setDevicePixelRatio(devicePixelRatioF());
+#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
+	// Has to happen before loading the pieces as it sets the pixel ratio for the fragments
+	loadTextures();
+#endif
 
 	// Load pieces
 	updateStatusMessage(tr("Loading pieces..."));
@@ -587,6 +588,7 @@ void Board::toggleOverview()
 bool Board::event(QEvent* event)
 {
 	if (event->type() == QEvent::DevicePixelRatioChange) {
+		loadTextures();
 		if (!m_image_path.isEmpty()) {
 			loadImage();
 		}
@@ -1120,6 +1122,8 @@ void Board::drawRect(QPainter& painter, const QRect& rect, const QColor& fill, c
 
 void Board::loadImage()
 {
+	const qreal pixelratio = devicePixelRatioF();
+
 	// Record currently open image
 	QSettings settings;
 	settings.setValue("OpenGame/Image", m_image_path);
@@ -1131,19 +1135,6 @@ void Board::loadImage()
 		activateWindow();
 	}
 	QImageReader source(Path::image(m_image_path));
-
-	// Set pixmap fragments to match device pixel ratio for high DPI rendering
-	const qreal pixelratio = devicePixelRatioF();
-	FragmentList::setDevicePixelRatio(pixelratio);
-
-	// Create bevel texture
-	m_bevel_pixmap = QPixmap(":/bumpmap.png");
-	m_bevel_pixmap = m_bevel_pixmap.scaled(m_bevel_pixmap.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	m_bevel_pixmap.setDevicePixelRatio(pixelratio);
-
-	// Create shadow textures
-	m_shadow_pixmap = AppearanceDialog::shadow(pixelratio);
-	m_selected_shadow_pixmap = AppearanceDialog::shadowSelected(pixelratio);
 
 	// Create puzzle texture
 	const QSize size(m_columns * Tile::size * pixelratio, m_rows * Tile::size * pixelratio);
@@ -1163,6 +1154,24 @@ void Board::loadImage()
 
 	// Create overview
 	m_overview->load(image, pixelratio);
+}
+
+//-----------------------------------------------------------------------------
+
+void Board::loadTextures()
+{
+	// Set pixmap fragments to match device pixel ratio for high DPI rendering
+	const qreal pixelratio = devicePixelRatioF();
+	FragmentList::setDevicePixelRatio(pixelratio);
+
+	// Create bevel texture
+	m_bevel_pixmap = QPixmap(":/bumpmap.png");
+	m_bevel_pixmap = m_bevel_pixmap.scaled(m_bevel_pixmap.size() * pixelratio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	m_bevel_pixmap.setDevicePixelRatio(pixelratio);
+
+	// Create shadow textures
+	m_shadow_pixmap = AppearanceDialog::shadow(pixelratio);
+	m_selected_shadow_pixmap = AppearanceDialog::shadowSelected(pixelratio);
 }
 
 //-----------------------------------------------------------------------------

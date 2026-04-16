@@ -327,9 +327,14 @@ private:
 	void drawRect(QPainter& painter, const QRect& rect, const QColor& fill, const QColor& border) const;
 
 	/**
-	 * Load the image for the puzzle, as well as the bevel and shadows.
+	 * Load the image for the puzzle.
 	 */
 	void loadImage();
+
+	/**
+	 * Load the bevels and shadows.
+	 */
+	void loadTextures();
 
 	/**
 	 * Change the mouse cursor depending on if it is over a piece.
