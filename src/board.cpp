@@ -313,6 +313,10 @@ void Board::openGame(int id)
 		xml.raiseError(tr("Unknown data format"));
 	}
 
+	// Set pixmap fragments to match device pixel ratio for high DPI rendering;
+	// waiting for loadImage() is too late as the pieces use it immediately.
+	FragmentList::setDevicePixelRatio(devicePixelRatioF());
+
 	// Load pieces
 	updateStatusMessage(tr("Loading pieces..."));
 	QPoint pos;
