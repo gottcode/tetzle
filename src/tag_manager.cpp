@@ -66,17 +66,12 @@ TagManager::TagManager(QWidget* parent)
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.beginGroup("Tags");
 	const QStringList tags = file.childKeys();
-	QStringList images;
 	const QDir folder(Path::images(), "*.*");
 	for (const QString& tag : tags) {
-		images = file.value(tag).toStringList();
-		QMutableStringListIterator i(images);
-		while (i.hasNext()) {
-			i.next();
-			if (!folder.exists(i.value())) {
-				i.remove();
-			}
-		}
+		QStringList images = file.value(tag).toStringList();
+		images.removeIf([&folder](const QString& image) {
+			return !folder.exists(image);
+		});
 		m_tags[tag] = images;
 
 		QListWidgetItem* item = new QListWidgetItem(tag);
@@ -112,9 +107,7 @@ QStringList TagManager::tags() const
 QString TagManager::tags(const QString& image) const
 {
 	QStringList tags;
-	QHashIterator<QString, QStringList> i(m_tags);
-	while (i.hasNext()) {
-		i.next();
+	for (auto i = m_tags.cbegin(); i != m_tags.cend(); ++i) {
 		if (i.value().contains(image)) {
 			tags.append(i.key());
 		}
@@ -160,9 +153,7 @@ void TagManager::setImageTags(const QString& image, const QStringList& tags)
 
 	// Add or remove image from tags
 	bool changed = false;
-	QMutableHashIterator<QString, QStringList> i(m_tags);
-	while (i.hasNext()) {
-		i.next();
+	for (auto i = m_tags.begin(); i != m_tags.end(); ++i) {
 		const bool tagged = tags.contains(i.key());
 		QStringList& tag = i.value();
 		if (tag.contains(image)) {
@@ -237,10 +228,8 @@ void TagManager::currentTagChanged(int index)
 		filter = m_all;
 	} else if (action == "UNTAGGED") {
 		filter = m_all;
-		QHashIterator<QString, QStringList> i(m_tags);
-		while (i.hasNext()) {
-			i.next();
-			for (const QString& image : i.value()) {
+		for (const QStringList& tags : std::as_const(m_tags)) {
+			for (const QString& image : tags) {
 				filter.removeOne(image);
 			}
 		}
@@ -319,9 +308,7 @@ void TagManager::storeTags() const
 	QSettings file(Path::image("tags"), QSettings::IniFormat);
 	file.clear();
 	file.beginGroup("Tags");
-	QHashIterator<QString, QStringList> i(m_tags);
-	while (i.hasNext()) {
-		i.next();
+	for (auto i = m_tags.cbegin(); i != m_tags.cend(); ++i) {
 		file.setValue(i.key(), i.value());
 	}
 }
