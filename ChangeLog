@@ -1,3 +1,10 @@
+3.0.5
+-----
+* FIXED: Did not load puzzle correctly with HiDPI.
+* FIXED: Tried to load empty images with fractional scaling.
+* Document policy prohibiting the use of AI.
+* Use strict mode to disable unsafe Qt APIs.
+
 3.0.4
 -----
 * FIXED: Crash when starting game.
