@@ -20,6 +20,7 @@
   <url type="bugtracker">https://gottcode.org/tetzle/bugs/</url>
   <url type="donation">https://gottcode.org/tip/</url>
   <url type="translate">https://app.transifex.com/gottcode/tetzle/</url>
+  <url type="vcs-browser">https://codeberg.org/gottcode/tetzle</url>
 
   <developer id="org.gottcode">
     <name translatable="no">Graeme Gott</name>
