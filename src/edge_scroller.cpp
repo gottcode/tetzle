@@ -117,3 +117,5 @@ void EdgeScroller::paintEvent(QPaintEvent*)
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_edge_scroller.cpp"

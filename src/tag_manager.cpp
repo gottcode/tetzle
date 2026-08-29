@@ -330,3 +330,5 @@ void TagManager::updateFilter()
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_tag_manager.cpp"

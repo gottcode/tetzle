@@ -96,3 +96,5 @@ void ZoomSlider::setValue(int level)
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_zoom_slider.cpp"

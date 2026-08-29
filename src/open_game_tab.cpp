@@ -148,3 +148,5 @@ void OpenGameTab::deleteGame()
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_open_game_tab.cpp"

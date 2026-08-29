@@ -157,3 +157,5 @@ void ImagePropertiesDialog::addTag()
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_image_properties_dialog.cpp"

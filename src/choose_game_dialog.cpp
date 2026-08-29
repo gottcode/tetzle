@@ -108,3 +108,5 @@ void ChooseGameDialog::hideEvent(QHideEvent* event)
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_choose_game_dialog.cpp"

@@ -54,3 +54,5 @@ void ColorButton::chooseColor()
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_color_button.cpp"

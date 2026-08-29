@@ -558,3 +558,5 @@ void NewGameTab::removeThumbnail(const QString& image_id) const
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_new_game_tab.cpp"

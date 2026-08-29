@@ -238,3 +238,5 @@ QPixmap AppearanceDialog::coloredShadow(const QColor& color, qreal pixelratio)
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_appearance_dialog.cpp"

@@ -170,3 +170,5 @@ void ThumbnailLoader::imageLoaded(const Thumbnail& details)
 }
 
 //-----------------------------------------------------------------------------
+
+#include "moc_thumbnail_loader.cpp"
